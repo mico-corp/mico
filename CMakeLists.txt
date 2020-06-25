@@ -22,11 +22,11 @@
 cmake_minimum_required (VERSION 3.12 FATAL_ERROR)
 project(mico VERSION 1.0 LANGUAGES C CXX)
 
-add_subdirectory(flow)
 add_subdirectory(nodeeditor)
+add_subdirectory(flow)
 add_subdirectory(core_mplugin)
 add_subdirectory(cameras_mplugin)
-add_subdirectory(python_mplugin)
 add_subdirectory(slam_mplugin)
 add_subdirectory(visualizers_mplugin)
 add_subdirectory(dnn_mplugin)
+#add_subdirectory(python_mplugin)
