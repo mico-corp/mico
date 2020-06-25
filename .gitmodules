@@ -1,0 +1,24 @@
+[submodule "flow"]
+	path = flow
+	url = https://github.com/mico-corp/flow
+[submodule "nodeeditor"]
+	path = nodeeditor
+	url = https://github.com/mico-corp/nodeeditor
+[submodule "core_mplugin"]
+	path = core_mplugin
+	url = https://github.com/mico-corp/core_mplugin
+[submodule "slam_mplugin"]
+	path = slam_mplugin
+	url = https://github.com/mico-corp/slam_mplugin
+[submodule "cameras_mplugin"]
+	path = cameras_mplugin
+	url = https://github.com/mico-corp/cameras_mplugin
+[submodule "dnn_mplugin"]
+	path = dnn_mplugin
+	url = https://github.com/mico-corp/dnn_mplugin
+[submodule "visualizers_mplugin"]
+	path = visualizers_mplugin
+	url = https://github.com/mico-corp/visualizers_mplugin
+[submodule "python_mplugin"]
+	path = python_mplugin
+	url = https://github.com/mico-corp/python_mplugin
