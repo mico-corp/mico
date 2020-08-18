@@ -22,11 +22,43 @@
 cmake_minimum_required (VERSION 3.12 FATAL_ERROR)
 project(mico VERSION 1.0 LANGUAGES C CXX)
 
+set(BUNDLE_COMPILATION ON)
+
+option(BUILD_CAMERAS        "Set to build CAMERAS Module"       ON)
+option(BUILD_VISUALIZERS    "Set to build VISUALIZERS Module"   ON)
+option(BUILD_SLAM           "Set to build SLAM Module"          ON)
+option(BUILD_DNN            "Set to build DNN Module"           OFF)
+
+SET(MICO_MODULES core)
+
 add_subdirectory(nodeeditor)
 add_subdirectory(flow)
 add_subdirectory(core_mplugin)
-add_subdirectory(cameras_mplugin)
-add_subdirectory(slam_mplugin)
-add_subdirectory(visualizers_mplugin)
-add_subdirectory(dnn_mplugin)
+
+if(${BUILD_CAMERAS})
+    list(APPEND MICO_MODULES cameras)
+    add_subdirectory(cameras_mplugin)
+endif()
+
+if(${BUILD_SLAM})
+    list(APPEND MICO_MODULES slam)
+    add_subdirectory(slam_mplugin)
+endif()
+
+if(${BUILD_VISUALIZERS})
+    list(APPEND MICO_MODULES visualizers)
+    add_subdirectory(visualizers_mplugin)
+endif()
+
+if(${BUILD_DNN})
+    list(APPEND MICO_MODULES dnn)
+    add_subdirectory(dnn_mplugin)
+endif()
+
 #add_subdirectory(python_mplugin)
+
+# Add custom comand for flow install of all selected modules
+add_custom_target(flow_install
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/plugins 
+                                     $ENV{HOME}/.flow/plugins
+)
