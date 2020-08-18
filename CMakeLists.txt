@@ -27,6 +27,7 @@ set(BUNDLE_COMPILATION ON)
 option(BUILD_CAMERAS        "Set to build CAMERAS Module"       ON)
 option(BUILD_VISUALIZERS    "Set to build VISUALIZERS Module"   ON)
 option(BUILD_SLAM           "Set to build SLAM Module"          ON)
+option(BUILD_PYTHON         "Set to build Python Module"        ON)
 option(BUILD_DNN            "Set to build DNN Module"           OFF)
 
 SET(MICO_MODULES core)
@@ -55,7 +56,10 @@ if(${BUILD_DNN})
     add_subdirectory(dnn_mplugin)
 endif()
 
-#add_subdirectory(python_mplugin)
+if(${BUILD_PYTHON})
+    list(APPEND MICO_MODULES python)
+    add_subdirectory(python_mplugin)
+endif()
 
 # Add custom comand for flow install of all selected modules
 add_custom_target(flow_install
