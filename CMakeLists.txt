@@ -36,6 +36,9 @@ add_subdirectory(nodeeditor)
 add_subdirectory(flow)
 add_subdirectory(core_mplugin)
 
+list(APPEND MICO_MODULES math)
+add_subdirectory(math_mplugin)
+
 if(${BUILD_CAMERAS})
     list(APPEND MICO_MODULES cameras)
     add_subdirectory(cameras_mplugin)

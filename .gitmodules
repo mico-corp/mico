@@ -22,3 +22,6 @@
 [submodule "python_mplugin"]
 	path = python_mplugin
 	url = https://github.com/mico-corp/python_mplugin
+[submodule "math_mplugin"]
+	path = math_mplugin
+	url = https://github.com/mico-corp/math_mplugin
