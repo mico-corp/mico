@@ -26,7 +26,7 @@ set(BUNDLE_COMPILATION ON)
 
 option(BUILD_CAMERAS        "Set to build CAMERAS Module"       ON)
 option(BUILD_VISUALIZERS    "Set to build VISUALIZERS Module"   ON)
-option(BUILD_SLAM           "Set to build SLAM Module"          ON)
+option(BUILD_SLAM           "Set to build SLAM Module"          OFF)
 option(BUILD_PYTHON         "Set to build Python Module"        ON)
 option(BUILD_DNN            "Set to build DNN Module"           OFF)
 
