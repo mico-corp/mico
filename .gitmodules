@@ -25,3 +25,6 @@
 [submodule "math_mplugin"]
 	path = math_mplugin
 	url = https://github.com/mico-corp/math_mplugin
+[submodule "fastcom_mplugin"]
+	path = fastcom_mplugin
+	url = https://github.com/mico-corp/fastcom_mplugin
