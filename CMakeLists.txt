@@ -30,6 +30,7 @@ option(BUILD_SLAM           "Set to build SLAM Module"          OFF)
 option(BUILD_PYTHON         "Set to build Python Module"        ON)
 option(BUILD_DNN            "Set to build DNN Module"           OFF)
 option(BUILD_FASTCOM        "Set to build fastcom Module"       ON)
+option(BUILD_ROBOTICS       "Set to build robotics Module"      ON)
 
 SET(MICO_MODULES core)
 
@@ -68,6 +69,11 @@ endif()
 if(${BUILD_FASTCOM})
     list(APPEND MICO_MODULES fastcom)
     add_subdirectory(fastcom_mplugin)
+endif()
+
+if(${BUILD_ROBOTICS})
+    list(APPEND MICO_MODULES robotics)
+    add_subdirectory(robotics_mplugin)
 endif()
 
 # Add custom comand for flow install of all selected modules
