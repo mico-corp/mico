@@ -5,7 +5,7 @@ All MICO-plugins in one repository using git submodules.
 ## Dependencies
 
 ```
-sudo apt-get install qt5-default
+sudo apt-get install qt5-default libeigen3-dev
 ```
 
 ## Build 
