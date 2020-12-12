@@ -27,52 +27,43 @@ set(BUNDLE_COMPILATION ON)
 option(BUILD_CAMERAS        "Set to build CAMERAS Module"       ON)
 option(BUILD_VISUALIZERS    "Set to build VISUALIZERS Module"   ON)
 option(BUILD_SLAM           "Set to build SLAM Module"          OFF)
-option(BUILD_PYTHON         "Set to build Python Module"        OFF)
+option(BUILD_PYTHON         "Set to build Python Module"        ON)
 option(BUILD_DNN            "Set to build DNN Module"           OFF)
 option(BUILD_FASTCOM        "Set to build fastcom Module"       ON)
 option(BUILD_ROBOTICS       "Set to build robotics Module"      ON)
 
-SET(MICO_MODULES core)
+SET(MICO_MODULES "" PARENT_SCOPE)
 
 add_subdirectory(nodeeditor)
 add_subdirectory(flow)
 add_subdirectory(core_mplugin)
-
-list(APPEND MICO_MODULES math)
 add_subdirectory(math_mplugin)
 
 if(${BUILD_CAMERAS})
-    list(APPEND MICO_MODULES cameras)
     add_subdirectory(cameras_mplugin)
 endif()
 
 if(${BUILD_SLAM})
-    list(APPEND MICO_MODULES slam)
     add_subdirectory(slam_mplugin)
 endif()
 
 if(${BUILD_VISUALIZERS})
-    list(APPEND MICO_MODULES visualizers)
     add_subdirectory(visualizers_mplugin)
 endif()
 
 if(${BUILD_DNN})
-    list(APPEND MICO_MODULES dnn)
     add_subdirectory(dnn_mplugin)
 endif()
 
 if(${BUILD_PYTHON})
-    list(APPEND MICO_MODULES python)
     add_subdirectory(python_mplugin)
 endif()
 
 if(${BUILD_FASTCOM})
-    list(APPEND MICO_MODULES fastcom)
     add_subdirectory(fastcom_mplugin)
 endif()
 
 if(${BUILD_ROBOTICS})
-    list(APPEND MICO_MODULES robotics)
     add_subdirectory(robotics_mplugin)
 endif()
 
@@ -81,3 +72,33 @@ add_custom_target(flow_install
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/plugins 
                                      $ENV{HOME}/.flow/plugins
 )
+
+
+
+# ----------------------------------------------------------------------------
+# Summary:
+# ----------------------------------------------------------------------------
+message(STATUS "==========================================================================")
+message(STATUS "==========================================================================")
+message(STATUS "")
+message(STATUS "General configuration for mico ${mico_VERSION} ")
+message(STATUS "    Machine:"             ${CMAKE_HOST_SYSTEM_NAME} ${CMAKE_HOST_SYSTEM_VERSION} ${CMAKE_HOST_SYSTEM_PROCESSOR})
+message(STATUS "    CMake:"            ${CMAKE_VERSION})
+message(STATUS "    CMake generator:"  ${CMAKE_GENERATOR})
+message(STATUS "    CMake build tool:" ${CMAKE_BUILD_TOOL})
+message(STATUS "")
+message(STATUS "  C/C++:")
+message(STATUS "    C++ Compiler:"           ${CMAKE_CXX_COMPILER})
+message(STATUS "    C++ flags (Release):"    ${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE})
+message(STATUS "    C++ flags (Debug):"      ${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG})
+message(STATUS "    C Compiler:"             ${CMAKE_C_COMPILER} ${CMAKE_C_COMPILER_ARG1})
+message(STATUS "    C flags (Release):"      ${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RELEASE})
+message(STATUS "    C flags (Debug):"        ${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_DEBUG})
+message(STATUS "    Linker flags (Release):" ${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_SHARED_LINKER_FLAGS_RELEASE})
+message(STATUS "    Linker flags (Debug):"   ${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_SHARED_LINKER_FLAGS_DEBUG})
+message(STATUS "")
+message(STATUS "  mico modules: ${MICO_MODULES}")
+message(STATUS "")
+message(STATUS "  Install to:" "${CMAKE_INSTALL_PREFIX}")
+message(STATUS "==========================================================================")
+message(STATUS "")
