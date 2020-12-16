@@ -31,6 +31,3 @@
 [submodule "robotics_mplugin"]
 	path = robotics_mplugin
 	url = https://github.com/mico-corp/robotics_mplugin.git
-[submodule "arduino_mplugin"]
-	path = arduino_mplugin
-	url = https://github.com/mico-corp/arduino_mplugin
