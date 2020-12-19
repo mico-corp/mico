@@ -22,6 +22,12 @@
 cmake_minimum_required (VERSION 3.12 FATAL_ERROR)
 project(mico VERSION 1.0 LANGUAGES C CXX)
 
+if(WIN32)
+    set(LIBRARY_MODE STATIC)
+elseif(UNIX)
+    set(LIBRARY_MODE SHARED)
+endif()
+
 set(BUNDLE_COMPILATION ON)
 
 option(BUILD_CAMERAS        "Set to build CAMERAS Module"       ON)
@@ -32,7 +38,7 @@ option(BUILD_DNN            "Set to build DNN Module"           OFF)
 option(BUILD_FASTCOM        "Set to build fastcom Module"       ON)
 option(BUILD_ROBOTICS       "Set to build robotics Module"      ON)
 
-SET(MICO_MODULES "" PARENT_SCOPE)
+SET(MICO_MODULES "")
 
 add_subdirectory(nodeeditor)
 add_subdirectory(flow)
@@ -67,7 +73,15 @@ if(${BUILD_ROBOTICS})
     add_subdirectory(robotics_mplugin)
 endif()
 
+
 # Add custom comand for flow install of all selected modules
+set(PLUGINS_DIR "")
+if(WIN32)   
+    set(PLUGINS_DIR "C:/.flow/plugins")
+elseif(UNIX)
+    set(PLUGINS_DIR $ENV{HOME}/.flow/plugins)
+endif()
+
 add_custom_target(flow_install
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/plugins 
                                      $ENV{HOME}/.flow/plugins
