@@ -10,6 +10,7 @@ sudo apt-get install qt5-default libeigen3-dev libboost-all-dev libpcl-dev libop
 
 * Pangolin: https://github.com/stevenlovegrove/Pangolin
 * Pybind11: https://github.com/pybind/pybind11
+* Python3 with numpy
 
 ## Build 
 
