@@ -47,6 +47,7 @@ option(BUILD_PYTHON         "Set to build Python Module"        ON)
 option(BUILD_DNN            "Set to build DNN Module"           OFF)
 option(BUILD_FASTCOM        "Set to build fastcom Module"       ON)
 option(BUILD_ROBOTICS       "Set to build robotics Module"      ON)
+option(BUILD_ARDUINO        "Set to build arduino Module"       ON)
 
 SET(MICO_MODULES "")
 
@@ -83,6 +84,9 @@ if(${BUILD_ROBOTICS})
     add_subdirectory(robotics_mplugin)
 endif()
 
+if(${BUILD_ARDUINO})
+    add_subdirectory(arduino_mplugin)
+endif()
 
 # Add custom comand for flow install of all selected modules
 set(PLUGINS_DIR "")
