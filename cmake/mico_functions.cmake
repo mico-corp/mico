@@ -20,7 +20,7 @@
 ##---------------------------------------------------------------------------------------------------------------------
 
 
-function(add_mplugin)
+macro(add_mplugin)
     set(options "")
     set(oneValueArgs PLUGIN_NAME)
     set(multiValueArgs PLUGIN_SOURCES PLUGIN_HEADERS MICO_DEPS)
@@ -92,34 +92,34 @@ function(add_mplugin)
     add_dependencies(flow_install_${IN_PLUGIN_NAME} ${IN_PLUGIN_NAME})
     add_dependencies(flow_install_${IN_PLUGIN_NAME}_resources ${IN_PLUGIN_NAME})
 
-endfunction(add_mplugin)
+endmacro(add_mplugin)
 
 #----------------------------------------------------------------------------------------------------------------------
-function(mplugin_link_library PLUGIN_NAME TARGET)
+macro(mplugin_link_library PLUGIN_NAME TARGETS)
     target_link_libraries(${PLUGIN_NAME} LINK_PUBLIC ${TARGETS})
 
     if(WIN32)
         set(EXPORTED_PLUGIN_NAME ${PLUGIN_NAME}_mplugin)
         target_link_libraries(${EXPORTED_PLUGIN_NAME} LINK_PUBLIC ${TARGETS})
     endif()
-endfunction(mplugin_link_library)
+endmacro(mplugin_link_library)
 
 #----------------------------------------------------------------------------------------------------------------------
-function(mplugin_include_directory PLUGIN_NAME INCLUDES)
+macro(mplugin_include_directory PLUGIN_NAME INCLUDES)
     target_include_directories(${PLUGIN_NAME} PUBLIC ${INCLUDES})
     
     if(WIN32)
         set(EXPORTED_PLUGIN_NAME ${PLUGIN_NAME}_mplugin)
         target_include_directories(${EXPORTED_PLUGIN_NAME} PUBLIC ${INCLUDES})
     endif()
-endfunction(mplugin_include_directory)
+endmacro(mplugin_include_directory)
 
 #----------------------------------------------------------------------------------------------------------------------
-function(mplugin_compile_definition PLUGIN_NAME DEFINITIONS)
+macro(mplugin_compile_definition PLUGIN_NAME DEFINITIONS)
     target_compile_definitions(${PLUGIN_NAME} PUBLIC ${DEFINITIONS})
     
     if(WIN32)
         set(EXPORTED_PLUGIN_NAME ${PLUGIN_NAME}_mplugin)
         target_compile_definitions(${EXPORTED_PLUGIN_NAME} PUBLIC ${DEFINITIONS})
     endif()
-endfunction(mplugin_compile_definition)
+endmacro(mplugin_compile_definition)
