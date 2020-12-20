@@ -34,26 +34,41 @@ macro(add_mplugin)
     if(NOT ${BUNDLE_COMPILATION})
         find_package(flow REQUIRED)
         if(${flow_FOUND})
-            set(MICO_PLUGIN_LIBRARIES "${MICO_PLUGIN_LIBRARIES} flow::flow")
-            set(MICO_PLUGIN_COMPILE_DEFS "${MICO_PLUGIN_COMPILE_DEFS} HAS_FLOW")
+            set(MICO_PLUGIN_LIBRARIES ${MICO_PLUGIN_LIBRARIES} flow::flow)
+            set(MICO_PLUGIN_COMPILE_DEFS ${MICO_PLUGIN_COMPILE_DEFS} HAS_FLOW)
         endif()
     else()
         set(flow_FOUND TRUE)
-        set(MICO_PLUGIN_LIBRARIES "${MICO_PLUGIN_LIBRARIES} flow")
-        set(MICO_PLUGIN_COMPILE_DEFS "${MICO_PLUGIN_COMPILE_DEFS} HAS_FLOW")
+        set(MICO_PLUGIN_LIBRARIES ${MICO_PLUGIN_LIBRARIES} flow)
+        set(MICO_PLUGIN_COMPILE_DEFS ${MICO_PLUGIN_COMPILE_DEFS} HAS_FLOW)
     endif()
 
+
+    if(${BUNDLE_COMPILATION})
+        set(MICO_PLUGIN_LIBRARIES ${MICO_PLUGIN_LIBRARIES} NodeEditor::nodes)
+        set(MICO_PLUGIN_COMPILE_DEFS ${MICO_PLUGIN_COMPILE_DEFS} HAS_QTNODEEDITOR)
+    else()
+        message(FATAL_ERROR "NOT READY")
+        find_package(NodeEditor REQUIRED)
+        if(${NodeEditor_FOUND})
+            # set(MICO_PLUGIN_INCLUDES "${MICO_PLUGIN_INCLUDES} ${NodeEditor_INCLUDE_DIRS})")
+            # set(MICO_PLUGIN_LIBRARIES "${MICO_PLUGIN_LIBRARIES} ${NodeEditor_LIBRARIES})")
+            # set(MICO_PLUGIN_COMPILE_DEFS "${MICO_PLUGIN_COMPILE_DEFS} HAS_QTNODEEDITOR")
+        endif()
+    endif()
+  
+
     # Get othermico deps
-    foreach(DEP ${MICO_DEPS})
+    foreach(DEP ${IN_MICO_DEPS})
         if(NOT ${BUNDLE_COMPILATION})
             find_package(mico-${DEP} REQUIRED HINTS "/usr/local/lib/cmake/mico")
         endif()
-        set(MICO_PLUGIN_LIBRARIES "${MICO_PLUGIN_LIBRARIES} mico::mico-${DEP}")
+        set(MICO_PLUGIN_LIBRARIES ${MICO_PLUGIN_LIBRARIES} mico-${DEP})
     endforeach()
 
     # Strip linking deps
     string(STRIP "${MICO_PLUGIN_LIBRARIES}" MICO_PLUGIN_LIBRARIES)
-
+    
     # Create library
     add_library(${IN_PLUGIN_NAME} ${LIBRARY_MODE} ${IN_PLUGIN_SOURCES} ${IN_PLUGIN_HEADERS})
     target_compile_features(${IN_PLUGIN_NAME} PUBLIC cxx_std_17)
@@ -62,6 +77,9 @@ macro(add_mplugin)
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
     )
+    if(WIN32)
+        target_include_directories(${IN_PLUGIN_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+    endif()
 
     add_library(${PROJECT_NAME}::${IN_PLUGIN_NAME} ALIAS ${IN_PLUGIN_NAME})
 
@@ -73,7 +91,7 @@ macro(add_mplugin)
     if(WIN32)
         set(EXPORTED_PLUGIN_NAME ${IN_PLUGIN_NAME}_mplugin)
         add_library(${EXPORTED_PLUGIN_NAME} SHARED ${IN_PLUGIN_SOURCES})
-        target_include_directories(${EXPORTED_PLUGIN_NAME} PUBLIC ${MICO_PLUGIN_INCLUDES})
+        target_include_directories(${EXPORTED_PLUGIN_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include ${MICO_PLUGIN_INCLUDES})
         target_link_libraries(${EXPORTED_PLUGIN_NAME} LINK_PUBLIC ${MICO_PLUGIN_LIBRARIES})
         target_compile_definitions(${EXPORTED_PLUGIN_NAME} PUBLIC ${MICO_PLUGIN_COMPILE_DEFS})
     else(UNIX)
