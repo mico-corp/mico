@@ -98,6 +98,8 @@ macro(add_mplugin)
         set(EXPORTED_PLUGIN_NAME ${IN_PLUGIN_NAME} ${IN_PLUGIN_NAME})
     endif()
 
+    #file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/plugins/resources/math)
+
     add_custom_target(flow_install_${IN_PLUGIN_NAME} ALL
                     COMMAND ${CMAKE_COMMAND} -E copy 	$<TARGET_FILE:${EXPORTED_PLUGIN_NAME}>
                     ${CMAKE_BINARY_DIR}/plugins
