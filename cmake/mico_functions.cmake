@@ -21,7 +21,7 @@
 
 
 macro(add_mplugin)
-    set(options "")
+    set(options HAS_RESOURCES)
     set(oneValueArgs PLUGIN_NAME)
     set(multiValueArgs PLUGIN_SOURCES PLUGIN_HEADERS MICO_DEPS)
     cmake_parse_arguments(IN "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
@@ -95,7 +95,7 @@ macro(add_mplugin)
         target_link_libraries(${EXPORTED_PLUGIN_NAME} LINK_PUBLIC ${MICO_PLUGIN_LIBRARIES})
         target_compile_definitions(${EXPORTED_PLUGIN_NAME} PUBLIC ${MICO_PLUGIN_COMPILE_DEFS})
     else(UNIX)
-        set(EXPORTED_PLUGIN_NAME ${IN_PLUGIN_NAME} ${IN_PLUGIN_NAME})
+        set(EXPORTED_PLUGIN_NAME ${IN_PLUGIN_NAME})
     endif()
 
     #file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/plugins/resources/math)
@@ -104,13 +104,16 @@ macro(add_mplugin)
                     COMMAND ${CMAKE_COMMAND} -E copy 	$<TARGET_FILE:${EXPORTED_PLUGIN_NAME}>
                     ${CMAKE_BINARY_DIR}/plugins
     )
-    add_custom_target(flow_install_${IN_PLUGIN_NAME}_resources ALL
-                    COMMAND ${CMAKE_COMMAND} -E copy_directory 	${CMAKE_CURRENT_SOURCE_DIR}/resources 
-                    ${CMAKE_BINARY_DIR}/plugins/resources/math
-    )
+
+    if(${IN_HAS_RESOURCES})
+        add_custom_target(flow_install_${IN_PLUGIN_NAME}_resources ALL
+                        COMMAND ${CMAKE_COMMAND} -E copy_directory 	${CMAKE_CURRENT_SOURCE_DIR}/resources 
+                        ${CMAKE_BINARY_DIR}/plugins/resources
+        )
+        add_dependencies(flow_install_${IN_PLUGIN_NAME}_resources ${IN_PLUGIN_NAME})
+    endif()
 
     add_dependencies(flow_install_${IN_PLUGIN_NAME} ${IN_PLUGIN_NAME})
-    add_dependencies(flow_install_${IN_PLUGIN_NAME}_resources ${IN_PLUGIN_NAME})
 
 endmacro(add_mplugin)
 
@@ -119,8 +122,7 @@ macro(mplugin_link_library PLUGIN_NAME TARGETS)
     target_link_libraries(${PLUGIN_NAME} LINK_PUBLIC ${TARGETS})
 
     if(WIN32)
-        set(EXPORTED_PLUGIN_NAME ${PLUGIN_NAME}_mplugin)
-        target_link_libraries(${EXPORTED_PLUGIN_NAME} LINK_PUBLIC ${TARGETS})
+        target_link_libraries(${PLUGIN_NAME}_mplugin LINK_PUBLIC ${TARGETS})
     endif()
 endmacro(mplugin_link_library)
 
@@ -129,8 +131,7 @@ macro(mplugin_include_directory PLUGIN_NAME INCLUDES)
     target_include_directories(${PLUGIN_NAME} PUBLIC ${INCLUDES})
     
     if(WIN32)
-        set(EXPORTED_PLUGIN_NAME ${PLUGIN_NAME}_mplugin)
-        target_include_directories(${EXPORTED_PLUGIN_NAME} PUBLIC ${INCLUDES})
+        target_include_directories(${PLUGIN_NAME}_mplugin PUBLIC ${INCLUDES})
     endif()
 endmacro(mplugin_include_directory)
 
@@ -139,7 +140,6 @@ macro(mplugin_compile_definition PLUGIN_NAME DEFINITIONS)
     target_compile_definitions(${PLUGIN_NAME} PUBLIC ${DEFINITIONS})
     
     if(WIN32)
-        set(EXPORTED_PLUGIN_NAME ${PLUGIN_NAME}_mplugin)
-        target_compile_definitions(${EXPORTED_PLUGIN_NAME} PUBLIC ${DEFINITIONS})
+        target_compile_definitions(${PLUGIN_NAME}_mplugin PUBLIC ${DEFINITIONS})
     endif()
 endmacro(mplugin_compile_definition)

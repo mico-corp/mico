@@ -46,7 +46,7 @@ option(BUILD_SLAM           "Set to build SLAM Module"          OFF)
 option(BUILD_PYTHON         "Set to build Python Module"        ON)
 option(BUILD_DNN            "Set to build DNN Module"           OFF)
 option(BUILD_FASTCOM        "Set to build fastcom Module"       ON)
-option(BUILD_ROBOTICS       "Set to build robotics Module"      ON)
+option(BUILD_ROBOTICS       "Set to build robotics Module"      OFF)
 option(BUILD_ARDUINO        "Set to build arduino Module"       ON)
 
 SET(MICO_MODULES "")
