@@ -34,6 +34,13 @@ include(cmake/mico_functions.cmake)
 
 if(WIN32)
     set(LIBRARY_MODE STATIC)
+    # if(MSVC)
+    #     add_compile_options(
+    #         $<$<CONFIG:>:/MT> #---------|
+    #         $<$<CONFIG:Debug>:/MTd> #---|-- Statically link the runtime libraries
+    #         $<$<CONFIG:Release>:/MT> #--|
+    #     )
+    # endif()
 elseif(UNIX)
     set(LIBRARY_MODE SHARED)
 endif()
