@@ -31,5 +31,5 @@ macro(micoInstallPcl _installDir)
         endif()
     endif()
     
-    find_package(pcl HINTS ${_installDir}/dependencies REQUIRED)    
+    find_package(PCL HINTS ${_installDir}/dependencies/cmake REQUIRED)    
 endmacro(micoInstallPcl)

@@ -33,3 +33,5 @@ cd build
 cmake .. -DCMAKE_INSTALL_PREFIX=%install_directory% -DBUILD_EXAMPLES=OFF -DBUILD_MATLAB_BINDINGS=OFF -DBUILD_PYTHON_BINDINGS=OFF -DBUILD_TESTS=OFF
 cmake --build . --config Release -j
 cmake --build . --config Release -j --target INSTALL
+cmake --build . --config debug -j
+cmake --build . --config debug -j --target INSTALL

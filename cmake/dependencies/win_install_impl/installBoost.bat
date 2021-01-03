@@ -31,3 +31,4 @@ git submodule init
 git submodule update
 @REM .\bootstrap.bat
 .\b2 variant=release threading=multi install --prefix=%install_directory%
+.\b2 variant=debug threading=multi install --prefix=%install_directory%

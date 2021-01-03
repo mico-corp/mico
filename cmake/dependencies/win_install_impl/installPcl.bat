@@ -33,3 +33,5 @@ cd build
 cmake .. -DCMAKE_INSTALL_PREFIX=%install_directory% -DBoost_INCLUDE_DIR=%install_directory%/include/boost-1_75
 cmake --build . --config Release -j
 cmake --build . --config Release -j --target INSTALL
+cmake --build . --config debug -j
+cmake --build . --config debug -j --target INSTALL
