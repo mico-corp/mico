@@ -55,15 +55,15 @@ macro(loadDefaultMicoDependencies)
         # Install doxygen 666
     else()
         ## Find Qt5
-        find_package(Qt5 5.12)
+        find_package(Qt5 5.12 REQUIRED)
         ## Boost
-        find_package(Boost)
+        find_package(Boost REQUIRED)
         ## Find Eigen
-        find_package(Eigen3)
+        find_package(Eigen3 REQUIRED)
         ## Find OpenCV
-        find_package(OpenCV)
+        find_package(OpenCV REQUIRED)
         ## Find PCL
-        find_package(PCL QUIET)
+        find_package(PCL  QUIET REQUIRED)
         ## Find Doxygen
         find_package(Doxygen)
 
