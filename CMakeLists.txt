@@ -31,6 +31,9 @@ endif()
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/" ${CMAKE_MODULE_PATH})
 
 include(cmake/mico_functions.cmake)
+include(cmake/mico_dependencies.cmake)
+
+loadDefaultMicoDependencies()
 
 if(WIN32)
     set(LIBRARY_MODE STATIC)
