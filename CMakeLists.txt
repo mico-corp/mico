@@ -55,6 +55,7 @@ option(BUILD_VISUALIZERS    "Set to build VISUALIZERS Module"   ON)
 option(BUILD_SLAM           "Set to build SLAM Module"          OFF)
 option(BUILD_PYTHON         "Set to build Python Module"        ON)
 option(BUILD_DNN            "Set to build DNN Module"           OFF)
+option(BUILD_ML             "Set to build ML Module"           ON)
 option(BUILD_FASTCOM        "Set to build fastcom Module"       ON)
 option(BUILD_ROBOTICS       "Set to build robotics Module"      OFF)
 option(BUILD_ARDUINO        "Set to build arduino Module"       ON)
@@ -80,6 +81,10 @@ endif()
 
 if(${BUILD_DNN})
     add_subdirectory(dnn_mplugin)
+endif()
+
+if(${BUILD_ML})
+    add_subdirectory(ml_mplugin)
 endif()
 
 if(${BUILD_PYTHON})

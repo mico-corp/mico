@@ -31,5 +31,5 @@ macro(micoInstallOpencv _installDir)
         endif()
     endif()
     
-    find_package(OpenCV HINTS ${_installDir}/dependencies REQUIRED)    
+    find_package(OpenCV HINTS ${_installDir}/dependencies REQUIRED COMPONENTS core objdetect imgproc highgui)    
 endmacro(micoInstallOpencv)
