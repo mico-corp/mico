@@ -48,6 +48,7 @@ elseif(UNIX)
     set(LIBRARY_MODE SHARED)
 endif()
 
+set(MICO_CLONE_ALL_DEPENDENCIES FALSE)
 set(BUNDLE_COMPILATION ON)
 
 option(BUILD_CAMERAS        "Set to build CAMERAS Module"       ON)

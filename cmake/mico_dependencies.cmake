@@ -30,10 +30,6 @@ include(cmake/dependencies/mico_install_qt5.cmake)
 include(cmake/dependencies/mico_install_dlfcn.cmake)
 
 macro(loadDefaultMicoDependencies)
-    if(NOT MICO_CLONE_ALL_DEPENDENCIES)
-        set(MICO_CLONE_ALL_DEPENDENCIES TRUE)
-    endif()
-
     if(${MICO_CLONE_ALL_DEPENDENCIES})
         if(WIN32)
             set(MICO_ROOT_DIR "c:/users/$ENV{USERNAME}/mico/")
@@ -55,7 +51,7 @@ macro(loadDefaultMicoDependencies)
         # Install doxygen 666
     else()
         ## Find Qt5
-        find_package(Qt5 5.12 REQUIRED)
+        find_package(Qt5 5.12 COMPONENTS Core Widgets REQUIRED)
         ## Boost
         find_package(Boost REQUIRED)
         ## Find Eigen
