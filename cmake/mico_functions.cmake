@@ -143,3 +143,12 @@ macro(mplugin_compile_definition PLUGIN_NAME DEFINITIONS)
         target_compile_definitions(${PLUGIN_NAME}_mplugin PUBLIC ${DEFINITIONS})
     endif()
 endmacro(mplugin_compile_definition)
+
+#----------------------------------------------------------------------------------------------------------------------
+macro(mplugin_compile_private_definition PLUGIN_NAME DEFINITIONS)
+    target_compile_definitions(${PLUGIN_NAME} PRIVATE ${DEFINITIONS})
+    
+    if(WIN32)
+        target_compile_definitions(${PLUGIN_NAME}_mplugin PRIVATE ${DEFINITIONS})
+    endif()
+endmacro(mplugin_compile_private_definition)
