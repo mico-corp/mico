@@ -20,7 +20,7 @@
 ##---------------------------------------------------------------------------------------------------------------------
 
 cmake_minimum_required (VERSION 3.12 FATAL_ERROR)
-project(mico VERSION 1.0 LANGUAGES C CXX)
+project(mico VERSION 1.0.0 LANGUAGES C CXX)
 
 if( NOT CMAKE_BUILD_TYPE )
   set( CMAKE_BUILD_TYPE Release CACHE STRING
@@ -33,6 +33,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/" ${CMAKE_MODULE_PATH})
 include(cmake/mico_functions.cmake)
 include(cmake/mico_dependencies.cmake)
 
+defineRootDir()
 loadDefaultMicoDependencies()
 
 if(WIN32)
