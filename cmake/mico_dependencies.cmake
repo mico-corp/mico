@@ -28,6 +28,7 @@ include(cmake/dependencies/mico_install_pcl.cmake)
 include(cmake/dependencies/mico_install_opencv.cmake)
 include(cmake/dependencies/mico_install_qt5.cmake)
 include(cmake/dependencies/mico_install_dlfcn.cmake)
+include(cmake/dependencies/mico_install_pybind11.cmake)
 
 macro(defineRootDir)
     if(WIN32)
@@ -56,6 +57,10 @@ macro(loadDefaultMicoDependencies)
         micoInstallOpencv(${MICO_ROOT_DIR})
         micoInstallQt5(${MICO_ROOT_DIR})
         micoInstallDlfcn(${MICO_ROOT_DIR})
+
+        if(${BUILD_PYTHON})
+            micoInstallPybind11(${MICO_ROOT_DIR})
+        endif()
 
         # Install doxygen 666
     else()

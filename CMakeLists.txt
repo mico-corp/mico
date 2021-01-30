@@ -33,9 +33,6 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/" ${CMAKE_MODULE_PATH})
 include(cmake/mico_functions.cmake)
 include(cmake/mico_dependencies.cmake)
 
-defineRootDir()
-loadDefaultMicoDependencies()
-
 if(WIN32)
     set(LIBRARY_MODE STATIC)
     # if(MSVC)
@@ -49,7 +46,7 @@ elseif(UNIX)
     set(LIBRARY_MODE SHARED)
 endif()
 
-set(MICO_CLONE_ALL_DEPENDENCIES FALSE)
+set(MICO_CLONE_ALL_DEPENDENCIES TRUE)
 set(BUNDLE_COMPILATION ON)
 
 option(BUILD_CAMERAS        "Set to build CAMERAS Module"       ON)
@@ -63,6 +60,9 @@ option(BUILD_ROBOTICS       "Set to build robotics Module"      OFF)
 option(BUILD_ARDUINO        "Set to build arduino Module"       ON)
 
 SET(MICO_MODULES "")
+
+defineRootDir()
+loadDefaultMicoDependencies()
 
 add_subdirectory(nodeeditor)
 add_subdirectory(flow)
