@@ -22,6 +22,7 @@
 macro(micoInstallPybind11 _installDir)
 
     ## Check that python is already installed and the additional components.
+    set(Python3_ROOT_DIR "C:/Program Files/Python39")
     find_package(Python3 QUIET COMPONENTS Interpreter Development NumPy REQUIRED)
     
     ##Check if already installed
