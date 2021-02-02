@@ -37,3 +37,6 @@
 [submodule "ml_mplugin"]
 	path = ml_mplugin
 	url = https://github.com/mico-corp/ml_mplugin
+[submodule "simulation_mplugin"]
+	path = simulation_mplugin
+	url = https://github.com/mico-corp/simulation_mplugin
