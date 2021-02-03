@@ -62,6 +62,7 @@ option(BUILD_ML             "Set to build ML Module"           ON)
 option(BUILD_FASTCOM        "Set to build fastcom Module"       ON)
 option(BUILD_ROBOTICS       "Set to build robotics Module"      OFF)
 option(BUILD_ARDUINO        "Set to build arduino Module"       ON)
+option(BUILD_SIMULATION     "Set to build simulation Module"       ON)
 
 SET(MICO_MODULES "")
 
@@ -107,6 +108,10 @@ endif()
 
 if(${BUILD_ARDUINO})
     add_subdirectory(arduino_mplugin)
+endif()
+
+if(${BUILD_SIMULATION})
+    add_subdirectory(simulation_mplugin)
 endif()
 
 # Add custom comand for flow install of all selected modules
