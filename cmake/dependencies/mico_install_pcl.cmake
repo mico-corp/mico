@@ -21,14 +21,14 @@
 
 macro(micoInstallPcl _installDir)
     ##Check if already installed
-    if(NOT EXISTS ${_installDir}/dependencies/include/pcl-1.11)
-        if(UNIX)
-            execute_process(COMMAND sudo apt-get install -y libpcl-dev)
-        elseif(WIN32)
+    if(UNIX)
+        execute_process(COMMAND sudo apt-get install -y libpcl-dev)
+    elseif(WIN32)
+        if(NOT EXISTS ${_installDir}/dependencies/include/pcl-1.11)
             execute_process(COMMAND  ${CMAKE_SOURCE_DIR}/cmake/dependencies/win_install_impl/installPcl.bat ${_installDir}/tmp ${_installDir}/dependencies)
-        else()
-            message(FATAL_ERROR "Cannot build for current OS")
         endif()
+    else()
+        message(FATAL_ERROR "Cannot build for current OS")
     endif()
     
     find_package(PCL HINTS ${_installDir}/dependencies/cmake REQUIRED)    

@@ -21,14 +21,14 @@
 
 macro(micoInstallVtk _installDir)
     ##Check if already installed
-    if(NOT EXISTS ${_installDir}/dependencies/include/vtk-8.2)
-        if(UNIX)
-            execute_process(COMMAND sudo apt-get install libvtk-dev)
-        elseif(WIN32)
+    if(UNIX)
+        execute_process(COMMAND sudo apt-get install libvtk-dev)
+    elseif(WIN32)
+        if(NOT EXISTS ${_installDir}/dependencies/include/vtk-8.2)
             execute_process(COMMAND  ${CMAKE_SOURCE_DIR}/cmake/dependencies/win_install_impl/installVtk.bat ${_installDir}/tmp ${_installDir}/dependencies)
-        else()
-            message(FATAL_ERROR "Cannot build for current OS")
         endif()
+    else()
+        message(FATAL_ERROR "Cannot build for current OS")
     endif()
     
     find_package(vtk HINTS ${_installDir}/dependencies REQUIRED)    

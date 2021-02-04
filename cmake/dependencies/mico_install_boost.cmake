@@ -20,15 +20,16 @@
 ##---------------------------------------------------------------------------------------------------------------------
 
 macro(micoInstallBoost _installDir)
-    ##Check if already installed
-    if(NOT EXISTS ${_installDir}/dependencies/include/boost-1_75)
-        if(UNIX)
-            execute_process(COMMAND sudo apt-get install -y libboost-all-dev)
-        elseif(WIN32)
+
+    if(UNIX)
+        execute_process(COMMAND sudo apt-get install -y libboost-all-dev)
+    elseif(WIN32)
+        ##Check if already installed
+        if(NOT EXISTS ${_installDir}/dependencies/include/boost-1_75)
             execute_process(COMMAND  ${CMAKE_SOURCE_DIR}/cmake/dependencies/win_install_impl/installBoost.bat ${_installDir}/tmp ${_installDir}/dependencies)
-        else()
-            message(FATAL_ERROR "Cannot build for current OS")
         endif()
+    else()
+        message(FATAL_ERROR "Cannot build for current OS")
     endif()
     
     find_package(Boost COMPONENTS system filesystem HINTS ${_installDir}/dependencies REQUIRED)

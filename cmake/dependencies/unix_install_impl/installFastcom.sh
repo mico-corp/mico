@@ -22,15 +22,27 @@
 set build_directory=%1
 set install_directory=%2
 
-git clone https://github.com/pybind/pybind11 %build_directory%/pybind11
+@REM ##---------------------------------------------------------------------------------------------------------------------
+git clone https://github.com/zaphoyd/websocketpp %build_directory%/websocketpp
 
-cd %build_directory%/pybind11
+cd %build_directory%/websocketpp
 
 mkdir build
 cd build
 
 cmake .. -DCMAKE_INSTALL_PREFIX=%install_directory%
-cmake --build . --config Release -j
-cmake --build . --config Release -j --target INSTALL
-cmake --build . --config debug -j
-cmake --build . --config debug -j --target INSTALL
+make -j4
+sudo make install
+
+@REM ##---------------------------------------------------------------------------------------------------------------------
+cd %build_directory%
+git clone https://github.com/Bardo91/fastcom %build_directory%/fastcom
+
+cd %build_directory%/fastcom
+
+mkdir build
+cd build
+
+cmake .. -DCMAKE_INSTALL_PREFIX=%install_directory% -DBUILD_EXAMPLES=OFF -DBUILD_TESTS=OFF
+make -j4
+sudo make install

@@ -22,6 +22,7 @@
 set build_directory=%1
 set install_directory=%2
 
+cd %build_directory%
 git clone https://github.com/pybind/pybind11 %build_directory%/pybind11
 
 cd %build_directory%/pybind11
@@ -30,7 +31,5 @@ mkdir build
 cd build
 
 cmake .. -DCMAKE_INSTALL_PREFIX=%install_directory%
-cmake --build . --config Release -j
-cmake --build . --config Release -j --target INSTALL
-cmake --build . --config debug -j
-cmake --build . --config debug -j --target INSTALL
+make -j4
+sudo make install

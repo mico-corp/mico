@@ -21,14 +21,14 @@
 
 macro(micoInstallFastcom _installDir)
     ##Check if already installed
-    if(NOT EXISTS ${_installDir}/dependencies/include/fastcom)
-        if(UNIX)
-            message(FATAL_ERROR "System not ready to auto install fastcom in linux")
-        elseif(WIN32)
+    if(UNIX)
+        execute_process(COMMAND  ${CMAKE_SOURCE_DIR}/cmake/dependencies/unix_install_impl/installFastcom.sh ${_installDir}/tmp ${_installDir}/dependencies)
+    elseif(WIN32)
+        if(NOT EXISTS ${_installDir}/dependencies/include/fastcom)
             execute_process(COMMAND  ${CMAKE_SOURCE_DIR}/cmake/dependencies/win_install_impl/installFastcom.bat ${_installDir}/tmp ${_installDir}/dependencies)
-        else()
-            message(FATAL_ERROR "Cannot build for current OS")
         endif()
+    else()
+        message(FATAL_ERROR "Cannot build for current OS")
     endif()
     
     find_package(fastcom HINTS ${_installDir}/dependencies REQUIRED)    

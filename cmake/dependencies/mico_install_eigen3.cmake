@@ -21,14 +21,14 @@
 
 macro(micoInstallEigen _installDir)
     ##Check if already installed
-    if(NOT EXISTS ${_installDir}/dependencies/include/eigen3)
-        if(UNIX)
-            execute_process(COMMAND sudo apt-get install -y libeigen3-dev)
-        elseif(WIN32)
+    if(UNIX)
+        execute_process(COMMAND sudo apt-get install -y libeigen3-dev)
+    elseif(WIN32)
+        if(NOT EXISTS ${_installDir}/dependencies/include/eigen3)
             execute_process(COMMAND  ${CMAKE_SOURCE_DIR}/cmake/dependencies/win_install_impl/installEigen.bat ${_installDir}/tmp ${_installDir}/dependencies)
-        else()
-            message(FATAL_ERROR "Cannot build for current OS")
         endif()
+    else()
+        message(FATAL_ERROR "Cannot build for current OS")
     endif()
     
     find_package(Eigen3 HINTS ${_installDir}/dependencies REQUIRED)    

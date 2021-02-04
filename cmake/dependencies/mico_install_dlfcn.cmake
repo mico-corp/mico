@@ -21,14 +21,14 @@
 
 macro(micoInstallDlfcn _installDir)
     ##Check if already installed
-    if(NOT EXISTS ${_installDir}/dependencies/include/dlfcn.h)
-        if(UNIX)
-            message(FATAL_ERROR "Not implemented yet in linux")
-        elseif(WIN32)
+    if(UNIX)
+       # In linux is a base library
+    elseif(WIN32)
+        if(NOT EXISTS ${_installDir}/dependencies/include/dlfcn.h)
             execute_process(COMMAND  ${CMAKE_SOURCE_DIR}/cmake/dependencies/win_install_impl/installDlfcn.bat ${_installDir}/tmp ${_installDir}/dependencies)
-        else()
-            message(FATAL_ERROR "Cannot build for current OS")
         endif()
+    else()
+        message(FATAL_ERROR "Cannot build for current OS")
     endif()
     
     find_package(vtk HINTS ${_installDir}/dependencies REQUIRED)    

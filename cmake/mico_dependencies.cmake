@@ -47,7 +47,7 @@ macro(defineRootDir)
 endmacro(defineRootDir)
 
 macro(loadDefaultMicoDependencies)
-    if(${MICO_CLONE_ALL_DEPENDENCIES})
+    if(${MICO_INSTALL_ALL_DEPENDENCIES})
         defineRootDir()
 
         micoInstallBoost(${MICO_ROOT_DIR})

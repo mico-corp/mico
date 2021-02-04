@@ -22,18 +22,20 @@
 macro(micoInstallPybind11 _installDir)
 
     ## Check that python is already installed and the additional components.
-    set(Python3_ROOT_DIR "C:/Program Files/Python39")
+    if(WIN32)
+        set(Python3_ROOT_DIR "C:/Program Files/Python39")
+    endif()
     find_package(Python3 QUIET COMPONENTS Interpreter Development NumPy REQUIRED)
     
     ##Check if already installed
-    if(NOT EXISTS ${_installDir}/dependencies/include/pybind11)
-        if(UNIX)
-            message(FATAL_ERROR "auto install not prepared in unix systems")
-        elseif(WIN32)
+    if(UNIX)
+        execute_process(COMMAND  ${CMAKE_SOURCE_DIR}/cmake/dependencies/unix_install_impl/installPybind11.sh ${_installDir}/tmp ${_installDir}/dependencies)
+    elseif(WIN32)
+        if(NOT EXISTS ${_installDir}/dependencies/include/pybind11)
             execute_process(COMMAND  ${CMAKE_SOURCE_DIR}/cmake/dependencies/win_install_impl/installPybind11.bat ${_installDir}/tmp ${_installDir}/dependencies)
-        else()
-            message(FATAL_ERROR "Cannot build for current OS")
         endif()
+    else()
+        message(FATAL_ERROR "Cannot build for current OS")
     endif()
     
     find_package(pybind11 HINTS ${_installDir}/dependencies/cmake REQUIRED)    
