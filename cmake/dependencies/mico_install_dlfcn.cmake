@@ -31,5 +31,5 @@ macro(micoInstallDlfcn _installDir)
         message(FATAL_ERROR "Cannot build for current OS")
     endif()
     
-    find_package(vtk HINTS ${_installDir}/dependencies REQUIRED)    
+
 endmacro(micoInstallDlfcn)

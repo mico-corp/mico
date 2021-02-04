@@ -22,7 +22,7 @@
 macro(micoInstallFastcom _installDir)
     ##Check if already installed
     if(UNIX)
-        execute_process(COMMAND  ${CMAKE_SOURCE_DIR}/cmake/dependencies/unix_install_impl/installFastcom.sh ${_installDir}/tmp ${_installDir}/dependencies)
+        execute_process(COMMAND bash  ${CMAKE_SOURCE_DIR}/cmake/dependencies/unix_install_impl/installFastcom.sh ${_installDir}/tmp ${_installDir}/dependencies)
     elseif(WIN32)
         if(NOT EXISTS ${_installDir}/dependencies/include/fastcom)
             execute_process(COMMAND  ${CMAKE_SOURCE_DIR}/cmake/dependencies/win_install_impl/installFastcom.bat ${_installDir}/tmp ${_installDir}/dependencies)

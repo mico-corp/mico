@@ -30,9 +30,8 @@ macro(micoInstallQt5 _installDir)
     elseif(WIN32)
         set(HINT_PATH "C:/Qt/5.12.5/msvc2017_64/lib/cmake")
     endif()
-
     ##Check if already installed
-    find_package(Qt5 COMPONENTS Widgets REQUIRED HINTS ${HINT_PATH})  
+    find_package(Qt5 COMPONENTS Widgets HINTS ${HINT_PATH})  
 
     if(NOT ${Qt5_FOUND})
         if(UNIX)
