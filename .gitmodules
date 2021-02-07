@@ -40,3 +40,6 @@
 [submodule "simulation_mplugin"]
 	path = simulation_mplugin
 	url = https://github.com/mico-corp/simulation_mplugin
+[submodule "ar_mplugin"]
+	path = ar_mplugin
+	url = https://github.com/mico-corp/ar_mplugin
