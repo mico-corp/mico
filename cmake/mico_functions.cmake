@@ -118,37 +118,52 @@ macro(add_mplugin)
 endmacro(add_mplugin)
 
 #----------------------------------------------------------------------------------------------------------------------
-macro(mplugin_link_library PLUGIN_NAME TARGETS)
-    target_link_libraries(${PLUGIN_NAME} LINK_PUBLIC ${TARGETS})
+macro(mplugin_link_library)
+    set(options DUMMY)
+    set(oneValueArgs PLUGIN_NAME)
+    set(multiValueArgs PLUGIN_LIBRARIES)
+    cmake_parse_arguments(IN "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+
+    target_link_libraries(${IN_PLUGIN_NAME} LINK_PUBLIC ${IN_PLUGIN_LIBRARIES})
 
     if(WIN32)
-        target_link_libraries(${PLUGIN_NAME}_mplugin LINK_PUBLIC ${TARGETS})
+        target_link_libraries(${IN_PLUGIN_NAME}_mplugin LINK_PUBLIC ${IN_PLUGIN_LIBRARIES})
     endif()
 endmacro(mplugin_link_library)
 
 #----------------------------------------------------------------------------------------------------------------------
-macro(mplugin_include_directory PLUGIN_NAME INCLUDES)
-    target_include_directories(${PLUGIN_NAME} PUBLIC ${INCLUDES})
+macro(mplugin_include_directory)
+    set(options DUMMY)
+    set(oneValueArgs PLUGIN_NAME)
+    set(multiValueArgs PLUGIN_INCLUDES)
+    cmake_parse_arguments(IN "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+
+    target_include_directories(${IN_PLUGIN_NAME} PUBLIC ${IN_PLUGIN_INCLUDES})
     
     if(WIN32)
-        target_include_directories(${PLUGIN_NAME}_mplugin PUBLIC ${INCLUDES})
+        target_include_directories(${IN_PLUGIN_NAME}_mplugin PUBLIC ${IN_PLUGIN_INCLUDES})
     endif()
 endmacro(mplugin_include_directory)
 
 #----------------------------------------------------------------------------------------------------------------------
-macro(mplugin_compile_definition PLUGIN_NAME DEFINITIONS)
-    target_compile_definitions(${PLUGIN_NAME} PUBLIC ${DEFINITIONS})
-    
-    if(WIN32)
-        target_compile_definitions(${PLUGIN_NAME}_mplugin PUBLIC ${DEFINITIONS})
-    endif()
-endmacro(mplugin_compile_definition)
+macro(mplugin_compile_definition)
+    set(options IS_PRIVATE)
+    set(oneValueArgs PLUGIN_NAME)
+    set(multiValueArgs PLUGIN_DEFINITIONS)
+    cmake_parse_arguments(IN "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
 
-#----------------------------------------------------------------------------------------------------------------------
-macro(mplugin_compile_private_definition PLUGIN_NAME DEFINITIONS)
-    target_compile_definitions(${PLUGIN_NAME} PRIVATE ${DEFINITIONS})
-    
-    if(WIN32)
-        target_compile_definitions(${PLUGIN_NAME}_mplugin PRIVATE ${DEFINITIONS})
+    if(IS_PRIVATE)
+        target_compile_definitions(${IN_PLUGIN_NAME} PRIVATE ${IN_PLUGIN_DEFINITIONS})
+        
+        if(WIN32)
+            target_compile_definitions(${IN_PLUGIN_NAME}_mplugin PRIVATE ${IN_PLUGIN_DEFINITIONS})
+        endif()
+    else()
+        target_compile_definitions(${IN_PLUGIN_NAME} PUBLIC ${IN_PLUGIN_DEFINITIONS})
+        
+        if(WIN32)
+            target_compile_definitions(${IN_PLUGIN_NAME}_mplugin PUBLIC ${IN_PLUGIN_DEFINITIONS})
+        endif()
     endif()
-endmacro(mplugin_compile_private_definition)
+    
+endmacro(mplugin_compile_definition)
