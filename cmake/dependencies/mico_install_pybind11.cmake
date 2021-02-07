@@ -25,11 +25,16 @@ macro(micoInstallPybind11 _installDir)
     if(WIN32)
         set(Python3_ROOT_DIR "C:/Program Files/Python39")
     endif()
+    if(UNIX)
+        execute_process(COMMAND sudo apt-get install -y python3-dev python3-pip)
+	execute_process(COMMAND pip3 install numpy opencv-python)
+    endif()
+
     find_package(Python3 QUIET COMPONENTS Interpreter Development NumPy REQUIRED)
     
     ##Check if already installed
     if(UNIX)
-        execute_process(COMMAND  ${CMAKE_SOURCE_DIR}/cmake/dependencies/unix_install_impl/installPybind11.sh ${_installDir}/tmp ${_installDir}/dependencies)
+        execute_process(COMMAND  bash ${CMAKE_SOURCE_DIR}/cmake/dependencies/unix_install_impl/installPybind11.sh ${_installDir}/tmp ${_installDir}/dependencies)
     elseif(WIN32)
         if(NOT EXISTS ${_installDir}/dependencies/include/pybind11)
             execute_process(COMMAND  ${CMAKE_SOURCE_DIR}/cmake/dependencies/win_install_impl/installPybind11.bat ${_installDir}/tmp ${_installDir}/dependencies)

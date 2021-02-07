@@ -32,7 +32,7 @@ macro(micoInstallFlann _installDir)
     endif()
     
     if(UNIX)
-        find_package(flann HINTS ${_installDir}/dependencies REQUIRED)    
+#        find_package(flann HINTS ${_installDir}/dependencies REQUIRED)    
     elseif(WIN32)
         if(EXISTS ${_installDir}/dependencies/include/flann)
             set(FLANN_INCLUDE_DIR ${_installDir}/dependencies/include)
