@@ -30,6 +30,7 @@ include(cmake/dependencies/mico_install_qt5.cmake)
 include(cmake/dependencies/mico_install_dlfcn.cmake)
 include(cmake/dependencies/mico_install_pybind11.cmake)
 include(cmake/dependencies/mico_install_fastcom.cmake)
+include(cmake/dependencies/mico_install_gl_deps.cmake)
 
 macro(defineRootDir)
     if(WIN32)
@@ -66,6 +67,8 @@ macro(loadDefaultMicoDependencies)
         if(${BUILD_PYTHON})
             micoInstallPybind11(${MICO_ROOT_DIR})
         endif()
+
+        micoInstallGl_deps(${MICO_ROOT_DIR})
 
         # Install doxygen 666
     else()
