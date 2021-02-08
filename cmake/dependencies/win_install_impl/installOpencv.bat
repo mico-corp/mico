@@ -23,6 +23,10 @@ set build_directory=%1
 set install_directory=%2
 
 git clone https://github.com/opencv/opencv %build_directory%/opencv
+git clone https://github.com/opencv/opencv_contrib %build_directory%/opencv_contrib
+
+cd %build_directory%/opencv_contrib
+git checkout 4.2.0
 
 cd %build_directory%/opencv
 git checkout 4.2.0
@@ -30,7 +34,7 @@ git checkout 4.2.0
 mkdir build
 cd build
 
-cmake .. -DCMAKE_INSTALL_PREFIX=%install_directory% -DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF 
+cmake .. -DCMAKE_INSTALL_PREFIX=%install_directory% -DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF  -DOPENCV_EXTRA_MODULES_PATH=%build_directory%/opencv_contrib/modules
 cmake --build . --config Release -j
 cmake --build . --config Release -j --target INSTALL
 cmake --build . --config debug -j
