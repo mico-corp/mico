@@ -43,6 +43,6 @@ cd $build_directory/fastcom
 mkdir build
 cd build
 
-cmake .. -DCMAKE_INSTALL_PREFIX -DBUILD_EXAMPLES=OFF -DBUILD_TESTS=OFF
+cmake .. -DCMAKE_INSTALL_PREFIX=$install_directory -DBUILD_EXAMPLES=OFF -DBUILD_TESTS=OFF
 make -j4
 sudo make install

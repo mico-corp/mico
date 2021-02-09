@@ -22,7 +22,7 @@
 macro(micoInstallGl_deps _installDir)
     ##Check if already installed
     if(UNIX)
-        MESSAGE(FATAL_ERROR "Not ready in ubuntu yet")
+    execute_process(COMMAND  sudo apt-get install -y freeglut3-dev libglew-dev)
     elseif(WIN32)
         if(NOT EXISTS ${_installDir}/dependencies/include/GL)
             execute_process(COMMAND  ${CMAKE_SOURCE_DIR}/cmake/dependencies/win_install_impl/installGL_deps.bat ${_installDir}/tmp ${_installDir}/dependencies)
