@@ -92,55 +92,22 @@ FILE_VERSION_FILTER    =
 LAYOUT_FILE            = 
 CITE_BIB_FILES         = 
 
-INPUT                  = @CMAKE_CURRENT_SOURCE_DIR@/include @CMAKE_CURRENT_SOURCE_DIR@/doc
+INPUT                  = @CMAKE_CURRENT_SOURCE_DIR@/ @CMAKE_CURRENT_SOURCE_DIR@/doc
 INPUT_ENCODING         = UTF-8
-FILE_PATTERNS          = *.c \
-                         *.cc \
-                         *.cxx \
-                         *.cpp \
-                         *.c++ \
-                         *.java \
-                         *.ii \
-                         *.ixx \
-                         *.ipp \
-                         *.i++ \
-                         *.inl \
-                         *.idl \
-                         *.ddl \
-                         *.odl \
-                         *.h \
-                         *.hh \
-                         *.hxx \
-                         *.hpp \
-                         *.h++ \
-                         *.cs \
-                         *.d \
-                         *.php \
-                         *.php4 \
-                         *.php5 \
-                         *.phtml \
-                         *.inc \
-                         *.m \
-                         *.markdown \
-                         *.md \
-                         *.mm \
-                         *.dox \
-                         *.py \
-                         *.pyw \
-                         *.f90 \
-                         *.f \
-                         *.for \
-                         *.tcl \
-                         *.vhd \
-                         *.vhdl \
-                         *.ucf \
-                         *.qsf \
-                         *.as \
-                         *.js
+FILE_PATTERNS          = *.h
 RECURSIVE              = YES
 EXCLUDE                = 
 EXCLUDE_SYMLINKS       = NO
-EXCLUDE_PATTERNS       = 
+EXCLUDE_PATTERNS       = nodeeditor/*
+EXCLUDE_PATTERNS       += dnn_mplugin/*
+EXCLUDE_PATTERNS       += slam_mplugin/*
+EXCLUDE_PATTERNS       += */Thirdparty/*
+EXCLUDE_PATTERNS       += */thirdparty/*
+EXCLUDE_PATTERNS       += */3rdParty/*
+EXCLUDE_PATTERNS       += */3rdparty/*
+EXCLUDE_PATTERNS       += */qcustomplot.h
+EXCLUDE_PATTERNS       += build/*
+EXCLUDE_PATTERNS       += cmake/*
 EXCLUDE_SYMBOLS        = 
 EXAMPLE_PATH           = 
 EXAMPLE_PATTERNS       = *
