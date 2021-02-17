@@ -133,6 +133,19 @@ add_custom_target(flow_install
 )
 
 
+##################################################
+######    Documentation.                  ########
+##################################################
+find_package(Doxygen)
+if(DOXYGEN_FOUND)
+	configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
+	add_custom_target(	doc_mico-math
+						${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
+						WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+						COMMENT "Generating API documentation with Doxygen" VERBATIM )
+endif(DOXYGEN_FOUND)
+
+
 
 # ----------------------------------------------------------------------------
 # Summary:
@@ -158,6 +171,6 @@ message(STATUS "    Linker flags (Debug):"   ${CMAKE_SHARED_LINKER_FLAGS} ${CMAK
 message(STATUS "")
 message(STATUS "  mico modules: ${MICO_MODULES}")
 message(STATUS "")
-message(STATUS "  Install to:" "${CMAKE_INSTALL_PREFIX}")
+message(STATUS "  Install to: ${CMAKE_INSTALL_PREFIX}")
 message(STATUS "==========================================================================")
 message(STATUS "")
