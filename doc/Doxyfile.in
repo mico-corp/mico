@@ -92,9 +92,10 @@ FILE_VERSION_FILTER    =
 LAYOUT_FILE            = 
 CITE_BIB_FILES         = 
 
-INPUT                  = @CMAKE_CURRENT_SOURCE_DIR@/ @CMAKE_CURRENT_SOURCE_DIR@/doc
+INPUT                  =    @CMAKE_CURRENT_SOURCE_DIR@/doc/main_page.md \
+                            @CMAKE_CURRENT_SOURCE_DIR@/doc/plugins.md
 INPUT_ENCODING         = UTF-8
-FILE_PATTERNS          = *.h
+FILE_PATTERNS          =    *.h \
 RECURSIVE              = YES
 EXCLUDE                = 
 EXCLUDE_SYMLINKS       = NO
@@ -119,7 +120,6 @@ FILTER_PATTERNS        =
 FILTER_SOURCE_FILES    = NO
 FILTER_SOURCE_PATTERNS = 
 USE_MDFILE_AS_MAINPAGE = @CMAKE_CURRENT_SOURCE_DIR@/doc/main_page.md
-
 SOURCE_BROWSER         = YES
 INLINE_SOURCES         = NO
 STRIP_CODE_COMMENTS    = YES

@@ -1,7 +1,5 @@
 \mainpage MICO 
 
-\image html icon.png width=300px
-
 ---
 ## MICO
 
