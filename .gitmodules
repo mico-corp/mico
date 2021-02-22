@@ -43,3 +43,6 @@
 [submodule "ar_mplugin"]
 	path = ar_mplugin
 	url = https://github.com/mico-corp/ar_mplugin
+[submodule "dvs_mplugin"]
+	path = dvs_mplugin
+	url = https://github.com/mico-corp/dvs_mplugin

@@ -64,6 +64,7 @@ option(BUILD_ROBOTICS       "Set to build robotics Module"      OFF)
 option(BUILD_ARDUINO        "Set to build arduino Module"       ON)
 option(BUILD_SIMULATION     "Set to build simulation Module"       ON)
 option(BUILD_AR             "Set to build AR Module"       ON)
+option(BUILD_DVS            "Set to build DSV Module"       ON)
 
 SET(MICO_MODULES "")
 
@@ -117,6 +118,10 @@ endif()
 
 if(${BUILD_AR})
     add_subdirectory(ar_mplugin)
+endif()
+
+if(${BUILD_DVS})
+    add_subdirectory(dvs_mplugin)
 endif()
 
 # Add custom comand for flow install of all selected modules
