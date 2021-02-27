@@ -97,11 +97,12 @@ FILE_PATTERNS          =    *.h \
                             *.md
 
 RECURSIVE              = YES
-EXCLUDE                =    nodeeditor \
-                            build \
-                            dnn_mplugin \
-                            slam_mplugin \
-                            cmake 
+EXCLUDE                =    @CMAKE_CURRENT_SOURCE_DIR@/nodeeditor \
+                            @CMAKE_CURRENT_SOURCE_DIR@/build \
+                            @CMAKE_CURRENT_SOURCE_DIR@/cmake \
+                            @CMAKE_CURRENT_SOURCE_DIR@/dnn_mplugin \
+                            @CMAKE_CURRENT_SOURCE_DIR@/slam_mplugin
+                            
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       =    */old_src/*         \
                             */Thirdparty/*      \
@@ -109,7 +110,8 @@ EXCLUDE_PATTERNS       =    */old_src/*         \
                             */3rdParty/*        \
                             */3rdparty/*        \
                             */qcustomplot.h     \
-                             
+                            */README.md
+
 EXCLUDE_SYMBOLS        = 
 EXAMPLE_PATH           = 
 EXAMPLE_PATTERNS       = *

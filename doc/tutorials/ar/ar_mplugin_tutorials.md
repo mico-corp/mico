@@ -1,5 +1,5 @@
-# Augmented Reality Plugin tutorials.
-
+Augmented Reality Plugin tutorials {#tutorial_ar_mplugin}
+=================================
 
 ### Camera calibration.
 
