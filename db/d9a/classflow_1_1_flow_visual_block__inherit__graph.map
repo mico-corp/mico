@@ -1,0 +1,6 @@
+<map id="flow::FlowVisualBlock&lt; Block_, HasAutoLoop_ &gt;" name="flow::FlowVisualBlock&lt; Block_, HasAutoLoop_ &gt;">
+<area shape="rect" id="node1" title=" " alt="" coords="133,80,312,121"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,5,120,32"/>
+<area shape="rect" id="node3" href="$df/d30/classflow_1_1_configurable_block.html" title="Interface to allow dynamic cast of MicoBlocks." alt="" coords="145,5,301,32"/>
+<area shape="rect" id="node4" href="$d5/d5b/classflow_1_1_runnable_block.html" title="Interface to allow dynamic cast of MicoBlocks." alt="" coords="325,5,464,32"/>
+</map>
