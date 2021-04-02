@@ -62,84 +62,88 @@ option(BUILD_VISUALIZERS    "Set to build VISUALIZERS Module"   ON)
 option(BUILD_SLAM           "Set to build SLAM Module"          OFF)
 option(BUILD_PYTHON         "Set to build Python Module"        OFF)
 option(BUILD_DNN            "Set to build DNN Module"           OFF)
-option(BUILD_ML             "Set to build ML Module"           ON)
+option(BUILD_ML             "Set to build ML Module"            ON)
 option(BUILD_FASTCOM        "Set to build fastcom Module"       OFF)
 option(BUILD_ROBOTICS       "Set to build robotics Module"      OFF)
 option(BUILD_ARDUINO        "Set to build arduino Module"       ON)
-option(BUILD_SIMULATION     "Set to build simulation Module"       ON)
-option(BUILD_AR             "Set to build AR Module"       ON)
-option(BUILD_DVS            "Set to build DSV Module"       ON)
+option(BUILD_SIMULATION     "Set to build simulation Module"    ON)
+option(BUILD_AR             "Set to build AR Module"            OFF)
+option(BUILD_DVS            "Set to build DSV Module"           OFF)
 
 SET(MICO_MODULES "")
 
 defineRootDir()
-loadDefaultMicoDependencies()
 
-add_subdirectory(nodeeditor)
-add_subdirectory(flow)
-add_subdirectory(core_mplugin)
-add_subdirectory(math_mplugin)
+if(${MICO_INSTALL_ALL_DEPENDENCIES})
+    installMicoDeps()
+else()
+    add_subdirectory(nodeeditor)
+    add_subdirectory(flow)
+    add_subdirectory(core_mplugin)
+    add_subdirectory(math_mplugin)
 
-if(${BUILD_CAMERAS})
-    add_subdirectory(cameras_mplugin)
+    if(${BUILD_CAMERAS})
+        add_subdirectory(cameras_mplugin)
+    endif()
+
+    if(${BUILD_SLAM})
+        add_subdirectory(slam_mplugin)
+    endif()
+
+    if(${BUILD_VISUALIZERS})
+        add_subdirectory(visualizers_mplugin)
+    endif()
+
+    if(${BUILD_DNN})
+        add_subdirectory(dnn_mplugin)
+    endif()
+
+    if(${BUILD_ML})
+        add_subdirectory(ml_mplugin)
+    endif()
+
+    if(${BUILD_PYTHON})
+        add_subdirectory(python_mplugin)
+    endif()
+
+    if(${BUILD_FASTCOM})
+        add_subdirectory(fastcom_mplugin)
+    endif()
+
+    if(${BUILD_ROBOTICS})
+        add_subdirectory(robotics_mplugin)
+    endif()
+
+    if(${BUILD_ARDUINO})
+        add_subdirectory(arduino_mplugin)
+    endif()
+
+    if(${BUILD_SIMULATION})
+        add_subdirectory(simulation_mplugin)
+    endif()
+
+    if(${BUILD_AR})
+        add_subdirectory(ar_mplugin)
+    endif()
+
+    if(${BUILD_DVS})
+        add_subdirectory(dvs_mplugin)
+    endif()
+
+    # Add custom comand for flow install of all selected modules
+    set(PLUGINS_DIR "")
+    if(WIN32)   
+        set(PLUGINS_DIR "C:/.flow/plugins")
+    elseif(UNIX)
+        set(PLUGINS_DIR $ENV{HOME}/.flow/plugins)
+    endif()
+
+    add_custom_target(flow_install
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/plugins 
+                                        $ENV{HOME}/.flow/plugins
+    )
+    
 endif()
-
-if(${BUILD_SLAM})
-    add_subdirectory(slam_mplugin)
-endif()
-
-if(${BUILD_VISUALIZERS})
-    add_subdirectory(visualizers_mplugin)
-endif()
-
-if(${BUILD_DNN})
-    add_subdirectory(dnn_mplugin)
-endif()
-
-if(${BUILD_ML})
-    add_subdirectory(ml_mplugin)
-endif()
-
-if(${BUILD_PYTHON})
-    add_subdirectory(python_mplugin)
-endif()
-
-if(${BUILD_FASTCOM})
-    add_subdirectory(fastcom_mplugin)
-endif()
-
-if(${BUILD_ROBOTICS})
-    add_subdirectory(robotics_mplugin)
-endif()
-
-if(${BUILD_ARDUINO})
-    add_subdirectory(arduino_mplugin)
-endif()
-
-if(${BUILD_SIMULATION})
-    add_subdirectory(simulation_mplugin)
-endif()
-
-if(${BUILD_AR})
-    add_subdirectory(ar_mplugin)
-endif()
-
-if(${BUILD_DVS})
-    add_subdirectory(dvs_mplugin)
-endif()
-
-# Add custom comand for flow install of all selected modules
-set(PLUGINS_DIR "")
-if(WIN32)   
-    set(PLUGINS_DIR "C:/.flow/plugins")
-elseif(UNIX)
-    set(PLUGINS_DIR $ENV{HOME}/.flow/plugins)
-endif()
-
-add_custom_target(flow_install
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/plugins 
-                                     $ENV{HOME}/.flow/plugins
-)
 
 
 ##################################################

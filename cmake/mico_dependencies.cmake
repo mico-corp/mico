@@ -47,43 +47,25 @@ macro(defineRootDir)
 
 endmacro(defineRootDir)
 
-macro(loadDefaultMicoDependencies)
-    if(${MICO_INSTALL_ALL_DEPENDENCIES})
-        defineRootDir()
+macro(installMicoDeps)
+    defineRootDir()
 
-        micoInstallBoost(${MICO_ROOT_DIR})
-        micoInstallEigen(${MICO_ROOT_DIR})
-        micoInstallFlann(${MICO_ROOT_DIR})
-        micoInstallVtk(${MICO_ROOT_DIR})
-        micoInstallPcl(${MICO_ROOT_DIR})
-        micoInstallOpencv(${MICO_ROOT_DIR})
-        micoInstallQt5(${MICO_ROOT_DIR})
-        micoInstallDlfcn(${MICO_ROOT_DIR})
-        
-        if(${BUILD_FASTCOM})
-            micoInstallFastcom(${MICO_ROOT_DIR})
-        endif()
-
-        if(${BUILD_PYTHON})
-            micoInstallPybind11(${MICO_ROOT_DIR})
-        endif()
-
-        micoInstallGl_deps(${MICO_ROOT_DIR})
-
-        # Install doxygen 666
-    else()
-        ## Find Qt5
-        find_package(Qt5 5.12 COMPONENTS Core Widgets REQUIRED)
-        ## Boost
-        find_package(Boost REQUIRED)
-        ## Find Eigen
-        find_package(Eigen3 REQUIRED)
-        ## Find OpenCV
-        find_package(OpenCV REQUIRED)
-        ## Find PCL
-        find_package(PCL  QUIET REQUIRED)
-        ## Find Doxygen
-        find_package(Doxygen)
-
+    micoInstallBoost(${MICO_ROOT_DIR})
+    micoInstallEigen(${MICO_ROOT_DIR})
+    micoInstallFlann(${MICO_ROOT_DIR})
+    micoInstallVtk(${MICO_ROOT_DIR})
+    micoInstallPcl(${MICO_ROOT_DIR})
+    micoInstallOpencv(${MICO_ROOT_DIR})
+    micoInstallQt5(${MICO_ROOT_DIR})
+    micoInstallDlfcn(${MICO_ROOT_DIR})
+    
+    if(${BUILD_FASTCOM})
+        micoInstallFastcom(${MICO_ROOT_DIR})
     endif()
-endmacro(loadDefaultMicoDependencies)
+
+    if(${BUILD_PYTHON})
+        micoInstallPybind11(${MICO_ROOT_DIR})
+    endif()
+
+    micoInstallGl_deps(${MICO_ROOT_DIR})
+endmacro(installMicoDeps)
