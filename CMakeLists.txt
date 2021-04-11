@@ -46,7 +46,7 @@ elseif(UNIX)
     set(LIBRARY_MODE SHARED)
 endif()
 
-option(MICO_INSTALL_ALL_DEPENDENCIES        "Set to install all dependencies"       ON)
+option(MICO_INSTALL_ALL_DEPENDENCIES        "Set to install all dependencies"       OFF)
 
 if(WIN32)
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)

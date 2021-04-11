@@ -83,17 +83,17 @@ macro(add_mplugin)
 
     add_library(${PROJECT_NAME}::${IN_PLUGIN_NAME} ALIAS ${IN_PLUGIN_NAME})
 
-    target_include_directories(${IN_PLUGIN_NAME} PUBLIC ${MICO_PLUGIN_INCLUDES})
-    target_link_libraries(${IN_PLUGIN_NAME} LINK_PUBLIC ${MICO_PLUGIN_LIBRARIES})
-    target_compile_definitions(${IN_PLUGIN_NAME} PUBLIC ${MICO_PLUGIN_COMPILE_DEFS})
+    target_include_directories(${IN_PLUGIN_NAME} PRIVATE ${MICO_PLUGIN_INCLUDES})
+    target_link_libraries(${IN_PLUGIN_NAME} PRIVATE ${MICO_PLUGIN_LIBRARIES})
+    target_compile_definitions(${IN_PLUGIN_NAME} PRIVATE ${MICO_PLUGIN_COMPILE_DEFS})
 
     # Plugin installation target
     if(WIN32)
         set(EXPORTED_PLUGIN_NAME ${IN_PLUGIN_NAME}_mplugin)
         add_library(${EXPORTED_PLUGIN_NAME} SHARED ${IN_PLUGIN_SOURCES})
-        target_include_directories(${EXPORTED_PLUGIN_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include ${MICO_PLUGIN_INCLUDES})
-        target_link_libraries(${EXPORTED_PLUGIN_NAME} LINK_PUBLIC ${MICO_PLUGIN_LIBRARIES})
-        target_compile_definitions(${EXPORTED_PLUGIN_NAME} PUBLIC ${MICO_PLUGIN_COMPILE_DEFS})
+        target_include_directories(${EXPORTED_PLUGIN_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include ${MICO_PLUGIN_INCLUDES})
+        target_link_libraries(${EXPORTED_PLUGIN_NAME} PRIVATE ${MICO_PLUGIN_LIBRARIES})
+        target_compile_definitions(${EXPORTED_PLUGIN_NAME} PRIVATE ${MICO_PLUGIN_COMPILE_DEFS})
     else(UNIX)
         set(EXPORTED_PLUGIN_NAME ${IN_PLUGIN_NAME})
     endif()
@@ -119,50 +119,73 @@ endmacro(add_mplugin)
 
 #----------------------------------------------------------------------------------------------------------------------
 macro(mplugin_link_library)
-    set(options DUMMY)
+    set(options IS_PUBLIC)
     set(oneValueArgs PLUGIN_NAME)
     set(multiValueArgs PLUGIN_LIBRARIES)
     cmake_parse_arguments(IN "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
 
-    target_link_libraries(${IN_PLUGIN_NAME} LINK_PUBLIC ${IN_PLUGIN_LIBRARIES})
-
-    if(WIN32)
-        target_link_libraries(${IN_PLUGIN_NAME}_mplugin LINK_PUBLIC ${IN_PLUGIN_LIBRARIES})
+    if(${IN_PLUGIN_NAME} STREQUAL "mico-visualizers")
+        message(WARNING "I AM IN ${IN_PLUGIN_LIBRARIES}")
     endif()
+
+    if(IS_PUBLIC)
+        target_link_libraries(${IN_PLUGIN_NAME} PUBLIC ${IN_PLUGIN_LIBRARIES})
+
+        if(WIN32)
+            target_link_libraries(${IN_PLUGIN_NAME}_mplugin PUBLIC ${IN_PLUGIN_LIBRARIES})
+        endif()
+    else()
+        target_link_libraries(${IN_PLUGIN_NAME} PRIVATE ${IN_PLUGIN_LIBRARIES})
+
+        if(WIN32)
+            target_link_libraries(${IN_PLUGIN_NAME}_mplugin PRIVATE ${IN_PLUGIN_LIBRARIES})
+        endif()
+    endif()
+
+    
 endmacro(mplugin_link_library)
 
 #----------------------------------------------------------------------------------------------------------------------
 macro(mplugin_include_directory)
-    set(options DUMMY)
+    set(options IS_PUBLIC)
     set(oneValueArgs PLUGIN_NAME)
     set(multiValueArgs PLUGIN_INCLUDES)
     cmake_parse_arguments(IN "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
 
-    target_include_directories(${IN_PLUGIN_NAME} PUBLIC ${IN_PLUGIN_INCLUDES})
-    
-    if(WIN32)
-        target_include_directories(${IN_PLUGIN_NAME}_mplugin PUBLIC ${IN_PLUGIN_INCLUDES})
+    if(IS_PUBLIC)
+        target_include_directories(${IN_PLUGIN_NAME} PUBLIC ${PLUGIN_INCLUDES})
+        
+        if(WIN32)
+            target_include_directories(${IN_PLUGIN_NAME}_mplugin PUBLIC ${PLUGIN_INCLUDES})
+        endif()
+    else()
+        target_include_directories(${IN_PLUGIN_NAME} PRIVATE ${PLUGIN_INCLUDES})
+            
+        if(WIN32)
+            target_include_directories(${IN_PLUGIN_NAME}_mplugin PRIVATE ${DEP})
+        endif()
     endif()
+
 endmacro(mplugin_include_directory)
 
 #----------------------------------------------------------------------------------------------------------------------
 macro(mplugin_compile_definition)
-    set(options IS_PRIVATE)
+    set(options IS_PUBLIC)
     set(oneValueArgs PLUGIN_NAME)
     set(multiValueArgs PLUGIN_DEFINITIONS)
     cmake_parse_arguments(IN "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
 
-    if(IS_PRIVATE)
-        target_compile_definitions(${IN_PLUGIN_NAME} PRIVATE ${IN_PLUGIN_DEFINITIONS})
-        
-        if(WIN32)
-            target_compile_definitions(${IN_PLUGIN_NAME}_mplugin PRIVATE ${IN_PLUGIN_DEFINITIONS})
-        endif()
-    else()
+    if(IS_PUBLIC)
         target_compile_definitions(${IN_PLUGIN_NAME} PUBLIC ${IN_PLUGIN_DEFINITIONS})
         
         if(WIN32)
             target_compile_definitions(${IN_PLUGIN_NAME}_mplugin PUBLIC ${IN_PLUGIN_DEFINITIONS})
+        endif()
+    else()
+        target_compile_definitions(${IN_PLUGIN_NAME} PRIVATE ${IN_PLUGIN_DEFINITIONS})
+        
+        if(WIN32)
+            target_compile_definitions(${IN_PLUGIN_NAME}_mplugin PRIVATE ${IN_PLUGIN_DEFINITIONS})
         endif()
     endif()
     
