@@ -19,55 +19,11 @@
 ##  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ##---------------------------------------------------------------------------------------------------------------------
 
-include(ExternalProject)
-include(cmake/dependencies/mico_install_boost.cmake)
-include(cmake/dependencies/mico_install_eigen3.cmake)
-include(cmake/dependencies/mico_install_flann.cmake)
-include(cmake/dependencies/mico_install_vtk.cmake)
-include(cmake/dependencies/mico_install_pcl.cmake)
-include(cmake/dependencies/mico_install_opencv.cmake)
-include(cmake/dependencies/mico_install_qt5.cmake)
-include(cmake/dependencies/mico_install_dlfcn.cmake)
-include(cmake/dependencies/mico_install_pybind11.cmake)
-include(cmake/dependencies/mico_install_fastcom.cmake)
-include(cmake/dependencies/mico_install_gl_deps.cmake)
-include(cmake/dependencies/mico_install_raspicam.cmake)
-
-macro(defineRootDir)
-    if(WIN32)
-        set(MICO_ROOT_DIR "c:/users/$ENV{USERNAME}/mico/")
-    elseif(UNIX)
-        set(MICO_ROOT_DIR "/home/$ENV{USER}/mico/")        
-    else()
-        set(MICO_ROOT_DIR "${CMAKE_CURRENT_BINARY_DIR/mico/")
+macro(micoInstallRaspicam _installDir)
+    ##Check if already installed
+    if(UNIX)
+            execute_process(COMMAND  ${CMAKE_SOURCE_DIR}/cmake/dependencies/unix_install_impl/installRaspicam.sh ${_installDir}/tmp ${_installDir}/dependencies)
     endif()
 
-    if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-        set(CMAKE_INSTALL_PREFIX ${MICO_ROOT_DIR})
-    endif() 
-
-endmacro(defineRootDir)
-
-macro(installMicoDeps)
-    defineRootDir()
-
-    micoInstallBoost(${MICO_ROOT_DIR})
-    micoInstallEigen(${MICO_ROOT_DIR})
-    micoInstallFlann(${MICO_ROOT_DIR})
-    micoInstallVtk(${MICO_ROOT_DIR})
-    micoInstallPcl(${MICO_ROOT_DIR})
-    micoInstallOpencv(${MICO_ROOT_DIR})
-    micoInstallQt5(${MICO_ROOT_DIR})
-    micoInstallDlfcn(${MICO_ROOT_DIR})
-    micoInstallRaspicam(${MICO_ROOT_DIR})
-    
-    if(${BUILD_FASTCOM})
-        micoInstallFastcom(${MICO_ROOT_DIR})
-    endif()
-
-    if(${BUILD_PYTHON})
-        micoInstallPybind11(${MICO_ROOT_DIR})
-    endif()
-
-    micoInstallGl_deps(${MICO_ROOT_DIR})
-endmacro(installMicoDeps)
+    find_package(OpenCV HINTS ${_installDir}/dependencies REQUIRED )    
+endmacro(micoInstallRaspicam)
