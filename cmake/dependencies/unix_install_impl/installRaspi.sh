@@ -19,11 +19,26 @@
 ##  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ##---------------------------------------------------------------------------------------------------------------------
 
-macro(micoInstallRaspicam _installDir)
-    ##Check if already installed
-    if(UNIX)
-            execute_process(COMMAND  ${CMAKE_SOURCE_DIR}/cmake/dependencies/unix_install_impl/installRaspicam.sh ${_installDir}/tmp ${_installDir}/dependencies)
-    endif()
+build_directory=%1
+install_directory=%2
 
-    find_package(OpenCV HINTS ${_installDir}/dependencies REQUIRED )    
-endmacro(micoInstallRaspicam)
+cd $build_directory
+git clone https://github.com/rmsalinas/raspicam $build_directory/raspicam
+
+cd $build_directory/raspicam
+
+mkdir build
+cd build
+
+cmake .. -DCMAKE_INSTALL_PREFIX=$install_directory -DBUILD_UTILS=OFF -DBUILD_TESTS=OFF
+cmake --build . --config Release -j
+cmake --build . --config Release -j --target INSTALL
+cmake --build . --config debug -j
+cmake --build . --config debug -j --target INSTALL
+
+cd $build_directory
+wget https://github.com/joan2937/pigpio/archive/master.zip
+unzip master.zip
+cd pigpio-master
+make
+sudo make install
