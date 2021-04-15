@@ -28,6 +28,9 @@ if( NOT CMAKE_BUILD_TYPE )
        FORCE )
 endif()
 
+include(cmake/mico_functions.cmake)
+detect_OS()
+
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/" ${CMAKE_MODULE_PATH})
 
 include(cmake/mico_functions.cmake)
@@ -168,6 +171,7 @@ message(STATUS "================================================================
 message(STATUS "")
 message(STATUS "General configuration for mico ${mico_VERSION} ")
 message(STATUS "    Machine:"             ${CMAKE_HOST_SYSTEM_NAME} ${CMAKE_HOST_SYSTEM_VERSION} ${CMAKE_HOST_SYSTEM_PROCESSOR})
+message(STATUS "    Target OS: "            ${TARGET_OS})
 message(STATUS "    CMake:"            ${CMAKE_VERSION})
 message(STATUS "    CMake generator:"  ${CMAKE_GENERATOR})
 message(STATUS "    CMake build tool:" ${CMAKE_BUILD_TOOL})

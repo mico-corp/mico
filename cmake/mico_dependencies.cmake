@@ -59,8 +59,11 @@ macro(installMicoDeps)
     micoInstallOpencv(${MICO_ROOT_DIR})
     micoInstallQt5(${MICO_ROOT_DIR})
     micoInstallDlfcn(${MICO_ROOT_DIR})
-    micoInstallRaspi(${MICO_ROOT_DIR})
-    
+
+    if(${TARGET_OS} STREQUAL "Raspbian")
+       micoInstallRaspi(${MICO_ROOT_DIR})
+    endif()
+
     if(${BUILD_FASTCOM})
         micoInstallFastcom(${MICO_ROOT_DIR})
     endif()
