@@ -20,6 +20,29 @@
 ##---------------------------------------------------------------------------------------------------------------------
 
 
+#----------------------------------------------------------------------------------------------------------------------
+macro(detect_OS)
+    if(UNIX AND APPLE)	
+        set(TARGET_OS mac)
+    elseif(UNIX)
+        find_program(LSB_RELEASE_EXEC lsb_release)
+        execute_process(COMMAND ${LSB_RELEASE_EXEC} -is
+            OUTPUT_VARIABLE LSB_RELEASE_ID_SHORT
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+        set(TARGET_OS ${LSB_RELEASE_ID_SHORT})
+        if(${TARGET_OS} STREQUAL "")
+            set(TARGET_OS Linux)
+        endif()
+    elseif(WIN32)
+        set(TARGET_OS Windows)
+    else()
+        set(TARGET_OS Unknown)
+    endif()
+    
+endmacro(detect_OS)
+
+
 macro(add_mplugin)
     set(options HAS_RESOURCES)
     set(oneValueArgs PLUGIN_NAME)
@@ -190,24 +213,3 @@ macro(mplugin_compile_definition)
     endif()
     
 endmacro(mplugin_compile_definition)
-
-
-
-#----------------------------------------------------------------------------------------------------------------------
-macro(detect_OS)
-    if(UNIX AND APPLE)	
-        set(TARGET_OS mac)
-    elseif(UNIX)
-	find_program(LSB_RELEASE_EXEC lsb_release)
-	execute_process(COMMAND ${LSB_RELEASE_EXEC} -is
-	    OUTPUT_VARIABLE LSB_RELEASE_ID_SHORT
-	    OUTPUT_STRIP_TRAILING_WHITESPACE
-	)
-	set(TARGET_OS ${LSB_RELEASE_ID_SHORT})
-    elseif(WIN32)
-        set(TARGET_OS Windows)
-    else()
-        set(TARGET_OS Unknown)
-    endif()
-    
-endmacro(detect_OS)
