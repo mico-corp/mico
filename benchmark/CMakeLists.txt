@@ -23,3 +23,7 @@
 add_executable(benchmark_flow benchmark_flow.cpp)
 target_link_libraries(benchmark_flow PRIVATE flow)
 
+find_package(OpenCV 4.2 REQUIRED)
+set_target_properties(${OpenCV_LIBS} PROPERTIES MAP_IMPORTED_CONFIG_RELWITHDEBINFO RELEASE)
+target_include_directories(benchmark_flow PRIVATE ${OpenCV_INCLUDE_DIRS})
+target_link_libraries(benchmark_flow PRIVATE ${OpenCV_LIBS})
