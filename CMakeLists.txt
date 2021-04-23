@@ -73,6 +73,8 @@ option(BUILD_SIMULATION     "Set to build simulation Module"    ON)
 option(BUILD_AR             "Set to build AR Module"            OFF)
 option(BUILD_DVS            "Set to build DSV Module"           OFF)
 
+option(BUILD_BENCHMARK      "Set to build Benchmarks"           OFF)
+
 SET(MICO_MODULES "")
 
 defineRootDir()
@@ -132,6 +134,11 @@ else()
     if(${BUILD_DVS})
         add_subdirectory(dvs_mplugin)
     endif()
+
+    if(${BUILD_BENCHMARK})
+        add_subdirectory(benchmark)
+    endif()
+
 
     # Add custom comand for flow install of all selected modules
     set(PLUGINS_DIR "")

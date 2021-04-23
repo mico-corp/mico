@@ -1,7 +1,7 @@
 DOXYFILE_ENCODING      = UTF-8
 PROJECT_NAME           = MICO
 PROJECT_NUMBER         = @mico_VERSION@
-PROJECT_BRIEF          = "Modular Interchangeable Computer prOgraming"
+PROJECT_BRIEF          = "Modular Interchangeable Computer prOgramming"
 PROJECT_LOGO           = @CMAKE_CURRENT_SOURCE_DIR@/doc/resources/icon.png
 OUTPUT_DIRECTORY       = @CMAKE_CURRENT_BINARY_DIR@/doc
 CREATE_SUBDIRS         = YES
