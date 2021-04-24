@@ -32,24 +32,31 @@
 
 using namespace flow;
 
-double singleIntStream(int nIters);
-void multipleIntStream();
+void singleIntStream(int nIters);
+void multipleIntStream(int nStreamer, int nIters);
 void singleCvStream();
 
 int main(void){
 
-    ThreadPool::init(std::thread::hardware_concurrency());
+    ThreadPool::init(4);
 
     {
         std::vector<double> sIters = {1e1,1e2,1e3,1e4,1e5};
         for(auto i: sIters) singleIntStream(i);
     }
 
-    multipleIntStream();
+    {
+        std::vector<double> nStreamers = {5, 10, 20, 50};
+        for(auto s:nStreamers){
+            multipleIntStream(s, 1000);
+        }
+
+    }
+
 }
 
 
-double singleIntStream(int nIters){
+void singleIntStream(int nIters){
     auto pol1 = new Policy( { makeInput<int>("pol1") } );
     auto pipe1 = new Outpipe("pol1", typeid(int).name());
 
@@ -96,10 +103,7 @@ double singleIntStream(int nIters){
 }
 
 
-void multipleIntStream(){
-
-    int nStreams = 50;
-    int nIters = 1e3;
+void multipleIntStream(int nStreams, int nIters){
     std::vector<Policy*> policies(nStreams);
     std::vector<Outpipe*> pipes(nStreams);
     std::vector<std::thread> callers(nStreams);
@@ -148,13 +152,24 @@ void multipleIntStream(){
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
+
+    std::ofstream file("bm_flow_multiInt_"+std::to_string(nStreams)+"_"+std::to_string(nIters)+".txt");
+
+
     long iters = 0;
     double acc = 0;
-    for(auto ts:times){
-        acc += std::accumulate(ts.second.begin(), ts.second.end(), 0);
-        iters += ts.second.size();
+    for(auto &[id, subTimes]:times){
+        for(auto &t: subTimes){
+            file << t << ",";
+            acc += t / nIters*nStreams;
+        }
+        file << std::endl;
     }
-    double avg = acc / iters;
-    std::cout << "Benchmark multithread: "  << avg << "ns" << std::endl;
+    std::cout << "Benchmark multithread: "  << acc << "ns" << std::endl;
+    file.close();
 
+
+    for(auto &caller:callers){
+        caller.join();
+    }
 }

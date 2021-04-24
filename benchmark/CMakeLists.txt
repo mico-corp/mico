@@ -31,7 +31,8 @@ target_link_libraries(benchmark_flow PRIVATE ${OpenCV_LIBS})
 find_package(catkin COMPONENTS roscpp)
 if(${catkin_FOUND})
     add_executable(benchmark_ros benchmark_ros.cpp)
+    target_compile_features(benchmark_ros PRIVATE cxx_std_17)
     target_link_libraries(benchmark_ros PRIVATE ${catkin_LIBRARIES})
     target_include_directories(benchmark_ros PRIVATE ${catkin_INCLUDE_DIRS})
-
+    
 endif()

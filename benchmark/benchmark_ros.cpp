@@ -32,7 +32,7 @@
 #include <map>
 
 void singleIntStream(int nIters);
-void multipleIntStream();
+void multipleIntStream(int nStreams, int nIters);
 void singleCvStream();
 
 int main(int _argc, char** _argv){
@@ -45,7 +45,13 @@ int main(int _argc, char** _argv){
         for(auto i: sIters) singleIntStream(i);
     }
 
-    ros::waitForShutdown();
+    {
+        std::vector<double> nStreamers = {5, 10, 20, 50};
+        for(auto s:nStreamers){
+            multipleIntStream(s, 1000);
+        }
+
+    }
 
 }
 
@@ -93,65 +99,71 @@ void singleIntStream(int nIters){
 }
 
 
-// void multipleIntStream(){
+void multipleIntStream(int nStreams, int nIters){
+    ros::NodeHandle nh;
 
-//     int nStreams = 50;
-//     int nIters = 1e3;
-//     std::vector<Policy*> policies(nStreams);
-//     std::vector<Outpipe*> pipes(nStreams);
-//     std::vector<std::thread> callers(nStreams);
+    std::vector<ros::Subscriber> policies(nStreams);
+    std::vector<ros::Publisher> pipes(nStreams);
+    std::vector<std::thread> callers(nStreams);
 
-//     std::map<int, std::vector<double>> times;
-//     std::map<int, std::vector<std::chrono::system_clock::time_point>> t0s;
+    std::map<int, std::vector<double>> times;
+    std::map<int, std::vector<std::chrono::system_clock::time_point>> t0s;
+
+    boost::function<void(const std_msgs::Int32, int)> cb = [&](const std_msgs::Int32 &_data, int _id){
+        auto t1 = std::chrono::system_clock::now();
+        int i = _data.data;
+        times[_id][i] = std::chrono::duration_cast<std::chrono::nanoseconds>(t1-t0s[_id][i]).count();
+    };
+
+
+    std::mutex m;
+    std::condition_variable cv;
     
-//     std::mutex m;
-//     std::condition_variable cv;
-    
-//     for(unsigned i = 0; i < nStreams;i++){
-//         times[i] = std::vector<double>(nIters);
-//         t0s[i] = std::vector<std::chrono::system_clock::time_point>(nIters);
+    for(unsigned i = 0; i < nStreams;i++){
+        times[i] = std::vector<double>(nIters);
+        t0s[i] = std::vector<std::chrono::system_clock::time_point>(nIters);
 
-//         policies[i] = new Policy( { makeInput<int>("pol1") } );
-//         pipes[i] = new Outpipe("pol1", typeid(int).name());
+        boost::function<void(const std_msgs::Int32)> cbf =  boost::bind(cb, boost::placeholders::_1, i);
+        policies[i] = nh.subscribe<std_msgs::Int32>("topic"+std::to_string(i), 0,cbf);
+        pipes[i] = nh.advertise<std_msgs::Int32>("topic"+std::to_string(i), 0);
 
 
-//         pipes[i]->registerPolicy(policies[i], "pol1");
-//         policies[i]->registerCallback({"pol1"},
-//         std::bind([&](DataFlow _data, int id){
-//             auto t1 = std::chrono::system_clock::now();
-//             int iter = _data.get<int>("pol1");
-//             times[id][iter] = std::chrono::duration_cast<std::chrono::nanoseconds>(t1-t0s[id][iter]).count();
-//             // printf("Id %d, iter %d\n", id, iter);
-//         }, std::placeholders::_1, i));
+        callers[i] = std::thread(std::bind(
+            [&](int id){
+                std::unique_lock<std::mutex> lk(m);
+                cv.wait(lk);
 
-//         callers[i] = std::thread(std::bind(
-//             [&](int id){
-//                 std::unique_lock<std::mutex> lk(m);
-//                 cv.wait(lk);
-
-//                 for(int iter = 0 ; iter < nIters ; iter++){
-//                     t0s[id][iter] = std::chrono::system_clock::now();
-//                     pipes[id]->flush(iter);
-//                 }
-//             }, i)
-//             );
-//     }
+                for(int iter = 0 ; iter < nIters ; iter++){
+                    t0s[id][iter] = std::chrono::system_clock::now();
+                    std_msgs::Int32 data;
+                    data.data = iter;
+                    pipes[id].publish(data);
+                }
+            }, i)
+            );
+    }
 
 
-//     cv.notify_all();
-//     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    cv.notify_all();
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
-//     while(ThreadPool::get()->queueSize()){
-//         std::this_thread::sleep_for(std::chrono::milliseconds(10));
-//     }
+    std::ofstream file("bm_ros_multiInt_"+std::to_string(nStreams)+"_"+std::to_string(nIters)+".txt");
 
-//     long iters = 0;
-//     double acc = 0;
-//     for(auto ts:times){
-//         acc += std::accumulate(ts.second.begin(), ts.second.end(), 0);
-//         iters += ts.second.size();
-//     }
-//     double avg = acc / iters;
-//     std::cout << "Benchmark multithread: "  << avg << "ns" << std::endl;
 
-// }
+    long iters = 0;
+    double acc = 0;
+    for(auto &[id, subTimes]:times){
+        for(auto &t: subTimes){
+            file << t << ",";
+            acc += t / nIters*nStreams;
+        }
+        file << std::endl;
+    }
+    std::cout << "Benchmark multithread: "  << acc << "ns" << std::endl;
+    file.close();
+
+
+    for(auto &caller:callers){
+        caller.join();
+    }
+}
