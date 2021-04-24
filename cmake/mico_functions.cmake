@@ -147,10 +147,6 @@ macro(mplugin_link_library)
     set(multiValueArgs PLUGIN_LIBRARIES)
     cmake_parse_arguments(IN "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
 
-    if(${IN_PLUGIN_NAME} STREQUAL "mico-visualizers")
-        message(WARNING "I AM IN ${IN_PLUGIN_LIBRARIES}")
-    endif()
-
     if(IS_PUBLIC)
         target_link_libraries(${IN_PLUGIN_NAME} PUBLIC ${IN_PLUGIN_LIBRARIES})
 
