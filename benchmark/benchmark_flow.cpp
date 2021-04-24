@@ -27,28 +27,38 @@
 #include <mutex>
 #include <algorithm>
 #include <map>
+#include <fstream>
+#include <vector>
 
 using namespace flow;
 
-void singleIntStream();
+double singleIntStream(int nIters);
 void multipleIntStream();
 void singleCvStream();
 
 int main(void){
-    singleIntStream();
-    multipleIntStream();
 
+    ThreadPool::init(std::thread::hardware_concurrency());
+
+    {
+        std::vector<double> sIters = {1e1,1e2,1e3,1e4,1e5};
+        for(auto i: sIters) singleIntStream(i);
+    }
+
+    multipleIntStream();
 }
 
 
-void singleIntStream(){
+double singleIntStream(int nIters){
     auto pol1 = new Policy( { makeInput<int>("pol1") } );
     auto pipe1 = new Outpipe("pol1", typeid(int).name());
+
+
+    std::ofstream file("bm_flow_singleInt_"+std::to_string(nIters)+".txt");
 
     std::mutex m;
     std::condition_variable cv;
     
-    int nIters = 1e5;
     std::vector<double> times(nIters);
     std::vector<std::chrono::system_clock::time_point> t0s(nIters);
 
@@ -72,10 +82,17 @@ void singleIntStream(){
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
-    double acc = std::accumulate(times.begin(), times.end(), 0);
-    double avg = acc / times.size();
-    std::cout << "Avg time int flush: "  << avg << "ns" << std::endl;
+    double acc = 0;
+    std::for_each(times.begin(), times.end(), [&](double _a) { 
+        acc += _a/nIters; 
+        file << _a << ",";
+    });
+    file << std::endl;
+    std::cout << "Avg time int flush: "  << acc << "ns" << std::endl;
 
+    file.flush();
+    file.close();
+    
 }
 
 

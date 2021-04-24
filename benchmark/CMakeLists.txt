@@ -27,3 +27,11 @@ find_package(OpenCV 4.2 REQUIRED)
 set_target_properties(${OpenCV_LIBS} PROPERTIES MAP_IMPORTED_CONFIG_RELWITHDEBINFO RELEASE)
 target_include_directories(benchmark_flow PRIVATE ${OpenCV_INCLUDE_DIRS})
 target_link_libraries(benchmark_flow PRIVATE ${OpenCV_LIBS})
+
+find_package(catkin COMPONENTS roscpp)
+if(${catkin_FOUND})
+    add_executable(benchmark_ros benchmark_ros.cpp)
+    target_link_libraries(benchmark_ros PRIVATE ${catkin_LIBRARIES})
+    target_include_directories(benchmark_ros PRIVATE ${catkin_INCLUDE_DIRS})
+
+endif()
