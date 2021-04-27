@@ -1,0 +1,6 @@
+get_filename_component(mico_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+include(CMakeFindDependencyMacro)
+
+if(NOT TARGET mico::mico-visualizers)
+    include("${mico_CMAKE_DIR}/mico-visualizers-targets.cmake")
+endif()

@@ -1,0 +1,9 @@
+get_filename_component(mico_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+include(CMakeFindDependencyMacro)
+
+find_package(OpenCV REQUIRED)
+find_package(PCL  QUIET REQUIRED)
+
+if(NOT TARGET mico::mico-core)
+    include("${mico_CMAKE_DIR}/mico-core-targets.cmake")
+endif()
