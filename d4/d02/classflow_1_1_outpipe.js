@@ -1,7 +1,8 @@
 var classflow_1_1_outpipe =
 [
     [ "Outpipe", "d4/d02/classflow_1_1_outpipe.html#ac1db9d6dc5b1dd6323f1541eb61cf8b0", null ],
-    [ "flush", "d4/d02/classflow_1_1_outpipe.html#a27006b3638278c224ca7801e0c2759cf", null ],
+    [ "Outpipe", "d4/d02/classflow_1_1_outpipe.html#ae89489eef6ffa123b66a6cce29a4946c", null ],
+    [ "flush", "d4/d02/classflow_1_1_outpipe.html#a11c527b45d1f94be2211b0bac6012d71", null ],
     [ "registerPolicy", "d4/d02/classflow_1_1_outpipe.html#a5bd9a730d30c178953eae7a07ed09957", null ],
     [ "registrations", "d4/d02/classflow_1_1_outpipe.html#a7b54d71988eed5f58f231ec42cf7f2a4", null ],
     [ "tag", "d4/d02/classflow_1_1_outpipe.html#ab3081e66a7fff2650c65ad9f51e24a48", null ],

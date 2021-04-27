@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['harrisdetector_79',['HarrisDetector',['../d6/d48/classmico_1_1dvs_1_1_harris_detector.html',1,'mico::dvs']]],
-  ['highlightingrule_80',['HighlightingRule',['../da/dfa/class_highlighting_rule.html',1,'']]]
+  ['get_77',['get',['../df/d89/classflow_1_1_data_flow.html#ad8db4cbb3cd601b671e1e2297ceb0cfe',1,'flow::DataFlow']]],
+  ['getparambyname_78',['getParamByName',['../da/dc0/classflow_1_1_block.html#af34e99e284e96e25969b60f2f10aa160',1,'flow::Block']]],
+  ['getpipe_79',['getPipe',['../da/dc0/classflow_1_1_block.html#ac75e2d283728880e0f664e991edd46fa',1,'flow::Block']]],
+  ['getpolicy_80',['getPolicy',['../da/dc0/classflow_1_1_block.html#a08758b4316ab7bff1dd4ef544aa7eee7',1,'flow::Block']]]
 ];

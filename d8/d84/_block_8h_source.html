@@ -29,7 +29,7 @@
    <div id="projectname">MICO
    &#160;<span id="projectnumber">1.0.0</span>
    </div>
-   <div id="projectbrief">Modular Interchangeable Computer prOgraming</div>
+   <div id="projectbrief">Modular Interchangeable Computer prOgramming</div>
   </td>
  </tr>
  </tbody>
@@ -121,12 +121,12 @@ $(document).ready(function(){initNavTree('d8/d84/_block_8h_source.html','../../'
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &lt;unordered_map&gt;</span></div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &lt;any&gt;</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &lt;boost/any.hpp&gt;</span></div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &lt;flow/Policy.h&gt;</span></div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#include &lt;flow/Outpipe.h&gt;</span></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &lt;tuple&gt;</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &lt;any&gt;</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &lt;boost/any.hpp&gt;</span></div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#include &lt;QtCore/QObject&gt;</span></div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#include &lt;QBoxLayout&gt;</span></div>
@@ -140,12 +140,12 @@ $(document).ready(function(){initNavTree('d8/d84/_block_8h_source.html','../../'
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <span class="keyword">enum</span> eParameterType { BOOLEAN, INTEGER, DECIMAL, STRING, OPTIONS };</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        std::string name_;</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        eParameterType type_;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        std::any value_;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keywordtype">bool</span>                     asBool()<span class="keyword">       const </span>{ assert(type_ == eParameterType::BOOLEAN); <span class="keywordflow">return</span> std::any_cast&lt;bool&gt;(value_); };</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="keywordtype">int</span>                      asInteger()<span class="keyword">    const </span>{ assert(type_ == eParameterType::INTEGER); <span class="keywordflow">return</span> std::any_cast&lt;int&gt;(value_); };</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keywordtype">float</span>                    asDecimal()<span class="keyword">    const </span>{ assert(type_ == eParameterType::DECIMAL); <span class="keywordflow">return</span> std::any_cast&lt;float&gt;(value_); };</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        std::string              asString()<span class="keyword">     const </span>{ assert(type_ == eParameterType::STRING);  <span class="keywordflow">return</span> std::any_cast&lt;std::string&gt;(value_); };</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        std::vector&lt;std::string&gt; asOptions()<span class="keyword">    const </span>{ assert(type_ == eParameterType::OPTIONS); <span class="keywordflow">return</span> std::any_cast&lt;std::vector&lt;std::string&gt;&gt;(value_); };</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        boost::any value_;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keywordtype">bool</span>                     asBool()<span class="keyword">       const </span>{ assert(type_ == eParameterType::BOOLEAN); <span class="keywordflow">return</span> boost::any_cast&lt;bool&gt;(value_); };</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="keywordtype">int</span>                      asInteger()<span class="keyword">    const </span>{ assert(type_ == eParameterType::INTEGER); <span class="keywordflow">return</span> boost::any_cast&lt;int&gt;(value_); };</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keywordtype">float</span>                    asDecimal()<span class="keyword">    const </span>{ assert(type_ == eParameterType::DECIMAL); <span class="keywordflow">return</span> boost::any_cast&lt;float&gt;(value_); };</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        std::string              asString()<span class="keyword">     const </span>{ assert(type_ == eParameterType::STRING);  <span class="keywordflow">return</span> boost::any_cast&lt;std::string&gt;(value_); };</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        std::vector&lt;std::string&gt; asOptions()<span class="keyword">    const </span>{ assert(type_ == eParameterType::OPTIONS); <span class="keywordflow">return</span> boost::any_cast&lt;std::vector&lt;std::string&gt;&gt;(value_); };</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    };</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    </div>
@@ -169,7 +169,7 @@ $(document).ready(function(){initNavTree('d8/d84/_block_8h_source.html','../../'
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
 <div class="line"><a name="l00090"></a><span class="lineno"><a class="line" href="../../da/dc0/classflow_1_1_block.html#a2d7300594bba43e9e70c28e89026360c">   90</a></span>&#160;        <span class="keywordtype">void</span> <a class="code" href="../../da/dc0/classflow_1_1_block.html#a2d7300594bba43e9e70c28e89026360c">stop</a>();</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        </div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <span class="comment">// void operator()(std::unordered_map&lt;std::string,std::any&gt; _data, std::unordered_map&lt;std::string,bool&gt; _valid);</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <span class="comment">// void operator()(std::unordered_map&lt;std::string,boost::any&gt; _data, std::unordered_map&lt;std::string,bool&gt; _valid);</span></div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
 <div class="line"><a name="l00095"></a><span class="lineno"><a class="line" href="../../da/dc0/classflow_1_1_block.html#aa0e78f54bfa1db9957d047775bc046e6">   95</a></span>&#160;        <span class="keywordtype">int</span> <a class="code" href="../../da/dc0/classflow_1_1_block.html#aa0e78f54bfa1db9957d047775bc046e6">nInputs</a>();</div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
@@ -193,7 +193,7 @@ $(document).ready(function(){initNavTree('d8/d84/_block_8h_source.html','../../'
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160; </div>
 <div class="line"><a name="l00126"></a><span class="lineno"><a class="line" href="../../da/dc0/classflow_1_1_block.html#a47313a2af59bc1fdda7dc9b729bfd6cf">  126</a></span>&#160;        <span class="keyword">virtual</span> std::string <a class="code" href="../../da/dc0/classflow_1_1_block.html#a47313a2af59bc1fdda7dc9b729bfd6cf">description</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> <span class="stringliteral">&quot;Flow block without description&quot;</span>;};</div>
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160; </div>
-<div class="line"><a name="l00129"></a><span class="lineno"><a class="line" href="../../da/dc0/classflow_1_1_block.html#a86266043232e7b8ed1e5ff59ac9c8398">  129</a></span>&#160;        <span class="keyword">virtual</span> QIcon <a class="code" href="../../da/dc0/classflow_1_1_block.html#a86266043232e7b8ed1e5ff59ac9c8398">icon</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> QIcon((Persistency::resourceDir()+<span class="stringliteral">&quot;question.svg&quot;</span>).c_str()); };</div>
+<div class="line"><a name="l00129"></a><span class="lineno"><a class="line" href="../../da/dc0/classflow_1_1_block.html#a86266043232e7b8ed1e5ff59ac9c8398">  129</a></span>&#160;        <span class="keyword">virtual</span> QIcon <a class="code" href="../../da/dc0/classflow_1_1_block.html#a86266043232e7b8ed1e5ff59ac9c8398">icon</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> QIcon((Persistency::resourceDir()/<span class="stringliteral">&quot;question.svg&quot;</span>).<span class="keywordtype">string</span>().c_str()); };</div>
 <div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160; </div>
 <div class="line"><a name="l00132"></a><span class="lineno"><a class="line" href="../../da/dc0/classflow_1_1_block.html#af34e99e284e96e25969b60f2f10aa160">  132</a></span>&#160;        std::optional&lt;ConfigParameterDef&gt; <a class="code" href="../../da/dc0/classflow_1_1_block.html#af34e99e284e96e25969b60f2f10aa160">getParamByName</a>(<span class="keyword">const</span> std::vector&lt;flow::ConfigParameterDef&gt; &amp;_params, <span class="keyword">const</span> std::string &amp;_pname);</div>
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160; </div>

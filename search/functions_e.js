@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['writestring_341',['writeString',['../d1/df4/class_serial_port.html#aad40abfc621df73b304d2f0f4900ea31',1,'SerialPort::writeString(std::string s)'],['../d1/df4/class_serial_port.html#aeae19f22ae235e46d6f5e6bf6953f9fe',1,'SerialPort::writeString(std::string s)']]]
+  ['unregisterpolicy_349',['unregisterPolicy',['../d4/d02/classflow_1_1_outpipe.html#ae4a67bc47f025a271aa7744e4dc4df0a',1,'flow::Outpipe']]],
+  ['update_350',['update',['../df/d89/classflow_1_1_data_flow.html#aa19bb7275146cc326756d96833b11eba',1,'flow::DataFlow']]]
 ];

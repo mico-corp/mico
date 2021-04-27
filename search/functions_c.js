@@ -1,7 +1,9 @@
 var searchData=
 [
-  ['tag_335',['tag',['../d4/d02/classflow_1_1_outpipe.html#ab3081e66a7fff2650c65ad9f51e24a48',1,'flow::Outpipe::tag()'],['../d3/dfe/classflow_1_1_policy_input.html#a671651d58032d79b11887aae41a03564',1,'flow::PolicyInput::tag()']]],
-  ['togglebuttonblock_336',['ToggleButtonBlock',['../d5/dae/classmico_1_1arduino_1_1_toggle_button_block.html#a18092ac059608126a84e814fec9cd767',1,'mico::arduino::ToggleButtonBlock']]],
-  ['type_337',['type',['../d4/d02/classflow_1_1_outpipe.html#aeb974e2621fef2cb91983b9307f06047',1,'flow::Outpipe']]],
-  ['typename_338',['typeName',['../d3/dfe/classflow_1_1_policy_input.html#af0b860744dc9fff1679fe89bb18b0b89',1,'flow::PolicyInput']]]
+  ['serialport_339',['SerialPort',['../d1/df4/class_serial_port.html#ac84d3956f10b5baa1ad289d60ba6ffb3',1,'SerialPort::SerialPort(std::string _port, unsigned int _baudRate)'],['../d1/df4/class_serial_port.html#a192b90817089bf0760ec2b96356d3045',1,'SerialPort::SerialPort(std::string port, unsigned int baud_rate)']]],
+  ['signalswitcher_340',['SignalSwitcher',['../d5/dd9/classmico_1_1arduino_1_1_signal_switcher.html#a8d2d377cfac6f9d19e925dfd4facb982',1,'mico::arduino::SignalSwitcher']]],
+  ['sliderpwm_341',['SliderPwm',['../d1/d9e/classmico_1_1arduino_1_1_slider_pwm.html#a90e0845b4e97f51f66441c2427dd0936',1,'mico::arduino::SliderPwm']]],
+  ['start_342',['start',['../da/dc0/classflow_1_1_block.html#a02a05374d71f8d774a21c010a400aa87',1,'flow::Block']]],
+  ['stop_343',['stop',['../da/dc0/classflow_1_1_block.html#a2d7300594bba43e9e70c28e89026360c',1,'flow::Block']]],
+  ['streamwebcam_344',['StreamWebcam',['../d6/daf/classmico_1_1cameras_1_1_stream_webcam.html#a56321c3e847e3ca202d7250a6efd0544',1,'mico::cameras::StreamWebcam']]]
 ];

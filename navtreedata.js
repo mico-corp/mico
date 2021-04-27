@@ -26,8 +26,8 @@ var NAVTREE =
 [
   [ "MICO", "index.html", [
     [ "What is MICO?", "index.html#what_is_mico", null ],
-    [ "Examples", "index.html#autotoc_md4", null ],
-    [ "Mico tutorials", "d6/d4f/tutorial_table_of_content.html", "d6/d4f/tutorial_table_of_content" ],
+    [ "Examples", "index.html#autotoc_md14", null ],
+    [ "Content list MICO Wiki", "d8/d2a/content_list_mico_wiki.html", "d8/d2a/content_list_mico_wiki" ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],
@@ -36,9 +36,6 @@ var NAVTREE =
         [ "All", "functions.html", "functions_dup" ],
         [ "Functions", "functions_func.html", "functions_func" ]
       ] ]
-    ] ],
-    [ "Files", "files.html", [
-      [ "File List", "files.html", "files_dup" ]
     ] ]
   ] ]
 ];
@@ -46,9 +43,9 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d5/da6/classmico_1_1dvs_1_1_local_event_queues.html#a4eb0986973d4bda4b00a097b5fff070d",
-"da/d83/classmico_1_1math_1_1_block_timer.html",
-"de/d1d/_cmd_parser_8h_source.html"
+"d6/d48/classmico_1_1dvs_1_1_harris_detector.html#a4d769a073b909cf924c2d34bd6b9a001",
+"da/dc0/classflow_1_1_block.html#a6449095590cf9df18fa9b182e0cee6de",
+"df/d96/classmico_1_1arduino_1_1_and_operator.html#a435fdfce3e2d856c87d4a05cfcd19b58"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

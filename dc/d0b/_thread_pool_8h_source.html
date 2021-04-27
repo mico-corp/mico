@@ -29,7 +29,7 @@
    <div id="projectname">MICO
    &#160;<span id="projectnumber">1.0.0</span>
    </div>
-   <div id="projectbrief">Modular Interchangeable Computer prOgraming</div>
+   <div id="projectbrief">Modular Interchangeable Computer prOgramming</div>
   </td>
  </tr>
  </tbody>
@@ -133,23 +133,29 @@ $(document).ready(function(){initNavTree('dc/d0b/_thread_pool_8h_source.html','.
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="keywordtype">void</span> emplace(Task _task);</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        ~<a class="code" href="../../dc/d68/classflow_1_1_thread_pool.html">ThreadPool</a>();</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <a class="code" href="../../dc/d68/classflow_1_1_thread_pool.html">ThreadPool</a>(<span class="keywordtype">size_t</span> _nThreads);</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="keyword">static</span> std::shared_ptr&lt;ThreadPool&gt; instance_;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;      </div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="../../dc/d68/classflow_1_1_thread_pool.html#a5b111574f4483c42fbf9b64e4d03c721">   51</a></span>&#160;        <span class="keywordtype">unsigned</span> <a class="code" href="../../dc/d68/classflow_1_1_thread_pool.html#a5b111574f4483c42fbf9b64e4d03c721">queueSize</a>() {</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;            <span class="keywordflow">return</span> tasks_.size();</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        }</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        </div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        std::queue&lt;Task&gt; tasks_;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keywordtype">bool</span> isRunning_=<span class="keyword">true</span>;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="keywordtype">int</span> nThreads_;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        std::vector&lt;std::thread&gt; threads_;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        std::condition_variable waitEvent_;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        std::mutex  threadLock_;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    };</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;}</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <a class="code" href="../../dc/d68/classflow_1_1_thread_pool.html">ThreadPool</a>(<span class="keywordtype">size_t</span> _nThreads);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="keyword">static</span> std::shared_ptr&lt;ThreadPool&gt; instance_;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        </div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        std::queue&lt;Task&gt; tasks_;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="keywordtype">bool</span> isRunning_=<span class="keyword">true</span>;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="keywordtype">int</span> nThreads_;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        std::vector&lt;std::thread&gt; threads_;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        std::condition_variable waitEvent_;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        std::mutex  threadLock_;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    };</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;}</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclassflow_1_1_thread_pool_html"><div class="ttname"><a href="../../dc/d68/classflow_1_1_thread_pool.html">flow::ThreadPool</a></div><div class="ttdef"><b>Definition:</b> <a href="../../dc/d0b/_thread_pool_8h_source.html#l00039">ThreadPool.h:39</a></div></div>
+<div class="ttc" id="aclassflow_1_1_thread_pool_html_a5b111574f4483c42fbf9b64e4d03c721"><div class="ttname"><a href="../../dc/d68/classflow_1_1_thread_pool.html#a5b111574f4483c42fbf9b64e4d03c721">flow::ThreadPool::queueSize</a></div><div class="ttdeci">unsigned queueSize()</div><div class="ttdoc">Get size of task queue.</div><div class="ttdef"><b>Definition:</b> <a href="../../dc/d0b/_thread_pool_8h_source.html#l00051">ThreadPool.h:51</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

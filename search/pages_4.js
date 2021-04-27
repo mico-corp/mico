@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['python_20plugin_20tutorials_358',['Python Plugin tutorials',['../d5/d86/tutorial_python_mplugin.html',1,'tutorial_table_of_content']]]
+  ['how_20to_20create_20a_20mico_20block_366',['How to create a MICO block',['../d5/db3/create_mico_block.html',1,'content_list_mico_wiki']]],
+  ['how_20to_20install_20mico_367',['How to install MICO',['../df/d82/install_mico.html',1,'content_list_mico_wiki']]]
 ];

@@ -29,7 +29,7 @@
    <div id="projectname">MICO
    &#160;<span id="projectnumber">1.0.0</span>
    </div>
-   <div id="projectbrief">Modular Interchangeable Computer prOgraming</div>
+   <div id="projectbrief">Modular Interchangeable Computer prOgramming</div>
   </td>
  </tr>
  </tbody>
@@ -139,9 +139,9 @@ $(document).ready(function(){initNavTree('dc/d6a/_face_detectors_8h_source.html'
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            <span class="keywordtype">bool</span> idle_ = <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            std::map&lt;std::string, std::string&gt; detectors = {</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;                {<span class="stringliteral">&quot;Face detector&quot;</span>,  flow::Persistency::resourceDir() + <span class="stringliteral">&quot;/ml/haarcascade_frontalface_alt.xml&quot;</span>},</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;                {<span class="stringliteral">&quot;Body detector&quot;</span>,  flow::Persistency::resourceDir() + <span class="stringliteral">&quot;/ml/haarcascade_fullbody.xml&quot;</span>},</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;                {<span class="stringliteral">&quot;Upperbody detector&quot;</span>,  flow::Persistency::resourceDir() + <span class="stringliteral">&quot;/ml/haarcascade_upperbody.xml&quot;</span>}</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;                {<span class="stringliteral">&quot;Face detector&quot;</span>,  (flow::Persistency::resourceDir() / <span class="stringliteral">&quot;ml&quot;</span>/<span class="stringliteral">&quot;haarcascade_frontalface_alt.xml&quot;</span>).<span class="keywordtype">string</span>()},</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;                {<span class="stringliteral">&quot;Body detector&quot;</span>,  (flow::Persistency::resourceDir() / <span class="stringliteral">&quot;ml&quot;</span>/<span class="stringliteral">&quot;haarcascade_fullbody.xml&quot;</span>).<span class="keywordtype">string</span>()},</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;                {<span class="stringliteral">&quot;Upperbody detector&quot;</span>,  (flow::Persistency::resourceDir() / <span class="stringliteral">&quot;ml&quot;</span>/<span class="stringliteral">&quot;haarcascade_upperbody.xml&quot;</span>).<span class="keywordtype">string</span>()}</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            };</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        };</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>

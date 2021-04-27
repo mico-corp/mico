@@ -29,7 +29,7 @@
    <div id="projectname">MICO
    &#160;<span id="projectnumber">1.0.0</span>
    </div>
-   <div id="projectbrief">Modular Interchangeable Computer prOgraming</div>
+   <div id="projectbrief">Modular Interchangeable Computer prOgramming</div>
   </td>
  </tr>
  </tbody>
@@ -102,10 +102,10 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d89/classflow_1_1_data_flow.html#a246c23ef957d8a02d019499f92a84b90">DataFlow</a> (std::map&lt; std::string, std::string &gt; _flows, std::function&lt; void(<a class="el" href="../../df/d89/classflow_1_1_data_flow.html">DataFlow</a> _f)&gt; _callback)</td></tr>
 <tr class="memdesc:a246c23ef957d8a02d019499f92a84b90"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a data flow with a set if input flows and associate a callback to it. <br /></td></tr>
 <tr class="separator:a246c23ef957d8a02d019499f92a84b90"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a96cef94d60f8297d936f7747b9d7e94b"><td class="memItemLeft" align="right" valign="top"><a id="a96cef94d60f8297d936f7747b9d7e94b"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d89/classflow_1_1_data_flow.html#a96cef94d60f8297d936f7747b9d7e94b">update</a> (std::string _tag, std::any _data)</td></tr>
-<tr class="memdesc:a96cef94d60f8297d936f7747b9d7e94b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update an specific input tag. If all the inputs have been satisfied then the callback is called. <br /></td></tr>
-<tr class="separator:a96cef94d60f8297d936f7747b9d7e94b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa19bb7275146cc326756d96833b11eba"><td class="memItemLeft" align="right" valign="top"><a id="aa19bb7275146cc326756d96833b11eba"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d89/classflow_1_1_data_flow.html#aa19bb7275146cc326756d96833b11eba">update</a> (std::string _tag, boost::any _data)</td></tr>
+<tr class="memdesc:aa19bb7275146cc326756d96833b11eba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update an specific input tag. If all the inputs have been satisfied then the callback is called. <br /></td></tr>
+<tr class="separator:aa19bb7275146cc326756d96833b11eba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae03f0120a6b687436fe9e767d0fb4ce3"><td class="memItemLeft" align="right" valign="top"><a id="ae03f0120a6b687436fe9e767d0fb4ce3"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d89/classflow_1_1_data_flow.html#ae03f0120a6b687436fe9e767d0fb4ce3">checkData</a> ()</td></tr>
 <tr class="memdesc:ae03f0120a6b687436fe9e767d0fb4ce3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query to check internal status of data and update the <a class="el" href="../../df/d89/classflow_1_1_data_flow.html">DataFlow</a>. <br /></td></tr>
@@ -119,10 +119,10 @@ template&lt;typename T_ &gt; </td></tr>
 float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d89/classflow_1_1_data_flow.html#a5db32caf2f6e2263cb6513663a83d03a">frequency</a> () const</td></tr>
 <tr class="memdesc:a5db32caf2f6e2263cb6513663a83d03a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current frequency at which the <a class="el" href="../../df/d89/classflow_1_1_data_flow.html">DataFlow</a> is triggering the callback. <br /></td></tr>
 <tr class="separator:a5db32caf2f6e2263cb6513663a83d03a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa45b36757e82f0da6808a282c97aa0a2"><td class="memItemLeft" align="right" valign="top"><a id="aa45b36757e82f0da6808a282c97aa0a2"></a>
+<tr class="memitem:a23f04cfa331638a479fdc0cec1c14cb9"><td class="memItemLeft" align="right" valign="top"><a id="a23f04cfa331638a479fdc0cec1c14cb9"></a>
 template&lt;&gt; </td></tr>
-<tr class="memitem:aa45b36757e82f0da6808a282c97aa0a2"><td class="memTemplItemLeft" align="right" valign="top">std::any&#160;</td><td class="memTemplItemRight" valign="bottom"><b>get</b> (std::string const &amp;_tag)</td></tr>
-<tr class="separator:aa45b36757e82f0da6808a282c97aa0a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23f04cfa331638a479fdc0cec1c14cb9"><td class="memTemplItemLeft" align="right" valign="top">boost::any&#160;</td><td class="memTemplItemRight" valign="bottom"><b>get</b> (std::string const &amp;_tag)</td></tr>
+<tr class="separator:a23f04cfa331638a479fdc0cec1c14cb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -132,18 +132,15 @@ static bool&#160;</td><td class="memItemRight" valign="bottom"><b>checkIfConvers
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:ada07e420a77ab65feba095f63a26c0fb"><td class="memItemLeft" align="right" valign="top"><a id="ada07e420a77ab65feba095f63a26c0fb"></a>
-static std::map&lt; std::string, std::map&lt; std::string, std::function&lt; std::any(std::any &amp;)&gt; &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>conversions_</b></td></tr>
-<tr class="separator:ada07e420a77ab65feba095f63a26c0fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a485d910cda87ed37c30f3fdbd15b19f9"><td class="memItemLeft" align="right" valign="top"><a id="a485d910cda87ed37c30f3fdbd15b19f9"></a>
+static std::map&lt; std::string, std::map&lt; std::string, std::function&lt; boost::any(boost::any &amp;)&gt; &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>conversions_</b></td></tr>
+<tr class="separator:a485d910cda87ed37c30f3fdbd15b19f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Base class of flow that a flow of data. It manages the implicit conversion of data through the streams and call the associated callbacks. It is used in input policies to generate automatic data flows. </p>
 
 <p class="definition">Definition at line <a class="el" href="../../dd/d8c/_data_flow_8h_source.html#l00043">43</a> of file <a class="el" href="../../dd/d8c/_data_flow_8h_source.html">DataFlow.h</a>.</p>
-</div><hr/>The documentation for this class was generated from the following file:<ul>
-<li>C:/Users/Bardo91/Desktop/mico/flow/include/flow/<a class="el" href="../../dd/d8c/_data_flow_8h_source.html">DataFlow.h</a></li>
-</ul>
-</div><!-- contents -->
+</div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->

@@ -29,7 +29,7 @@
    <div id="projectname">MICO
    &#160;<span id="projectnumber">1.0.0</span>
    </div>
-   <div id="projectbrief">Modular Interchangeable Computer prOgraming</div>
+   <div id="projectbrief">Modular Interchangeable Computer prOgramming</div>
   </td>
  </tr>
  </tbody>
@@ -123,7 +123,7 @@ $(document).ready(function(){initNavTree('db/de3/_stream_webcam_8h_source.html',
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="keyword">public</span>:</div>
 <div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="../../d6/daf/classmico_1_1cameras_1_1_stream_webcam.html#aa26335fc61378b52adb5af36bb556c8f">   37</a></span>&#160;            <span class="keyword">virtual</span> std::string <a class="code" href="../../d6/daf/classmico_1_1cameras_1_1_stream_webcam.html#aa26335fc61378b52adb5af36bb556c8f">name</a>()<span class="keyword"> const override </span>{<span class="keywordflow">return</span> <span class="stringliteral">&quot;Streamer Webcam&quot;</span>;}     </div>
 <div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="../../d6/daf/classmico_1_1cameras_1_1_stream_webcam.html#a99d69c5da5a718625b9a18895521ee2c">   39</a></span>&#160;                <span class="keyword">virtual</span> QIcon <a class="code" href="../../d6/daf/classmico_1_1cameras_1_1_stream_webcam.html#a99d69c5da5a718625b9a18895521ee2c">icon</a>()<span class="keyword"> const override </span>{ </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;                <span class="keywordflow">return</span> QIcon((flow::Persistency::resourceDir() + <span class="stringliteral">&quot;cameras/webcam_icon.svg&quot;</span>).c_str());</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;                <span class="keywordflow">return</span> QIcon((flow::Persistency::resourceDir() / <span class="stringliteral">&quot;cameras&quot;</span>/<span class="stringliteral">&quot;webcam_icon.svg&quot;</span>).<span class="keywordtype">string</span>().c_str());</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;            }</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;            </div>
 <div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="../../d6/daf/classmico_1_1cameras_1_1_stream_webcam.html#a56321c3e847e3ca202d7250a6efd0544">   44</a></span>&#160;            <a class="code" href="../../d6/daf/classmico_1_1cameras_1_1_stream_webcam.html#a56321c3e847e3ca202d7250a6efd0544">StreamWebcam</a>();</div>

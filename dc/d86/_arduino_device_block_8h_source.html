@@ -29,7 +29,7 @@
    <div id="projectname">MICO
    &#160;<span id="projectnumber">1.0.0</span>
    </div>
-   <div id="projectbrief">Modular Interchangeable Computer prOgraming</div>
+   <div id="projectbrief">Modular Interchangeable Computer prOgramming</div>
   </td>
  </tr>
  </tbody>
@@ -127,7 +127,7 @@ $(document).ready(function(){initNavTree('dc/d86/_arduino_device_block_8h_source
 <div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="../../da/d42/classmico_1_1arduino_1_1_arduino_device_block.html#a05a524fdc2fc8a4b23fbdd4df9571699">   41</a></span>&#160;            <span class="keyword">virtual</span> std::string <a class="code" href="../../da/d42/classmico_1_1arduino_1_1_arduino_device_block.html#a05a524fdc2fc8a4b23fbdd4df9571699">name</a>()<span class="keyword"> const override </span>{<span class="keywordflow">return</span> <span class="stringliteral">&quot;Arduino Device&quot;</span>;} </div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
 <div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="../../da/d42/classmico_1_1arduino_1_1_arduino_device_block.html#a98ec033e4ee00f250df6ef0df6b02ae0">   44</a></span>&#160;            <span class="keyword">virtual</span> QIcon <a class="code" href="../../da/d42/classmico_1_1arduino_1_1_arduino_device_block.html#a98ec033e4ee00f250df6ef0df6b02ae0">icon</a>()<span class="keyword"> const override </span>{ </div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;                <span class="keywordflow">return</span> QIcon((flow::Persistency::resourceDir()+<span class="stringliteral">&quot;arduino/arduino_icon.png&quot;</span>).c_str());</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;                <span class="keywordflow">return</span> QIcon((flow::Persistency::resourceDir()/<span class="stringliteral">&quot;arduino&quot;</span>/<span class="stringliteral">&quot;arduino_icon.png&quot;</span>).<span class="keywordtype">string</span>().c_str());</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;            }</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
 <div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="../../da/d42/classmico_1_1arduino_1_1_arduino_device_block.html#ad0f190e7815e22b95348723586ba45ab">   49</a></span>&#160;            <a class="code" href="../../da/d42/classmico_1_1arduino_1_1_arduino_device_block.html#ad0f190e7815e22b95348723586ba45ab">ArduinoDeviceBlock</a>();</div>

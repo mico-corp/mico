@@ -1,7 +1,9 @@
 var searchData=
 [
-  ['get_75',['get',['../df/d89/classflow_1_1_data_flow.html#ad8db4cbb3cd601b671e1e2297ceb0cfe',1,'flow::DataFlow']]],
-  ['getparambyname_76',['getParamByName',['../da/dc0/classflow_1_1_block.html#af34e99e284e96e25969b60f2f10aa160',1,'flow::Block']]],
-  ['getpipe_77',['getPipe',['../da/dc0/classflow_1_1_block.html#ac75e2d283728880e0f664e991edd46fa',1,'flow::Block']]],
-  ['getpolicy_78',['getPolicy',['../da/dc0/classflow_1_1_block.html#a08758b4316ab7bff1dd4ef544aa7eee7',1,'flow::Block']]]
+  ['fastdetector_71',['FastDetector',['../d4/de2/classmico_1_1dvs_1_1_fast_detector.html',1,'mico::dvs']]],
+  ['fixeddistinctqueue_72',['FixedDistinctQueue',['../d1/dd5/classmico_1_1dvs_1_1_fixed_distinct_queue.html',1,'mico::dvs']]],
+  ['flowvisualblock_73',['FlowVisualBlock',['../d8/df6/classflow_1_1_flow_visual_block.html',1,'flow']]],
+  ['flowvisualinterface_74',['FlowVisualInterface',['../d8/d08/classflow_1_1_flow_visual_interface.html',1,'flow']]],
+  ['flush_75',['flush',['../d4/d02/classflow_1_1_outpipe.html#a11c527b45d1f94be2211b0bac6012d71',1,'flow::Outpipe']]],
+  ['frequency_76',['frequency',['../df/d89/classflow_1_1_data_flow.html#a5db32caf2f6e2263cb6513663a83d03a',1,'flow::DataFlow']]]
 ];

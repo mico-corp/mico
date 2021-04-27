@@ -1,10 +1,6 @@
 var annotated_dup =
 [
     [ "fastcom_wrapper", null, [
-      [ "Camera calibration.", "d2/d30/tutorial_ar_mplugin.html#autotoc_md5", null ],
-      [ "Printing ARUCO markers", "d2/d30/tutorial_ar_mplugin.html#autotoc_md6", null ],
-      [ "Camera position estimation and main coordinate system", "d2/d30/tutorial_ar_mplugin.html#autotoc_md7", null ],
-      [ "Adding new entities", "d2/d30/tutorial_ar_mplugin.html#autotoc_md8", null ],
       [ "BlockFastcomPublisher", "d0/d42/classfastcom__wrapper_1_1_block_fastcom_publisher.html", "d0/d42/classfastcom__wrapper_1_1_block_fastcom_publisher" ],
       [ "TraitFastcomPublisher", "d3/d98/structfastcom__wrapper_1_1_trait_fastcom_publisher.html", "d3/d98/structfastcom__wrapper_1_1_trait_fastcom_publisher" ],
       [ "BlockFastcomSubscriber", "d9/d22/classfastcom__wrapper_1_1_block_fastcom_subscriber.html", "d9/d22/classfastcom__wrapper_1_1_block_fastcom_subscriber" ],
@@ -52,6 +48,7 @@ var annotated_dup =
       [ "arduino", null, [
         [ "ArduinoDeviceBlock", "da/d42/classmico_1_1arduino_1_1_arduino_device_block.html", "da/d42/classmico_1_1arduino_1_1_arduino_device_block" ],
         [ "BlockJoyPad", "d3/dae/classmico_1_1arduino_1_1_block_joy_pad.html", "d3/dae/classmico_1_1arduino_1_1_block_joy_pad" ],
+        [ "RaspberryGpioBlock", "d7/d56/classmico_1_1arduino_1_1_raspberry_gpio_block.html", "d7/d56/classmico_1_1arduino_1_1_raspberry_gpio_block" ],
         [ "ToggleButtonBlock", "d5/dae/classmico_1_1arduino_1_1_toggle_button_block.html", "d5/dae/classmico_1_1arduino_1_1_toggle_button_block" ],
         [ "SliderPwm", "d1/d9e/classmico_1_1arduino_1_1_slider_pwm.html", "d1/d9e/classmico_1_1arduino_1_1_slider_pwm" ],
         [ "SignalSwitcher", "d5/dd9/classmico_1_1arduino_1_1_signal_switcher.html", "d5/dd9/classmico_1_1arduino_1_1_signal_switcher" ],
@@ -60,6 +57,7 @@ var annotated_dup =
         [ "OrOperator", "d7/da0/classmico_1_1arduino_1_1_or_operator.html", "d7/da0/classmico_1_1arduino_1_1_or_operator" ]
       ] ],
       [ "cameras", null, [
+        [ "RaspiCam", "d7/d0a/classmico_1_1cameras_1_1_raspi_cam.html", "d7/d0a/classmico_1_1cameras_1_1_raspi_cam" ],
         [ "StreamWebcam", "d6/daf/classmico_1_1cameras_1_1_stream_webcam.html", "d6/daf/classmico_1_1cameras_1_1_stream_webcam" ]
       ] ],
       [ "core", null, [

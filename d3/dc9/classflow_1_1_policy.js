@@ -10,5 +10,5 @@ var classflow_1_1_policy =
     [ "nInputs", "d3/dc9/classflow_1_1_policy.html#ab4868d39c52c4df811d75c2eafc77050", null ],
     [ "registerCallback", "d3/dc9/classflow_1_1_policy.html#aae993ad8770c6068bc0041ba8ad36d45", null ],
     [ "type", "d3/dc9/classflow_1_1_policy.html#aca6525edaf151e9ee6f2ba64e4ccb3e6", null ],
-    [ "update", "d3/dc9/classflow_1_1_policy.html#ad3be1ade16f19929dc9415bb153974d2", null ]
+    [ "update", "d3/dc9/classflow_1_1_policy.html#a830354e656eba31678b63879dcba23cb", null ]
 ];
