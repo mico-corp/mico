@@ -27,6 +27,8 @@ if(WIN32)
 	add_compile_options("/std:c++17")
 endif()
 
+add_subdirectory(thirdparty/nodeeditor)
+
 #########################################
 ######			General config	   ######
 #########################################
