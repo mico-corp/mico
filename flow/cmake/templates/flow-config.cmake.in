@@ -1,0 +1,13 @@
+get_filename_component(flow_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+include(CMakeFindDependencyMacro)
+
+
+if(${NodeEditor_FOUND})
+    find_package(NodeEditor REQUIRED)
+endif()
+
+find_package(Boost REQUIRED COMPONENTS system filesystem)
+
+if(NOT TARGET flow::flow)
+    include("${flow_CMAKE_DIR}/flow-targets.cmake")
+endif()
