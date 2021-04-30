@@ -266,15 +266,14 @@ namespace flow{
             // Load blocks registered
             void *hndl = dlopen((pluginDir+file).c_str(), RTLD_NOW);
             if(hndl == nullptr){
-                std::cerr << "ERROR: " <<  dlerror() << std::endl;
-                
+                std::cerr << "[Warning]: " <<  dlerror() << std::endl;
             }else{
                 dlerror();
 
                 typedef PluginNodeCreator* (*Factory)();
                 void *mkr = dlsym(hndl, "factory");
                 if(mkr == nullptr){
-                    std::cout << "Pluging " << file << " does not have factory" << std::endl;
+                    std::cout << "[Warning] Pluging " << file << " does not have factory" << std::endl;
                     continue;
                 }
 
@@ -282,7 +281,7 @@ namespace flow{
 
                 const char *dlsym_error = dlerror();    
                 if (dlsym_error) {
-                    std::cerr << "Cannot load symbol 'factory': " << dlsym_error <<            '\n';
+                    std::cerr << "[Warning] Cannot load symbol 'factory': " << dlsym_error <<            '\n';
                 }
 
                 PluginNodeCreator* nodeCreator = factory();
