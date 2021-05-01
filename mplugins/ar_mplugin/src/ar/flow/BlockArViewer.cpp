@@ -51,7 +51,10 @@ namespace mico{
         }
         
         BlockArViewer::~BlockArViewer() {
-            delete widget_;
+            if (widget_) {
+                widget_->hide();
+                delete widget_;
+            }
         }
 
         

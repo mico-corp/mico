@@ -53,7 +53,7 @@ namespace mico{
             bool isConfigurable() override { return true; };
 
         private:
-            VisualizerGlWidget* widget_;
+            VisualizerGlWidget* widget_ = nullptr;
             bool idle_ = true;
         };
 

@@ -71,7 +71,7 @@ option(BUILD_FASTCOM            "Set to build fastcom Module"       OFF)
 option(BUILD_ROBOTICS           "Set to build robotics Module"      OFF)
 option(BUILD_ARDUINO            "Set to build arduino Module"       ON)
 option(BUILD_SIMULATION         "Set to build simulation Module"    ON)
-option(BUILD_AR                 "Set to build AR Module"            OFF)
+option(BUILD_AR                 "Set to build AR Module"            ON)
 option(BUILD_DVS                "Set to build DSV Module"           OFF)
 
 option(BUILD_BENCHMARK          "Set to build Benchmarks"           OFF)
