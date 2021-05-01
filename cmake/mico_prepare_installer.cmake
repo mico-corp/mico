@@ -1,0 +1,56 @@
+##---------------------------------------------------------------------------------------------------------------------
+##  MICO TEMPLATE plugin
+##---------------------------------------------------------------------------------------------------------------------
+##  Copyright 2020 Pablo Ramon Soria (a.k.a. Bardo91) pabramsor@gmail.com & Ricardo Lopez Lopez (a.k.a Ric92) & Marco Montes Grova (a.k.a mgrova)
+##---------------------------------------------------------------------------------------------------------------------
+##  Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+##  and associated documentation files (the "Software"), to deal in the Software without restriction,
+##  including without limitation the rights to use, copy, modify, merge, publish, distribute,
+##  sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+##  furnished to do so, subject to the following conditions:
+##
+##  The above copyright notice and this permission notice shall be included in all copies or substantial
+##  portions of the Software.
+##
+##  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+##  BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+##  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES
+##  OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+##  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+##---------------------------------------------------------------------------------------------------------------------
+
+
+macro(micoPrepareInstaller)
+    # Custom target for packaging.
+    if(USE_NSIS)
+        set(CPACK_GENERATOR "NSIS")
+    else(USE_NSIS)
+        set(CPACK_GENERATOR "ZIP")
+    endif(USE_NSIS)
+
+    set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
+    set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
+    set(CPACK_PACKAGE_VERSION_PATCH "0")
+    set(CPACK_PACKAGE_VENDOR "mico-corp")
+    set(CPACK_PACKAGE_INSTALL_REGISTRY_KEY ${PROJECT_NAME})
+    set(CPACK_IGNORE_FILES "\\.psd$;/CVS/;/\\.svn/;/\\.git/;\\.swp$;/CMakeLists.txt.user;\\.#;/#;\\.tar.gz$;/CMakeFiles/;CMakeCache.txt;\\.qm$;/build/;\\.diff$;.DS_Store'")
+    set(CPACK_SOURCE_GENERATOR "TGZ")
+    set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}")
+    set(CPACK_SOURCE_IGNORE_FILES ${CPACK_IGNORE_FILES})
+    
+    if(USE_NSIS)
+        set(CPACK_NSIS_INSTALLED_ICON_NAME "${PROJECT_SOURCE_DIR}/doc/mico.ico")
+        set(CPACK_NSIS_HELP_LINK "https://mico-corp.github.io/mico")
+        set(CPACK_NSIS_URL_INFO_ABOUT "https://mico-corp.github.io/mico")
+        # set(CPACK_NSIS_CONTACT ${APP_EMAIL})
+    endif()
+
+    include(CPack)
+
+    # Configure file with custom definitions for NSIS.
+    configure_file(
+        ${PROJECT_SOURCE_DIR}/NSIS.definitions.nsh.in
+        ${CMAKE_CURRENT_BINARY_DIR}/resources/nsis/NSIS.definitions.nsh
+    )
+
+endmacro(micoPrepareInstaller)

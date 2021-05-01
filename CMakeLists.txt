@@ -29,12 +29,13 @@ if( NOT CMAKE_BUILD_TYPE )
 endif()
 
 include(cmake/mico_functions.cmake)
+include(cmake/mico_dependencies.cmake)
+include(cmake/mico_prepare_installer.cmake)
+
 detect_OS()
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/" ${CMAKE_MODULE_PATH})
-
-include(cmake/mico_functions.cmake)
-include(cmake/mico_dependencies.cmake)
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 if(WIN32)
     set(LIBRARY_MODE STATIC)
@@ -60,20 +61,23 @@ endif()
 
 set(BUNDLE_COMPILATION ON) # Legacy
 
-option(BUILD_CAMERAS        "Set to build CAMERAS Module"       ON)
-option(BUILD_VISUALIZERS    "Set to build VISUALIZERS Module"   ON)
-option(BUILD_SLAM           "Set to build SLAM Module"          OFF)
-option(BUILD_PYTHON         "Set to build Python Module"        OFF)
-option(BUILD_DNN            "Set to build DNN Module"           OFF)
-option(BUILD_ML             "Set to build ML Module"            ON)
-option(BUILD_FASTCOM        "Set to build fastcom Module"       OFF)
-option(BUILD_ROBOTICS       "Set to build robotics Module"      OFF)
-option(BUILD_ARDUINO        "Set to build arduino Module"       ON)
-option(BUILD_SIMULATION     "Set to build simulation Module"    ON)
-option(BUILD_AR             "Set to build AR Module"            OFF)
-option(BUILD_DVS            "Set to build DSV Module"           OFF)
+option(BUILD_CAMERAS            "Set to build CAMERAS Module"       ON)
+option(BUILD_VISUALIZERS        "Set to build VISUALIZERS Module"   ON)
+option(BUILD_SLAM               "Set to build SLAM Module"          OFF)
+option(BUILD_PYTHON             "Set to build Python Module"        OFF)
+option(BUILD_DNN                "Set to build DNN Module"           OFF)
+option(BUILD_ML                 "Set to build ML Module"            ON)
+option(BUILD_FASTCOM            "Set to build fastcom Module"       OFF)
+option(BUILD_ROBOTICS           "Set to build robotics Module"      OFF)
+option(BUILD_ARDUINO            "Set to build arduino Module"       ON)
+option(BUILD_SIMULATION         "Set to build simulation Module"    ON)
+option(BUILD_AR                 "Set to build AR Module"            OFF)
+option(BUILD_DVS                "Set to build DSV Module"           OFF)
 
-option(BUILD_BENCHMARK      "Set to build Benchmarks"           OFF)
+option(BUILD_BENCHMARK          "Set to build Benchmarks"           OFF)
+
+option(MICO_PREPARE_INSTALLER   "Set to prepare installer" OFF)
+option(MICO_USE_NSIS            "Use NSIS generator to produce installer" ON)
 
 SET(MICO_MODULES "")
 
@@ -85,8 +89,10 @@ else()
     add_subdirectory(flow)
     add_subdirectory(mplugins)
     
+    if(${MICO_PREPARE_INSTALLER})
+        micoPrepareInstaller()
+    endif()
 endif()
-
 
 ##################################################
 ######    Documentation.                  ########

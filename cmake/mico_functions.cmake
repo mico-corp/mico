@@ -100,6 +100,9 @@ macro(add_mplugin)
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
     )
+
+    set_target_properties(${IN_PLUGIN_NAME} PROPERTIES FOLDER "mplugins")
+
     if(WIN32)
         target_include_directories(${IN_PLUGIN_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
     endif()
@@ -114,6 +117,8 @@ macro(add_mplugin)
     if(WIN32)
         set(EXPORTED_PLUGIN_NAME ${IN_PLUGIN_NAME}_mplugin)
         add_library(${EXPORTED_PLUGIN_NAME} SHARED ${IN_PLUGIN_SOURCES})
+
+        set_target_properties(${EXPORTED_PLUGIN_NAME} PROPERTIES FOLDER "mplugins/win32_export")
         target_include_directories(${EXPORTED_PLUGIN_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include ${MICO_PLUGIN_INCLUDES})
         target_link_libraries(${EXPORTED_PLUGIN_NAME} PRIVATE ${MICO_PLUGIN_LIBRARIES})
         target_compile_definitions(${EXPORTED_PLUGIN_NAME} PRIVATE ${MICO_PLUGIN_COMPILE_DEFS})
@@ -127,6 +132,7 @@ macro(add_mplugin)
                     COMMAND ${CMAKE_COMMAND} -E copy 	$<TARGET_FILE:${EXPORTED_PLUGIN_NAME}>
                     ${CMAKE_BINARY_DIR}/plugins
     )
+    set_target_properties(flow_install_${IN_PLUGIN_NAME} PROPERTIES FOLDER "mplugins/install")
 
     if(${IN_HAS_RESOURCES})
         add_custom_target(flow_install_${IN_PLUGIN_NAME}_resources ALL
@@ -134,6 +140,8 @@ macro(add_mplugin)
                         ${CMAKE_BINARY_DIR}/plugins/resources
         )
         add_dependencies(flow_install_${IN_PLUGIN_NAME}_resources ${IN_PLUGIN_NAME})
+
+        set_target_properties(flow_install_${IN_PLUGIN_NAME}_resources PROPERTIES FOLDER "mplugins/install")
     endif()
 
     add_dependencies(flow_install_${IN_PLUGIN_NAME} ${IN_PLUGIN_NAME})
