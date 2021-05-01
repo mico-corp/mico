@@ -141,7 +141,7 @@ install(TARGETS nodes ${PROJECT_NAME}
         EXPORT ${PROJECT_NAME}-targets
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib
-        INCLUDES DESTINATION ${CMAKE_INSTALL_PREFIX}
+        INCLUDES DESTINATION include
         )
 
 write_basic_package_version_file(
@@ -151,8 +151,8 @@ write_basic_package_version_file(
     )
 
 # This installs the include folder
-install(DIRECTORY include DESTINATION ${CMAKE_INSTALL_PREFIX} FILES_MATCHING PATTERN "*.h")
-install(DIRECTORY include DESTINATION ${CMAKE_INSTALL_PREFIX} FILES_MATCHING PATTERN "*.inl")
+# install(DIRECTORY include DESTINATION ${CMAKE_INSTALL_PREFIX} FILES_MATCHING PATTERN "*.h")
+# install(DIRECTORY include DESTINATION ${CMAKE_INSTALL_PREFIX} FILES_MATCHING PATTERN "*.inl")
 
 export(TARGETS nodes flow NAMESPACE flow:: FILE flow.cmake)
 
@@ -182,36 +182,5 @@ if(${BUILD_TOOLS})
     RUNTIME DESTINATION bin
   )
 endif()
-
-# uninstall target 
-if(NOT TARGET uninstall) 
-  configure_file( 
-      "${CMAKE_CURRENT_SOURCE_DIR}/cmake/templates/cmake_uninstall.cmake.in" 
-      "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake" 
-      IMMEDIATE @ONLY) 
- 
-  add_custom_target(uninstall COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake) 
-endif() 
-
-
-##################################################
-####  CPACK deb generation configuration    ######
-##################################################
-if(${PREPARE_PACKAGE_PPA})
-  set(UPLOAD_PPA "ppa:bardo91/mico")
-  set(CPACK_GENERATOR "DEB")
-  set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Pablo Ramon Soria <pabramsor@gmail.com>") #required
-  set(CPACK_DEBIAN_PACKAGE_NAME ${PLUGIN_NAME})
-  
-  include(CPack)
-  include(cmake/templates/prepare_package_ppa.cmake)
-endif()
-
-
-
-
-
-
-
 
 

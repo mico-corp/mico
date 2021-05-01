@@ -168,7 +168,7 @@ install(TARGETS nodes
   ARCHIVE DESTINATION lib
 )
 
-install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_PREFIX})
+# install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_PREFIX})
 
 install(EXPORT NodeEditorTargets
   FILE NodeEditorTargets.cmake
