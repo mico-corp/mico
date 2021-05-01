@@ -34,14 +34,18 @@ namespace mico{
         class BlockSum:public flow::Block{
         public:
             /// Get name of block
-            virtual std::string name() const override {return "Sum";}        
+            std::string name() const override {return "Sum";}        
+            
             /// Retreive icon of block    
-                virtual QIcon icon() const override { 
+            QIcon icon() const override { 
                 return QIcon((flow::Persistency::resourceDir()/"math"/"plus-positive-add-mathematical-symbol.svg").string().c_str());
             }
 
             /// Base constructor
             BlockSum();
+
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return false; };
 
             /// Returns a brief description of the block
             std::string description() const override {return    "Sum two float numbers"
@@ -54,14 +58,18 @@ namespace mico{
         class BlockSubstract:public flow::Block{
         public:
             /// Get name of block
-            virtual std::string name() const override {return "Substract";}  
+            std::string name() const override {return "Substract";}  
+            
             /// Retreive icon of block    
-                virtual QIcon icon() const override { 
+            QIcon icon() const override { 
                 return QIcon((flow::Persistency::resourceDir()/"math"/"minus-sign.svg").string().c_str());
             }      
 
             // Base constructor
             BlockSubstract();
+
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return false; };
 
             /// Returns a brief description of the block
             std::string description() const override {return    "Subsctract two float numbers"
@@ -75,14 +83,18 @@ namespace mico{
         class BlockMultiply:public flow::Block{
         public:
             /// Get name of block
-            virtual std::string name() const override {return "Multiply";}  
+            std::string name() const override {return "Multiply";}  
+            
             /// Retreive icon of block    
-                virtual QIcon icon() const override { 
+            QIcon icon() const override { 
                 return QIcon((flow::Persistency::resourceDir()/"math"/"multiply-mathematical-sign.svg").string().c_str());
             }     
 
             /// Base constructor 
             BlockMultiply();
+
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return false; };
 
             /// Returns a brief description of the block
             std::string description() const override {return    "Multiply two float numbers"
@@ -96,14 +108,18 @@ namespace mico{
         class BlockDivide:public flow::Block{
         public:
             /// Get name of block
-            virtual std::string name() const override {return "Divide";}      
+            std::string name() const override {return "Divide";}      
+            
             /// Retreive icon of block    
-            virtual QIcon icon() const override { 
+            QIcon icon() const override { 
                 return QIcon((flow::Persistency::resourceDir()/"math"/"divide-mathematical-sign.svg").string().c_str());
             }         
 
             /// Base constructor
             BlockDivide();
+
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return false; };
 
             /// Returns a brief description of the block
             std::string description() const override {return    "Divide two float numbers"
@@ -117,15 +133,18 @@ namespace mico{
         class BlockSquareRoot:public flow::Block{
         public:
             /// Get name of block
-            virtual std::string name() const override {return "sqrt";}    
+            std::string name() const override {return "sqrt";}    
 
             /// Retreive icon of block    
-            virtual QIcon icon() const override { 
+            QIcon icon() const override { 
                 return QIcon((flow::Persistency::resourceDir()/"math"/"square-root-mathematical-symbol.svg").string().c_str());
             }
 
             /// Base constructor
             BlockSquareRoot();
+
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return false; };
 
             /// Returns a brief description of the block
             std::string description() const override {return    "Square root of given input"
@@ -139,14 +158,17 @@ namespace mico{
         class BlockPow:public flow::Block{
         public:
             /// Get name of block
-            virtual std::string name() const override {return "Pow";}    
+            std::string name() const override {return "Pow";}    
 
             /// Retreive icon of block    
-            virtual QIcon icon() const override { 
+            QIcon icon() const override { 
                 return QIcon((flow::Persistency::resourceDir()/"math"/"pow-symbol.svg").string().c_str());
             }
             /// Base constructor
             BlockPow();
+
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return false; };
 
             /// Returns a brief description of the block
             std::string description() const override {return    "Pow of first number by second number"

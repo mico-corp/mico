@@ -54,9 +54,10 @@ namespace mico{
         class BlockPython: public flow::Block {
         public:
             /// Get name of block
-            virtual std::string name() const override {return "Python";}
+            std::string name() const override {return "Python";}
+            
             /// Retreive icon of block    
-                virtual QIcon icon() const override {
+            QIcon icon() const override {
                 return QIcon((flow::Persistency::resourceDir() + "python/Python.png").c_str());
             }
 
@@ -72,7 +73,10 @@ namespace mico{
             }
 
             /// Return the custom creation widget, in which the user chooses the number and type of inputs
-            virtual QBoxLayout * creationWidget() override;
+            QBoxLayout * creationWidget() override;
+
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return false; };
 
             /// This block is resizable, it returns true.
             bool resizable() const override { return true; }

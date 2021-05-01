@@ -41,6 +41,9 @@ namespace dvs{
         std::string description() const override {return "Flow wrapper of conversor";};
         
         BlockEventsToCloud();
+        
+        /// Return if the block is configurable.
+        bool isConfigurable() override { return false; };
 
     private:
         bool obtainPointCloudFromEvents(dv::EventStore _events , pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr &_cloud);  

@@ -32,18 +32,20 @@ namespace fastcom_wrapper{
 		BlockFastcomSubscriber(){
             createPipe<typename Trait_::DataType_>(Trait_::outputName());
         };
+        
 		/// Retreive icon of block    
-            virtual QIcon icon() const override { 
+        QIcon icon() const override { 
             return QIcon((flow::Persistency::resourceDir() + "fastcom/fastcom_logo.png").c_str());
         }
 
         std::string name() const override {  return Trait_::blockName(); }
+
 		/// Returns a brief description of the block
         std::string description() const override {return    "Communication block using fastcom.\n"+
                                                             std::string("Subscriber actor that receive data .");};
 
         /// Configure block with given parameters.
-        virtual bool configure(std::vector<flow::ConfigParameterDef> _params) override{
+        bool configure(std::vector<flow::ConfigParameterDef> _params) override{
             std::string ipAdress = "127.0.0.1";
             if (auto param = getParamByName(_params, "ip"); param) {
                 ipAdress = param.value().asString();
@@ -70,6 +72,9 @@ namespace fastcom_wrapper{
                 {"uri", flow::ConfigParameterDef::eParameterType::STRING, std::string("/uri")}
             };
         }; 
+
+        /// Return if the block is configurable.
+        bool isConfigurable() override { return true; };
 
     private:
 		Trait_ traitSub_;

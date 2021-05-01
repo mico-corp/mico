@@ -39,17 +39,18 @@ namespace fastcom_wrapper{
         };
 
         /// Retreive icon of block    
-            virtual QIcon icon() const override {
+        QIcon icon() const override {
             return QIcon((flow::Persistency::resourceDir() + "fastcom/fastcom_logo.png").c_str());
         }
 
         std::string name() const override{return Trait_::blockName(); }
+
         /// Returns a brief description of the block
         std::string description() const override {return    "Communication block using fastcom.\n"+
                                                             std::string("Publisher actor that sends data .");};
 
         /// Configure block with given parameters.
-        virtual bool configure(std::vector<flow::ConfigParameterDef> _params) override{
+        bool configure(std::vector<flow::ConfigParameterDef> _params) override{
             if (auto param = getParamByName(_params, "uri"); param) {
                 tPub_.pub_ = new typename Trait_::Publisher_(param.value().asString());
             }
@@ -63,6 +64,9 @@ namespace fastcom_wrapper{
             };
         };
 
+        /// Return if the block is configurable.
+        bool isConfigurable() override { return true; };
+        
     private:
         Trait_ tPub_; // 666
         

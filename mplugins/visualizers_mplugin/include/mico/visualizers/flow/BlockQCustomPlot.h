@@ -40,13 +40,19 @@ namespace mico{
         class BlockQCustomPlot: public flow::Block{
         public:
             /// Get name of block
-            virtual std::string name() const override {return "Plotter";}
+            std::string name() const override {return "Plotter";}
 
             /// Base constructor
             BlockQCustomPlot();
 
             /// Base destructor
             ~BlockQCustomPlot();
+
+            /// Configure block with given parameters.
+            bool configure(std::vector<flow::ConfigParameterDef> _params) override;
+
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return true; };
 
             /// Returns a brief description of the block
             std::string description() const override {return    "Signal plotters.\n"
@@ -58,8 +64,8 @@ namespace mico{
         private:
             std::mutex dataLock_;
             std::vector<float> pendingData1_, pendingData2_, pendingData3_; // 666 ugly but fastly implemented
-            QCustomPlot *plot_;
-            QTimer *dataTimer_;
+            QCustomPlot *plot_ = nullptr;
+            QTimer *dataTimer_ = nullptr;
             std::mutex imgLock_;
             bool idle_ = true;
 

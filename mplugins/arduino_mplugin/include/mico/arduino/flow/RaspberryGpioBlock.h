@@ -40,6 +40,9 @@ namespace mico{
             /// Base constructor
             RaspberryGpioBlock();
 
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return false; };
+
             /// Returns a brief description of the block
             std::string description() const override {return    "Low-level access to gpio in Raspberry pi. \n";};
 

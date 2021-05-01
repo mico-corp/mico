@@ -77,6 +77,9 @@ namespace flow{
         /// Get list of parameters of the block
         virtual std::vector<flow::ConfigParameterDef> parameters(){ return {}; };
 
+        /// Return if the block is configurable. This method is abstract to ensure new implementations implement it
+        virtual bool isConfigurable() = 0;
+
         [[deprecated("This function gives the map with all pipes, please use getPipe method and get just the needed")]]
         std::unordered_map<std::string, std::shared_ptr<Outpipe>>  getPipes();
         

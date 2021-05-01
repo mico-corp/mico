@@ -44,6 +44,9 @@ namespace mico{
             /// Base constructor
             BlockJoyPad();
 
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return false; };
+
             /// Returns a brief description of the block
             std::string description() const override {return    "Joy Pad\n";};
         private:

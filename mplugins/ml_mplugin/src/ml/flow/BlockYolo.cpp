@@ -75,8 +75,8 @@ namespace mico{
 
         std::vector<Detection> BlockYolo::parseDetections(cv::Mat &_frame, const std::vector<cv::Mat> &_detections){    
             std::vector<Detection> outDetections;    
-            constexpr float CONFIDENCE_THRESHOLD = 0;
-            constexpr float NMS_THRESHOLD = 0.4;
+            constexpr float CONFIDENCE_THRESHOLD = 0.0f;
+            constexpr float NMS_THRESHOLD = 0.4f;
             constexpr int NUM_CLASSES = 80;
             const cv::Scalar colors[] = {
                 {0, 255, 255},

@@ -38,6 +38,9 @@ namespace mico{
             /// Base constructor
             BlockSwitchFlow();
 
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return false; };
+
             /// Returns a brief description of the block
             std::string description() const override {return    "BlockSwitchFlow"
                                                                 "   - Outputs: \n";};

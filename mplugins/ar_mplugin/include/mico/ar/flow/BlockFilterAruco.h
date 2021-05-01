@@ -41,13 +41,18 @@ namespace mico{
             BlockFilterAruco();
 
             /// Configure block with given parameters.
-            virtual bool configure(std::vector<flow::ConfigParameterDef> _params) override;
+            bool configure(std::vector<flow::ConfigParameterDef> _params) override;
+            
             /// Get list of parameters of the block
             std::vector<flow::ConfigParameterDef> parameters() override;
+
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return true; };
 
             /// Returns a brief description of the block
             std::string description() const override {return    "Block Filter Aruco CS"
                                                                 "   - \n";};
+
 
         private:
             int id_ = 0;

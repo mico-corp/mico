@@ -41,7 +41,7 @@ namespace mico{
         class BlockMultiplyTransform:public flow::Block{
         public:
             /// Get name of block
-            virtual std::string name() const override {return "Multiply transform";}        
+            std::string name() const override {return "Multiply transform";}        
             
             /// Base constructor that initializes the pipes
             BlockMultiplyTransform();
@@ -49,6 +49,9 @@ namespace mico{
             /// Returns a brief description of the block
             std::string description() const override {return    "Multiply transform"
                                                                 "   - \n";};
+
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return false; };
 
         private:
             bool idle_ = true;

@@ -38,7 +38,7 @@ namespace mico{
         class BlockImageVisualizer: public flow::Block{
         public:
             /// Get name of block
-            virtual std::string name() const override {return "Image Visualizer";}
+            std::string name() const override {return "Image Visualizer";}
 
             /// Base constructor
             BlockImageVisualizer();
@@ -46,13 +46,19 @@ namespace mico{
             /// Base destructor
             ~BlockImageVisualizer();
 
+            /// Configure block with given parameters.
+            bool configure(std::vector<flow::ConfigParameterDef> _params) override;
+
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return true; };
+
             /// Returns a brief description of the block
             std::string description() const override {return    "Simple image visualizer block. Compatible with RGB and Depth images.\n"
                                                                 "   - Inputs: \n";};
 
         private:
-            QLabel *imageView_;
-            QTimer* imageRefresher_;
+            QLabel *imageView_ = nullptr;
+            QTimer* imageRefresher_ = nullptr;
             cv::Mat lastImage_;
             std::mutex imgLock_;
             bool idle_ = true;

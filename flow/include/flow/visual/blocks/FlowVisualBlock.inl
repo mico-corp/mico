@@ -32,7 +32,7 @@ namespace flow{
     inline FlowVisualBlock<Block_,HasAutoLoop_>::FlowVisualBlock() {
         flowBlock_ = std::make_shared<Block_>();
 
-        if(flowBlock_->customWidget() == nullptr && flowBlock_->parameters().size() == 0 && !HasAutoLoop_){
+        if(flowBlock_->customWidget() == nullptr && flowBlock_->isConfigurable() == 0 && !HasAutoLoop_){
             configBox_ = nullptr;
             return;
         }
@@ -48,7 +48,7 @@ namespace flow{
         }
 
         // configure parameters
-        if(flowBlock_->parameters().size() > 0){
+        if(flowBlock_->isConfigurable()){
             for(auto &param: flowBlock_->parameters()){
                 configParams_.push_back(new ParameterWidget(param));
                 configsLayout_->addLayout(configParams_.back());

@@ -38,9 +38,9 @@ namespace mico{
         class BlockTimer:public flow::Block{
         public:
             /// Get name of block
-            virtual std::string name() const override {return "Timer";}     
+            std::string name() const override {return "Timer";}     
             /// Retreive icon of block    
-                virtual QIcon icon() const override { 
+            QIcon icon() const override { 
                 return QIcon((flow::Persistency::resourceDir()/"math"/"timer-symbol.svg").string().c_str());
             }
 
@@ -48,16 +48,20 @@ namespace mico{
             BlockTimer();
             
             /// Configure block with given parameters.
-            virtual bool configure(std::vector<flow::ConfigParameterDef> _params) override;
+            bool configure(std::vector<flow::ConfigParameterDef> _params) override;
+
             /// Get list of parameters of the block
             std::vector<flow::ConfigParameterDef> parameters() override;
+
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return true; };
 
             /// Returns a brief description of the block
             std::string description() const override {return    "Stream a timer. Resolution is in seconds"
                                                                 "   - Outputs: Time counter\n";};
 
         protected:
-            virtual void loopCallback() override;
+            void loopCallback() override;
 
         private:
             float resolution_ = 0.001; // FPS
@@ -71,10 +75,10 @@ namespace mico{
         class BlockSine:public flow::Block{
         public:
             /// Get name of block
-            virtual std::string name() const override {return "Sine";}   
+            std::string name() const override {return "Sine";}   
 
             /// Retreive icon of block    
-            virtual QIcon icon() const override { 
+            QIcon icon() const override { 
                 return QIcon((flow::Persistency::resourceDir()/"math"/"sine-symbol.svg").string().c_str());
             }
             
@@ -82,10 +86,13 @@ namespace mico{
             BlockSine();
             
             /// Configure block with given parameters.
-            virtual bool configure(std::vector<flow::ConfigParameterDef> _params) override;
+            bool configure(std::vector<flow::ConfigParameterDef> _params) override;
             
             /// Get list of parameters of the block
             std::vector<flow::ConfigParameterDef> parameters() override;
+
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return true; };
 
             /// Returns a brief description of the block
             std::string description() const override {return    "Stream a constant by a given rate."
@@ -104,18 +111,22 @@ namespace mico{
         class BlockCosine:public flow::Block{
         public:
             /// Get name of block
-            virtual std::string name() const override {return "Cosine";}   
+            std::string name() const override {return "Cosine";}   
             /// Retreive icon of block    
-                virtual QIcon icon() const override { 
+            QIcon icon() const override { 
                 return QIcon((flow::Persistency::resourceDir()/"math"/"cosine-symbol.svg").string().c_str());
             }
             
             BlockCosine();
             
             /// Configure block with given parameters.
-            virtual bool configure(std::vector<flow::ConfigParameterDef> _params) override;
+            bool configure(std::vector<flow::ConfigParameterDef> _params) override;
+            
             /// Get list of parameters of the block
             std::vector<flow::ConfigParameterDef> parameters() override;
+
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return true; };
 
             /// Returns a brief description of the block
             std::string description() const override {return    "Stream a constant by a given rate."

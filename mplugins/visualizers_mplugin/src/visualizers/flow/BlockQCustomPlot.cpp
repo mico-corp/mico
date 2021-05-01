@@ -31,25 +31,6 @@
 namespace mico{
     namespace visualizer{
         BlockQCustomPlot::BlockQCustomPlot(){
-            plot_ = new QCustomPlot();
-            t0_ = std::chrono::steady_clock::now();
-            QSharedPointer<QCPAxisTickerTime> timeTicker(new QCPAxisTickerTime);
-            timeTicker->setTimeFormat("%h:%m:%s");
-            plot_->xAxis->setTicker(timeTicker);
-
-            plot_->xAxis->setLabel("time");
-            plot_->yAxis->setLabel("value");
-
-            plot_->setInteractions(   QCP::iRangeDrag | QCP::iRangeZoom  | QCP::iSelectPlottables );
-
-            plot_->addGraph()->setPen(QPen(QColor(255,0,0)));;
-            plot_->addGraph()->setPen(QPen(QColor(0,255,0)));;
-            plot_->addGraph()->setPen(QPen(QColor(0,0,255)));;
-
-            dataTimer_ = new QTimer();
-            QObject::connect(dataTimer_, &QTimer::timeout , [this](){this->realTimePlot();});
-            dataTimer_->start(30);
-
             createPolicy({  flow::makeInput<float>("signal1"), 
                             flow::makeInput<float>("signal2"), 
                             flow::makeInput<float>("signal3") });
@@ -91,15 +72,39 @@ namespace mico{
                 }
             );
 
-
-            plot_->show();
-
         }
         
         BlockQCustomPlot::~BlockQCustomPlot() {
-            dataTimer_->stop();
-            plot_->hide();
+            if(dataTimer_) dataTimer_->stop();
+            if(plot_) plot_->hide();
         };
+
+        bool BlockQCustomPlot::configure(std::vector<flow::ConfigParameterDef> _params) {
+            plot_ = new QCustomPlot();
+            t0_ = std::chrono::steady_clock::now();
+            QSharedPointer<QCPAxisTickerTime> timeTicker(new QCPAxisTickerTime);
+            timeTicker->setTimeFormat("%h:%m:%s");
+            plot_->xAxis->setTicker(timeTicker);
+
+            plot_->xAxis->setLabel("time");
+            plot_->yAxis->setLabel("value");
+
+            plot_->setInteractions(   QCP::iRangeDrag | QCP::iRangeZoom  | QCP::iSelectPlottables );
+
+            plot_->addGraph()->setPen(QPen(QColor(255,0,0)));;
+            plot_->addGraph()->setPen(QPen(QColor(0,255,0)));;
+            plot_->addGraph()->setPen(QPen(QColor(0,0,255)));;
+
+            dataTimer_ = new QTimer();
+            QObject::connect(dataTimer_, &QTimer::timeout , [this](){this->realTimePlot();});
+            dataTimer_->start(30);
+
+            plot_->setGeometry(0, 0, 400, 400);
+            plot_->show();
+
+            return true;
+        }
+
 
         //---------------------------------------------------------------------------------------------------------------------
         void BlockQCustomPlot::realTimePlot(){

@@ -46,6 +46,9 @@ namespace mico{
             /// Get list of parameters of the block
             std::vector<flow::ConfigParameterDef> parameters() override;
 
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return true; };
+
             /// Returns a brief description of the block
             std::string description() const override {return    "Detect objects Haars cascade algorithm"
                                                                 "   - Inputs: \n"

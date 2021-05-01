@@ -51,6 +51,9 @@ namespace mico{
                                                                 "   - Inputs: \n"
                                                                 "   - Outputs: \n";};
 
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return false; };
+
             virtual /// Get custom view widget to be display in the graph
             QWidget * customWidget() override;
         private:

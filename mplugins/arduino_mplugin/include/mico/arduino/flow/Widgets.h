@@ -47,6 +47,9 @@ namespace mico{
             /// Base constructor
             ToggleButtonBlock();
 
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return false; };
+
             /// Returns a brief description of the block
             std::string description() const override {return    "ToggleButton\n";};
         private:
@@ -67,6 +70,9 @@ namespace mico{
             /// Get custom view widget to be display in the graph
             QWidget* customWidget() override;
 
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return false; };
+
             /// Returns a brief description of the block
             std::string description() const override { return    "Slider pwm\n"; };
         private:
@@ -85,6 +91,9 @@ namespace mico{
 
             /// Get custom view widget to be display in the graph
             QWidget* customWidget() override;
+
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return false; };
 
             /// Returns a brief description of the block
             std::string description() const override { return    "Signal Switcher\n"; };
@@ -117,7 +126,11 @@ namespace mico{
             }
 
             /// Get name of block
-            virtual std::string name() const override {return "NOT";}     
+            std::string name() const override {return "NOT";}     
+
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return false; };
+            
             /// Returns a brief description of the block
             std::string description() const override {return    "NOT\n";};
         };
@@ -141,7 +154,11 @@ namespace mico{
             }
 
             /// Get name of block
-            virtual std::string name() const override {return "AND";}     
+            std::string name() const override {return "AND";}     
+            
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return false; };
+
             /// Returns a brief description of the block
             std::string description() const override {return    "AND\n";};
         };
@@ -164,7 +181,11 @@ namespace mico{
             }
 
             /// Get name of block
-            virtual std::string name() const override {return "OR";}     
+            std::string name() const override {return "OR";}     
+
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return false; };
+
             /// Returns a brief description of the block
             std::string description() const override {return    "OR\n";};
         };

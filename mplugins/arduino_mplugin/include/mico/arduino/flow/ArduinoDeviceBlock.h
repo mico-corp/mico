@@ -38,10 +38,10 @@ namespace mico{
         class ArduinoDeviceBlock:public flow::Block{
         public:
             /// Get name of block
-            virtual std::string name() const override {return "Arduino Device";} 
+            std::string name() const override {return "Arduino Device";} 
 
             /// Retreive icon of block    
-            virtual QIcon icon() const override { 
+            QIcon icon() const override { 
                 return QIcon((flow::Persistency::resourceDir()/"arduino"/"arduino_icon.png").string().c_str());
             }
 
@@ -52,9 +52,13 @@ namespace mico{
             ~ArduinoDeviceBlock();
 
             /// Configure block with given parameters.
-            virtual bool configure(std::vector<flow::ConfigParameterDef> _params) override;
+            bool configure(std::vector<flow::ConfigParameterDef> _params) override;
+
             /// Get list of parameters of the block
             std::vector<flow::ConfigParameterDef> parameters() override;
+
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return true; };
 
             /// Returns a brief description of the block
             std::string description() const override {return    "Arduino Device. Configure connection with"

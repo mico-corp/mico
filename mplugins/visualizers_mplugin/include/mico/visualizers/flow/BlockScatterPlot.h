@@ -39,10 +39,17 @@ namespace mico{
         class BlockScatterPlot: public flow::Block{
         public:
             /// Get name of block
-            virtual std::string name() const override {return "Scatter";}
+            std::string name() const override {return "Scatter";}
 
             BlockScatterPlot();
+
             ~BlockScatterPlot();
+
+            /// Configure block with given parameters.
+            bool configure(std::vector<flow::ConfigParameterDef> _params) override;
+
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return true; };
 
             /// Returns a brief description of the block
             std::string description() const override {return    "Scatter plot.\n"
@@ -54,8 +61,8 @@ namespace mico{
         private:
             std::mutex dataLock_;
             std::vector<std::pair<float,float>> pendingData_; // 666 ugly but fastly implemented
-            QCustomPlot *plot_;
-            QTimer *dataTimer_;
+            QCustomPlot *plot_ = nullptr;
+            QTimer *dataTimer_ = nullptr;
             std::mutex imgLock_;
             bool idle_ = true;
         };

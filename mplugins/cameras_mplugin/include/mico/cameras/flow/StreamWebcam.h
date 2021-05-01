@@ -34,9 +34,10 @@ namespace mico{
         class StreamWebcam:public flow::Block{
         public:
             /// Get name of block
-            virtual std::string name() const override {return "Streamer Webcam";}     
+            std::string name() const override {return "Streamer Webcam";}     
+            
             /// Retreive icon of block    
-                virtual QIcon icon() const override { 
+            QIcon icon() const override { 
                 return QIcon((flow::Persistency::resourceDir() / "cameras"/"webcam_icon.svg").string().c_str());
             }
             
@@ -47,18 +48,21 @@ namespace mico{
             ~StreamWebcam();
             
             /// Configure block with given parameters.
-            virtual bool configure(std::vector<flow::ConfigParameterDef> _params) override;
+            bool configure(std::vector<flow::ConfigParameterDef> _params) override;
 
             /// Get list of parameters of the block
             std::vector<flow::ConfigParameterDef> parameters() override;
             
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return true; };
+
             /// Returns a brief description of the block
             std::string description() const override {return    "Streamer block that reads from usb ready cameras "
                                                                 "connected to the computer and streams its images.\n"
                                                                 "   - Outputs: \n";};
                                                                 
         protected:
-            virtual void loopCallback() override;
+            void loopCallback() override;
 
         private:
             cv::VideoCapture *camera_ = nullptr;

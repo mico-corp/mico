@@ -31,27 +31,7 @@
 namespace mico{
     namespace visualizer{
         BlockImageVisualizer::BlockImageVisualizer(){
-            imageView_ = new QLabel();
-            imageView_->setScaledContents(true);
-            imageView_->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
-            imageView_->setMinimumHeight(150);
-            imageView_->setMinimumWidth(150);
-            imageView_->show();
-
-            imageRefresher_ = new QTimer();
-
-            QObject::connect(imageRefresher_, &QTimer::timeout, [&]() {
-                cv::Mat image;
-                imgLock_.lock();
-                image = lastImage_;
-                imgLock_.unlock();
-                if (image.rows != 0) {
-                    QImage qimg = QImage(image.data, image.cols, image.rows, QImage::Format_RGB888).rgbSwapped();
-                    imageView_->setPixmap(QPixmap::fromImage(qimg));
-                }
-            });
-            imageRefresher_->start(30);
-
+            
             createPolicy({  flow::makeInput<cv::Mat>("Image") });
 
             registerCallback({"Image"}, 
@@ -73,8 +53,41 @@ namespace mico{
         }
         
         BlockImageVisualizer::~BlockImageVisualizer() {
-            imageRefresher_->stop();
-            imageView_->hide();
+            if(imageRefresher_){
+                imageRefresher_->stop();
+                delete imageRefresher_;
+            }
+            if(imageView_){
+                imageView_->hide();
+                delete imageView_;
+            } 
         };
+
+        bool BlockImageVisualizer::configure(std::vector<flow::ConfigParameterDef> _params) {
+            imageView_ = new QLabel();
+            imageView_->setScaledContents(true);
+            imageView_->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+            imageView_->setMinimumHeight(150);
+            imageView_->setMinimumWidth(150);
+            imageView_->show();
+
+            imageRefresher_ = new QTimer();
+
+            QObject::connect(imageRefresher_, &QTimer::timeout, [&]() {
+                cv::Mat image;
+                imgLock_.lock();
+                image = lastImage_;
+                imgLock_.unlock();
+                if (image.rows != 0) {
+                    QImage qimg = QImage(image.data, image.cols, image.rows, QImage::Format_RGB888).rgbSwapped();
+                    imageView_->setPixmap(QPixmap::fromImage(qimg));
+                }
+            });
+            imageRefresher_->start(30);
+
+            return true;
+
+        }
     }
+
 }   

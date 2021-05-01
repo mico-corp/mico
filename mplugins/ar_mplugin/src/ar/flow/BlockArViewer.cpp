@@ -30,15 +30,14 @@
 namespace mico{
     namespace ar {
         BlockArViewer::BlockArViewer(){
-            widget_ = new VisualizerGlWidget();
-
             createPolicy({  flow::makeInput<Eigen::Matrix4f>("coordinates"),
                             flow::makeInput<cv::Mat>("image") });
 
             registerCallback({ "coordinates", "image" },
                 [&](flow::DataFlow _data) {
                     if (!idle_) return;
-                    
+                    if (!widget_) return;
+
                     idle_ = false;
                     Eigen::Matrix4f coordinates = _data.get<Eigen::Matrix4f>("coordinates");
                     cv::Mat image = _data.get<cv::Mat>("image");
@@ -49,11 +48,18 @@ namespace mico{
                 }
             );
 
-            widget_->show();
         }
         
         BlockArViewer::~BlockArViewer() {
             delete widget_;
+        }
+
+        
+        bool BlockArViewer::configure(std::vector<flow::ConfigParameterDef> _params){
+            widget_ = new VisualizerGlWidget();
+            widget_->show();
+
+            return true;
         }
     }
 }

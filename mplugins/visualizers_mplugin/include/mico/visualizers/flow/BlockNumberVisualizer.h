@@ -36,14 +36,18 @@ namespace mico {
         class BlockNumberVisualizer : public flow::Block {
         public:
             /// Get name of block
-            virtual std::string name() const override { return "Number Visualizer"; }
+            std::string name() const override { return "Number Visualizer"; }
 
             BlockNumberVisualizer();
+
             ~BlockNumberVisualizer();
 
             /// Returns a brief description of the block
             std::string description() const override { return "Simple number visualizer block.        \n"
                                                             "   - Inputs: Number to be displayed    \n"; };
+
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return false; };
 
 
             /// Get custom view widget to be display in the graph

@@ -41,7 +41,7 @@ namespace mico{
         class BlockInverseTransform:public flow::Block{
         public:
             /// Get name of block
-            virtual std::string name() const override {return "Inverse Transform";}        
+            std::string name() const override {return "Inverse Transform";}        
             
             /// Base constructor that initializes the pipes
             BlockInverseTransform();
@@ -50,6 +50,8 @@ namespace mico{
             std::string description() const override {return    "Inverse Transform"
                                                                 "   - \n";};
 
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return false; };
         private:
             bool idle_ = true;
         };

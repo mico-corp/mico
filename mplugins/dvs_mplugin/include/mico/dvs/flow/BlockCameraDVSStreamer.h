@@ -38,14 +38,18 @@ namespace dvs{
         ~BlockCameraDVSStreamer();
         
         /// Configure block with given parameters.
-        virtual bool configure(std::vector<flow::ConfigParameterDef> _params) override;
+        bool configure(std::vector<flow::ConfigParameterDef> _params) override;
+
         /// Get list of parameters of the block
         std::vector<flow::ConfigParameterDef> parameters() override;
 
-        virtual QWidget * customWidget() override;
+        /// Return if the block is configurable.
+        bool isConfigurable() override { return true; };
+
+        QWidget * customWidget() override;
 
     protected:
-        virtual void loopCallback() override;
+        void loopCallback() override;
 
 
     private:

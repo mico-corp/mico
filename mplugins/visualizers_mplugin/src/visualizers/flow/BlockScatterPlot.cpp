@@ -32,6 +32,28 @@
 namespace mico{
     namespace visualizer{
         BlockScatterPlot::BlockScatterPlot(){
+            createPolicy({  flow::makeInput<float>("x"), 
+                            flow::makeInput<float>("y")});
+
+            registerCallback({ "x", "y" },
+                [&](flow::DataFlow  _data) {
+                    float x = _data.get<float>("x");
+                    float y = _data.get<float>("y");
+                    dataLock_.lock();
+                    pendingData_.push_back(std::make_pair(x,y));
+                    dataLock_.unlock();
+                }
+            );
+
+        }
+        
+        BlockScatterPlot::~BlockScatterPlot() {
+            if(dataTimer_) dataTimer_->stop();
+            if(plot_) plot_->hide();
+        };
+
+        
+        bool BlockScatterPlot::configure(std::vector<flow::ConfigParameterDef> _params) {
             plot_ = new QCustomPlot();
 
             plot_->xAxis->setLabel("x");
@@ -49,28 +71,10 @@ namespace mico{
             QObject::connect(dataTimer_, &QTimer::timeout , [this](){this->realTimePlot();});
             dataTimer_->start(30);
 
-            createPolicy({  flow::makeInput<float>("x"), 
-                            flow::makeInput<float>("y")});
-
-            registerCallback({ "x", "y" },
-                [&](flow::DataFlow  _data) {
-                    float x = _data.get<float>("x");
-                    float y = _data.get<float>("y");
-                    dataLock_.lock();
-                    pendingData_.push_back(std::make_pair(x,y));
-                    dataLock_.unlock();
-                }
-            );
-
-
+            plot_->setGeometry(0, 0, 400, 400);
             plot_->show();
-
+            return true;
         }
-        
-        BlockScatterPlot::~BlockScatterPlot() {
-            dataTimer_->stop();
-            plot_->hide();
-        };
 
         //---------------------------------------------------------------------------------------------------------------------
         void BlockScatterPlot::realTimePlot(){

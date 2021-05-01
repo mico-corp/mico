@@ -40,10 +40,14 @@ namespace mico{
         class BlockYolo:public flow::Block{
         public:
             /// Get name of block
-            virtual std::string name() const override {return "Yolo DNN";}        
+            std::string name() const override {return "Yolo DNN";}        
 
             /// Base constructor. Initializes the neural network.
             BlockYolo();
+
+            
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return false; };
 
             /// Returns a brief description of the block
             std::string description() const override {return    "Detect objects Haars cascade algorithm"

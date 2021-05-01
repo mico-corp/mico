@@ -34,7 +34,7 @@ namespace mico{
         class BlockArViewer:public flow::Block{
         public:
             /// Get name of block
-            virtual std::string name() const override {return "Block AR viewer";}        
+            std::string name() const override {return "Block AR viewer";}        
             
             /// Base constructor that initializes the pipes
             BlockArViewer();
@@ -45,6 +45,12 @@ namespace mico{
             /// Returns a brief description of the block
             std::string description() const override {return    "Block AR viewer"
                                                                 "   - \n";};
+
+            /// Configure block with given parameters.
+            bool configure(std::vector<flow::ConfigParameterDef> _params) override;
+
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return true; };
 
         private:
             VisualizerGlWidget* widget_;
