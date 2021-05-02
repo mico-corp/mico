@@ -77,7 +77,12 @@ option(BUILD_DVS                "Set to build DSV Module"           OFF)
 option(BUILD_BENCHMARK          "Set to build Benchmarks"           OFF)
 
 option(MICO_PREPARE_INSTALLER   "Set to prepare installer" OFF)
-option(MICO_USE_NSIS            "Use NSIS generator to produce installer" ON)
+if(WIN32)
+    option(MICO_USE_NSIS            "Use NSIS generator to produce installer" ON)
+elseif(UNIX)
+    option(MICO_USE_DEB             "Use DEB generator to produce installer" ON)
+endif()
+
 
 SET(MICO_MODULES "")
 

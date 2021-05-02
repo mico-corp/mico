@@ -25,7 +25,9 @@ macro(micoPrepareInstaller)
     # Custom target for packaging.
     if(MICO_USE_NSIS)
         set(CPACK_GENERATOR "NSIS")
-    else(MICO_USE_NSIS)
+    elseif(MICO_USE_DEB)
+        set(CPACK_GENERATOR "DEB")
+    else()
         set(CPACK_GENERATOR "ZIP")
     endif(MICO_USE_NSIS)
 
@@ -55,6 +57,14 @@ macro(micoPrepareInstaller)
         set(CPACK_NSIS_URL_INFO_ABOUT "https://mico-corp.github.io/mico")
         # set(CPACK_NSIS_CONTACT ${APP_EMAIL})
     endif()
+
+    # Specific DEB configuration
+    if(MICO_USE_DEB)
+        SET(CPACK_GENERATOR "DEB")
+        SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "mico-corp") #required
+    endif()
+
+
 
     # Call final CPACK configuration and prepare nsis file
     include(CPack)
