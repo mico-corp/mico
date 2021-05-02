@@ -44,7 +44,7 @@ macro(micoPrepareInstaller)
     
     
     if(MICO_USE_NSIS)
-        set(CPACK_NSIS_MODIFY_PATH "ON")
+        set(CPACK_NSIS_MODIFY_PATH "OFF")
         set(CPACK_NSIS_MUI_ICON "${PROJECT_SOURCE_DIR}/doc/mico.ico")
         set(CPACK_NSIS_MUI_UNIICON "${PROJECT_SOURCE_DIR}/doc/mico.ico")
         set(CPACK_NSIS_HELP_LINK "https://mico-corp.github.io/mico")

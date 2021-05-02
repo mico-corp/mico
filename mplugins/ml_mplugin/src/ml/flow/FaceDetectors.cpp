@@ -36,11 +36,11 @@ namespace mico{
 
             registerCallback(   {"input"}, 
                                 [&](flow::DataFlow _data){
-                                    if(!idle_)
+                                    if(!idle_ || !isConfigured_)
                                         return;
 
                                     idle_ = false;
-                                    cv::Mat frame = _data.get<cv::Mat>("input"); 
+                                    cv::Mat frame = _data.get<cv::Mat>("input").clone();
                                     cv::Mat frame_gray;
                                     cv::cvtColor( frame, frame_gray, cv::COLOR_BGR2GRAY );
                                     cv::equalizeHist( frame_gray, frame_gray );
@@ -61,12 +61,16 @@ namespace mico{
 
         
         bool BlockHaarCascade::configure(std::vector<flow::ConfigParameterDef> _params) {
+            while (!idle_) {    // 666 This blocks the GUI, but it is a quick fix needed to release a working version.
+                std::this_thread::sleep_for(std::chrono::milliseconds(30));
+            }
+            isConfigured_ = false;
             if(auto detector = getParamByName(_params, "Detector"); detector){
                 if( !face_cascade.load( detectors[detector.value().asString()])) {
                     return false;
                 }
             }
-
+            isConfigured_ = true;
             return true;
         }
         

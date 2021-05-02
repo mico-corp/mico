@@ -57,6 +57,7 @@ namespace mico{
         private:
             cv::CascadeClassifier face_cascade;
             bool idle_ = true;
+            bool isConfigured_ = false;
 
             std::map<std::string, std::string> detectors = {
                 {"Face detector",  (flow::Persistency::resourceDir() / "ml"/"haarcascade_frontalface_alt.xml").string()},

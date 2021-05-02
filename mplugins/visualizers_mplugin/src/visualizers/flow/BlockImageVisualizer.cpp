@@ -69,7 +69,9 @@ namespace mico{
             imageView_->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
             imageView_->setMinimumHeight(150);
             imageView_->setMinimumWidth(150);
-            imageView_->show();
+            imageView_->setGeometry(0, 0, 640, 480);
+            imageView_->setWindowFlags(Qt::WindowStaysOnTopHint);
+            imageView_->show(); 
 
             imageRefresher_ = new QTimer();
 

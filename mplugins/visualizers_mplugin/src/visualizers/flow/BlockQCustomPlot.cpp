@@ -100,6 +100,7 @@ namespace mico{
             dataTimer_->start(30);
 
             plot_->setGeometry(0, 0, 400, 400);
+            plot_->setWindowFlags(Qt::WindowStaysOnTopHint);
             plot_->show();
 
             return true;

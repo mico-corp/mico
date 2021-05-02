@@ -56,7 +56,7 @@ namespace mico{
 
                                     idle_ = false;
                                     if(getPipe("image")->registrations() || getPipe("detections")->registrations()){
-                                        cv::Mat frame = _data.get<cv::Mat>("input"); 
+                                        cv::Mat frame = _data.get<cv::Mat>("input").clone(); 
                                         cv::Mat blob;        
                                         cv::dnn::blobFromImage(frame, blob, 0.00392, cv::Size(320, 320), cv::Scalar(), true, false, CV_32F);
                                         net_.setInput(blob);
