@@ -108,6 +108,9 @@ namespace flow{
                 case flow::ConfigParameterDef::eParameterType::INTEGER:
                     jParam["value"] = configParams_[counter]->getParam().asInteger();
                     break;
+                case flow::ConfigParameterDef::eParameterType::PATH:
+                    jParam["value"] = configParams_[counter]->getParam().asPath().string().c_str();
+                    break;
                 case flow::ConfigParameterDef::eParameterType::BOOLEAN:
                     jParam["value"] = configParams_[counter]->getParam().asBool();
                     break;
@@ -171,6 +174,9 @@ namespace flow{
                     break;
                 case flow::ConfigParameterDef::eParameterType::BOOLEAN:
                     configParams_[counter]->setValueBool(value.toBool());
+                    break;
+                case flow::ConfigParameterDef::eParameterType::PATH:
+                    configParams_[counter]->setValuePath(value.toString().toStdString());
                     break;
             }
                 

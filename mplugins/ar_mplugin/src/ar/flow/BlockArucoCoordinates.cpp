@@ -125,7 +125,7 @@ namespace mico{
             }
 
             if (auto param = getParamByName(_params, "calibration_file"); param) {
-                std::string paramFile = param.value().asString();
+                std::string paramFile = param.value().asPath().string();
                 
                 cv::FileStorage fs;
                 try {
@@ -152,7 +152,7 @@ namespace mico{
         std::vector<flow::ConfigParameterDef> BlockArucoCoordinates::parameters(){
             return {
                 {"id", flow::ConfigParameterDef::eParameterType::INTEGER, 1},
-                {"calibration_file", flow::ConfigParameterDef::eParameterType::STRING, std::string("")}
+                {"calibration_file", flow::ConfigParameterDef::eParameterType::PATH, fs::path("")}
             };
         }
     }

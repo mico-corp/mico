@@ -21,6 +21,7 @@
 
 
 macro(micoPrepareInstaller)
+    
     # Custom target for packaging.
     if(MICO_USE_NSIS)
         set(CPACK_GENERATOR "NSIS")
@@ -42,7 +43,10 @@ macro(micoPrepareInstaller)
     set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}")
     set(CPACK_SOURCE_IGNORE_FILES ${CPACK_IGNORE_FILES})
     
-    
+    # Configure executables
+    set(CPACK_PACKAGE_EXECUTABLES "flow_kids" "Flow for Kids")
+
+    # Specific NSIS configuration
     if(MICO_USE_NSIS)
         set(CPACK_NSIS_MODIFY_PATH "OFF")
         set(CPACK_NSIS_MUI_ICON "${PROJECT_SOURCE_DIR}/doc/mico.ico")
@@ -52,6 +56,7 @@ macro(micoPrepareInstaller)
         # set(CPACK_NSIS_CONTACT ${APP_EMAIL})
     endif()
 
+    # Call final CPACK configuration and prepare nsis file
     include(CPack)
 
     # Configure file with custom definitions for NSIS.

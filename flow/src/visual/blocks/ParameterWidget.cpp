@@ -21,10 +21,17 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 #include <flow/visual/blocks/ParameterWidget.h>
+
 #include <QIntValidator>
 #include <QDoubleValidator>
 #include <QSpinBox>
 #include <QComboBox>
+#include <QLineEdit>
+#include <QCheckBox>
+#include <QPushButton>
+#include <QLabel>
+#include <QFileDialog>
+#include <QGroupBox>
 
 namespace flow{
 
@@ -45,27 +52,49 @@ namespace flow{
         lName_ = _param.name_;
         type_ = _param.type_;
         label_ = new QLabel(_param.name_.c_str());
+        this->addWidget(label_);
+
 
         switch (type_) {
         case flow::ConfigParameterDef::eParameterType::STRING:
             value_ = new QLineEdit();
+            this->addWidget(value_);
+            
             static_cast<QLineEdit*>(value_)->setText(_param.asString().c_str());
             break;
         case flow::ConfigParameterDef::eParameterType::DECIMAL:
             value_ = new QLineEdit();
+            this->addWidget(value_);
+    
             static_cast<QLineEdit*>(value_)->setText(QString::number(_param.asDecimal(), 'f', 5));
             static_cast<QLineEdit*>(value_)->setValidator( new QDoubleValidator() );
             break;
         case flow::ConfigParameterDef::eParameterType::INTEGER:
         {
             value_ = new QSpinBox();
+            this->addWidget(value_);
+
             static_cast<QSpinBox*>(value_)->setValue(_param.asInteger());
             static_cast<QSpinBox*>(value_)->setMaximum(std::numeric_limits<int>::max());
             break;
         }
         case flow::ConfigParameterDef::eParameterType::BOOLEAN:
             value_ = new QCheckBox();
+            this->addWidget(value_);
+
             break;
+        case flow::ConfigParameterDef::eParameterType::PATH:
+        {
+            filePath_ = new QLineEdit("File Path");
+            value_ = filePath_;
+            this->addWidget(value_);
+
+            browseButton_ = new QPushButton("Browse");
+            connect(browseButton_, &QPushButton::clicked, this, &ParameterWidget::browseCallback);
+            this->addWidget(browseButton_);
+            
+            break;
+        }
         case flow::ConfigParameterDef::eParameterType::OPTIONS:
             value_ = new QComboBox();
             for(const auto &opt: _param.asOptions()){
@@ -74,8 +103,6 @@ namespace flow{
             break;
         }
 
-        this->addWidget(label_);
-        this->addWidget(value_);
     }
 
     //---------------------------------------------------------------------------------------------------------------------
@@ -135,4 +162,15 @@ namespace flow{
         static_cast<QCheckBox*>(value_)->setChecked(_val);
     }
 
+    void ParameterWidget::setValuePath(fs::path _val) {
+
+    }
+
+    void ParameterWidget::browseCallback() {
+        QString directory = QFileDialog::getOpenFileName(Q_NULLPTR, "Choose file", "", "All Files (*)", Q_NULLPTR, QFileDialog::DontUseNativeDialog);
+
+        if (!directory.isEmpty()) {
+            static_cast<QLineEdit*>(value_)->setText(directory);
+        }
+    }
 }

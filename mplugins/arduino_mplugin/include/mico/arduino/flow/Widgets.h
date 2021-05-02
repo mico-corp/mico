@@ -41,6 +41,7 @@ namespace mico{
         public:
             /// Retrieve name of block
             std::string name() const override {return "Toggle Button";}     
+            
             /// Get custom view widget to be display in the graph
             QWidget * customWidget() override;
             

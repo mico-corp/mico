@@ -1,6 +1,5 @@
-
 //---------------------------------------------------------------------------------------------------------------------
-//  flow
+//  Cameras wrapper MICO plugin
 //---------------------------------------------------------------------------------------------------------------------
 //  Copyright 2020 Pablo Ramon Soria (a.k.a. Bardo91) pabramsor@gmail.com
 //---------------------------------------------------------------------------------------------------------------------
@@ -20,57 +19,55 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------------------------------------
 
-#ifndef FLOW_VISUAL_BLOCKS_PARAMETERWIDGET_H_
-#define FLOW_VISUAL_BLOCKS_PARAMETERWIDGET_H_
 
-#include <flow/Export.h>
 
-#include <QWidget>
-#include <QHBoxLayout>
+#ifndef MICO_FLOW_BLOCKS_STREAMERS_SINGLEIMAGEFLUSHER_H_
+#define MICO_FLOW_BLOCKS_STREAMERS_SINGLEIMAGEFLUSHER_H_
 
 #include <flow/Block.h>
-#include <sstream>
+#include <opencv2/opencv.hpp>
 
+class QGroupBox;
 class QLineEdit;
-class QCheckBox;
-class QLabel;
-class QPushButton;
 
-namespace flow{
+namespace mico{
+    namespace cameras{
+        /// Mico block that opens USB camera devices and flush images out on a stream.
+        /// @ingroup  mico_cameras
+        class SingleImageFlusher:public flow::Block{
+        public:
+            /// Get name of block
+            std::string name() const override {return "Single Image Flusher";}     
+            
+            /// Retreive icon of block    
+            QIcon icon() const override {
+                return QIcon((flow::Persistency::resourceDir() / "cameras" / "single_image.png").string().c_str());
+            };
+            
+            /// Base constructor
+            SingleImageFlusher();
 
-    class ParameterWidget: public QHBoxLayout{
-    public:
-        ParameterWidget(const ConfigParameterDef &_param, 
-                        QWidget *_parent = nullptr, 
-                        const char *_name = nullptr);
-        ~ParameterWidget();
-        
-        std::string label() const;
+            /// Base destructor
+            ~SingleImageFlusher();
+            
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return false; };
 
-        ConfigParameterDef getParam();
+            /// Get custom view widget to be display in the graph
+            QWidget* customWidget() override;
 
-        void setValueString(std::string _val);
-        void setValueInt(int _val);
-        void setValueDec(float _val);
-        void setValueBool(bool _val);
-        void setValuePath(fs::path _val);
-
-        ConfigParameterDef::eParameterType type() { return type_; };
-
-    private:
-        void browseCallback();
-
-    private:
-        std::string lName_;
-        QLabel   * label_;
-        QWidget   * value_;
-        QLineEdit *filePath_;
-        QPushButton *browseButton_;
-        flow::ConfigParameterDef::eParameterType type_;
-
-    };
-
-
+            /// Returns a brief description of the block
+            std::string description() const override {return    "Simple block that outputs a single image when a button is clicked.\n"
+                                                                "   - Outputs: \n";};
+                                                                
+        private:
+            cv::VideoCapture *camera_ = nullptr;
+            QGroupBox* customWidget_ = nullptr;
+            QLineEdit* filePathLe_ = nullptr;
+        };
+    }
 }
+
+
 
 #endif

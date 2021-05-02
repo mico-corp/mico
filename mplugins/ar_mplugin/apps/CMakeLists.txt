@@ -37,3 +37,7 @@ target_link_libraries(calibration_app LINK_PUBLIC ${OpenCV_LIBS} )
 if(UNIX)
 	target_link_libraries(calibration_app LINK_PUBLIC pthread)
 endif()
+
+install(TARGETS calibration_app
+	RUNTIME DESTINATION bin/apps
+)

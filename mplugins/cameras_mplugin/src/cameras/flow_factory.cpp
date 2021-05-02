@@ -22,6 +22,7 @@
 
 #include <flow/flow.h>
 #include <mico/cameras/flow/StreamWebcam.h>
+#include <mico/cameras/flow/SingleImageFlusher.h>
 #include <mico/cameras/flow/RaspiCam.h>
 
 using namespace mico::cameras;
@@ -30,9 +31,11 @@ using namespace flow;
 extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(){
 
     flow::PluginNodeCreator *creator = new flow::PluginNodeCreator;
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<StreamWebcam, true            >>(); }, "cameras");
+
+    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<StreamWebcam, true           >>(); }, "cameras");
+    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<SingleImageFlusher          >>(); }, "cameras");
     #ifdef MICO_IS_RASPBIAN
-        creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<RaspiCam, true            >>(); }, "cameras");
+        creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<RaspiCam, true           >>(); }, "cameras");
     #endif
     return creator;
 }

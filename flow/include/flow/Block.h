@@ -42,12 +42,12 @@
 #include <QBoxLayout>
 #include <QIcon>
 #include <cassert>
-#include<optional>
+#include <optional>
 
 namespace flow{
 
     struct ConfigParameterDef {
-        enum eParameterType { BOOLEAN, INTEGER, DECIMAL, STRING, OPTIONS };
+        enum eParameterType { BOOLEAN, INTEGER, DECIMAL, STRING, PATH, OPTIONS };
         std::string name_;
         eParameterType type_;
         boost::any value_;
@@ -55,6 +55,7 @@ namespace flow{
         int                      asInteger()    const { assert(type_ == eParameterType::INTEGER); return boost::any_cast<int>(value_); };
         float                    asDecimal()    const { assert(type_ == eParameterType::DECIMAL); return boost::any_cast<float>(value_); };
         std::string              asString()     const { assert(type_ == eParameterType::STRING);  return boost::any_cast<std::string>(value_); };
+        fs::path                 asPath()       const { assert(type_ == eParameterType::PATH);    return boost::any_cast<fs::path>(value_); };
         std::vector<std::string> asOptions()    const { assert(type_ == eParameterType::OPTIONS); return boost::any_cast<std::vector<std::string>>(value_); };
     };
 

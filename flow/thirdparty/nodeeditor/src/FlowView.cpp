@@ -164,6 +164,7 @@ contextMenuEvent(QContextMenuEvent *event)
       grid->setViewMode(QListWidget::IconMode);
       grid->setIconSize(QSize(100, 100));
       grid->setResizeMode(QListWidget::Adjust);
+      grid->setMovement(QListView::Static);
 
       nodeTypeSelector->addItem(grid, cat);
       topLevelItems[cat] = grid;
