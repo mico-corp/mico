@@ -151,8 +151,17 @@ write_basic_package_version_file(
     )
 
 # This installs the include folder
-# install(DIRECTORY include DESTINATION ${CMAKE_INSTALL_PREFIX} FILES_MATCHING PATTERN "*.h")
-# install(DIRECTORY include DESTINATION ${CMAKE_INSTALL_PREFIX} FILES_MATCHING PATTERN "*.inl")
+install(  DIRECTORY include/ 
+          DESTINATION include 
+          FILES_MATCHING PATTERN "*.h")
+          
+install(  DIRECTORY include/ 
+          DESTINATION include 
+          FILES_MATCHING PATTERN "*.inl")
+
+install(  DIRECTORY resources/ 
+          DESTINATION bin/mplugins/resources )
+          
 
 export(TARGETS nodes flow NAMESPACE flow:: FILE flow.cmake)
 
@@ -184,3 +193,53 @@ if(${BUILD_TOOLS})
 endif()
 
 
+# Additional library requirements
+if(WIN32)
+    # Qt
+    install(    FILES 
+                ${Qt5_DIR}/../../../bin/Qt5Core.dll
+                ${Qt5_DIR}/../../../bin/Qt5Gui.dll
+                ${Qt5_DIR}/../../../bin/Qt5PrintSupport.dll
+                ${Qt5_DIR}/../../../bin/Qt5Svg.dll
+                ${Qt5_DIR}/../../../bin/Qt5Widgets.dll
+                DESTINATION bin )
+    
+    install(    DIRECTORY ${Qt5_DIR}/../../../plugins/platforms
+                DESTINATION bin )
+
+    install(    DIRECTORY ${Qt5_DIR}/../../../plugins/iconengines
+                DESTINATION bin )
+
+    find_package(OpenCV)
+    # OpenCV
+    install(    FILES 
+                ${OpenCV_DIR}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_aruco420.dll
+                ${OpenCV_DIR}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_calib3d420.dll
+                ${OpenCV_DIR}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_core420.dll
+                ${OpenCV_DIR}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_dnn420.dll
+                ${OpenCV_DIR}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_features2d420.dll
+                ${OpenCV_DIR}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_flann420.dll
+                ${OpenCV_DIR}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_highgui420.dll
+                ${OpenCV_DIR}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_imgproc420.dll
+                ${OpenCV_DIR}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_objdetect420.dll
+                ${OpenCV_DIR}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_videoio420.dll
+                DESTINATION bin )
+    
+    # dlfcn
+    install(    FILES 
+                ${dlfcn-win32_DIR}/../../bin/dl.dll
+                DESTINATION bin )
+          
+    # Freeglut
+    install(    FILES 
+                ${FreeGLUT_DIR}/../../../bin/freeglut.dll
+                DESTINATION bin )
+
+    # ucrtbase.dll y VCRUNTIME140D make it automatic please.... 
+    install(    FILES 
+                "C:/Program Files (x86)/Windows Kits/10/bin/10.0.18362.0/x64/ucrt/ucrtbased.dll"
+                "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Redist/MSVC/14.28.29325/debug_nonredist/x64/Microsoft.VC142.DebugCRT/vcruntime140d.dll"
+                DESTINATION bin )
+    
+     
+endif()

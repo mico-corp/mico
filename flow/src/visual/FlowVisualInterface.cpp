@@ -236,7 +236,7 @@ namespace flow{
 
     struct PathLeafString {
         std::string operator()(const boost::filesystem::directory_entry& entry) const {
-            return entry.path().leaf().string();
+            return entry.path().string();
         }
     };
 
@@ -252,19 +252,29 @@ namespace flow{
     void FlowVisualInterface::loadCustomPlugins(std::shared_ptr<QtNodes::DataModelRegistry> &_registry){
         // List plugins in default folder
         std::vector<std::string> files;
+        std::vector<std::string> hintsDirectories;
         #ifdef linux
             std::string userName(getenv("USER"));
-            std::string pluginDir = "/home/"+userName+"/.flow/plugins/";
+            hintsDirectories.push_back("/home/"+userName+"/.flow/plugins/");
         #endif
         #ifdef _WIN32
-            std::string pluginDir = "C:\\.flow\\plugins\\";
+            hintsDirectories.push_back("C:\\.flow\\plugins\\");
+            hintsDirectories.push_back("C:\\Program Files\\mico-corp\\mico\\bin\\mplugins");
+            hintsDirectories.push_back("C:\\Program Files (x86)\\mico-corp\\mico\\bin\\mplugins");
         #endif
-        readDirectory(pluginDir, files);
+        for(const auto &hint: hintsDirectories){
+            std::vector<std::string> filesDir;
+            readDirectory(hint, filesDir);
+            if(filesDir.size() > 0){
+                files.insert(files.end(), filesDir.begin(), filesDir.end());
+            }
+
+        }
         // Iterate over file
         for(auto file:files){
             std::cout << file << std::endl;
             // Load blocks registered
-            void *hndl = dlopen((pluginDir+file).c_str(), RTLD_NOW);
+            void *hndl = dlopen(file.c_str(), RTLD_NOW);
             if(hndl == nullptr){
                 std::cerr << "[Warning]: " <<  dlerror() << std::endl;
             }else{
@@ -273,7 +283,7 @@ namespace flow{
                 typedef PluginNodeCreator* (*Factory)();
                 void *mkr = dlsym(hndl, "factory");
                 if(mkr == nullptr){
-                    std::cout << "[Warning] Pluging " << file << " does not have factory" << std::endl;
+                    std::cerr << "[Warning] Pluging " << file << " does not have factory" << std::endl;
                     continue;
                 }
 

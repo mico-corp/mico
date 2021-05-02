@@ -126,25 +126,14 @@ macro(add_mplugin)
         set(EXPORTED_PLUGIN_NAME ${IN_PLUGIN_NAME})
     endif()
 
-    #file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/plugins/resources/math)
-
-    add_custom_target(flow_install_${IN_PLUGIN_NAME} ALL
-                    COMMAND ${CMAKE_COMMAND} -E copy 	$<TARGET_FILE:${EXPORTED_PLUGIN_NAME}>
-                    ${CMAKE_BINARY_DIR}/plugins
-    )
-    set_target_properties(flow_install_${IN_PLUGIN_NAME} PROPERTIES FOLDER "mplugins/install")
-
     if(${IN_HAS_RESOURCES})
-        add_custom_target(flow_install_${IN_PLUGIN_NAME}_resources ALL
-                        COMMAND ${CMAKE_COMMAND} -E copy_directory 	${CMAKE_CURRENT_SOURCE_DIR}/resources 
-                        ${CMAKE_BINARY_DIR}/plugins/resources
-        )
-        add_dependencies(flow_install_${IN_PLUGIN_NAME}_resources ${IN_PLUGIN_NAME})
-
-        set_target_properties(flow_install_${IN_PLUGIN_NAME}_resources PROPERTIES FOLDER "mplugins/install")
+        install(    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/resources 
+                    DESTINATION bin/mplugins )
     endif()
 
-    add_dependencies(flow_install_${IN_PLUGIN_NAME} ${IN_PLUGIN_NAME})
+    install(TARGETS ${EXPORTED_PLUGIN_NAME}
+        RUNTIME DESTINATION bin/mplugins
+    )
 
 endmacro(add_mplugin)
 

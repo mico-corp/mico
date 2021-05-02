@@ -43,7 +43,8 @@ namespace flow{
     public:
         static fs::path resourceDir () {
             #if defined(_WIN32)
-                return "c:\\.flow\\plugins\\resources";
+                // 666 uf............. depend on installation? fix it? will we support x86? make it configurable
+                return "C:\\Program Files\\mico-corp\\mico\\bin\\mplugins\\resources"; 
             #elif defined(__linux__)
                 std::string userDir(getenv("USER"));
                 std::string resourcesDir = "/home/"+userDir+"/.flow/plugins/resources";

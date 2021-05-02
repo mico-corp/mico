@@ -166,9 +166,11 @@ install(TARGETS nodes
   EXPORT NodeEditorTargets
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION bin
 )
 
-# install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(    DIRECTORY include/ 
+            DESTINATION include)
 
 install(EXPORT NodeEditorTargets
   FILE NodeEditorTargets.cmake

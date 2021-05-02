@@ -31,13 +31,17 @@ namespace mico{
     namespace ml{
         BlockYolo::BlockYolo(){
 
-            net_ = cv::dnn::readNetFromDarknet(
-                (flow::Persistency::resourceDir() / "ml"/"yolov3-tiny.cfg").string(), 
-                (flow::Persistency::resourceDir() / "ml"/"yolov3-tiny.weights").string());
-                
-            net_.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
-            net_.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
-            outputs_ = net_.getUnconnectedOutLayersNames();
+            try{
+                net_ = cv::dnn::readNetFromDarknet(
+                    (flow::Persistency::resourceDir() / "ml"/"yolov3-tiny.cfg").string(), 
+                    (flow::Persistency::resourceDir() / "ml"/"yolov3-tiny.weights").string());
+                    
+                net_.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
+                net_.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
+                outputs_ = net_.getUnconnectedOutLayersNames();
+            }catch(std::exception &_e){
+                std::cerr << "[WARNING] Failed to read YOLO parameters, cant use YOLO ML block" << std::endl;
+            }
 
             
             createPipe<cv::Mat>("image");
