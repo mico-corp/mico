@@ -43,10 +43,14 @@ namespace mico{
 
             /// Base destructor
             ~BlockTrajectoryVisualizerPangolin();
+            
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return false; };
 
-            virtual /// Get custom view widget to be display in the graph
-        QWidget * customWidget() override;
-            virtual QBoxLayout * creationWidget() override;
+            /// Get custom view widget to be display in the graph
+            QWidget * customWidget() override;
+            
+            QBoxLayout * creationWidget() override;
 
         private:
             void poseCallback(flow::DataFlow  _data, int _id);
