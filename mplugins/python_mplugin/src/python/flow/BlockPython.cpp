@@ -64,6 +64,7 @@ namespace mico {
                     this->runPythonCode(data, false);
                 });
 
+            locals_ = new pybind11::dict();
         }
         BlockPython::~BlockPython(){
             /*
@@ -139,25 +140,24 @@ namespace mico {
             
             try {
                 pybind11::scoped_interpreter guard{}; /// 666 seek for efficiency
-                auto locals = pybind11::dict();
+
                 if(_useData) { // Encode inputs
-                    for(auto input:inputInfo_){
-                        encodeInput(locals, _data, input.first, input.second);
+                    for(auto [label, type]: inputInfo_){
+                        encodeInput(*locals_, _data, label, type);
                     }
                 }
 
                 // pybind11::gil_scoped_acquire gil;
-                pybind11::exec(pythonCode, pybind11::globals(), locals);    // If this line crashes in Windows when importing numpy or cv2 saying somthing like
+                pybind11::exec(pythonCode, pybind11::globals(), *locals_);  // If this line crashes in Windows when importing numpy or cv2 saying somthing like
                                                                             //      "Importing the numpy C-extensions failed. This error can happen for
                                                                             //      many reasons, often due to issues with your setup or how NumPy was installed."
                                                                             // Try compiling in release mode as adviced in:
                                                                             //  https://numpy.org/devdocs/user/troubleshooting-importerror.html#debug-build-on-windows
                 // pybind11::gil_scoped_release nogil;
-
-
+                
                 for(auto output:outputInfo_){
-                    flushPipe(locals, output.first, output.second);
-                }        
+                    flushPipe(*locals_, output.first, output.second);
+                }
 
             }catch(pybind11::error_already_set &_e){
                 std::cout << "Catched pybinds exception: " << _e.what() << "\n";
@@ -172,17 +172,17 @@ namespace mico {
 
 
         void BlockPython::encodeInput(pybind11::dict &_locals, flow::DataFlow _data, std::string _tag, std::string _typeTag){
-
-            if(_typeTag == "int"){
+            
+            if(_typeTag == typeid(int).name()){
                 _locals[_tag.c_str()] = pybind11::int_(_data.get<int>(_tag));
-            }else if(_typeTag == "float"){
+            }else if(_typeTag == typeid(float).name()){
                 _locals[_tag.c_str()] = pybind11::float_(_data.get<float>(_tag));
-            }else if(_typeTag == "vec3"){
-                _locals[_tag.c_str()] = _data.get<Eigen::Vector3f>(_tag);
-            }else if(_typeTag == "vec4"){
-                _locals[_tag.c_str()] = _data.get<Eigen::Vector4f>(_tag);
-            }else if(_typeTag == "mat44"){
-                _locals[_tag.c_str()] = _data.get<Eigen::Matrix4f>(_tag);
+            // }else if(_typeTag == "vec3"){
+            //     _locals[_tag.c_str()] = _data.get<Eigen::Vector3f>(_tag);
+            // }else if(_typeTag == "vec4"){
+            //     _locals[_tag.c_str()] = _data.get<Eigen::Vector4f>(_tag);
+            // }else if(_typeTag == "map44"){
+            //     _locals[_tag.c_str()] = _data.get<Eigen::Matrix4f>(_tag);
             }else if(_typeTag == typeid(cv::Mat).name()){
                 auto image = _data.get<cv::Mat>(_tag);
                 if (image.rows != 0) {
@@ -204,16 +204,16 @@ namespace mico {
         void BlockPython::flushPipe(pybind11::dict &_locals , std::string _tag, std::string _typeTag){
         
             if(_locals.contains(_tag.c_str())){
-                if(_typeTag == "int"){
+                if(_typeTag == typeid(int).name()){
                     getPipe(_tag)->flush(_locals[_tag.c_str()].cast<int>());
-                }else if(_typeTag == "float"){
+                }else if(_typeTag == typeid(float).name()){
                     getPipe(_tag)->flush(_locals[_tag.c_str()].cast<float>());
-                }else if(_typeTag == "vec3"){
-                    getPipe(_tag)->flush(_locals[_tag.c_str()].cast<Eigen::Vector3f>());
-                }else if(_typeTag == "vec4"){
-                    getPipe(_tag)->flush(_locals[_tag.c_str()].cast<Eigen::Vector4f>());
-                }else if(_typeTag == "mat44"){
-                    getPipe(_tag)->flush(_locals[_tag.c_str()].cast<Eigen::Matrix4f>());
+                // }else if(_typeTag == "vec3"){
+                    // getPipe(_tag)->flush(_locals[_tag.c_str()].cast<Eigen::Vector3f>());
+                // }else if(_typeTag == "vec4"){
+                    // getPipe(_tag)->flush(_locals[_tag.c_str()].cast<Eigen::Vector4f>());
+                // }else if(_typeTag == "mat44"){
+                    // getPipe(_tag)->flush(_locals[_tag.c_str()].cast<Eigen::Matrix4f>());
                 }else if(_typeTag == typeid(cv::Mat).name()){
                     auto pyArray = pybind11::array_t<unsigned char>(_locals[_tag.c_str()]);
                     if(pyArray.ndim() == 2){

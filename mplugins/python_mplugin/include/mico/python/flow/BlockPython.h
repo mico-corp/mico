@@ -57,8 +57,8 @@ namespace mico{
             std::string name() const override {return "Python";}
             
             /// Retreive icon of block    
-            QIcon icon() const override {
-                return QIcon((flow::Persistency::resourceDir() + "python/Python.png").c_str());
+            QIcon icon() const override { 
+                return QIcon((flow::Persistency::resourceDir()/"python"/"Python.png").string().c_str());
             }
 
             /// Base constructor
@@ -103,6 +103,7 @@ namespace mico{
             QPushButton * runButton_;
             PythonSyntaxHighlighter *highlighter_;
 
+            pybind11::dict* locals_;
             static int nPythonBlocks_;
             //pybind11::gil_scoped_release *gilReleaser_; // Needed https://stackoverflow.com/questions/54772595/opencv-functions-lock-when-called-by-a-python-script-itself-called-by-a-c-thre
         };
