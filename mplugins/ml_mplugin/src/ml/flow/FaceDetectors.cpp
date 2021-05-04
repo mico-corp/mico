@@ -21,6 +21,7 @@
 
 
 #include <mico/ml/flow/FaceDetectors.h>
+#include <mico/ml/Detection.h>
 #include <flow/Outpipe.h>
 
 #include <cmath>
@@ -31,6 +32,7 @@ namespace mico{
     namespace ml{
         BlockHaarCascade::BlockHaarCascade(){
             createPipe<cv::Mat>("result");
+            createPipe<std::vector<Detection>>("detections");
 
             createPolicy({  flow::makeInput<cv::Mat>("input")  });
 
@@ -48,9 +50,12 @@ namespace mico{
                                     std::vector<cv::Rect> faces;
                                     if (!face_cascade.empty()) {
                                         face_cascade.detectMultiScale( frame_gray, faces );   
+                                        std::vector< Detection> detections;
                                         for ( size_t i = 0; i < faces.size(); i++ ) {
                                             cv::Point center( faces[i].x + faces[i].width/2, faces[i].y + faces[i].height/2 );
                                             cv::rectangle( frame, faces[i], cv::Scalar( 0, 255, 0 ), 4 );
+                                            
+                                            detections.push_back({ 0, faces[i] });
                                         }
                                         getPipe("result")->flush(frame);
                                     }
