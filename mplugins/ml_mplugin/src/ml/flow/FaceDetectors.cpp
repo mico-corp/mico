@@ -55,7 +55,7 @@ namespace mico{
                                             cv::Point center( faces[i].x + faces[i].width/2, faces[i].y + faces[i].height/2 );
                                             cv::rectangle( frame, faces[i], cv::Scalar( 0, 255, 0 ), 4 );
                                             
-                                            detections.push_back({ 0, faces[i] });
+                                            detections.push_back({ 0, faces[i], frame(faces[i])});
                                         }
                                         getPipe("result")->flush(frame);
                                     }

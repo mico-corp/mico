@@ -35,6 +35,7 @@ namespace mico{
         struct Detection{
             int label_;
             cv::Rect bb_;
+            cv::Mat crop_;
         };
 
         /// Mico block that triggers a boolean signal if a detection of a given ID appears.
