@@ -20,7 +20,7 @@
 ##---------------------------------------------------------------------------------------------------------------------
 
 cmake_minimum_required (VERSION 3.12 FATAL_ERROR)
-project(mico VERSION 1.0.0 LANGUAGES C CXX)
+project(mico VERSION 1.0.1 LANGUAGES C CXX)
 
 if( NOT CMAKE_BUILD_TYPE )
   set( CMAKE_BUILD_TYPE Release CACHE STRING
@@ -63,14 +63,12 @@ set(BUNDLE_COMPILATION ON) # Legacy
 
 option(BUILD_CAMERAS            "Set to build CAMERAS Module"       ON)
 option(BUILD_VISUALIZERS        "Set to build VISUALIZERS Module"   ON)
-option(BUILD_SLAM               "Set to build SLAM Module"          OFF)
 option(BUILD_PYTHON             "Set to build Python Module"        OFF)
-option(BUILD_DNN                "Set to build DNN Module"           OFF)
 option(BUILD_ML                 "Set to build ML Module"            ON)
 option(BUILD_FASTCOM            "Set to build fastcom Module"       OFF)
 option(BUILD_ROBOTICS           "Set to build robotics Module"      OFF)
 option(BUILD_ARDUINO            "Set to build arduino Module"       ON)
-option(BUILD_SIMULATION         "Set to build simulation Module"    ON)
+option(BUILD_SIMULATION         "Set to build simulation Module"    OFF)
 option(BUILD_AR                 "Set to build AR Module"            ON)
 option(BUILD_DVS                "Set to build DSV Module"           OFF)
 

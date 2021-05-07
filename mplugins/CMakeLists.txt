@@ -27,16 +27,8 @@ if(${BUILD_CAMERAS})
 	add_subdirectory(cameras_mplugin)
 endif()
 
-if(${BUILD_SLAM})
-	add_subdirectory(slam_mplugin)
-endif()
-
 if(${BUILD_VISUALIZERS})
 	add_subdirectory(visualizers_mplugin)
-endif()
-
-if(${BUILD_DNN})
-	add_subdirectory(dnn_mplugin)
 endif()
 
 if(${BUILD_ML})
