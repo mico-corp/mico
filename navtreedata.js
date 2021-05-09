@@ -26,7 +26,7 @@ var NAVTREE =
 [
   [ "MICO", "index.html", [
     [ "What is MICO?", "index.html#what_is_mico", null ],
-    [ "Examples", "index.html#autotoc_md14", null ],
+    [ "Examples", "index.html#autotoc_md11", null ],
     [ "Content list MICO Wiki", "d8/d2a/content_list_mico_wiki.html", "d8/d2a/content_list_mico_wiki" ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
@@ -43,9 +43,9 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d6/d48/classmico_1_1dvs_1_1_harris_detector.html#a4d769a073b909cf924c2d34bd6b9a001",
-"da/dc0/classflow_1_1_block.html#a6449095590cf9df18fa9b182e0cee6de",
-"df/d96/classmico_1_1arduino_1_1_and_operator.html#a435fdfce3e2d856c87d4a05cfcd19b58"
+"d5/db3/create_mico_block.html",
+"da/d83/classmico_1_1math_1_1_block_timer.html#a9d736fbf1b4ef2044e52bfd84b0d3ee6",
+"de/d0e/classmico_1_1visualizer_1_1_block_number_visualizer.html#a8b569e2c54d34616b3bb4ebccaae30fa"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

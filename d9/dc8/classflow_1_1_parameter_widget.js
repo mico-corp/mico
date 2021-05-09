@@ -7,6 +7,7 @@ var classflow_1_1_parameter_widget =
     [ "setValueBool", "d9/dc8/classflow_1_1_parameter_widget.html#a83a903ad3b974087827f85304a3b8df9", null ],
     [ "setValueDec", "d9/dc8/classflow_1_1_parameter_widget.html#a87c65d0a808f31fc545572cdbd9f7ec5", null ],
     [ "setValueInt", "d9/dc8/classflow_1_1_parameter_widget.html#a7ebd862f7729a63386034d551d1e66bf", null ],
+    [ "setValuePath", "d9/dc8/classflow_1_1_parameter_widget.html#aa07429156dbb1ac10bdb82f91c14424b", null ],
     [ "setValueString", "d9/dc8/classflow_1_1_parameter_widget.html#ac910867ca8ee48857dce3b975e58339e", null ],
     [ "type", "d9/dc8/classflow_1_1_parameter_widget.html#aec977cf7f8dfb2e631b3b07f471aef09", null ]
 ];

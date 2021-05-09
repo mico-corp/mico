@@ -58,6 +58,7 @@ var annotated_dup =
       ] ],
       [ "cameras", null, [
         [ "RaspiCam", "d7/d0a/classmico_1_1cameras_1_1_raspi_cam.html", "d7/d0a/classmico_1_1cameras_1_1_raspi_cam" ],
+        [ "SingleImageFlusher", "df/d89/classmico_1_1cameras_1_1_single_image_flusher.html", "df/d89/classmico_1_1cameras_1_1_single_image_flusher" ],
         [ "StreamWebcam", "d6/daf/classmico_1_1cameras_1_1_stream_webcam.html", "d6/daf/classmico_1_1cameras_1_1_stream_webcam" ]
       ] ],
       [ "core", null, [
@@ -76,6 +77,9 @@ var annotated_dup =
         [ "BlockEventsToImage", "d4/d68/classmico_1_1dvs_1_1_block_events_to_image.html", "d4/d68/classmico_1_1dvs_1_1_block_events_to_image" ],
         [ "BlockNoiseFilter", "da/dfe/classmico_1_1dvs_1_1_block_noise_filter.html", "da/dfe/classmico_1_1dvs_1_1_block_noise_filter" ]
       ] ],
+      [ "imgproc", null, [
+        [ "BlockKernelConvolution", "dc/dc7/classmico_1_1imgproc_1_1_block_kernel_convolution.html", "dc/dc7/classmico_1_1imgproc_1_1_block_kernel_convolution" ]
+      ] ],
       [ "math", null, [
         [ "BlockSum", "db/d60/classmico_1_1math_1_1_block_sum.html", "db/d60/classmico_1_1math_1_1_block_sum" ],
         [ "BlockSubstract", "d3/dfa/classmico_1_1math_1_1_block_substract.html", "d3/dfa/classmico_1_1math_1_1_block_substract" ],
@@ -90,10 +94,10 @@ var annotated_dup =
         [ "BlockCosine", "d4/d4f/classmico_1_1math_1_1_block_cosine.html", "d4/d4f/classmico_1_1math_1_1_block_cosine" ]
       ] ],
       [ "ml", null, [
+        [ "BlockHaarCascade", "dd/d2d/classmico_1_1ml_1_1_block_haar_cascade.html", "dd/d2d/classmico_1_1ml_1_1_block_haar_cascade" ],
         [ "Detection", "de/dfa/structmico_1_1ml_1_1_detection.html", "de/dfa/structmico_1_1ml_1_1_detection" ],
         [ "BlockTriggerDetection", "dc/d19/classmico_1_1ml_1_1_block_trigger_detection.html", "dc/d19/classmico_1_1ml_1_1_block_trigger_detection" ],
-        [ "BlockYolo", "da/da9/classmico_1_1ml_1_1_block_yolo.html", "da/da9/classmico_1_1ml_1_1_block_yolo" ],
-        [ "BlockHaarCascade", "dd/d2d/classmico_1_1ml_1_1_block_haar_cascade.html", "dd/d2d/classmico_1_1ml_1_1_block_haar_cascade" ]
+        [ "BlockYolo", "da/da9/classmico_1_1ml_1_1_block_yolo.html", "da/da9/classmico_1_1ml_1_1_block_yolo" ]
       ] ],
       [ "python", null, [
         [ "BlockPython", "d8/d0d/classmico_1_1python_1_1_block_python.html", "d8/d0d/classmico_1_1python_1_1_block_python" ],

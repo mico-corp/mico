@@ -27,7 +27,7 @@
   <td id="projectlogo"><img alt="Logo" src="../../icon.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">MICO
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">1.0.1</span>
    </div>
    <div id="projectbrief">Modular Interchangeable Computer prOgramming</div>
   </td>
@@ -89,7 +89,7 @@ $(document).ready(function(){initNavTree('d2/d30/tutorial_ar_mplugin.html','../.
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md_C__Users_Bardo91_Desktop_mico_doc_tutorials_ar_ar_mplugin_tutorials"></a></p>
-<h2><a class="anchor" id="autotoc_md17"></a>
+<h2><a class="anchor" id="autotoc_md14"></a>
 Camera calibration.</h2>
 <p>For better undestanding of what is camera calibration, please refer to other great tutorials as the one provided by OpenCV library <a href="https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_calib3d/py_calibration/py_calibration.html">link</a>.</p>
 <p>To start, you need to print a calibration chessboard pattern. This can be found in many places on internet. For simplicity, you can download this one:</p>
@@ -103,7 +103,7 @@ Camera calibration.</h2>
 <img src="../../camera_calibration.gif" alt="" width="320px"/>
 </div>
 <p>We recommend to record at least 12-16 images, placing the calibration pattern at different distances and angles, as shown in the previous gif. Once you have recorded a sufficient number of images, use right-click on the window to stop streaming and start the calibration process. Once it finishes, the application will end and a file will be placed in the location of the folder where the application was ran.</p>
-<h2><a class="anchor" id="autotoc_md18"></a>
+<h2><a class="anchor" id="autotoc_md15"></a>
 Printing ARUCO markers</h2>
 <p>The AR pluging works by detecting specific markers on camera's stream of images. For simplicity, [ARUCO])(<a href="https://www.uco.es/investiga/grupos/ava/node/26">https://www.uco.es/investiga/grupos/ava/node/26</a>) markers have been used. These were deceloped by the university of Cordoba in Spain, and popularized in the field of research and robotics thanks to ROS and OpenCV.</p>
 <p>For more information, refere to the developers webpage or OpenCV webpage. In this documentation, we have uploaded two sample aruco markers to be used in this tutorial, but there exists many of them.</p>
@@ -120,7 +120,7 @@ Printing ARUCO markers</h2>
 <td class="markdownTableBodyNone">Aruco marker 1   </td><td class="markdownTableBodyNone">Aruco marker 2   </td></tr>
 </table>
 </center><p>Print them and proceed to the following section.</p>
-<h2><a class="anchor" id="autotoc_md19"></a>
+<h2><a class="anchor" id="autotoc_md16"></a>
 Camera position estimation and main coordinate system</h2>
 <p>As mentioned in the previous section, the AR system works by detecting ARUCO markers on the camera stream. There are detected using the BlockArucoCoordinates. This block get an input stream of images and output a set of marker detections. These can be filtered using the BlockFilterAruco which get the set of markers and select the desired one by ID. This detections contains two kind of information: The ID of the marker and the 3D pose of it (represented by a 4x4 affine transform matrix). </p><center> <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -150,7 +150,7 @@ Camera position estimation and main coordinate system</h2>
 <img src="../../view_ar_viewer_main_coordinate.png" alt="" width="640px"/>
 </div>
 <p>Up to this point, you should be able to move the camera facing the marker and a 3D axes will appear, indicating the fixed coordinate frame.</p>
-<h2><a class="anchor" id="autotoc_md20"></a>
+<h2><a class="anchor" id="autotoc_md17"></a>
 Adding new entities</h2>
 <p>Now it is time to add more entities to the game. To do that, we will use the other Aruco Marker and two new blocks:</p>
 <ol type="1">

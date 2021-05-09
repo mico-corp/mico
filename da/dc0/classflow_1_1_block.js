@@ -15,6 +15,7 @@ var classflow_1_1_block =
     [ "getPolicy", "da/dc0/classflow_1_1_block.html#a08758b4316ab7bff1dd4ef544aa7eee7", null ],
     [ "icon", "da/dc0/classflow_1_1_block.html#a86266043232e7b8ed1e5ff59ac9c8398", null ],
     [ "inputTags", "da/dc0/classflow_1_1_block.html#a69b0b879baa05c1740ac9faddd1eed0d", null ],
+    [ "isConfigurable", "da/dc0/classflow_1_1_block.html#acdf9f3649201d946d209bb27c9aecffd", null ],
     [ "isRunningLoop", "da/dc0/classflow_1_1_block.html#a1c96632aa83e166831f1fcc832556ca4", null ],
     [ "loopCallback", "da/dc0/classflow_1_1_block.html#ab99be8e02b0fbebdc6425f1b82570be0", null ],
     [ "name", "da/dc0/classflow_1_1_block.html#a737c806e103c5c76b822b96c2c3e1bda", null ],

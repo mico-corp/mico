@@ -27,7 +27,7 @@
   <td id="projectlogo"><img alt="Logo" src="../../icon.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">MICO
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">1.0.1</span>
    </div>
    <div id="projectbrief">Modular Interchangeable Computer prOgramming</div>
   </td>
@@ -131,17 +131,18 @@ $(document).ready(function(){initNavTree('de/dbb/_persistency_8h_source.html','.
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">public</span>:</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <span class="keyword">static</span> fs::path resourceDir () {</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">            #if defined(_WIN32)</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;                <span class="keywordflow">return</span> <span class="stringliteral">&quot;c:\\.flow\\plugins\\resources&quot;</span>;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">            #elif defined(__linux__)</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;                std::string userDir(getenv(<span class="stringliteral">&quot;USER&quot;</span>));</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;                std::string resourcesDir = <span class="stringliteral">&quot;/home/&quot;</span>+userDir+<span class="stringliteral">&quot;/.flow/plugins/resources&quot;</span>;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;                <span class="keywordflow">return</span> resourcesDir;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">            #endif</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        }</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    };</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;}</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;                <span class="comment">// 666 uf............. depend on installation? fix it? will we support x86? make it configurable</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;                <span class="keywordflow">return</span> <span class="stringliteral">&quot;C:\\Program Files\\mico-corp\\mico\\bin\\mplugins\\resources&quot;</span>; </div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">            #elif defined(__linux__)</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;                std::string userDir(getenv(<span class="stringliteral">&quot;USER&quot;</span>));</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;                std::string resourcesDir = <span class="stringliteral">&quot;/home/&quot;</span>+userDir+<span class="stringliteral">&quot;/.flow/plugins/resources&quot;</span>;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;                <span class="keywordflow">return</span> resourcesDir;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">            #endif</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        }</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    };</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;}</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclassflow_1_1_persistency_html"><div class="ttname"><a href="../../dd/d79/classflow_1_1_persistency.html">flow::Persistency</a></div><div class="ttdef"><b>Definition:</b> <a href="../../de/dbb/_persistency_8h_source.html#l00042">Persistency.h:42</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

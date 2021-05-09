@@ -27,7 +27,7 @@
   <td id="projectlogo"><img alt="Logo" src="../../icon.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">MICO
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">1.0.1</span>
    </div>
    <div id="projectbrief">Modular Interchangeable Computer prOgramming</div>
   </td>
@@ -89,24 +89,24 @@ $(document).ready(function(){initNavTree('df/d82/install_mico.html','../../'); i
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md_C__Users_Bardo91_Desktop_mico_doc_common_install_mico"></a></p>
-<h1><a class="anchor" id="autotoc_md5"></a>
+<h1><a class="anchor" id="autotoc_md2"></a>
 Installation Ubuntu</h1>
-<h1><a class="anchor" id="autotoc_md6"></a>
+<h1><a class="anchor" id="autotoc_md3"></a>
 Installation Windows</h1>
-<h2><a class="anchor" id="autotoc_md7"></a>
+<h2><a class="anchor" id="autotoc_md4"></a>
 Package installer</h2>
 <p>The easiest way to install MICO is to use the automatic package installer. It can be download directly from <a href="https://github.com/mico-corp/mico/releases">github releases</a>.</p>
 <p>Download the zip file and follow the instructions.</p>
-<h2><a class="anchor" id="autotoc_md8"></a>
+<h2><a class="anchor" id="autotoc_md5"></a>
 Build from sources</h2>
 <p>Building it from sources takes more time, but most of the process has been automated through a pair of cmake calls.</p>
-<h3><a class="anchor" id="autotoc_md9"></a>
+<h3><a class="anchor" id="autotoc_md6"></a>
 1. Installing Visual Studio</h3>
 <p>We recommend you to install Visual Studio Community version. It can be downloaded from the official Microsoft webpage (<a href="https://visualstudio.microsoft.com/es/vs/community/">https://visualstudio.microsoft.com/es/vs/community/</a>). There is not current support for MinGw or CygWin, but if you want to use them share the process with us and we will integrate that option, we appreciate any contribution.</p>
-<h3><a class="anchor" id="autotoc_md10"></a>
+<h3><a class="anchor" id="autotoc_md7"></a>
 2. Installing Qt5</h3>
 <p>Qt5 needs to be installed manually. You can get it from the official QT webpage: <a href="https://www.qt.io/download">https://www.qt.io/download</a>. By now, MICO only has compatibility with Qt5 (at least versión 5.12.0).</p>
-<h3><a class="anchor" id="autotoc_md11"></a>
+<h3><a class="anchor" id="autotoc_md8"></a>
 3. Installing MICO</h3>
 <p>The rest of dependencies are automatically downloaded and compiled with a cmake script. At first, clone MICO repository in any folder on your computer. Get into the folder and run cmake. To run the installation script set ON the variable "MICO_INSTALL_ALL_DEPENDENCIES"</p>
 <div class="fragment"><div class="line">git clone https://github.com/mico-corp/mico/</div>
@@ -114,7 +114,7 @@ Build from sources</h2>
 <div class="line">cd build</div>
 <div class="line">cmake .. -DMICO_INSTALL_ALL_DEPENDENCIES=ON</div>
 </div><!-- fragment --><p>At this point, go to the kitchen an make a te or pop-corn. The process takes an average of two hours to download and compile all the dependencies in Windows. Once the process has finished we are ready to install everything</p>
-<h3><a class="anchor" id="autotoc_md12"></a>
+<h3><a class="anchor" id="autotoc_md9"></a>
 Installing flow_kids and MICO-plugins.</h3>
 <p>To install MICO visual interface and standard plugins just run the following lines of code in the build folder</p>
 <div class="fragment"><div class="line">cmake --build . --config Release -j</div>

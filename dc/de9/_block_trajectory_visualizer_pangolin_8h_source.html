@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>MICO: C:/Users/Bardo91/Desktop/mico/visualizers_mplugin/include/mico/visualizers/flow/BlockTrajectoryVisualizerPangolin.h Source File</title>
+<title>MICO: C:/Users/Bardo91/Desktop/mico/mplugins/visualizers_mplugin/include/mico/visualizers/flow/BlockTrajectoryVisualizerPangolin.h Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -27,7 +27,7 @@
   <td id="projectlogo"><img alt="Logo" src="../../icon.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">MICO
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">1.0.1</span>
    </div>
    <div id="projectbrief">Modular Interchangeable Computer prOgramming</div>
   </td>
@@ -128,53 +128,56 @@ $(document).ready(function(){initNavTree('dc/de9/_block_trajectory_visualizer_pa
 <div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="../../d6/ddd/classmico_1_1visualizer_1_1_block_trajectory_visualizer_pangolin.html#a6784f470623af406609c465e67257b6b">   42</a></span>&#160;            <a class="code" href="../../d6/ddd/classmico_1_1visualizer_1_1_block_trajectory_visualizer_pangolin.html#a6784f470623af406609c465e67257b6b">BlockTrajectoryVisualizerPangolin</a>();</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
 <div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="../../d6/ddd/classmico_1_1visualizer_1_1_block_trajectory_visualizer_pangolin.html#a8b7c79127c01a4b677da977e81407be2">   45</a></span>&#160;            <a class="code" href="../../d6/ddd/classmico_1_1visualizer_1_1_block_trajectory_visualizer_pangolin.html#a8b7c79127c01a4b677da977e81407be2">~BlockTrajectoryVisualizerPangolin</a>();</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;            <span class="keyword">virtual</span> </div>
-<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="../../d6/ddd/classmico_1_1visualizer_1_1_block_trajectory_visualizer_pangolin.html#a9dffb589c2779fcf9fa51ec638c364c5">   48</a></span>&#160;        QWidget * <a class="code" href="../../d6/ddd/classmico_1_1visualizer_1_1_block_trajectory_visualizer_pangolin.html#a9dffb589c2779fcf9fa51ec638c364c5">customWidget</a>() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="../../d6/ddd/classmico_1_1visualizer_1_1_block_trajectory_visualizer_pangolin.html#a65e6cce820ae1bde95a85e154a406fc0">   49</a></span>&#160;            <span class="keyword">virtual</span> QBoxLayout * <a class="code" href="../../d6/ddd/classmico_1_1visualizer_1_1_block_trajectory_visualizer_pangolin.html#a65e6cce820ae1bde95a85e154a406fc0">creationWidget</a>() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;            <span class="keywordtype">void</span> poseCallback(<a class="code" href="../../df/d89/classflow_1_1_data_flow.html">flow::DataFlow</a>  _data, <span class="keywordtype">int</span> _id);</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;            <span class="keywordtype">void</span> preparePolicy();</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;            <span class="keywordtype">unsigned</span> nTrajs_ = 1;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            QSpinBox * spinBox_;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;            std::vector&lt;Eigen::Vector3f&gt; lastPositions_;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            std::vector&lt;Eigen::Vector4f&gt; colorLines_ = {{0.0f, 1.0f, 0.0f, 0.6f}, </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;                                                        {1.0f, 0.0f, 0.0f, 0.6f}, </div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;                                                        {0.0f, 0.0f, 1.0f, 0.6f}, </div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;                                                        {0.6f, 0.6f, 0.0f, 0.6f}, </div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;                                                        {0.6f, 0.0f, 0.6f, 0.6f}, </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;                                                        {0.0f, 0.6f, 0.6f, 0.6f}};</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            std::vector&lt;bool&gt; isFirst_;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            </div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;            PangolinVisualizer *visualizer_ = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        };</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    }</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;}</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="aclassflow_1_1_block_html"><div class="ttname"><a href="../../da/dc0/classflow_1_1_block.html">flow::Block</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d84/_block_8h_source.html#l00065">Block.h:65</a></div></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;            </div>
+<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="../../d6/ddd/classmico_1_1visualizer_1_1_block_trajectory_visualizer_pangolin.html#aab5426c0d61ce7ad39d2b2369fc8c198">   48</a></span>&#160;            <span class="keywordtype">bool</span> <a class="code" href="../../d6/ddd/classmico_1_1visualizer_1_1_block_trajectory_visualizer_pangolin.html#aab5426c0d61ce7ad39d2b2369fc8c198">isConfigurable</a>()<span class="keyword"> override </span>{ <span class="keywordflow">return</span> <span class="keyword">false</span>; };</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="../../d6/ddd/classmico_1_1visualizer_1_1_block_trajectory_visualizer_pangolin.html#aa86d48f054e434715edfe16ddc396526">   51</a></span>&#160;            QWidget * <a class="code" href="../../d6/ddd/classmico_1_1visualizer_1_1_block_trajectory_visualizer_pangolin.html#aa86d48f054e434715edfe16ddc396526">customWidget</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;            </div>
+<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="../../d6/ddd/classmico_1_1visualizer_1_1_block_trajectory_visualizer_pangolin.html#ab05852325b3a4109d76bb4b1252dda77">   53</a></span>&#160;            QBoxLayout * <a class="code" href="../../d6/ddd/classmico_1_1visualizer_1_1_block_trajectory_visualizer_pangolin.html#ab05852325b3a4109d76bb4b1252dda77">creationWidget</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            <span class="keywordtype">void</span> poseCallback(<a class="code" href="../../df/d89/classflow_1_1_data_flow.html">flow::DataFlow</a>  _data, <span class="keywordtype">int</span> _id);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            <span class="keywordtype">void</span> preparePolicy();</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;            <span class="keywordtype">unsigned</span> nTrajs_ = 1;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;            QSpinBox * spinBox_;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;            std::vector&lt;Eigen::Vector3f&gt; lastPositions_;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            std::vector&lt;Eigen::Vector4f&gt; colorLines_ = {{0.0f, 1.0f, 0.0f, 0.6f}, </div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;                                                        {1.0f, 0.0f, 0.0f, 0.6f}, </div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;                                                        {0.0f, 0.0f, 1.0f, 0.6f}, </div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;                                                        {0.6f, 0.6f, 0.0f, 0.6f}, </div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;                                                        {0.6f, 0.0f, 0.6f, 0.6f}, </div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;                                                        {0.0f, 0.6f, 0.6f, 0.6f}};</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;            std::vector&lt;bool&gt; isFirst_;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            </div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            PangolinVisualizer *visualizer_ = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        };</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    }</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;}</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aclassflow_1_1_block_html"><div class="ttname"><a href="../../da/dc0/classflow_1_1_block.html">flow::Block</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d84/_block_8h_source.html#l00066">Block.h:66</a></div></div>
 <div class="ttc" id="aclassflow_1_1_data_flow_html"><div class="ttname"><a href="../../df/d89/classflow_1_1_data_flow.html">flow::DataFlow</a></div><div class="ttdef"><b>Definition:</b> <a href="../../dd/d8c/_data_flow_8h_source.html#l00043">DataFlow.h:43</a></div></div>
 <div class="ttc" id="aclassmico_1_1visualizer_1_1_block_trajectory_visualizer_pangolin_html"><div class="ttname"><a href="../../d6/ddd/classmico_1_1visualizer_1_1_block_trajectory_visualizer_pangolin.html">mico::visualizer::BlockTrajectoryVisualizerPangolin</a></div><div class="ttdef"><b>Definition:</b> <a href="../../dc/de9/_block_trajectory_visualizer_pangolin_8h_source.html#l00036">BlockTrajectoryVisualizerPangolin.h:36</a></div></div>
-<div class="ttc" id="aclassmico_1_1visualizer_1_1_block_trajectory_visualizer_pangolin_html_a65e6cce820ae1bde95a85e154a406fc0"><div class="ttname"><a href="../../d6/ddd/classmico_1_1visualizer_1_1_block_trajectory_visualizer_pangolin.html#a65e6cce820ae1bde95a85e154a406fc0">mico::visualizer::BlockTrajectoryVisualizerPangolin::creationWidget</a></div><div class="ttdeci">virtual QBoxLayout * creationWidget() override</div><div class="ttdoc">Virtual method to be override by sons. Get custom view widget to be display in the creation context m...</div></div>
 <div class="ttc" id="aclassmico_1_1visualizer_1_1_block_trajectory_visualizer_pangolin_html_a6784f470623af406609c465e67257b6b"><div class="ttname"><a href="../../d6/ddd/classmico_1_1visualizer_1_1_block_trajectory_visualizer_pangolin.html#a6784f470623af406609c465e67257b6b">mico::visualizer::BlockTrajectoryVisualizerPangolin::BlockTrajectoryVisualizerPangolin</a></div><div class="ttdeci">BlockTrajectoryVisualizerPangolin()</div><div class="ttdoc">Base constructor.</div></div>
 <div class="ttc" id="aclassmico_1_1visualizer_1_1_block_trajectory_visualizer_pangolin_html_a8b7c79127c01a4b677da977e81407be2"><div class="ttname"><a href="../../d6/ddd/classmico_1_1visualizer_1_1_block_trajectory_visualizer_pangolin.html#a8b7c79127c01a4b677da977e81407be2">mico::visualizer::BlockTrajectoryVisualizerPangolin::~BlockTrajectoryVisualizerPangolin</a></div><div class="ttdeci">~BlockTrajectoryVisualizerPangolin()</div><div class="ttdoc">Base destructor.</div></div>
-<div class="ttc" id="aclassmico_1_1visualizer_1_1_block_trajectory_visualizer_pangolin_html_a9dffb589c2779fcf9fa51ec638c364c5"><div class="ttname"><a href="../../d6/ddd/classmico_1_1visualizer_1_1_block_trajectory_visualizer_pangolin.html#a9dffb589c2779fcf9fa51ec638c364c5">mico::visualizer::BlockTrajectoryVisualizerPangolin::customWidget</a></div><div class="ttdeci">virtual QWidget * customWidget() override</div><div class="ttdoc">Get custom view widget to be display in the graph.</div></div>
+<div class="ttc" id="aclassmico_1_1visualizer_1_1_block_trajectory_visualizer_pangolin_html_aa86d48f054e434715edfe16ddc396526"><div class="ttname"><a href="../../d6/ddd/classmico_1_1visualizer_1_1_block_trajectory_visualizer_pangolin.html#aa86d48f054e434715edfe16ddc396526">mico::visualizer::BlockTrajectoryVisualizerPangolin::customWidget</a></div><div class="ttdeci">QWidget * customWidget() override</div><div class="ttdoc">Get custom view widget to be display in the graph.</div></div>
+<div class="ttc" id="aclassmico_1_1visualizer_1_1_block_trajectory_visualizer_pangolin_html_aab5426c0d61ce7ad39d2b2369fc8c198"><div class="ttname"><a href="../../d6/ddd/classmico_1_1visualizer_1_1_block_trajectory_visualizer_pangolin.html#aab5426c0d61ce7ad39d2b2369fc8c198">mico::visualizer::BlockTrajectoryVisualizerPangolin::isConfigurable</a></div><div class="ttdeci">bool isConfigurable() override</div><div class="ttdoc">Return if the block is configurable.</div><div class="ttdef"><b>Definition:</b> <a href="../../dc/de9/_block_trajectory_visualizer_pangolin_8h_source.html#l00048">BlockTrajectoryVisualizerPangolin.h:48</a></div></div>
+<div class="ttc" id="aclassmico_1_1visualizer_1_1_block_trajectory_visualizer_pangolin_html_ab05852325b3a4109d76bb4b1252dda77"><div class="ttname"><a href="../../d6/ddd/classmico_1_1visualizer_1_1_block_trajectory_visualizer_pangolin.html#ab05852325b3a4109d76bb4b1252dda77">mico::visualizer::BlockTrajectoryVisualizerPangolin::creationWidget</a></div><div class="ttdeci">QBoxLayout * creationWidget() override</div><div class="ttdoc">Virtual method to be override by sons. Get custom view widget to be display in the creation context m...</div></div>
 <div class="ttc" id="aclassmico_1_1visualizer_1_1_block_trajectory_visualizer_pangolin_html_aeef422fa6345c8a54b04e24ece7892ed"><div class="ttname"><a href="../../d6/ddd/classmico_1_1visualizer_1_1_block_trajectory_visualizer_pangolin.html#aeef422fa6345c8a54b04e24ece7892ed">mico::visualizer::BlockTrajectoryVisualizerPangolin::name</a></div><div class="ttdeci">virtual std::string name() const override</div><div class="ttdoc">Get name of block.</div><div class="ttdef"><b>Definition:</b> <a href="../../dc/de9/_block_trajectory_visualizer_pangolin_8h_source.html#l00039">BlockTrajectoryVisualizerPangolin.h:39</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="../../dir_f8b6886654c0d51a598ea0b3ec6e37c1.html">visualizers_mplugin</a></li><li class="navelem"><a class="el" href="../../dir_5c49d03c17e2f68da953c462fb888f40.html">include</a></li><li class="navelem"><a class="el" href="../../dir_999a0a153b51b60039562570282d61e5.html">mico</a></li><li class="navelem"><a class="el" href="../../dir_99071646552cab6ee895f00c2dd579c6.html">visualizers</a></li><li class="navelem"><a class="el" href="../../dir_7ee387544c5ae0267026b786c2133edc.html">flow</a></li><li class="navelem"><b>BlockTrajectoryVisualizerPangolin.h</b></li>
+    <li class="navelem"><a class="el" href="../../dir_c70d4adbbc6bfb7003d146c7a6b1e3f6.html">mplugins</a></li><li class="navelem"><a class="el" href="../../dir_89c4553aabd15b6136dd62d1faff78b0.html">visualizers_mplugin</a></li><li class="navelem"><a class="el" href="../../dir_72c944845d196160febe970f95606d5b.html">include</a></li><li class="navelem"><a class="el" href="../../dir_10155a43ff7ab20569088b5d96cd499f.html">mico</a></li><li class="navelem"><a class="el" href="../../dir_130b792ce8c2afb909613d6e0859ba77.html">visualizers</a></li><li class="navelem"><a class="el" href="../../dir_6fd6bcacc3db2570b6e58437a97a36e1.html">flow</a></li><li class="navelem"><b>BlockTrajectoryVisualizerPangolin.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

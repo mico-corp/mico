@@ -1,14 +1,14 @@
 var content_list_mico_wiki =
 [
     [ "How to install MICO", "df/d82/install_mico.html", [
-      [ "Installation Ubuntu", "df/d82/install_mico.html#autotoc_md5", null ],
-      [ "Installation Windows", "df/d82/install_mico.html#autotoc_md6", [
-        [ "Package installer", "df/d82/install_mico.html#autotoc_md7", null ],
-        [ "Build from sources", "df/d82/install_mico.html#autotoc_md8", [
-          [ "1. Installing Visual Studio", "df/d82/install_mico.html#autotoc_md9", null ],
-          [ "2. Installing Qt5", "df/d82/install_mico.html#autotoc_md10", null ],
-          [ "3. Installing MICO", "df/d82/install_mico.html#autotoc_md11", null ],
-          [ "Installing flow_kids and MICO-plugins.", "df/d82/install_mico.html#autotoc_md12", null ]
+      [ "Installation Ubuntu", "df/d82/install_mico.html#autotoc_md2", null ],
+      [ "Installation Windows", "df/d82/install_mico.html#autotoc_md3", [
+        [ "Package installer", "df/d82/install_mico.html#autotoc_md4", null ],
+        [ "Build from sources", "df/d82/install_mico.html#autotoc_md5", [
+          [ "1. Installing Visual Studio", "df/d82/install_mico.html#autotoc_md6", null ],
+          [ "2. Installing Qt5", "df/d82/install_mico.html#autotoc_md7", null ],
+          [ "3. Installing MICO", "df/d82/install_mico.html#autotoc_md8", null ],
+          [ "Installing flow_kids and MICO-plugins.", "df/d82/install_mico.html#autotoc_md9", null ]
         ] ]
       ] ]
     ] ],
