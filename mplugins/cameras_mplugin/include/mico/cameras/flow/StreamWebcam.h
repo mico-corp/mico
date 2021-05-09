@@ -27,6 +27,8 @@
 #include <flow/Block.h>
 #include <opencv2/opencv.hpp>
 
+class QSpinBox;
+
 namespace mico{
     namespace cameras{
         /// Mico block that opens USB camera devices and flush images out on a stream.
@@ -60,12 +62,15 @@ namespace mico{
             std::string description() const override {return    "Streamer block that reads from usb ready cameras "
                                                                 "connected to the computer and streams its images.\n"
                                                                 "   - Outputs: \n";};
-                                                                
+
+            QWidget* customWidget() override;
+
         protected:
             void loopCallback() override;
 
         private:
             cv::VideoCapture *camera_ = nullptr;
+            QSpinBox *freqSpinner_;
         };
     }
 }

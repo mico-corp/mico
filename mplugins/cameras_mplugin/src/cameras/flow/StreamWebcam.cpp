@@ -23,10 +23,18 @@
 #include <mico/cameras/flow/StreamWebcam.h>
 #include <flow/Outpipe.h>
 
+#include <QSpinBox>
+#include <QGroupBox>
+#include <QLabel>
+
 namespace mico{
     namespace cameras {
         StreamWebcam::StreamWebcam() {
             createPipe<cv::Mat>("Color");
+            freqSpinner_ = new QSpinBox;
+            freqSpinner_->setValue(30);
+            freqSpinner_->setMinimum(1);
+            freqSpinner_->setMaximum(200);
         }
 
 
@@ -65,6 +73,16 @@ namespace mico{
             };
         }
 
+
+        QWidget* StreamWebcam::customWidget() {
+            auto w = new QWidget();
+            auto l = new QHBoxLayout;
+            w->setLayout(l);
+            l->addWidget(new QLabel("Frequency: "));
+            l->addWidget(freqSpinner_);
+            return w;
+        };
+
         void StreamWebcam::loopCallback() {
             while (isRunningLoop()) {
                 if (auto pipe = getPipe("Color"); pipe->registrations() != 0) {
@@ -73,7 +91,10 @@ namespace mico{
                         pipe->flush(image);
                     }
                 }
-                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+                // Approximate sleep
+                float hz = freqSpinner_->value();
+                int incT = 1.0f / hz * 1000.0f;
+                std::this_thread::sleep_for(std::chrono::milliseconds(incT));
             }
         }
     }
