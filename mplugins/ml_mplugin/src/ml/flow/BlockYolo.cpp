@@ -135,7 +135,7 @@ namespace mico{
                     cv::rectangle(_frame, cv::Point(rect.x, rect.y - label_bg_sz.height - baseline - 10), cv::Point(rect.x + label_bg_sz.width, rect.y), color, cv::FILLED);
                     cv::putText(_frame, label.c_str(), cv::Point(rect.x, rect.y - baseline - 5), cv::FONT_HERSHEY_COMPLEX_SMALL, 1, cv::Scalar(0, 0, 0));
                     
-                    outDetections.push_back({c, rect, _frame(rect)});
+                    outDetections.push_back({c, rect, _frame(rect & cv::Rect(0,0,_frame.cols, _frame.rows))});
                 }
             }
             return outDetections;
