@@ -14,4 +14,4 @@ The single image flusher has been created to allow the user to send a single ima
 
 Following gif shows an example of usage.
 
-\image html tutorials/cameras/basic_streamrs.gif width=640px
+\image html tutorials/cameras/basic_streamers.gif width=640px
