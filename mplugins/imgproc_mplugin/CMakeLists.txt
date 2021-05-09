@@ -1,5 +1,5 @@
 ##---------------------------------------------------------------------------------------------------------------------
-##  Visualizers MICO plugin
+##  MICO ml wrapper plugin
 ##---------------------------------------------------------------------------------------------------------------------
 ##  Copyright 2020 Pablo Ramon Soria (a.k.a. Bardo91) pabramsor@gmail.com
 ##---------------------------------------------------------------------------------------------------------------------
@@ -18,69 +18,45 @@
 ##  OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 ##  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ##---------------------------------------------------------------------------------------------------------------------
+cmake_minimum_required (VERSION 3.12 FATAL_ERROR)
+project(mico VERSION 1.0 LANGUAGES C CXX)
+set(PLUGIN_NAME ${PROJECT_NAME}-imgproc)
 
 
-add_subdirectory(core_mplugin)
-add_subdirectory(math_mplugin)
+##################################################
+######    Configure project               ########
+##################################################
 
-if(${BUILD_CAMERAS})
-	add_subdirectory(cameras_mplugin)
+##################################################
+######    Loading 3rd party libraries.    ########
+##################################################
+
+set(EXTRA_INCLUDES "")
+set(EXTRA_LIBRARIES "")
+set(EXTRA_COMPILE_DEFS "")
+
+##################################################
+###### Create project and configure ALIAS ########
+##################################################
+
+file(GLOB_RECURSE MICO_IMGPROC_SOURCE_FILES "src/*.cpp" "src/*.c")
+file(GLOB_RECURSE MICO_IMGPROC_HEADER_FILES "include/*.h" "include/*.inl")
+ 
+SET(MICO_MODULES ${MICO_MODULES} imgproc PARENT_SCOPE)
+add_mplugin(    PLUGIN_NAME ${PLUGIN_NAME} 
+                PLUGIN_SOURCES ${MICO_IMGPROC_SOURCE_FILES}
+				PLUGIN_HEADERS  ${MICO_IMGPROC_HEADER_FILES} 
+				MICO_DEPS core
+				HAS_RESOURCES)
+
+##################################################
+######    Loading 3rd party libraries.    ########
+##################################################
+
+find_package(OpenCV REQUIRED COMPONENTS core objdetect imgproc highgui dnn)
+if(${OpenCV_FOUND})
+	mplugin_include_directory( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_INCLUDES ${OpenCV_INCLUDE_DIRS})
+	mplugin_link_library( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES ${OpenCV_LIBS})
+	mplugin_compile_definition( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_DEFINITIONS HAS_OPENCV)
 endif()
-
-if(${BUILD_VISUALIZERS})
-	add_subdirectory(visualizers_mplugin)
-endif()
-
-if(${BUILD_ML})
-	add_subdirectory(ml_mplugin)
-endif()
-
-if(${BUILD_IMGPROC})
-	add_subdirectory(imgproc_mplugin)
-endif()
-
-if(${BUILD_PYTHON})
-	add_subdirectory(python_mplugin)
-endif()
-
-if(${BUILD_FASTCOM})
-	add_subdirectory(fastcom_mplugin)
-endif()
-
-if(${BUILD_ROBOTICS})
-	add_subdirectory(robotics_mplugin)
-endif()
-
-if(${BUILD_ARDUINO})
-	add_subdirectory(arduino_mplugin)
-endif()
-
-if(${BUILD_SIMULATION})
-	add_subdirectory(simulation_mplugin)
-endif()
-
-if(${BUILD_AR})
-	add_subdirectory(ar_mplugin)
-endif()
-
-if(${BUILD_DVS})
-	add_subdirectory(dvs_mplugin)
-endif()
-
-if(${BUILD_BENCHMARK})
-	add_subdirectory(benchmark)
-endif()
-
-
-# Add custom comand for flow install of all selected modules
-set(PLUGINS_DIR "")
-if(WIN32)   
-	set(PLUGINS_DIR "C:/.flow/plugins")
-elseif(UNIX)
-	set(PLUGINS_DIR $ENV{HOME}/.flow/plugins)
-endif()
-
-add_custom_target(flow_install
-COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/plugins 
-                                $ENV{HOME}/.flow/plugins
-)
+				

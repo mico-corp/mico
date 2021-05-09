@@ -61,7 +61,7 @@ namespace mico{
 
             QObject::connect(qPushBt, &QPushButton::clicked, [&](){
                 auto filePath = filePathLe_->text().toStdString();
-                auto image = cv::imread(filePath);
+                auto image = cv::imread(filePath, -1);
                 if(image.rows != 0 && getPipe("Image")->registrations() != 0){
                     getPipe("Image")->flush(image);
                 }else{

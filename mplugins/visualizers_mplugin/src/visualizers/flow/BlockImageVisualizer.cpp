@@ -81,7 +81,14 @@ namespace mico{
                 image = lastImage_;
                 imgLock_.unlock();
                 if (image.rows != 0) {
-                    QImage qimg = QImage(image.data, image.cols, image.rows, QImage::Format_RGB888).rgbSwapped();
+                    QImage qimg;
+                    if (image.channels() == 1) {
+                        qimg = QImage(image.data, image.cols, image.rows, QImage::Format_Grayscale8);
+                    } else if (image.channels() == 3) {
+                        qimg = QImage(image.data, image.cols, image.rows, QImage::Format_RGB888).rgbSwapped();
+                    } else if (image.channels() == 4) {
+                        qimg = QImage(image.data, image.cols, image.rows, QImage::Format_RGBA8888).rgbSwapped();
+                    }
                     imageView_->setPixmap(QPixmap::fromImage(qimg));
                 }
             });
