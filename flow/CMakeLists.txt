@@ -224,6 +224,7 @@ if(WIN32)
                 ${OpenCV_DIR}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_imgcodecs420.dll
                 ${OpenCV_DIR}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_objdetect420.dll
                 ${OpenCV_DIR}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_videoio420.dll
+                ${OpenCV_DIR}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_xfeatures2d420.dll
                 DESTINATION bin )
     
     # dlfcn

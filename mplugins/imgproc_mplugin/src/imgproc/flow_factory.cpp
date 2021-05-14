@@ -22,6 +22,7 @@
 
 #include <flow/flow.h>
 #include <mico/imgproc/flow/BlockKernelConvolution.h>
+#include <mico/imgproc/flow/BlockFeatureExtract.h>
 
 using namespace mico::imgproc;
 using namespace flow;
@@ -31,6 +32,7 @@ extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(){
 
     // Functions
     creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockKernelConvolution>>(); }, "imgproc");
+    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockFeatureExtract>>(); }, "imgproc");
 
     return creator;
 }

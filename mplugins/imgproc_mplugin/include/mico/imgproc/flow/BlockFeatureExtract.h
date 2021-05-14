@@ -21,51 +21,50 @@
 
 
 
-#ifndef MICO_FLOW_BLOCKS_FACEDETECTORS_H_
-#define MICO_FLOW_BLOCKS_FACEDETECTORS_H_
+#ifndef MICO_FLOW_BLOCKS_BLOCKFEATUREEXTRACT_H_
+#define MICO_FLOW_BLOCKS_BLOCKFEATUREEXTRACT_H_
 
 #include <flow/Block.h>
 
 #include <opencv2/opencv.hpp>
+#include <mutex>
+
+#include <opencv2/features2d.hpp>
+
+class QTableWidget;
 
 namespace mico{
-    namespace ml{
-        /// Mico block that detects different objects using a Haar Cascade classifier.
+    namespace imgproc{
+        /// Mico block uses  YOLO DNN to generate an stream of detections.
         /// @ingroup  mico_ml
-        class BlockHaarCascade:public flow::Block{
+        class BlockFeatureExtract:public flow::Block{
         public:
             /// Get name of block
-            virtual std::string name() const override {return "Haar Cascade Clasifier";}        
+            std::string name() const override {return "Feature extractor";}        
 
-            /// Base constructor. Initializes the classifier.
-            BlockHaarCascade();
+            /// Base constructor. Initializes the neural network.
+            BlockFeatureExtract();
+            
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return true; };
 
             /// Configure block with given parameters.
-            virtual bool configure(std::vector<flow::ConfigParameterDef> _params) override;
+            bool configure(std::vector<flow::ConfigParameterDef> _params) override;
 
             /// Get list of parameters of the block
             std::vector<flow::ConfigParameterDef> parameters() override;
 
-            /// Return if the block is configurable.
-            bool isConfigurable() override { return true; };
-
             /// Returns a brief description of the block
-            std::string description() const override {return    "Detect objects Haars cascade algorithm"
+            std::string description() const override {return    "Extract features from the input image and outputs a vector with them."
                                                                 "   - Inputs: \n"
                                                                 "   - Outputs: \n";};
 
+                
         private:
-            cv::CascadeClassifier face_cascade;
             bool idle_ = true;
-            bool isConfigured_ = false;
-
-            std::map<std::string, std::string> detectors = {
-                {"Face detector",  (flow::Persistency::resourceDir() / "ml"/"haarcascade_frontalface_alt.xml").string()},
-                {"Body detector",  (flow::Persistency::resourceDir() / "ml"/"haarcascade_fullbody.xml").string()},
-                {"Upperbody detector",  (flow::Persistency::resourceDir() / "ml"/"haarcascade_upperbody.xml").string()}
-            };
+            std::mutex dataLock_;
+            cv::Ptr<cv::Feature2D> detector_;
         };
-
     }
 }
 
