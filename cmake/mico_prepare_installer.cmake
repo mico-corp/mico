@@ -56,6 +56,12 @@ macro(micoPrepareInstaller)
         set(CPACK_NSIS_HELP_LINK "https://mico-corp.github.io/mico")
         set(CPACK_NSIS_URL_INFO_ABOUT "https://mico-corp.github.io/mico")
         # set(CPACK_NSIS_CONTACT ${APP_EMAIL})
+        
+        # Configure file with custom definitions for NSIS.
+        configure_file(
+            ${PROJECT_SOURCE_DIR}/NSIS.definitions.nsh.in
+            ${CMAKE_CURRENT_BINARY_DIR}/NSIS.definitions.nsh
+        )
     endif()
 
     # Specific DEB configuration
@@ -69,10 +75,5 @@ macro(micoPrepareInstaller)
     # Call final CPACK configuration and prepare nsis file
     include(CPack)
 
-    # Configure file with custom definitions for NSIS.
-    configure_file(
-        ${PROJECT_SOURCE_DIR}/NSIS.definitions.nsh.in
-        ${CMAKE_CURRENT_BINARY_DIR}/resources/nsis/NSIS.definitions.nsh
-    )
 
 endmacro(micoPrepareInstaller)
