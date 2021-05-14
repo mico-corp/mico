@@ -100,6 +100,7 @@ namespace flow{
             for(const auto &opt: _param.asOptions()){
                 static_cast<QComboBox*>(value_)->addItem(opt.c_str());
             }
+            this->addWidget(value_);
             break;
         }
 

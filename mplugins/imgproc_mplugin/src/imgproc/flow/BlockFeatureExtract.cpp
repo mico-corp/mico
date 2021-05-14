@@ -42,6 +42,9 @@ namespace mico{
 
                                     idle_ = false;
                                     if(getPipe("features")->registrations() || getPipe("descriptors")->registrations() || getPipe("debug")->registrations()){
+                                        if (!detector_)
+                                            return;
+
                                         cv::Mat frame = _data.get<cv::Mat>("input").clone(); 
                                         cv::Mat result;
                                         if (frame.channels() == 1) {
@@ -80,10 +83,8 @@ namespace mico{
                 auto featureName = param.value().asString();
                 if (featureName == "ORB") {
                     detector_ = cv::ORB::create();
-                } else if (featureName == "SIFT"){
-                    detector_ = cv::xfeatures2d::SIFT::create();
-                } else if (featureName == "SURF") {
-                    detector_ = cv::xfeatures2d::SURF::create();
+                } else if (featureName == "AKAZE"){
+                    detector_ = cv::AKAZE::create();
                 } else {
                     return false;
                 }
@@ -93,7 +94,7 @@ namespace mico{
         }
     
         std::vector<flow::ConfigParameterDef> BlockFeatureExtract::parameters(){
-            std::vector<std::string> features = {"ORB", "SIFT", "SURF"};
+            std::vector<std::string> features = {"ORB", "AKAZE"};
 
             return {
                 {"Features", flow::ConfigParameterDef::eParameterType::OPTIONS, features}
