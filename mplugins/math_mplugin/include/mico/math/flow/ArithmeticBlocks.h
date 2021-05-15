@@ -25,6 +25,7 @@
 #define MICO_FLOW_BLOCKS_ARITHMETICBLOCKS_H_
 
 #include <flow/Block.h>
+#include <QPushButton>
 
 namespace mico{
     namespace math{
@@ -174,6 +175,34 @@ namespace mico{
             std::string description() const override {return    "Pow of first number by second number"
                                                                 "   - Outputs: pow\n";};
 
+        };
+
+        /// Mico block that performs an integration (accumulation) of the input signal
+        /// @ingroup  mico_math 
+        class BlockIntegrator :public flow::Block {
+        public:
+            /// Get name of block
+            std::string name() const override { return "Integrator"; }
+
+            /// Base constructor
+            BlockIntegrator();
+
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return false; };
+
+            /// Custom widget
+            QWidget* customWidget() { return resetBt_; };
+
+            /// Returns a brief description of the block
+            std::string description() const override {
+                return      "Accumulate the input signal"
+                            "   - Input: signal\n";
+                            "   - Outputs: accumulation\n";
+            };
+
+        private:
+            float acc_ = 0.0f;
+            QPushButton* resetBt_;
         };
     }
 }

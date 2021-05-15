@@ -132,5 +132,25 @@ namespace mico{
                                     }
             );
         }
+
+        BlockIntegrator::BlockIntegrator() {
+            resetBt_ = new QPushButton("Reset");
+            QObject::connect(resetBt_, &QPushButton::clicked, [&]() { 
+                acc_ = 0.0f;
+                getPipe("output")->flush(acc_); 
+            });
+
+            createPipe<float>("output");
+
+            createPolicy({ flow::makeInput<float>("input") });
+
+            registerCallback({ "input" },
+                [&](flow::DataFlow _data) {
+                    acc_ += _data.get<float>("input");
+
+                    getPipe("output")->flush(acc_);
+            }
+            );
+        }
     }
 }
