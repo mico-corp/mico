@@ -54,13 +54,13 @@ namespace mico{
 
                 if (camera_->open(param.value().asInteger(), cv::CAP_DSHOW)) {
                 	std::cout << "Using DSHOW Backend" << std::endl;
-                }else if (camera_->open(param.value().asInteger(), cv::CAP_V4L)) {
-                	std::cout << "Using V4L Backend" << std::endl;
                 }else if (camera_->open(param.value().asInteger(), cv::CAP_GSTREAMER)) {
                 	std::cout << "Using GSTREAMER Backend" << std::endl;
-        	}else{
-			return false;
-		}
+        	    }else if (camera_->open(param.value().asInteger(), cv::CAP_V4L)) {
+                	std::cout << "Using V4L Backend" << std::endl;
+                }else{
+			        return false;
+		        }
 
                 return camera_->isOpened();
             }
@@ -87,7 +87,7 @@ namespace mico{
             while (isRunningLoop()) {
                 if (auto pipe = getPipe("Color"); pipe->registrations() != 0) {
                     cv::Mat image;
-                    if(camera_->retrieve(image)) {
+                    if(camera_->grab() && camera_->retrieve(image)) {
                         pipe->flush(image);
                     }
                 }
