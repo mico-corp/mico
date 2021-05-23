@@ -23,6 +23,7 @@
 
 #include <mico/visualizers/flow/BlockImageVisualizer.h>
 #include <mico/visualizers/flow/BlockNumberVisualizer.h>
+#include <mico/visualizers/flow/BlockFrequencyCounter.h>
 #include <mico/visualizers/flow/BlockPointCloudVisualizer.h>
 #include <mico/visualizers/flow/BlockSceneVisualizer.h>
 #include <mico/visualizers/flow/BlockSceneVisualizerPangolin.h>
@@ -30,16 +31,18 @@
 #include <mico/visualizers/flow/BlockQCustomPlot.h>
 #include <mico/visualizers/flow/BlockScatterPlot.h>
 
+
 using namespace mico::visualizer;
 using namespace flow;
 
 extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(){
     flow::PluginNodeCreator *creator = new flow::PluginNodeCreator;
 
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockNumberVisualizer > >(); }, "Visualizers");
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockImageVisualizer > >(); }, "Visualizers");
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockQCustomPlot > >(); }, "Visualizers");
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockScatterPlot > >(); }, "Visualizers");
+    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockNumberVisualizer > >(); },  "Visualizers");
+    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockImageVisualizer > >(); },   "Visualizers");
+    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockQCustomPlot > >(); },       "Visualizers");
+    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockScatterPlot > >(); },       "Visualizers");
+    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockFrequencyCounter > >(); },  "Visualizers");
 
     #ifdef MICO_HAS_PANGOLIN
         creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockTrajectoryVisualizerPangolin > >(); }, "Visualizers");
