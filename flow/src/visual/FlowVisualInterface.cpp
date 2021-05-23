@@ -255,7 +255,7 @@ namespace flow{
         std::vector<std::string> hintsDirectories;
         #ifdef linux
             std::string userName(getenv("USER"));
-            hintsDirectories.push_back("/home/"+userName+"/.flow/plugins/");
+            hintsDirectories.push_back("/usr/lib");
         #endif
         #ifdef _WIN32
             hintsDirectories.push_back("C:\\.flow\\plugins\\");
@@ -272,6 +272,9 @@ namespace flow{
         }
         // Iterate over file
         for(auto file:files){
+            if(file.find("libmico") == std::string::npos)
+                continue;
+
             std::cout << file << std::endl;
             // Load blocks registered
             void *hndl = dlopen(file.c_str(), RTLD_NOW);

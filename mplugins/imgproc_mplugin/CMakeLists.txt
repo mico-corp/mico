@@ -47,13 +47,19 @@ add_mplugin(    PLUGIN_NAME ${PLUGIN_NAME}
                 PLUGIN_SOURCES ${MICO_IMGPROC_SOURCE_FILES}
 				PLUGIN_HEADERS  ${MICO_IMGPROC_HEADER_FILES} 
 				MICO_DEPS core
-				HAS_RESOURCES)
+				)
 
 ##################################################
 ######    Loading 3rd party libraries.    ########
 ##################################################
 
-find_package(OpenCV REQUIRED COMPONENTS core objdetect imgproc highgui dnn xfeatures2d)
+find_package(OpenCV REQUIRED COMPONENTS core 
+										objdetect 
+										imgproc 
+										highgui 
+										dnn 
+										#xfeatures2d
+										)
 if(${OpenCV_FOUND})
 	mplugin_include_directory( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_INCLUDES ${OpenCV_INCLUDE_DIRS})
 	mplugin_link_library( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES ${OpenCV_LIBS})
