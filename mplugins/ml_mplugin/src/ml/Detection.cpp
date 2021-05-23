@@ -100,21 +100,21 @@ FLOW_CONVERSION_REGISTER(micoMlDetection, cvMat, &DetectionToMat);
 FLOW_CONVERSION_REGISTER(StlVectorDetection, cvMat, &StlVectorDetectionToMat);
 
 boost::any DetectionToStlVectorFloat(boost::any &_input){
-    const auto& bb = boost::any_cast<mico::ml::Detection>(_input).bb_;
+    const auto bb = boost::any_cast<mico::ml::Detection>(_input).bb_;
     auto x = bb.x + bb.width/2;
     auto y = bb.y + bb.height/2;
     return std::vector<float>{x,y};
 }
 
 boost::any DetectionToCvPoint(boost::any &_input){
-    const auto& bb = boost::any_cast<mico::ml::Detection>(_input).bb_;
+    const auto bb = boost::any_cast<mico::ml::Detection>(_input).bb_;
     auto x = bb.x + bb.width/2;
     auto y = bb.y + bb.height/2;
     return cv::Point2f(x, y);
 }
 
 boost::any DetectionToEigen(boost::any &_input){
-    const auto& bb = boost::any_cast<mico::ml::Detection>(_input).bb_;
+    const auto bb = boost::any_cast<mico::ml::Detection>(_input).bb_;
     auto x = bb.x + bb.width/2;
     auto y = bb.y + bb.height/2;
     return Eigen::Vector2f(x, y);
@@ -129,7 +129,7 @@ FLOW_CONVERSION_REGISTER(micoMlDetection, EigenVector2f, &DetectionToEigen);
 
 
 boost::any StlVectorDetectionToStlVectorFloat(boost::any &_input){
-    const auto& bb = boost::any_cast<StlVectorDetection>(_input)[0].bb_;
+    const auto bb = boost::any_cast<StlVectorDetection>(_input)[0].bb_;
     auto x = bb.x + bb.width/2;
     auto y = bb.y + bb.height/2;
     return std::vector<float>{x,y};
@@ -137,14 +137,14 @@ boost::any StlVectorDetectionToStlVectorFloat(boost::any &_input){
 
 
 boost::any StlVectorDetectionToCvPoint(boost::any &_input){
-    const auto& bb = boost::any_cast<StlVectorDetection>(_input)[0].bb_;
+    const auto bb = boost::any_cast<StlVectorDetection>(_input)[0].bb_;
     auto x = bb.x + bb.width/2;
     auto y = bb.y + bb.height/2;
     return cv::Point2f(x, y);
 }
 
 boost::any StlVectorDetectionToEigen(boost::any &_input){
-    const auto& bb = boost::any_cast<StlVectorDetection>(_input)[0].bb_;
+    const auto bb = boost::any_cast<StlVectorDetection>(_input)[0].bb_;
     auto x = bb.x + bb.width/2;
     auto y = bb.y + bb.height/2;
     return Eigen::Vector2f(x, y);
