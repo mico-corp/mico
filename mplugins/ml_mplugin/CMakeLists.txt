@@ -60,3 +60,5 @@ if(${OpenCV_FOUND})
 	mplugin_compile_definition( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_DEFINITIONS HAS_OPENCV)
 endif()
 				
+find_package(Eigen3 REQUIRED)
+mplugin_link_library( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES Eigen3::Eigen)

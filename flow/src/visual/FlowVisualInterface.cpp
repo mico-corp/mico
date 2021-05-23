@@ -271,7 +271,7 @@ namespace flow{
         }
         // Iterate over file
         for(auto file:files){
-            if(file.find("libmico") == std::string::npos)
+            if(file.find("mico") == std::string::npos)
                 continue;
 
             std::cout << file << std::endl;
