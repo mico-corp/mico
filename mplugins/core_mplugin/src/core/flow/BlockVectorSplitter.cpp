@@ -20,18 +20,56 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 
-#include <flow/flow.h>
-#include <mico/core/flow/BlockSwitchFlow.h>
 #include <mico/core/flow/BlockVectorSplitter.h>
+#include <flow/Outpipe.h>
+#include <flow/Policy.h>
 
-using namespace mico::core;
-using namespace flow;
+#include <cmath>
 
-extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(){
-    flow::PluginNodeCreator *creator = new flow::PluginNodeCreator;
+#include <QSpinBox>
+#include <QLabel>
 
-//    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockSwitchFlow                    >>(); }, "core");
-   creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockVectorSplitter                    >>(); }, "core");
 
-    return creator;
+namespace mico{
+    namespace core{
+        BlockVectorSplitter::BlockVectorSplitter(){
+            createPolicy({  flow::makeInput<std::vector<float>>("vector") });
+            
+            registerCallback({"vector"},
+                                    [&](flow::DataFlow _data){
+                                        auto v = _data.get<std::vector<float>>("vector");
+                                        
+                                        for(unsigned i = 0; i < nTrajs_; i++){
+                                            getPipe("v" +std::to_string(i))->flush(v[i]);
+                                        }
+                                    }
+            );
+        }
+
+
+        void BlockVectorSplitter::preparePolicy(){
+            removePipes();
+            for(unsigned i = 0; i < nTrajs_; i++){
+                createPipe<float>("v" +std::to_string(i));
+            }
+        }
+
+
+        QBoxLayout * BlockVectorSplitter::creationWidget(){
+            QBoxLayout *layout = new QVBoxLayout();
+            
+            
+            layout->addWidget(new QLabel("Select number of trajectories to be displayed."));
+
+            spinBox_ = new QSpinBox();
+            spinBox_->setMinimum(1);
+            spinBox_->setMaximum(10);
+            layout->addWidget(spinBox_);
+            QWidget::connect(spinBox_, QOverload<int>::of(&QSpinBox::valueChanged), [this](int _n){ 
+                    this->nTrajs_ = _n; 
+                    this->preparePolicy();
+                });
+            return layout;
+        }
+    }
 }

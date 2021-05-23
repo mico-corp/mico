@@ -59,7 +59,8 @@ namespace mico{
                                                 detections.push_back({ 0, faces[i], frame(faces[i])});
                                             }
                                             if(getPipe("result")->registrations() != 0 ) getPipe("result")->flush(frame);
-                                            if(getPipe("detections")->registrations() != 0) getPipe("detections")->flush(detections);
+                                            if(detections.size() != 0 && getPipe("detections")->registrations() != 0) 
+                                                getPipe("detections")->flush(detections);
                                             
                                         }
 

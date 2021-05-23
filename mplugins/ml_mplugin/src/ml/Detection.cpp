@@ -25,28 +25,12 @@
 #include <mico/ml/Detection.h>
 #include <mico/core/TemplatesConversion.h>
 
+#include <Eigen/Eigen>
+
 #include <QComboBox>
 #include <QHBoxLayout>
 #include <QGroupBox>
 #include <QSpinBox>
-
-
-typedef std::vector<mico::ml::Detection> StlVectorDetection;
-typedef mico::ml::Detection micoMlDetection;
-typedef cv::Mat cvMat;
-const auto flatVectorDetectionConversion    = simpleFlatVectorTakeFirst<StlVectorDetection, micoMlDetection>;
-FLOW_CONVERSION_REGISTER(StlVectorDetection, micoMlDetection, flatVectorDetectionConversion);
-
-boost::any DetectionToMat(boost::any &_input){
-    return boost::any_cast<mico::ml::Detection>(_input).crop_;
-}
-
-boost::any StlVectorDetectionToMat(boost::any &_input){
-    return boost::any_cast<StlVectorDetection>(_input)[0].crop_;
-}
-
-FLOW_CONVERSION_REGISTER(micoMlDetection, cvMat, &DetectionToMat);
-FLOW_CONVERSION_REGISTER(StlVectorDetection, cvMat, &StlVectorDetectionToMat);
 
 
 namespace mico{
@@ -95,5 +79,79 @@ namespace mico{
         }
     }
 }
+
+// -------------------------- Type conversions ------------
+
+typedef std::vector<mico::ml::Detection> StlVectorDetection;
+typedef mico::ml::Detection micoMlDetection;
+typedef cv::Mat cvMat;
+const auto flatVectorDetectionConversion    = simpleFlatVectorTakeFirst<StlVectorDetection, micoMlDetection>;
+FLOW_CONVERSION_REGISTER(StlVectorDetection, micoMlDetection, flatVectorDetectionConversion);
+
+boost::any DetectionToMat(boost::any &_input){
+    return boost::any_cast<mico::ml::Detection>(_input).crop_;
+}
+
+boost::any StlVectorDetectionToMat(boost::any &_input){
+    return boost::any_cast<StlVectorDetection>(_input)[0].crop_;
+}
+
+FLOW_CONVERSION_REGISTER(micoMlDetection, cvMat, &DetectionToMat);
+FLOW_CONVERSION_REGISTER(StlVectorDetection, cvMat, &StlVectorDetectionToMat);
+
+boost::any DetectionToStlVectorFloat(boost::any &_input){
+    const auto& bb = boost::any_cast<mico::ml::Detection>(_input).bb_;
+    auto x = bb.x + bb.width/2;
+    auto y = bb.y + bb.height/2;
+    return std::vector<float>{x,y};
+}
+
+boost::any DetectionToCvPoint(boost::any &_input){
+    const auto& bb = boost::any_cast<mico::ml::Detection>(_input).bb_;
+    auto x = bb.x + bb.width/2;
+    auto y = bb.y + bb.height/2;
+    return cv::Point2f(x, y);
+}
+
+boost::any DetectionToEigen(boost::any &_input){
+    const auto& bb = boost::any_cast<mico::ml::Detection>(_input).bb_;
+    auto x = bb.x + bb.width/2;
+    auto y = bb.y + bb.height/2;
+    return Eigen::Vector2f(x, y);
+}
+
+typedef Eigen::Vector2f EigenVector2f;
+typedef cv::Point2f CvPoint2f;
+typedef std::vector<float> StlVectorFloat;
+FLOW_CONVERSION_REGISTER(micoMlDetection, StlVectorFloat, &DetectionToStlVectorFloat);
+FLOW_CONVERSION_REGISTER(micoMlDetection, CvPoint2f, &DetectionToCvPoint);
+FLOW_CONVERSION_REGISTER(micoMlDetection, EigenVector2f, &DetectionToEigen);
+
+
+boost::any StlVectorDetectionToStlVectorFloat(boost::any &_input){
+    const auto& bb = boost::any_cast<StlVectorDetection>(_input)[0].bb_;
+    auto x = bb.x + bb.width/2;
+    auto y = bb.y + bb.height/2;
+    return std::vector<float>{x,y};
+}
+
+
+boost::any StlVectorDetectionToCvPoint(boost::any &_input){
+    const auto& bb = boost::any_cast<StlVectorDetection>(_input)[0].bb_;
+    auto x = bb.x + bb.width/2;
+    auto y = bb.y + bb.height/2;
+    return cv::Point2f(x, y);
+}
+
+boost::any StlVectorDetectionToEigen(boost::any &_input){
+    const auto& bb = boost::any_cast<StlVectorDetection>(_input)[0].bb_;
+    auto x = bb.x + bb.width/2;
+    auto y = bb.y + bb.height/2;
+    return Eigen::Vector2f(x, y);
+}
+
+FLOW_CONVERSION_REGISTER(StlVectorDetection, StlVectorFloat, &StlVectorDetectionToStlVectorFloat);
+FLOW_CONVERSION_REGISTER(StlVectorDetection, CvPoint2f, &StlVectorDetectionToCvPoint);
+FLOW_CONVERSION_REGISTER(StlVectorDetection, EigenVector2f, &StlVectorDetectionToEigen);
 
 #endif

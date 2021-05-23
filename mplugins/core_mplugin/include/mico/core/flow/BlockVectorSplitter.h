@@ -20,18 +20,44 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 
-#include <flow/flow.h>
-#include <mico/core/flow/BlockSwitchFlow.h>
-#include <mico/core/flow/BlockVectorSplitter.h>
 
-using namespace mico::core;
-using namespace flow;
+#ifndef MICO_FLOW_BLOCKS_BLOCKVECTORSPLITTER_H_
+#define MICO_FLOW_BLOCKS_BLOCKVECTORSPLITTER_H_
 
-extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(){
-    flow::PluginNodeCreator *creator = new flow::PluginNodeCreator;
+#include <flow/Block.h>
 
-//    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockSwitchFlow                    >>(); }, "core");
-   creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockVectorSplitter                    >>(); }, "core");
+class QSpinBox;
 
-    return creator;
+namespace mico{
+    namespace core{
+        /// Mico block that splits a vector type signal into X signals.
+        /// @ingroup  mico_core
+        class BlockVectorSplitter:public flow::Block{
+        public:
+            /// Get name of block
+            virtual std::string name() const override {return "Vector Splitter";}        
+
+            /// Base constructor
+            BlockVectorSplitter();
+
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return false; };
+
+            /// Returns a brief description of the block
+            std::string description() const override {return    "BlockVectorSplitter"
+                                                                "   - Outputs: \n";};
+
+            QBoxLayout * creationWidget() override;
+
+        private:
+            void preparePolicy();
+            unsigned nTrajs_ = 1;
+
+            QSpinBox * spinBox_;
+        };
+    }
 }
+
+
+
+#endif
