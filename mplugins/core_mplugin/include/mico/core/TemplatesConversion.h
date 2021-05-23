@@ -19,30 +19,21 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------------------------------------
 
+#ifndef MICO_CORE_TEMPLATESCONVERSION_H_
+#define MICO_CORE_TEMPLATESCONVERSION_H_
 
-#include <mico/core/TemplatesConversion.h>
+#include <vector>
+#include <flow/DataFlow.h>
 
-//
-//#ifdef _WIN32
-//	// https://stackoverflow.com/a/12229732/1304903
-//	// In windows, there is not proper dynamic loading of libraries so the compiler complains about the undefined definicion of the
-//	// static factory registration.... As what we will do is to load the registration types and block creation, we will just define the 
-//	// variable to allow the generation of the shared library to be loaded by flow_kids.
-//	std::vector<std::string> flow::TypeLog::registeredTypes_ = {};
-//#endif
+template<typename InT_, typename OutT_>
+boost::any directConversionType(boost::any &_input){
+    return (OutT_) boost::any_cast<InT_>(_input);
+}
 
-const auto directConversionFloatInt     = directConversionType<float, int>;
-const auto directConversionFloatBool    = directConversionType<float, bool>;
-const auto directConversionIntFloat     = directConversionType<int, float>;
-const auto directConversionIntBool      = directConversionType<int, bool>;
-const auto directConversionBoolInt      = directConversionType<bool, int>;
-const auto directConversionBoolFloat    = directConversionType<bool, float>;
+// Add concepts for compile time safety
+template<typename InT_, typename OutT_>
+boost::any simpleFlatVectorTakeFirst(boost::any &_input){
+    return (OutT_) boost::any_cast<InT_>(_input)[0];
+}
 
-INIT_FLOW_CONVERSION_MAP()
-FLOW_CONVERSION_REGISTER(float, int, directConversionFloatInt);
-FLOW_CONVERSION_REGISTER(float, bool, directConversionFloatBool);
-FLOW_CONVERSION_REGISTER(int, float, directConversionIntFloat);
-FLOW_CONVERSION_REGISTER(int, bool, directConversionIntBool);
-FLOW_CONVERSION_REGISTER(bool, int, directConversionBoolInt);
-FLOW_CONVERSION_REGISTER(bool, float, directConversionBoolFloat);
-
+#endif

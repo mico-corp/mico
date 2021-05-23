@@ -31,6 +31,7 @@
 
 #include <QGroupBox>
 #include <QPushButton>
+#include <flow/Persistency.h>
 
 namespace mico{
 
@@ -41,8 +42,8 @@ namespace mico{
         /// Retreive icon of block    
             virtual QIcon icon() const override { 
             std::string userDir(getenv("USER"));
-            std::string resourcesDir = "/home/"+userDir+"/.flow/plugins/resources/cameras/";
-            return QIcon((resourcesDir+"realsense_icon.png").c_str());
+            std::string resourceDir = flow::Persistency::resourceDir()/"resources"/"cameras"/"realsense_icon.png";
+            return QIcon(resourceDir.c_str());
         }
         
         StreamRealSenseTracking();

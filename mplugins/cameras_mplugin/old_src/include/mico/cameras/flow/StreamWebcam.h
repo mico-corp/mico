@@ -26,6 +26,7 @@
 
 #include <flow/Block.h>
 #include <opencv2/opencv.hpp>
+#include <flow/Persistency.h>
 
 namespace mico{
 
@@ -36,8 +37,8 @@ namespace mico{
         /// Retreive icon of block    
             virtual QIcon icon() const override { 
             std::string userDir(getenv("USER"));
-            std::string resourcesDir = "/home/"+userDir+"/.flow/plugins/resources/cameras/";
-            return QIcon((resourcesDir+"webcam_icon.svg").c_str());
+            std::string resourceDir = flow::Persistency::resourceDir()/"resources"/"cameras"/"webcam_icon.svg";
+            return QIcon(resourceDir.c_str());
         }
         
         StreamWebcam();

@@ -27,6 +27,7 @@
 #include <flow/Block.h>
 
 #include <mico/cameras/StereoCameras/StereoCameraKinect.h>
+#include <flow/Persistency.h>
 
 namespace mico{
 
@@ -37,8 +38,8 @@ namespace mico{
         /// Retreive icon of block    
             virtual QIcon icon() const override { 
             std::string userDir(getenv("USER"));
-            std::string resourcesDir = "/home/"+userDir+"/.flow/plugins/resources/cameras/";
-            return QIcon((resourcesDir+"kinect_icon.svg").c_str());
+            std::string resourceDir = flow::Persistency::resourceDir()/"resources"/"cameras"/"kinect_icon.svg";
+            return QIcon(resourceDir.c_str());
         }
         
         StreamKinect();

@@ -122,18 +122,22 @@ macro(add_mplugin)
         target_include_directories(${EXPORTED_PLUGIN_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include ${MICO_PLUGIN_INCLUDES})
         target_link_libraries(${EXPORTED_PLUGIN_NAME} PRIVATE ${MICO_PLUGIN_LIBRARIES})
         target_compile_definitions(${EXPORTED_PLUGIN_NAME} PRIVATE ${MICO_PLUGIN_COMPILE_DEFS})
+    
+        
+        install(TARGETS ${EXPORTED_PLUGIN_NAME}
+                RUNTIME DESTINATION bin/mplugins
+        )
     else(UNIX)
-        set(EXPORTED_PLUGIN_NAME ${IN_PLUGIN_NAME})
+        install(TARGETS ${IN_PLUGIN_NAME}
+                LIBRARY DESTINATION bin/mplugins
+        )
     endif()
 
     if(${IN_HAS_RESOURCES})
         install(    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/resources 
                     DESTINATION bin/mplugins )
     endif()
-
-    install(TARGETS ${EXPORTED_PLUGIN_NAME}
-        RUNTIME DESTINATION bin/mplugins
-    )
+    
 
 endmacro(add_mplugin)
 

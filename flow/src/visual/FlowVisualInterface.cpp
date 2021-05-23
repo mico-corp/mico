@@ -255,10 +255,9 @@ namespace flow{
         std::vector<std::string> hintsDirectories;
         #ifdef linux
             std::string userName(getenv("USER"));
-            hintsDirectories.push_back("/usr/lib");
+            hintsDirectories.push_back("/usr/bin/mplugins");
         #endif
         #ifdef _WIN32
-            hintsDirectories.push_back("C:\\.flow\\plugins\\");
             hintsDirectories.push_back("C:\\Program Files\\mico-corp\\mico\\bin\\mplugins");
             hintsDirectories.push_back("C:\\Program Files (x86)\\mico-corp\\mico\\bin\\mplugins");
         #endif

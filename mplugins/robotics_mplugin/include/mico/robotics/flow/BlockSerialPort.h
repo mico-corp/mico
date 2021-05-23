@@ -27,6 +27,7 @@
 #include <flow/Block.h>
 #include <flow/flow.h>
 #include <mico/robotics/SerialPort.h>
+#include <flow/Persistency.h>
 
 
 /*
@@ -38,8 +39,8 @@ namespace mico{
         /// Retreive icon of block    
             virtual QIcon icon() const override { 
             std::string userDir(getenv("USER"));
-            std::string resourcesDir = "/home/"+userDir+"/.flow/plugins/resources/robotics/";
-            return QIcon((resourcesDir+"serial_port_icon.png").c_str());
+            std::string resourceDir = flow::Persistency::resourceDir()/"resources"/"robotics"/"serial_port_icon.png";
+            return QIcon(resourceDir.c_str());
         }
         BlockSerialPort();
         ~BlockSerialPort();

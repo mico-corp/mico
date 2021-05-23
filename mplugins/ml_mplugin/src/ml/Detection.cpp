@@ -23,11 +23,31 @@
 #define MICO_ML_DETECTION_H_
 
 #include <mico/ml/Detection.h>
+#include <mico/core/TemplatesConversion.h>
 
 #include <QComboBox>
 #include <QHBoxLayout>
 #include <QGroupBox>
 #include <QSpinBox>
+
+
+typedef std::vector<mico::ml::Detection> StlVectorDetection;
+typedef mico::ml::Detection micoMlDetection;
+typedef cv::Mat cvMat;
+const auto flatVectorDetectionConversion    = simpleFlatVectorTakeFirst<StlVectorDetection, micoMlDetection>;
+FLOW_CONVERSION_REGISTER(StlVectorDetection, micoMlDetection, flatVectorDetectionConversion);
+
+boost::any DetectionToMat(boost::any &_input){
+    return boost::any_cast<mico::ml::Detection>(_input).crop_;
+}
+
+boost::any StlVectorDetectionToMat(boost::any &_input){
+    return boost::any_cast<StlVectorDetection>(_input)[0].crop_;
+}
+
+FLOW_CONVERSION_REGISTER(micoMlDetection, cvMat, &DetectionToMat);
+FLOW_CONVERSION_REGISTER(StlVectorDetection, cvMat, &StlVectorDetectionToMat);
+
 
 namespace mico{
     namespace ml{

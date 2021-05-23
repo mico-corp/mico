@@ -70,17 +70,3 @@ endif()
 if(${BUILD_BENCHMARK})
 	add_subdirectory(benchmark)
 endif()
-
-
-# Add custom comand for flow install of all selected modules
-set(PLUGINS_DIR "")
-if(WIN32)   
-	set(PLUGINS_DIR "C:/.flow/plugins")
-elseif(UNIX)
-	set(PLUGINS_DIR $ENV{HOME}/.flow/plugins)
-endif()
-
-add_custom_target(flow_install
-COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/plugins 
-                                $ENV{HOME}/.flow/plugins
-)
