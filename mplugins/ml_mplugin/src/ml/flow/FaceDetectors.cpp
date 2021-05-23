@@ -42,22 +42,27 @@ namespace mico{
                                         return;
 
                                     idle_ = false;
-                                    cv::Mat frame = _data.get<cv::Mat>("input").clone();
-                                    cv::Mat frame_gray;
-                                    cv::cvtColor( frame, frame_gray, cv::COLOR_BGR2GRAY );
-                                    cv::equalizeHist( frame_gray, frame_gray );
-                                    //-- Detect faces
-                                    std::vector<cv::Rect> faces;
-                                    if (!face_cascade.empty()) {
-                                        face_cascade.detectMultiScale( frame_gray, faces );   
-                                        std::vector< Detection> detections;
-                                        for ( size_t i = 0; i < faces.size(); i++ ) {
-                                            cv::Point center( faces[i].x + faces[i].width/2, faces[i].y + faces[i].height/2 );
-                                            cv::rectangle( frame, faces[i], cv::Scalar( 0, 255, 0 ), 4 );
+                                    if(getPipe("result")->registrations() != 0 || getPipe("detections")->registrations() != 0){
+                                        cv::Mat frame = _data.get<cv::Mat>("input").clone();
+                                        cv::Mat frame_gray;
+                                        cv::cvtColor( frame, frame_gray, cv::COLOR_BGR2GRAY );
+                                        cv::equalizeHist( frame_gray, frame_gray );
+                                        //-- Detect faces
+                                        std::vector<cv::Rect> faces;
+                                        if (!face_cascade.empty()) {
+                                            face_cascade.detectMultiScale( frame_gray, faces );   
+                                            std::vector< Detection> detections;
+                                            for ( size_t i = 0; i < faces.size(); i++ ) {
+                                                cv::Point center( faces[i].x + faces[i].width/2, faces[i].y + faces[i].height/2 );
+                                                cv::rectangle( frame, faces[i], cv::Scalar( 0, 255, 0 ), 4 );
+                                                
+                                                detections.push_back({ 0, faces[i], frame(faces[i])});
+                                            }
+                                            if(getPipe("result")->registrations() != 0 ) getPipe("result")->flush(frame);
+                                            if(getPipe("detections")->registrations() != 0) getPipe("detections")->flush(detections);
                                             
-                                            detections.push_back({ 0, faces[i], frame(faces[i])});
                                         }
-                                        getPipe("result")->flush(frame);
+
                                     }
                                     idle_ = true;
                                 }
