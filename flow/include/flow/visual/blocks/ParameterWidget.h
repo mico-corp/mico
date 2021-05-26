@@ -38,7 +38,7 @@ class QPushButton;
 
 namespace flow{
 
-    class ParameterWidget: public QHBoxLayout{
+    class FLOW_DECL ParameterWidget: public QHBoxLayout{
     public:
         ParameterWidget(const ConfigParameterDef &_param, 
                         QWidget *_parent = nullptr, 

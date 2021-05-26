@@ -38,7 +38,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/" ${CMAKE_MODULE_PATH})
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 if(WIN32)
-    set(LIBRARY_MODE STATIC)
+    set(LIBRARY_MODE SHARED)
     # if(MSVC)
     #     add_compile_options(
     #         $<$<CONFIG:>:/MT> #---------|

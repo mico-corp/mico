@@ -25,9 +25,7 @@
 
 namespace flow{
 
-    #if defined(__linux__)
-        std::map<std::string, std::map<std::string, std::function<boost::any(boost::any&)>>> DataFlow::conversions_ = {};
-    #endif 
+    std::map<std::string, std::map<std::string, std::function<boost::any(boost::any&)>>> DataFlow::conversions_ = {};
 
     DataFlow::DataFlow(std::map<std::string, std::string> _flows, std::function<void(DataFlow _f)> _callback){
         callback_ = _callback;

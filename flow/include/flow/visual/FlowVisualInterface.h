@@ -39,7 +39,7 @@ namespace QtNodes{
 
 namespace flow{
 
-    class FlowVisualInterface{
+    class FLOW_DECL FlowVisualInterface{
         public:
             typedef std::function<void(std::shared_ptr<QtNodes::DataModelRegistry> &_registry)> RegistryFnType_;
             typedef std::shared_ptr<QtNodes::DataModelRegistry> RegistryType_;

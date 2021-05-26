@@ -63,7 +63,7 @@ namespace flow{
     /// Base class of flow that represents a functioning block. A Block represents an action or module with an specific
     /// behaviour or implemented algorithm. Is composed by a set of N inputs and M outputs and the associated internal actions.
     /// @ingroup  flow
-    class Block{
+    class FLOW_DECL Block{
     public:
         /// Get name of block
         virtual std::string name() const {return "Unnammed";}

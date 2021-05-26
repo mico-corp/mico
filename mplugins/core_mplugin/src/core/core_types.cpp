@@ -38,7 +38,6 @@ const auto directConversionIntBool      = directConversionType<int, bool>;
 const auto directConversionBoolInt      = directConversionType<bool, int>;
 const auto directConversionBoolFloat    = directConversionType<bool, float>;
 
-INIT_FLOW_CONVERSION_MAP()
 FLOW_CONVERSION_REGISTER(float, int, directConversionFloatInt);
 FLOW_CONVERSION_REGISTER(float, bool, directConversionFloatBool);
 FLOW_CONVERSION_REGISTER(int, float, directConversionIntFloat);

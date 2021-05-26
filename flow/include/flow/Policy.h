@@ -43,7 +43,7 @@ namespace flow{
 
     /// Base class of flow that represents a single input stream.
     /// @ingroup  flow
-    class PolicyInput{
+    class FLOW_DECL PolicyInput{
     public:
         /// Build an input stream with a given name and type
         PolicyInput(std::string _tag, std::string _type) :tag_(_tag), typeName_(_type) {};

@@ -40,7 +40,7 @@ namespace flow{
     /// Base class of flow that a flow of data. It manages the implicit conversion of data through the streams and call the 
     /// associated callbacks. It is used in input policies to generate automatic data flows.
     /// @ingroup  flow
-    class DataFlow{
+    class FLOW_DECL DataFlow{
     public:
         /// Construct a data flow with a set if input flows and associate a callback to it.
         DataFlow(std::map<std::string, std::string> _flows, std::function<void(DataFlow _f)> _callback);
@@ -106,14 +106,6 @@ namespace flow {
         return data_[_tag];
     }
 }                                                                                \
-
-
-#if defined(WIN32)
-    #define INIT_FLOW_CONVERSION_MAP()                                                                                  \
-        std::map<std::string, std::map<std::string, std::function<boost::any(boost::any&)>>> flow::DataFlow::conversions_ = {};
-#else
-    #define INIT_FLOW_CONVERSION_MAP()                             
-#endif
 
 #define FLOW_CONVERSION_REGISTER(Type1_, Type2_, conversion_)                                                       \
     namespace flow{                                                                                                 \

@@ -114,25 +114,28 @@ macro(add_mplugin)
     target_compile_definitions(${IN_PLUGIN_NAME} PRIVATE ${MICO_PLUGIN_COMPILE_DEFS})
 
     # Plugin installation target
-    if(WIN32)
-        set(EXPORTED_PLUGIN_NAME ${IN_PLUGIN_NAME}_mplugin)
-        add_library(${EXPORTED_PLUGIN_NAME} SHARED ${IN_PLUGIN_SOURCES})
+    # if(WIN32)
+    #     set(EXPORTED_PLUGIN_NAME ${IN_PLUGIN_NAME}_mplugin)
+    #     add_library(${EXPORTED_PLUGIN_NAME} SHARED ${IN_PLUGIN_SOURCES})
 
-        set_target_properties(${EXPORTED_PLUGIN_NAME} PROPERTIES FOLDER "mplugins/win32_export")
-        target_include_directories(${EXPORTED_PLUGIN_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include ${MICO_PLUGIN_INCLUDES})
-        target_link_libraries(${EXPORTED_PLUGIN_NAME} PRIVATE ${MICO_PLUGIN_LIBRARIES})
-        target_compile_definitions(${EXPORTED_PLUGIN_NAME} PRIVATE ${MICO_PLUGIN_COMPILE_DEFS})
+    #     set_target_properties(${EXPORTED_PLUGIN_NAME} PROPERTIES FOLDER "mplugins/win32_export")
+    #     target_include_directories(${EXPORTED_PLUGIN_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include ${MICO_PLUGIN_INCLUDES})
+    #     target_link_libraries(${EXPORTED_PLUGIN_NAME} PRIVATE ${MICO_PLUGIN_LIBRARIES})
+    #     target_compile_definitions(${EXPORTED_PLUGIN_NAME} PRIVATE ${MICO_PLUGIN_COMPILE_DEFS})
     
         
-        install(TARGETS ${EXPORTED_PLUGIN_NAME}
-                RUNTIME DESTINATION bin/mplugins
-        )
-    else(UNIX)
-        install(TARGETS ${IN_PLUGIN_NAME}
-                LIBRARY DESTINATION bin/mplugins
-        )
-    endif()
-
+    #     install(TARGETS ${EXPORTED_PLUGIN_NAME}
+    #             RUNTIME DESTINATION bin/mplugins
+    #     )
+    # else(UNIX)
+    #     install(TARGETS ${IN_PLUGIN_NAME}
+    #             LIBRARY DESTINATION bin/mplugins
+    #     )
+    # endif()
+    
+    install(TARGETS ${IN_PLUGIN_NAME}
+        LIBRARY DESTINATION bin/mplugins
+    )
     if(${IN_HAS_RESOURCES})
         install(    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/resources 
                     DESTINATION bin/mplugins )
@@ -151,15 +154,15 @@ macro(mplugin_link_library)
     if(IS_PUBLIC)
         target_link_libraries(${IN_PLUGIN_NAME} PUBLIC ${IN_PLUGIN_LIBRARIES})
 
-        if(WIN32)
-            target_link_libraries(${IN_PLUGIN_NAME}_mplugin PUBLIC ${IN_PLUGIN_LIBRARIES})
-        endif()
+        # if(WIN32)
+        #     target_link_libraries(${IN_PLUGIN_NAME}_mplugin PUBLIC ${IN_PLUGIN_LIBRARIES})
+        # endif()
     else()
         target_link_libraries(${IN_PLUGIN_NAME} PRIVATE ${IN_PLUGIN_LIBRARIES})
 
-        if(WIN32)
-            target_link_libraries(${IN_PLUGIN_NAME}_mplugin PRIVATE ${IN_PLUGIN_LIBRARIES})
-        endif()
+        # if(WIN32)
+        #     target_link_libraries(${IN_PLUGIN_NAME}_mplugin PRIVATE ${IN_PLUGIN_LIBRARIES})
+        # endif()
     endif()
 
     
@@ -175,15 +178,15 @@ macro(mplugin_include_directory)
     if(IS_PUBLIC)
         target_include_directories(${IN_PLUGIN_NAME} PUBLIC ${PLUGIN_INCLUDES})
         
-        if(WIN32)
-            target_include_directories(${IN_PLUGIN_NAME}_mplugin PUBLIC ${PLUGIN_INCLUDES})
-        endif()
+        # if(WIN32)
+        #     target_include_directories(${IN_PLUGIN_NAME}_mplugin PUBLIC ${PLUGIN_INCLUDES})
+        # endif()
     else()
         target_include_directories(${IN_PLUGIN_NAME} PRIVATE ${PLUGIN_INCLUDES})
             
-        if(WIN32)
-            target_include_directories(${IN_PLUGIN_NAME}_mplugin PRIVATE ${DEP})
-        endif()
+        # if(WIN32)
+        #     target_include_directories(${IN_PLUGIN_NAME}_mplugin PRIVATE ${DEP})
+        # endif()
     endif()
 
 endmacro(mplugin_include_directory)
@@ -198,15 +201,15 @@ macro(mplugin_compile_definition)
     if(IS_PUBLIC)
         target_compile_definitions(${IN_PLUGIN_NAME} PUBLIC ${IN_PLUGIN_DEFINITIONS})
         
-        if(WIN32)
-            target_compile_definitions(${IN_PLUGIN_NAME}_mplugin PUBLIC ${IN_PLUGIN_DEFINITIONS})
-        endif()
+        # if(WIN32)
+        #     target_compile_definitions(${IN_PLUGIN_NAME}_mplugin PUBLIC ${IN_PLUGIN_DEFINITIONS})
+        # endif()
     else()
         target_compile_definitions(${IN_PLUGIN_NAME} PRIVATE ${IN_PLUGIN_DEFINITIONS})
         
-        if(WIN32)
-            target_compile_definitions(${IN_PLUGIN_NAME}_mplugin PRIVATE ${IN_PLUGIN_DEFINITIONS})
-        endif()
+        # if(WIN32)
+        #     target_compile_definitions(${IN_PLUGIN_NAME}_mplugin PRIVATE ${IN_PLUGIN_DEFINITIONS})
+        # endif()
     endif()
     
 endmacro(mplugin_compile_definition)
