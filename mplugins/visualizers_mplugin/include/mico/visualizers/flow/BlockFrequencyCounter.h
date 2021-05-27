@@ -35,7 +35,7 @@ namespace mico {
         class BlockFrequencyCounter : public flow::Block {
         public:
             /// Get name of block
-            std::string name() const override { return "Stream Frequency Counter"; }
+            std::string name() const override { return "Frequency Counter"; }
 
             BlockFrequencyCounter();
 

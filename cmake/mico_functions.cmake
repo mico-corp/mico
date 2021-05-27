@@ -113,9 +113,15 @@ macro(add_mplugin)
     target_link_libraries(${IN_PLUGIN_NAME} PRIVATE ${MICO_PLUGIN_LIBRARIES})
     target_compile_definitions(${IN_PLUGIN_NAME} PRIVATE ${MICO_PLUGIN_COMPILE_DEFS})
     
-    install(TARGETS ${IN_PLUGIN_NAME}
-        LIBRARY DESTINATION bin/mplugins
-    )
+    if(WIN32)
+        install(TARGETS ${IN_PLUGIN_NAME}
+            RUNTIME DESTINATION bin/mplugins
+        )
+    elseif(UNIX)
+        install(TARGETS ${IN_PLUGIN_NAME}
+            LIBRARY DESTINATION bin/mplugins
+        )
+    endif()
 
     if(${IN_HAS_RESOURCES})
         install(    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/resources 

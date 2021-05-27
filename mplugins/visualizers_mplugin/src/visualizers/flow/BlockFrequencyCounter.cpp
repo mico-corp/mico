@@ -37,7 +37,7 @@ namespace mico{
             memset(freqList_, 0, sizeof(float)*listSize_);
             textDisplay_ = new QLabel("0.000000");
 
-            createPolicy({  flow::makeInput<float>("Stream")});
+            createPolicy({  flow::makeInput<boost::any>("Stream")});
             createPipe<float>("Hz");
 
             t0_ = std::chrono::steady_clock::now();

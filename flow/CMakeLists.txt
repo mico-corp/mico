@@ -193,6 +193,18 @@ if(${BUILD_TOOLS})
 endif()
 
 
+if(WIN32)
+  install(TARGETS ${PROJECT_NAME}
+      RUNTIME DESTINATION bin
+  )
+  elseif(UNIX)
+  install(TARGETS ${PROJECT_NAME}
+      LIBRARY DESTINATION bin
+  )
+endif()
+
+
+
 # Additional library requirements
 if(WIN32)
     # Qt
