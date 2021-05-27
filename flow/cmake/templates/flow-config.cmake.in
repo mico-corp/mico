@@ -3,10 +3,14 @@ include(CMakeFindDependencyMacro)
 
 
 
-find_package(Qt5 REQUIRED COMPONENTS Core Widgets Gui)
+find_package(Qt5 REQUIRED COMPONENTS Core Widgets Gui PrintSupport)
 find_package(NodeEditor REQUIRED)
+find_package(Boost REQUIRED COMPONENTS system filesystem program_options exception)
 
-find_package(Boost REQUIRED COMPONENTS system filesystem)
+if(WIN32)
+    find_package(dlfcn-win32 REQUIRED)
+    target_link_libraries(${PROJECT_NAME} LINK_PUBLIC dlfcn-win32::dl)
+endif()
 
 if(NOT TARGET flow::flow)
     include("${flow_CMAKE_DIR}/flow-targets.cmake")

@@ -216,6 +216,9 @@ if(WIN32)
                 ${Qt5_DIR}/../../../bin/Qt5Widgets.dll
                 DESTINATION bin )
     
+    install(    DIRECTORY ${Qt5_DIR}/../../../include
+                DESTINATION include )
+
     install(    DIRECTORY ${Qt5_DIR}/../../../plugins/platforms
                 DESTINATION bin )
 
@@ -238,6 +241,9 @@ if(WIN32)
                 ${OpenCV_DIR}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_videoio420.dll
 #                ${OpenCV_DIR}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_xfeatures2d420.dll
                 DESTINATION bin )
+
+    install(    DIRECTORY ${OpenCV_DIR}/include/opencv2
+                DESTINATION include )
     
     # dlfcn
     install(    FILES 
