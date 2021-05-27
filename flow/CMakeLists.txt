@@ -75,10 +75,10 @@ else()
   endif()
 endif()
 
-find_package(Eigen3 REQUIRED)
-if(${Eigen3_FOUND})
-  target_include_directories(${PROJECT_NAME} PUBLIC "/usr/include/eigen3")
-endif()
+# find_package(Eigen3 REQUIRED)
+# if(${Eigen3_FOUND})
+#   target_include_directories(${PROJECT_NAME} PUBLIC "/usr/include/eigen3")
+# endif()
 
 find_package(Boost REQUIRED COMPONENTS system filesystem program_options exception)
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC Boost::boost 

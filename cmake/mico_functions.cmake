@@ -74,9 +74,9 @@ macro(add_mplugin)
         message(FATAL_ERROR "NOT READY")
         find_package(NodeEditor REQUIRED)
         if(${NodeEditor_FOUND})
-            # set(MICO_PLUGIN_INCLUDES "${MICO_PLUGIN_INCLUDES} ${NodeEditor_INCLUDE_DIRS})")
-            # set(MICO_PLUGIN_LIBRARIES "${MICO_PLUGIN_LIBRARIES} ${NodeEditor_LIBRARIES})")
-            # set(MICO_PLUGIN_COMPILE_DEFS "${MICO_PLUGIN_COMPILE_DEFS} HAS_QTNODEEDITOR")
+            set(MICO_PLUGIN_INCLUDES "${MICO_PLUGIN_INCLUDES} ${NodeEditor_INCLUDE_DIRS})")
+            set(MICO_PLUGIN_LIBRARIES "${MICO_PLUGIN_LIBRARIES} ${NodeEditor_LIBRARIES})")
+            set(MICO_PLUGIN_COMPILE_DEFS "${MICO_PLUGIN_COMPILE_DEFS} HAS_QTNODEEDITOR")
         endif()
     endif()
   
@@ -103,22 +103,24 @@ macro(add_mplugin)
 
     set_target_properties(${IN_PLUGIN_NAME} PROPERTIES FOLDER "mplugins")
 
-    if(WIN32)
-        target_include_directories(${IN_PLUGIN_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-    endif()
-
     add_library(${PROJECT_NAME}::${IN_PLUGIN_NAME} ALIAS ${IN_PLUGIN_NAME})
 
-    target_include_directories(${IN_PLUGIN_NAME} PRIVATE ${MICO_PLUGIN_INCLUDES})
-    target_link_libraries(${IN_PLUGIN_NAME} PRIVATE ${MICO_PLUGIN_LIBRARIES})
-    target_compile_definitions(${IN_PLUGIN_NAME} PRIVATE ${MICO_PLUGIN_COMPILE_DEFS})
+    target_include_directories(${IN_PLUGIN_NAME} PUBLIC ${MICO_PLUGIN_INCLUDES})
+    target_link_libraries(${IN_PLUGIN_NAME} PUBLIC ${MICO_PLUGIN_LIBRARIES})
+    target_compile_definitions(${IN_PLUGIN_NAME} PUBLIC ${MICO_PLUGIN_COMPILE_DEFS})
     
     if(WIN32)
-        install(TARGETS ${IN_PLUGIN_NAME}
+        install(TARGETS nodes ${IN_PLUGIN_NAME}
+            EXPORT ${IN_PLUGIN_NAME}-targets
+            LIBRARY DESTINATION lib
+            ARCHIVE DESTINATION lib
             RUNTIME DESTINATION bin/mplugins
         )
     elseif(UNIX)
-        install(TARGETS ${IN_PLUGIN_NAME}
+        install(TARGETS nodes ${IN_PLUGIN_NAME}    
+            EXPORT ${IN_PLUGIN_NAME}-targets
+            LIBRARY DESTINATION lib
+            ARCHIVE DESTINATION lib
             LIBRARY DESTINATION bin/mplugins
         )
     endif()
@@ -128,6 +130,23 @@ macro(add_mplugin)
                     DESTINATION bin/mplugins )
     endif()
     
+    # This generates flow-targets.cmake
+    install(EXPORT ${IN_PLUGIN_NAME}-targets
+        FILE "${IN_PLUGIN_NAME}-targets.cmake"
+        NAMESPACE ${PROJECT_NAME}::
+        DESTINATION lib/cmake/${IN_PLUGIN_NAME}
+        )
+    
+    configure_file(
+        "${CMAKE_CURRENT_SOURCE_DIR}/cmake/templates/${IN_PLUGIN_NAME}-config.cmake.in"
+        "${CMAKE_CURRENT_BINARY_DIR}/${IN_PLUGIN_NAME}-config.cmake"
+        @ONLY
+    )
+    
+    install(FILES 
+        "${CMAKE_CURRENT_BINARY_DIR}/${IN_PLUGIN_NAME}-config.cmake"
+        DESTINATION lib/cmake/${IN_PLUGIN_NAME}
+    )
 
 endmacro(add_mplugin)
 

@@ -24,7 +24,7 @@ add_executable(flow_kids flow_kids.cpp)
 target_include_directories(flow_kids PUBLIC ../include)
 target_link_libraries(flow_kids LINK_PUBLIC flow)
 
-# add_subdirectory(block_creator)
+add_subdirectory(block_creator)
 
 ### Add test with input file
 # find_package(fastcom REQUIRED)

@@ -2,9 +2,9 @@ get_filename_component(flow_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
 include(CMakeFindDependencyMacro)
 
 
-if(${NodeEditor_FOUND})
-    find_package(NodeEditor REQUIRED)
-endif()
+
+find_package(Qt5 REQUIRED COMPONENTS Core Widgets Gui)
+find_package(NodeEditor REQUIRED)
 
 find_package(Boost REQUIRED COMPONENTS system filesystem)
 
