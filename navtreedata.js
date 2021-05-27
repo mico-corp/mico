@@ -43,9 +43,9 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d5/db3/create_mico_block.html",
-"da/d83/classmico_1_1math_1_1_block_timer.html#a9d736fbf1b4ef2044e52bfd84b0d3ee6",
-"de/d0e/classmico_1_1visualizer_1_1_block_number_visualizer.html#a8b569e2c54d34616b3bb4ebccaae30fa"
+"d5/dae/classmico_1_1arduino_1_1_toggle_button_block.html#ac8e7a2379df13a1c55a2f705b557759b",
+"da/d42/classmico_1_1arduino_1_1_arduino_device_block.html#a820e9c379aba5abcbe0c0b375b0a4bce",
+"dd/de6/classmico_1_1math_1_1_const_streamer.html#acfaacd85a7b121f8a77a673d7146e9e1"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

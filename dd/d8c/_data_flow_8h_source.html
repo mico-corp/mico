@@ -27,7 +27,7 @@
   <td id="projectlogo"><img alt="Logo" src="../../icon.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">MICO
-   &#160;<span id="projectnumber">1.0.1</span>
+   &#160;<span id="projectnumber">1.0.3</span>
    </div>
    <div id="projectbrief">Modular Interchangeable Computer prOgramming</div>
   </td>
@@ -127,7 +127,7 @@ $(document).ready(function(){initNavTree('dd/d8c/_data_flow_8h_source.html','../
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">namespace </span>flow{</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        </div>
-<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="../../df/d89/classflow_1_1_data_flow.html">   43</a></span>&#160;    <span class="keyword">class </span><a class="code" href="../../df/d89/classflow_1_1_data_flow.html">DataFlow</a>{</div>
+<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="../../df/d89/classflow_1_1_data_flow.html">   43</a></span>&#160;    <span class="keyword">class </span>FLOW_DECL <a class="code" href="../../df/d89/classflow_1_1_data_flow.html">DataFlow</a>{</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keyword">public</span>:</div>
 <div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="../../df/d89/classflow_1_1_data_flow.html#a246c23ef957d8a02d019499f92a84b90">   46</a></span>&#160;        <a class="code" href="../../df/d89/classflow_1_1_data_flow.html#a246c23ef957d8a02d019499f92a84b90">DataFlow</a>(std::map&lt;std::string, std::string&gt; _flows, std::function&lt;<span class="keywordtype">void</span>(<a class="code" href="../../df/d89/classflow_1_1_data_flow.html">DataFlow</a> _f)&gt; _callback);</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
@@ -136,7 +136,7 @@ $(document).ready(function(){initNavTree('dd/d8c/_data_flow_8h_source.html','../
 <div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="../../df/d89/classflow_1_1_data_flow.html#ae03f0120a6b687436fe9e767d0fb4ce3">   52</a></span>&#160;        <span class="keywordtype">void</span> <a class="code" href="../../df/d89/classflow_1_1_data_flow.html#ae03f0120a6b687436fe9e767d0fb4ce3">checkData</a>();</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T_&gt;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        T_ <a class="code" href="../../df/d89/classflow_1_1_data_flow.html#ad8db4cbb3cd601b671e1e2297ceb0cfe">get</a>(std::string <span class="keyword">const</span> &amp;_tag);</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        T_ get(std::string <span class="keyword">const</span> &amp;_tag);</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
 <div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="../../df/d89/classflow_1_1_data_flow.html#a5db32caf2f6e2263cb6513663a83d03a">   59</a></span>&#160;        <span class="keywordtype">float</span> <a class="code" href="../../df/d89/classflow_1_1_data_flow.html#a5db32caf2f6e2263cb6513663a83d03a">frequency</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
@@ -189,30 +189,22 @@ $(document).ready(function(){initNavTree('dd/d8c/_data_flow_8h_source.html','../
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    }</div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;}                                                                                \</div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="preprocessor">#if defined(WIN32)</span></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="preprocessor">    #define INIT_FLOW_CONVERSION_MAP()                                                                                  \</span></div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="preprocessor">        std::map&lt;std::string, std::map&lt;std::string, std::function&lt;boost::any(boost::any&amp;)&gt;&gt;&gt; flow::DataFlow::conversions_ = {};</span></div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="preprocessor">    #define INIT_FLOW_CONVERSION_MAP()                             </span></div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="preprocessor">#define FLOW_CONVERSION_REGISTER(Type1_, Type2_, conversion_)                                                       \</span></div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="preprocessor">    namespace flow{                                                                                                 \</span></div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="preprocessor">        struct ConversionRegistrator##Type1_##Type2_{                                                               \</span></div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="preprocessor">            ConversionRegistrator##Type1_##Type2_(){                                                                \</span></div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="preprocessor">                DataFlow::conversions_[typeid(Type1_).name()][typeid(Type2_).name()] = conversion_;                 \</span></div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="preprocessor">            }                                                                                                       \</span></div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="preprocessor">            typedef Type1_ TraitType1_;                                                                             \</span></div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="preprocessor">            typedef Type2_ TraitType2_;                                                                             \</span></div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="preprocessor">            static ConversionRegistrator##Type1_##Type2_ traitRegistrator_;                                         \</span></div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="preprocessor">        };                                                                                                          \</span></div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="preprocessor">        ConversionRegistrator##Type1_##Type2_ ConversionRegistrator##Type1_##Type2_::traitRegistrator_ = ConversionRegistrator##Type1_##Type2_();    \</span></div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="preprocessor">    }                                                                                                               \</span></div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="preprocessor"></span> </div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160; </div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160; </div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="preprocessor">#define FLOW_CONVERSION_REGISTER(Type1_, Type2_, conversion_)                                                       \</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="preprocessor">    namespace flow{                                                                                                 \</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="preprocessor">        struct ConversionRegistrator##Type1_##Type2_{                                                               \</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="preprocessor">            ConversionRegistrator##Type1_##Type2_(){                                                                \</span></div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="preprocessor">                DataFlow::conversions_[typeid(Type1_).name()][typeid(Type2_).name()] = conversion_;                 \</span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="preprocessor">            }                                                                                                       \</span></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="preprocessor">            typedef Type1_ TraitType1_;                                                                             \</span></div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="preprocessor">            typedef Type2_ TraitType2_;                                                                             \</span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="preprocessor">            static ConversionRegistrator##Type1_##Type2_ traitRegistrator_;                                         \</span></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="preprocessor">        };                                                                                                          \</span></div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="preprocessor">        ConversionRegistrator##Type1_##Type2_ ConversionRegistrator##Type1_##Type2_::traitRegistrator_ = ConversionRegistrator##Type1_##Type2_();    \</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="preprocessor">    }                                                                                                               \</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="preprocessor"></span> </div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160; </div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclassflow_1_1_data_flow_html"><div class="ttname"><a href="../../df/d89/classflow_1_1_data_flow.html">flow::DataFlow</a></div><div class="ttdef"><b>Definition:</b> <a href="../../dd/d8c/_data_flow_8h_source.html#l00043">DataFlow.h:43</a></div></div>
 <div class="ttc" id="aclassflow_1_1_data_flow_html_a246c23ef957d8a02d019499f92a84b90"><div class="ttname"><a href="../../df/d89/classflow_1_1_data_flow.html#a246c23ef957d8a02d019499f92a84b90">flow::DataFlow::DataFlow</a></div><div class="ttdeci">DataFlow(std::map&lt; std::string, std::string &gt; _flows, std::function&lt; void(DataFlow _f)&gt; _callback)</div><div class="ttdoc">Construct a data flow with a set if input flows and associate a callback to it.</div></div>
 <div class="ttc" id="aclassflow_1_1_data_flow_html_a5db32caf2f6e2263cb6513663a83d03a"><div class="ttname"><a href="../../df/d89/classflow_1_1_data_flow.html#a5db32caf2f6e2263cb6513663a83d03a">flow::DataFlow::frequency</a></div><div class="ttdeci">float frequency() const</div><div class="ttdoc">Get the current frequency at which the DataFlow is triggering the callback.</div></div>

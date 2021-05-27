@@ -62,7 +62,8 @@ var annotated_dup =
         [ "StreamWebcam", "d6/daf/classmico_1_1cameras_1_1_stream_webcam.html", "d6/daf/classmico_1_1cameras_1_1_stream_webcam" ]
       ] ],
       [ "core", null, [
-        [ "BlockSwitchFlow", "d1/de5/classmico_1_1core_1_1_block_switch_flow.html", "d1/de5/classmico_1_1core_1_1_block_switch_flow" ]
+        [ "BlockSwitchFlow", "d1/de5/classmico_1_1core_1_1_block_switch_flow.html", "d1/de5/classmico_1_1core_1_1_block_switch_flow" ],
+        [ "BlockVectorSplitter", "d7/d46/classmico_1_1core_1_1_block_vector_splitter.html", "d7/d46/classmico_1_1core_1_1_block_vector_splitter" ]
       ] ],
       [ "dvs", null, [
         [ "Detector", "d1/d42/classmico_1_1dvs_1_1_detector.html", "d1/d42/classmico_1_1dvs_1_1_detector" ],
@@ -78,6 +79,7 @@ var annotated_dup =
         [ "BlockNoiseFilter", "da/dfe/classmico_1_1dvs_1_1_block_noise_filter.html", "da/dfe/classmico_1_1dvs_1_1_block_noise_filter" ]
       ] ],
       [ "imgproc", null, [
+        [ "BlockFeatureExtract", "d6/d61/classmico_1_1imgproc_1_1_block_feature_extract.html", "d6/d61/classmico_1_1imgproc_1_1_block_feature_extract" ],
         [ "BlockKernelConvolution", "dc/dc7/classmico_1_1imgproc_1_1_block_kernel_convolution.html", "dc/dc7/classmico_1_1imgproc_1_1_block_kernel_convolution" ]
       ] ],
       [ "math", null, [
@@ -87,6 +89,7 @@ var annotated_dup =
         [ "BlockDivide", "db/d43/classmico_1_1math_1_1_block_divide.html", "db/d43/classmico_1_1math_1_1_block_divide" ],
         [ "BlockSquareRoot", "dc/d6b/classmico_1_1math_1_1_block_square_root.html", "dc/d6b/classmico_1_1math_1_1_block_square_root" ],
         [ "BlockPow", "dd/d08/classmico_1_1math_1_1_block_pow.html", "dd/d08/classmico_1_1math_1_1_block_pow" ],
+        [ "BlockIntegrator", "d5/d30/classmico_1_1math_1_1_block_integrator.html", "d5/d30/classmico_1_1math_1_1_block_integrator" ],
         [ "ComparisonBlock", "da/d75/classmico_1_1math_1_1_comparison_block.html", "da/d75/classmico_1_1math_1_1_comparison_block" ],
         [ "ConstStreamer", "dd/de6/classmico_1_1math_1_1_const_streamer.html", "dd/de6/classmico_1_1math_1_1_const_streamer" ],
         [ "BlockTimer", "da/d83/classmico_1_1math_1_1_block_timer.html", "da/d83/classmico_1_1math_1_1_block_timer" ],
@@ -94,10 +97,10 @@ var annotated_dup =
         [ "BlockCosine", "d4/d4f/classmico_1_1math_1_1_block_cosine.html", "d4/d4f/classmico_1_1math_1_1_block_cosine" ]
       ] ],
       [ "ml", null, [
-        [ "BlockHaarCascade", "dd/d2d/classmico_1_1ml_1_1_block_haar_cascade.html", "dd/d2d/classmico_1_1ml_1_1_block_haar_cascade" ],
         [ "Detection", "de/dfa/structmico_1_1ml_1_1_detection.html", "de/dfa/structmico_1_1ml_1_1_detection" ],
         [ "BlockTriggerDetection", "dc/d19/classmico_1_1ml_1_1_block_trigger_detection.html", "dc/d19/classmico_1_1ml_1_1_block_trigger_detection" ],
-        [ "BlockYolo", "da/da9/classmico_1_1ml_1_1_block_yolo.html", "da/da9/classmico_1_1ml_1_1_block_yolo" ]
+        [ "BlockYolo", "da/da9/classmico_1_1ml_1_1_block_yolo.html", "da/da9/classmico_1_1ml_1_1_block_yolo" ],
+        [ "BlockHaarCascade", "dd/d2d/classmico_1_1ml_1_1_block_haar_cascade.html", "dd/d2d/classmico_1_1ml_1_1_block_haar_cascade" ]
       ] ],
       [ "python", null, [
         [ "BlockPython", "d8/d0d/classmico_1_1python_1_1_block_python.html", "d8/d0d/classmico_1_1python_1_1_block_python" ],
@@ -112,6 +115,7 @@ var annotated_dup =
         [ "BlockFirstOrderSystem", "dc/dc0/classmico_1_1simulation_1_1_block_first_order_system.html", "dc/dc0/classmico_1_1simulation_1_1_block_first_order_system" ]
       ] ],
       [ "visualizer", null, [
+        [ "BlockFrequencyCounter", "dc/d93/classmico_1_1visualizer_1_1_block_frequency_counter.html", "dc/d93/classmico_1_1visualizer_1_1_block_frequency_counter" ],
         [ "BlockImageVisualizer", "da/df8/classmico_1_1visualizer_1_1_block_image_visualizer.html", "da/df8/classmico_1_1visualizer_1_1_block_image_visualizer" ],
         [ "BlockNumberVisualizer", "de/d0e/classmico_1_1visualizer_1_1_block_number_visualizer.html", "de/d0e/classmico_1_1visualizer_1_1_block_number_visualizer" ],
         [ "BlockPointCloudVisualizer", "d8/da8/classmico_1_1visualizer_1_1_block_point_cloud_visualizer.html", "d8/da8/classmico_1_1visualizer_1_1_block_point_cloud_visualizer" ],

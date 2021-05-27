@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['joypad_94',['JoyPad',['../dc/dec/class_joy_pad.html',1,'']]]
+  ['joypad_98',['JoyPad',['../dc/dec/class_joy_pad.html',1,'']]]
 ];
