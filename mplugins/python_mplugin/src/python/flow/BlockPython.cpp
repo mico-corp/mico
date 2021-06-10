@@ -30,18 +30,22 @@
 
 #include <opencv2/opencv.hpp>
 
+#include <pybind11/numpy.h>
+#include <pybind11/stl.h>
+#include <pybind11/pybind11.h>
+#include <pybind11/eval.h>
+
+namespace py = pybind11;
 
 namespace mico {
     namespace python{
         int BlockPython::nPythonBlocks_ = 0;
 
         BlockPython::BlockPython(){
-            /*nPythonBlocks_++;
+            nPythonBlocks_++;
             if(nPythonBlocks_ == 1){
                 pybind11::initialize_interpreter();
-            }*/ /// 666 seek for efficiency
-
-            pybind11::scoped_interpreter guard{}; /// 666 seek for efficiency
+            } /// 666 seek for efficiency
 
             // Interface constructor
             interfaceSelector_ = new InterfaceSelectorWidget("Python interface Selector");
@@ -67,11 +71,10 @@ namespace mico {
             locals_ = new pybind11::dict();
         }
         BlockPython::~BlockPython(){
-            /*
             if(nPythonBlocks_== 1){
                 pybind11::finalize_interpreter();
             }
-            nPythonBlocks_--; */ ///666 seek for efficiency
+            nPythonBlocks_--; ///666 seek for efficiency
         }
 
 
@@ -139,7 +142,6 @@ namespace mico {
             std::string pythonCode = pythonEditor_->toPlainText().toStdString();
             
             try {
-                pybind11::scoped_interpreter guard{}; /// 666 seek for efficiency
 
                 if(_useData) { // Encode inputs
                     for(auto [label, type]: inputInfo_){
@@ -147,13 +149,13 @@ namespace mico {
                     }
                 }
 
-                // pybind11::gil_scoped_acquire gil;
+                pybind11::gil_scoped_acquire gil;
                 pybind11::exec(pythonCode, pybind11::globals(), *locals_);  // If this line crashes in Windows when importing numpy or cv2 saying somthing like
                                                                             //      "Importing the numpy C-extensions failed. This error can happen for
                                                                             //      many reasons, often due to issues with your setup or how NumPy was installed."
                                                                             // Try compiling in release mode as adviced in:
                                                                             //  https://numpy.org/devdocs/user/troubleshooting-importerror.html#debug-build-on-windows
-                // pybind11::gil_scoped_release nogil;
+                pybind11::gil_scoped_release nogil;
                 
                 for(auto output:outputInfo_){
                     flushPipe(*locals_, output.first, output.second);
