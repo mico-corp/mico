@@ -19,23 +19,33 @@
 ##  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ##---------------------------------------------------------------------------------------------------------------------
 
-build_directory=%1
-install_directory=%2
+build_directory=$1
+install_directory=$2
 
-git clone https://github.com/opencv/opencv $build_directory/opencv
+##---------------------------------------------------------------------------------------------------------------------
+sudo apt-get install curl
+
+##---------------------------------------------------------------------------------------------------------------------
+cd $build_directory
 git clone https://github.com/opencv/opencv_contrib $build_directory/opencv_contrib
 
 cd $build_directory/opencv_contrib
+
 git checkout 4.2.0
 
+##---------------------------------------------------------------------------------------------------------------------
+cd $build_directory
+git clone https://github.com/opencv/opencv $build_directory/opencv
+
 cd $build_directory/opencv
+
 git checkout 4.2.0
 
 mkdir build
 cd build
 
-cmake .. -DCMAKE_INSTALL_PREFIX=$install_directory -DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF  -DOPENCV_EXTRA_MODULES_PATH=$build_directory/opencv_contrib/modules
-cmake --build . --config Release -j
-cmake --build . --config Release -j --target INSTALL
-cmake --build . --config debug -j
-cmake --build . --config debug -j --target INSTALL
+cmake .. -DOPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules ..
+bash download_with_wget.sh
+cmake .. -DOPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules ..
+make -j4
+sudo make install

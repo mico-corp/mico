@@ -23,7 +23,7 @@ macro(micoInstallOpencv _installDir)
     ##Check if already installed
     if(UNIX)
         if(NOT EXISTS ${_installDir}/dependencies/include/opencv2)
-            execute_process(COMMAND  ${CMAKE_SOURCE_DIR}/cmake/dependencies/unix_install_impl/installOpencv.sh ${_installDir}/tmp ${_installDir}/dependencies)
+            execute_process(COMMAND  bash ${CMAKE_SOURCE_DIR}/cmake/dependencies/unix_install_impl/installOpencv.sh ${_installDir}/tmp ${_installDir}/dependencies)
         endif()
     elseif(WIN32)
         if(NOT EXISTS ${_installDir}/dependencies/include/opencv2)

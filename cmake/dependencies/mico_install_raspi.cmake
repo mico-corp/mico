@@ -22,8 +22,8 @@
 macro(micoInstallRaspi _installDir)
     ##Check if already installed
     if(UNIX)
-            execute_process(COMMAND  ${CMAKE_SOURCE_DIR}/cmake/dependencies/unix_install_impl/installRaspi.sh ${_installDir}/tmp ${_installDir}/dependencies)
+            execute_process(COMMAND bash ${CMAKE_SOURCE_DIR}/cmake/dependencies/unix_install_impl/installRaspi.sh ${_installDir}/tmp ${_installDir}/dependencies)
     endif()
 
-    find_package(OpenCV HINTS ${_installDir}/dependencies REQUIRED )    
+#    find_package(OpenCV HINTS ${_installDir}/dependencies REQUIRED )    
 endmacro(micoInstallRaspi)
