@@ -56,7 +56,7 @@ macro(installMicoDeps)
     micoInstallFlann(${MICO_ROOT_DIR})
     micoInstallVtk(${MICO_ROOT_DIR})
     micoInstallPcl(${MICO_ROOT_DIR})
-    micoInstallOpencv(${MICO_ROOT_DIR})
+#    micoInstallOpencv(${MICO_ROOT_DIR})
     micoInstallQt5(${MICO_ROOT_DIR})
     micoInstallDlfcn(${MICO_ROOT_DIR})
 
