@@ -74,6 +74,23 @@ macro(micoPrepareInstaller)
         SET(CPACK_GENERATOR "DEB")
         SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "mico-corp") #required
 
+
+	if(${TARGET_OS} STREQUAL "Raspbian")
+        SET(CPACK_DEBIAN_PACKAGE_DEPENDS "libboost-all-dev, \
+        libeigen3-dev,  \
+        libflann-dev, \
+        libopencv-dev, \
+        libopencv-contrib-dev, \
+        qt5-qmake, \
+        libqt5opengl5-dev, \
+        qtbase5-dev, \
+        qttools5-dev-tools, \
+        libgl1-mesa-dev, \
+        freeglut3-dev, \
+        libglew-dev")
+
+	else()
+
         SET(CPACK_DEBIAN_PACKAGE_DEPENDS "libboost-all-dev, \
         libgraphviz-dev, \
         libeigen3-dev,  \
@@ -91,6 +108,8 @@ macro(micoPrepareInstaller)
         libgl1-mesa-dev, \
         freeglut3-dev, \
         libglew-dev")
+
+	endif()
     endif()
 
 
