@@ -24,11 +24,21 @@ set install_directory=%2
 
 git clone https://github.com/boostorg/boost %build_directory%/boost
 
-cd %build_directory%/boost
+cd %build_directory%
 
-git checkout boost-1.75.0
-git submodule init
-git submodule update
-@REM .\bootstrap.bat
+if not exist boost\ (
+	git clone https://github.com/boostorg/boost %build_directory%/boost
+
+	cd %build_directory%/boost
+
+	git checkout boost-1.75.0
+	git submodule init
+	git submodule update
+
+) else (
+	cd %build_directory%/boost
+)
+
+call bootstrap.bat
 .\b2 variant=release threading=multi install --prefix=%install_directory%
 .\b2 variant=debug threading=multi install --prefix=%install_directory%
