@@ -74,42 +74,41 @@ macro(micoPrepareInstaller)
         SET(CPACK_GENERATOR "DEB")
         SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "mico-corp") #required
 
+	    if(${TARGET_OS} STREQUAL "Raspbian")
+            SET(CPACK_DEBIAN_PACKAGE_DEPENDS "libboost-all-dev, \
+            libeigen3-dev,  \
+            libflann-dev, \
+            libopencv-dev, \
+            libopencv-contrib-dev, \
+            qt5-qmake, \
+            libqt5opengl5-dev, \
+            qtbase5-dev, \
+            qttools5-dev-tools, \
+            libgl1-mesa-dev, \
+            freeglut3-dev, \
+            libglew-dev")
 
-	if(${TARGET_OS} STREQUAL "Raspbian")
-        SET(CPACK_DEBIAN_PACKAGE_DEPENDS "libboost-all-dev, \
-        libeigen3-dev,  \
-        libflann-dev, \
-        libopencv-dev, \
-        libopencv-contrib-dev, \
-        qt5-qmake, \
-        libqt5opengl5-dev, \
-        qtbase5-dev, \
-        qttools5-dev-tools, \
-        libgl1-mesa-dev, \
-        freeglut3-dev, \
-        libglew-dev")
+	    else()
 
-	else()
+            SET(CPACK_DEBIAN_PACKAGE_DEPENDS "libboost-all-dev, \
+            libgraphviz-dev, \
+            libeigen3-dev,  \
+            libflann-dev, \
+            libopencv-dev, \
+            libopencv-contrib-dev, \
+            qt5-qmake, \
+            qt5-default, \
+            libqt5opengl5-dev, \
+            qtbase5-dev, \
+            qttools5-dev-tools, \
+            qtmultimedia5-dev, \
+            libusb-1.0-0-dev, \
+            mesa-common-dev, \
+            libgl1-mesa-dev, \
+            freeglut3-dev, \
+            libglew-dev")
 
-        SET(CPACK_DEBIAN_PACKAGE_DEPENDS "libboost-all-dev, \
-        libgraphviz-dev, \
-        libeigen3-dev,  \
-        libflann-dev, \
-        libopencv-dev, \
-        libopencv-contrib-dev, \
-        qt5-qmake, \
-        qt5-default, \
-        libqt5opengl5-dev, \
-        qtbase5-dev, \
-        qttools5-dev-tools, \
-        qtmultimedia5-dev, \
-        libusb-1.0-0-dev, \
-        mesa-common-dev, \
-        libgl1-mesa-dev, \
-        freeglut3-dev, \
-        libglew-dev")
-
-	endif()
+	    endif()
     endif()
 
 

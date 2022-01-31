@@ -1,0 +1,26 @@
+{
+  "name": "mico",
+  "version-string": "1.0.4",
+  "port-version": 1,
+  "homepage": "www.mico-corp.com",
+  "description": "Modular Interchangeable Computer prOgraming framework. Yet another zero coding programming library for developers and education..",
+  "dependencies": [
+    "vtk",
+    "pcl",
+    {
+      "name": "opencv",
+      "features": [
+        "contrib",
+        "gstreamer"
+      ]
+    },
+    "boost",
+    "zlib",
+    "yaml-cpp",
+    "qt5",
+    "qt5-multimedia",
+    "realsense2",
+    "dlfcn-win32",
+    "pangolin"
+  ]
+}
