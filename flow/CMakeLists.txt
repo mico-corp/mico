@@ -185,10 +185,23 @@ endif()
 
 
 if(WIN32)
-  install(TARGETS ${PROJECT_NAME}
-      RUNTIME DESTINATION bin
-  )
-  elseif(UNIX)
+    install(TARGETS ${PROJECT_NAME}
+        RUNTIME DESTINATION bin
+    )
+
+    file(GLOB flow_dlls ${CMAKE_BINARY_DIR}/bin/*.dll)
+    install(FILES ${flow_dlls}
+        DESTINATION bin
+    )
+
+    if(EXISTS ${CMAKE_BINARY_DIR}/bin/plugins) # Qt projects
+        FILE(GLOB plugins_dirs ${CMAKE_BINARY_DIR}/bin/plugins/*)
+        install(DIRECTORY ${plugins_dirs}
+            DESTINATION bin
+        )
+    endif()
+
+elseif(UNIX)
   install(TARGETS ${PROJECT_NAME}
       LIBRARY DESTINATION bin
   )
