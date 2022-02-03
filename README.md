@@ -27,5 +27,19 @@ git clone https://github.com/microsoft/vcpkg
 ```
 cmake . --preset=Ubuntu -DCMAKE_TOOLCHAIN_FILE=/home/bardo91/programming/vcpkg/scripts/buildsystems/vcpkg.cmake
 ```
+This last step might take some time.... In my case it took 3 hours to compile PCL and Qt5. Be patient.
 
 And that's it, you are ready to compile. In MSVC you can select the project you want to compile. In ubuntu, go to the out/build/Ubuntu folder and type make to compile all!
+
+BTW: If your computer get stuck compiling the dependencies with VPKG (Which happens typically compiling PCL or QT5), I recomend you to limit the number of threads for VCPKG. To do so, befor calling `cmake . --preset....`, type `export VCPKG_MAX_CONCURRENCY=4` in your screen (o whatever number of threads you want). It happens because compiling and linking those libraries consumes a lot of RAM, and if you have many threads compiling/linking at the same time the PC might get run out of memory, and the OS get stuck.
+
+## Alternative to VCPKG in Ubuntu to compile MICO
+
+You can just call cmake, without specifying the TOOLCHAIN file. To make it work, you need to install all the dependencies manually. In Ubuntu it is not very hard. 
+
+```
+sudo apt-get install qt5-default libeigen3-dev libboost-all-dev libpcl-dev libopencv-dev
+```
+* Pangolin: https://github.com/stevenlovegrove/Pangolin
+* Pybind11: https://github.com/pybind/pybind11
+* Python3 with numpy
