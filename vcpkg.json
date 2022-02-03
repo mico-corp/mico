@@ -10,8 +10,7 @@
     {
       "name": "opencv",
       "features": [
-        "contrib",
-        "gstreamer"
+        "contrib"
       ]
     },
     "boost",
@@ -20,7 +19,10 @@
     "qt5",
     "qt5-multimedia",
     "realsense2",
-    "dlfcn-win32",
+    {
+      "name":"dlfcn-win32",
+    "platform": "windows"
+    },
     "pangolin"
   ]
 }
