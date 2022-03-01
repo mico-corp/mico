@@ -42,6 +42,20 @@ macro(detect_OS)
     
 endmacro(detect_OS)
 
+macro(defineRootDir)
+    if(WIN32)
+        set(MICO_ROOT_DIR "c:/users/$ENV{USERNAME}/mico/")
+    elseif(UNIX)
+        set(MICO_ROOT_DIR "/home/$ENV{USER}/mico/")        
+    else()
+        set(MICO_ROOT_DIR "${CMAKE_CURRENT_BINARY_DIR/mico/")
+    endif()
+
+    if(NOT DEFINED CMAKE_INSTALL_PREFIX)
+        set(CMAKE_INSTALL_PREFIX ${MICO_ROOT_DIR})
+    endif() 
+
+endmacro(defineRootDir)
 
 macro(add_mplugin)
     set(options HAS_RESOURCES)
@@ -54,32 +68,12 @@ macro(add_mplugin)
     set(MICO_PLUGIN_COMPILE_DEFS "")
 
     # Get flow dep
-    if(NOT ${BUNDLE_COMPILATION})
-        find_package(flow REQUIRED)
-        if(${flow_FOUND})
-            set(MICO_PLUGIN_LIBRARIES ${MICO_PLUGIN_LIBRARIES} flow::flow)
-            set(MICO_PLUGIN_COMPILE_DEFS ${MICO_PLUGIN_COMPILE_DEFS} HAS_FLOW)
-        endif()
-    else()
-        set(flow_FOUND TRUE)
-        set(MICO_PLUGIN_LIBRARIES ${MICO_PLUGIN_LIBRARIES} flow)
-        set(MICO_PLUGIN_COMPILE_DEFS ${MICO_PLUGIN_COMPILE_DEFS} HAS_FLOW)
-    endif()
+    set(flow_FOUND TRUE)
+    set(MICO_PLUGIN_LIBRARIES ${MICO_PLUGIN_LIBRARIES} flow)
+    set(MICO_PLUGIN_COMPILE_DEFS ${MICO_PLUGIN_COMPILE_DEFS} HAS_FLOW)
 
-
-    if(${BUNDLE_COMPILATION})
-        set(MICO_PLUGIN_LIBRARIES ${MICO_PLUGIN_LIBRARIES} NodeEditor::nodes)
-        set(MICO_PLUGIN_COMPILE_DEFS ${MICO_PLUGIN_COMPILE_DEFS} HAS_QTNODEEDITOR)
-    else()
-        message(FATAL_ERROR "NOT READY")
-        find_package(NodeEditor REQUIRED)
-        if(${NodeEditor_FOUND})
-            set(MICO_PLUGIN_INCLUDES "${MICO_PLUGIN_INCLUDES} ${NodeEditor_INCLUDE_DIRS})")
-            set(MICO_PLUGIN_LIBRARIES "${MICO_PLUGIN_LIBRARIES} ${NodeEditor_LIBRARIES})")
-            set(MICO_PLUGIN_COMPILE_DEFS "${MICO_PLUGIN_COMPILE_DEFS} HAS_QTNODEEDITOR")
-        endif()
-    endif()
-  
+    set(MICO_PLUGIN_LIBRARIES ${MICO_PLUGIN_LIBRARIES} NodeEditor::nodes)
+    set(MICO_PLUGIN_COMPILE_DEFS ${MICO_PLUGIN_COMPILE_DEFS} HAS_QTNODEEDITOR)  
 
     # Get othermico deps
     foreach(DEP ${IN_MICO_DEPS})

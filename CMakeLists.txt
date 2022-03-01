@@ -20,7 +20,7 @@
 ##---------------------------------------------------------------------------------------------------------------------
 
 cmake_minimum_required (VERSION 3.12 FATAL_ERROR)
-project(mico VERSION 1.0.4 LANGUAGES C CXX)
+project(mico VERSION 1.1.0 LANGUAGES C CXX)
 
 if( NOT CMAKE_BUILD_TYPE )
   set( CMAKE_BUILD_TYPE Release CACHE STRING
@@ -29,13 +29,14 @@ if( NOT CMAKE_BUILD_TYPE )
 endif()
 
 include(cmake/mico_functions.cmake)
-include(cmake/mico_dependencies.cmake)
 include(cmake/mico_prepare_installer.cmake)
 
 detect_OS()
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/" ${CMAKE_MODULE_PATH})
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
+set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/package)
 
 if(WIN32)
     set(LIBRARY_MODE SHARED)
@@ -50,16 +51,11 @@ elseif(UNIX)
     set(LIBRARY_MODE SHARED)
 endif()
 
-option(MICO_INSTALL_ALL_DEPENDENCIES        "Set to install all dependencies"       OFF)
-
 if(WIN32)
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 endif()
-
-
-set(BUNDLE_COMPILATION ON) # Legacy
 
 option(BUILD_CAMERAS            "Set to build CAMERAS Module"       ON)
 option(BUILD_VISUALIZERS        "Set to build VISUALIZERS Module"   ON)
@@ -75,7 +71,7 @@ option(BUILD_DVS                "Set to build DSV Module"           OFF)
 
 option(BUILD_BENCHMARK          "Set to build Benchmarks"           OFF)
 
-option(MICO_PREPARE_INSTALLER   "Set to prepare installer" OFF)
+option(MICO_PREPARE_INSTALLER   "Set to prepare installer" ON)
 if(WIN32)
     option(MICO_USE_NSIS            "Use NSIS generator to produce installer" ON)
 elseif(UNIX)
@@ -87,16 +83,13 @@ SET(MICO_MODULES "")
 
 defineRootDir()
 
-if(${MICO_INSTALL_ALL_DEPENDENCIES})
-    installMicoDeps()
-else()
-    add_subdirectory(flow)
-    add_subdirectory(mplugins)
+add_subdirectory(flow)
+add_subdirectory(mplugins)
     
-    if(${MICO_PREPARE_INSTALLER})
-        micoPrepareInstaller()
-    endif()
+if(${MICO_PREPARE_INSTALLER})
+    micoPrepareInstaller()
 endif()
+
 
 ##################################################
 ######    Documentation.                  ########

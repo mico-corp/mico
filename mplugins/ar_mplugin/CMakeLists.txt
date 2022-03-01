@@ -65,10 +65,6 @@ mplugin_compile_definition( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_DEFINITIONS HAS_OP
 if(WIN32)
 	find_package(FreeGLUT REQUIRED)
 	mplugin_link_library(PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES FreeGLUT::freeglut)
-
-	mplugin_link_library(PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES "${MICO_ROOT_DIR}/dependencies/lib/Release/x64/glew32.lib")
-	mplugin_link_library(PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES "${MICO_ROOT_DIR}/dependencies/lib/Release/x64/glew32.lib")
-	mplugin_link_library(PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES "${MICO_ROOT_DIR}/dependencies/lib/Release/x64/glew32s.lib")
 elseif(UNIX)
 	find_package(GLUT REQUIRED)
 	find_package(OpenGL REQUIRED)

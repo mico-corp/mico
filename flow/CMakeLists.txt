@@ -63,17 +63,8 @@ if(UNIX)
     target_link_libraries(${PROJECT_NAME} LINK_PUBLIC pthread X11 stdc++fs)
 endif()
 
-if(${BUNDLE_COMPILATION})
-  target_link_libraries(${PROJECT_NAME} LINK_PUBLIC NodeEditor::nodes)
-  target_compile_definitions(${PROJECT_NAME} PUBLIC HAS_QTNODEEDITOR)
-else()
-  find_package(NodeEditor)
-  if(${NodeEditor_FOUND})
-    target_include_directories(${PROJECT_NAME} PUBLIC ${NodeEditor_INCLUDE_DIRS})
-    target_link_libraries(${PROJECT_NAME} LINK_PUBLIC ${NodeEditor_LIBRARIES})
-    target_compile_definitions(${PROJECT_NAME} PUBLIC HAS_QTNODEEDITOR)
-  endif()
-endif()
+target_link_libraries(${PROJECT_NAME} LINK_PUBLIC NodeEditor::nodes)
+target_compile_definitions(${PROJECT_NAME} PUBLIC HAS_QTNODEEDITOR)
 
 # find_package(Eigen3 REQUIRED)
 # if(${Eigen3_FOUND})
@@ -194,73 +185,24 @@ endif()
 
 
 if(WIN32)
-  install(TARGETS ${PROJECT_NAME}
-      RUNTIME DESTINATION bin
-  )
-  elseif(UNIX)
+    install(TARGETS ${PROJECT_NAME}
+        RUNTIME DESTINATION bin
+    )
+
+    file(GLOB flow_dlls_debug ${CMAKE_BINARY_DIR}/bin/Debug/*.dll)
+    file(GLOB flow_dlls_release ${CMAKE_BINARY_DIR}/bin/Release/*.dll)
+    install(FILES ${flow_dlls_debug} ${flow_dlls_release}
+        DESTINATION bin
+    )
+
+    FILE(GLOB plugins_dirs_debug ${CMAKE_BINARY_DIR}/bin/Debug/plugins/*)
+    FILE(GLOB plugins_dirs_release ${CMAKE_BINARY_DIR}/bin/Release/plugins/*)
+      install(DIRECTORY ${plugins_dirs_debug} ${plugins_dirs_release}
+          DESTINATION bin
+      )
+
+elseif(UNIX)
   install(TARGETS ${PROJECT_NAME}
       LIBRARY DESTINATION bin
   )
-endif()
-
-
-
-# Additional library requirements
-if(WIN32)
-    # Qt
-    install(    FILES 
-                ${Qt5_DIR}/../../../bin/Qt5Core.dll
-                ${Qt5_DIR}/../../../bin/Qt5Gui.dll
-                ${Qt5_DIR}/../../../bin/Qt5PrintSupport.dll
-                ${Qt5_DIR}/../../../bin/Qt5Svg.dll
-                ${Qt5_DIR}/../../../bin/Qt5Widgets.dll
-                DESTINATION bin )
-    
-    install(    DIRECTORY ${Qt5_DIR}/../../../include
-                DESTINATION include )
-
-    install(    DIRECTORY ${Qt5_DIR}/../../../plugins/platforms
-                DESTINATION bin )
-
-    install(    DIRECTORY ${Qt5_DIR}/../../../plugins/iconengines
-                DESTINATION bin )
-
-    find_package(OpenCV)
-    # OpenCV
-    install(    FILES 
-                ${OpenCV_DIR}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_aruco420.dll
-                ${OpenCV_DIR}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_calib3d420.dll
-                ${OpenCV_DIR}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_core420.dll
-                ${OpenCV_DIR}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_dnn420.dll
-                ${OpenCV_DIR}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_features2d420.dll
-                ${OpenCV_DIR}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_flann420.dll
-                ${OpenCV_DIR}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_highgui420.dll
-                ${OpenCV_DIR}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_imgproc420.dll
-                ${OpenCV_DIR}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_imgcodecs420.dll
-                ${OpenCV_DIR}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_objdetect420.dll
-                ${OpenCV_DIR}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_videoio420.dll
-#                ${OpenCV_DIR}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin/opencv_xfeatures2d420.dll
-                DESTINATION bin )
-
-    install(    DIRECTORY ${OpenCV_DIR}/include/opencv2
-                DESTINATION include )
-    
-    # dlfcn
-    install(    FILES 
-                ${dlfcn-win32_DIR}/../../bin/dl.dll
-                DESTINATION bin )
-          
-    # Freeglut
-    install(    FILES 
-                ${FreeGLUT_DIR}/../../../bin/freeglut.dll
-                DESTINATION bin )
-
-    # ucrtbase.dll y VCRUNTIME140D make it automatic please.... 
-    install(    FILES 
-                "C:/Program Files (x86)/Windows Kits/10/bin/10.0.18362.0/x64/ucrt/ucrtbased.dll"
-                "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Redist/MSVC/14.28.29325/debug_nonredist/x64/Microsoft.VC142.DebugCRT/vcruntime140d.dll"
-                DESTINATION bin )
-    
-elseif(UNIX)
-    
 endif()
