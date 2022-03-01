@@ -114,6 +114,4 @@ macro(micoPrepareInstaller)
 
     # Call final CPACK configuration and prepare nsis file
     include(CPack)
-
-
 endmacro(micoPrepareInstaller)
