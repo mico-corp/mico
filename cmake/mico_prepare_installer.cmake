@@ -61,12 +61,35 @@ macro(micoPrepareInstaller)
         set(CPACK_NSIS_HELP_LINK "https://mico-corp.github.io/mico")
         set(CPACK_NSIS_URL_INFO_ABOUT "https://mico-corp.github.io/mico")
         # set(CPACK_NSIS_CONTACT ${APP_EMAIL})
-        
         # Configure file with custom definitions for NSIS.
+
         configure_file(
             ${PROJECT_SOURCE_DIR}/NSIS.definitions.nsh.in
-            ${CMAKE_CURRENT_BINARY_DIR}/NSIS.definitions.nsh
+            ${CMAKE_CURRENT_BINARY_DIR}/NSIS.definitions.nsh )
+
+        set(CPACK_NSIS_CREATE_ICONS_EXTRA
+            "CreateShortCut '$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\Flow Kids.lnk' '$INSTDIR\\\\bin\\\\flow_kids.exe'"
         )
+
+        set(CPACK_NSIS_DELETE_ICONS_EXTRA
+            "Delete '$SMPROGRAMS\\\\$START_MENU\\\\Flow Kids.lnk'"
+        )
+
+        # More info https://www.mantidproject.org/NSIS_CPACK_Customisations.html
+        # https://martinrotter.github.io/it-programming/2014/05/09/integrating-nsis-cmake/
+        # https://cmake.cmake.narkive.com/pqtiaSbt/cpack-add-and-define-an-environment-variable-for-nsis
+    
+        set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/nsis_files ${CMAKE_MODULE_PATH})
+        
+
+        # Download plugin https://nsis.sourceforge.io/EnVar_plug-in
+        if(WIN32 AND NOT EXISTS "C:/Program Files (x86)/NSIS/Plugins/amd64-unicode/EnVar.dll")
+            MESSAGE(WARNING "EnVar pluging is not installed in your OS. Please, download and install it https://nsis.sourceforge.io/EnVar_plug-in to be able to generate NSIS packages")
+        endif()
+        # set(nsis_envar_plugin "https://nsis.sourceforge.io/mediawiki/images/7/7f/EnVar_plugin.zip")
+        # file(DOWNLOAD ${nsis_envar_plugin} ${CMAKE_BINARY_DIR}/EnVar_plugin.zip)
+        # file(ARCHIVE_EXTRACT INPUT ${CMAKE_BINARY_DIR}/EnVar_plugin.zip DESTINATION "C:/Program Files (x86)/NSIS")
+
     endif()
 
     # Specific DEB configuration

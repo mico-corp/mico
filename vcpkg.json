@@ -23,6 +23,8 @@
       "name":"dlfcn-win32",
     "platform": "windows"
     },
-    "pangolin"
+    "pangolin",
+    "python3",
+    "pybind11"
   ]
 }

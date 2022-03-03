@@ -24,7 +24,7 @@ project(mico VERSION 1.0 LANGUAGES C CXX)
 set(PLUGIN_NAME ${PROJECT_NAME}-python)
 
 
-find_package(Python3 QUIET COMPONENTS Interpreter Development NumPy)
+find_package(Python3 QUIET COMPONENTS Interpreter Development)
 find_package(pybind11 QUIET)
 if(${pybind11_FOUND} AND ${Python3_FOUND})
     ##################################################

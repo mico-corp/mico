@@ -7,6 +7,7 @@
 !define MUI_ICON "@PROJECT_SOURCE_DIR@/doc/mico.ico"
 !define MUI_UNICON "@PROJECT_SOURCE_DIR@/doc/mico.ico"
 !define PATCH  "0"
+!define ADD_TO_PATH_ALL_USERS "1"
 
 Function finishpageaction
 CreateShortcut "$desktop\Flow For Kids.lnk" "$instdir\bin\flow_kids.exe"

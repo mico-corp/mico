@@ -189,15 +189,13 @@ if(WIN32)
         RUNTIME DESTINATION bin
     )
 
-    file(GLOB flow_dlls_debug ${CMAKE_BINARY_DIR}/bin/Debug/*.dll)
-    file(GLOB flow_dlls_release ${CMAKE_BINARY_DIR}/bin/Release/*.dll)
-    install(FILES ${flow_dlls_debug} ${flow_dlls_release}
+    file(GLOB flow_dlls ${CMAKE_BINARY_DIR}/bin/*.dll)
+    install(FILES ${flow_dlls}
         DESTINATION bin
     )
 
-    FILE(GLOB plugins_dirs_debug ${CMAKE_BINARY_DIR}/bin/Debug/plugins/*)
-    FILE(GLOB plugins_dirs_release ${CMAKE_BINARY_DIR}/bin/Release/plugins/*)
-      install(DIRECTORY ${plugins_dirs_debug} ${plugins_dirs_release}
+    FILE(GLOB plugins_dirs ${CMAKE_BINARY_DIR}/bin/plugins/*)
+      install(DIRECTORY ${plugins_dirs} 
           DESTINATION bin
       )
 
