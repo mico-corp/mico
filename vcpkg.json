@@ -25,6 +25,10 @@
     },
     "pangolin",
     "python3",
-    "pybind11"
+    "pybind11",
+    {
+      "name": "dvsal",
+      "platform": "linux"
+    }
   ]
 }
