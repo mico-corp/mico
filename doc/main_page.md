@@ -6,7 +6,7 @@
 What is MICO? {#what_is_mico}
 ==========================================================
 
-MICO (or <b>M</b>odular <b>I</b>nterchangeable <b>C</b>omputer pr<b>O</b>gramming) is an Open-Source framework for programming without coding. The target audience of the framework is varied. It was initially designed and developed at the University of Seville by the <em>Group of Robotics Vision and Control</em>, the purpose was to create fastly applications which may have similar core concepts but with some interchangeable parts. 
+MICO (or <b>M</b>odules-based <b>I</b>nterface for <b>C</b>omputer visi<b>O</b>n) is an Open-Source framework for programming without coding. The target audience of the framework is varied. It was initially designed and developed at the University of Seville by the <em>Group of Robotics Vision and Control</em>, the purpose was to create fastly applications which may have similar core concepts but with some interchangeable parts. 
 
 
 The Framework is based in a lowlevel library called <b>FLOW</b>, this library is the responsible of abstracting the data streams so it is easy to interconnect different pieces of the application.
