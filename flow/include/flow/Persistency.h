@@ -41,16 +41,32 @@ namespace flow{
     /// @ingroup  flow
     class Persistency{
     public:
+        static void setResourceDir(fs::path _path) {
+            resourceDir_ = _path;
+            isInit_ = true;
+        }
+
         static fs::path resourceDir () {
+            init();
+            return resourceDir_;
+        }
+
+    private:
+        static void init() {
+            if (isInit_) return;
+
+            isInit_ = true;
             #if defined(_WIN32)
                 // 666 uf............. depend on installation? fix it? will we support x86? make it configurable
-                return "C:\\Program Files\\mico-corp\\mico\\bin\\mplugins\\resources"; 
+                resourceDir_ = "C:\\Program Files\\mico-corp\\mico\\bin\\mplugins\\resources";
             #elif defined(__linux__)
                 std::string userDir(getenv("USER"));
-                std::string resourcesDir = "/usr/bin/mplugins/resources";
-                return resourcesDir;
+                std::string resourceDir_ = "/usr/bin/mplugins/resources";
             #endif
         }
+
+        inline static fs::path resourceDir_ = "";
+        inline static bool isInit_ = false;
     };
 }
 

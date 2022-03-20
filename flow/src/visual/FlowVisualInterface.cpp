@@ -42,6 +42,9 @@
 #include <QtCore/QFile>
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
+#include <QDialog>
+#include <QLabel>
+#include <QDialogButtonBox>
 
 #ifdef foreach  // To be able to use Qt and RealSense Device
   #undef foreach
@@ -269,6 +272,11 @@ namespace flow{
             }
 
         }
+
+        if (files.size() == 0) {
+            files = queryOtherPlugingDir();
+        }
+
         // Iterate over file
         for(auto file:files){
             if(file.find("mico") == std::string::npos)
@@ -282,7 +290,7 @@ namespace flow{
             }else{
                 dlerror();
 
-                typedef PluginNodeCreator* (*Factory)();
+                typedef PluginNodeCreator* (*Factory)(fs::path);
                 void *mkr = dlsym(hndl, "factory");
                 if(mkr == nullptr){
                     std::cerr << "[Warning] Pluging " << file << " does not have factory" << std::endl;
@@ -296,7 +304,7 @@ namespace flow{
                     std::cerr << "[Warning] Cannot load symbol 'factory': " << dlsym_error <<            '\n';
                 }
 
-                PluginNodeCreator* nodeCreator = factory();
+                PluginNodeCreator* nodeCreator = factory(file);
                 auto listOfNodeCreators = nodeCreator->get();
                 for(auto &nodeCreator: listOfNodeCreators){
                     _registry->registerModel<NodeDataModel>(nodeCreator.second,nodeCreator.first.c_str());
@@ -304,6 +312,48 @@ namespace flow{
             }
         }
         
+    }
+
+    std::vector<std::string> FlowVisualInterface::queryOtherPlugingDir(){
+        QDialog dialog;
+        auto layout = new QVBoxLayout(&dialog);
+        dialog.setLayout(layout);
+
+        dialog.setWindowTitle("Select plugins directory");
+        layout->addWidget(new QLabel("Could not find any pluging, please select a valid directory"));
+        
+        auto hlay = new QHBoxLayout(&dialog);
+        layout->addLayout(hlay);
+        QLineEdit dir(&dialog);
+        hlay->addWidget(&dir);
+        QPushButton searchBt("Search");
+        hlay->addWidget(&searchBt);
+
+        QObject::connect(&searchBt, &QPushButton::clicked, [&]() {
+            QString filename = QFileDialog::getExistingDirectory(&dialog, "Choose Folder");
+            dir.setText(filename);
+        });
+        
+        QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+        layout->addWidget(buttonBox);
+        auto okButton = buttonBox->button(QDialogButtonBox::Ok);
+        okButton->setDefault(true);
+        okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+        QObject::connect(buttonBox, &QDialogButtonBox::accepted, [&]() {
+            dialog.accept();
+        });
+        QObject::connect(buttonBox, &QDialogButtonBox::rejected, [&]() {
+            dir.setText("");
+            dialog.close();
+        });
+
+        dialog.exec();
+        std::vector<std::string> files;
+        if (dir.text().toStdString() != "") {
+            readDirectory(dir.text().toStdString(), files);
+            Persistency::setResourceDir(dir.text().toStdString() + "/resources");
+        }
+        return files;
     }
 
     void FlowVisualInterface::configureAll() {

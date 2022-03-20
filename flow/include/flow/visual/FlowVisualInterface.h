@@ -56,6 +56,8 @@ namespace flow{
 
         private:
             void loadCustomPlugins(std::shared_ptr<QtNodes::DataModelRegistry> &_registry);
+            std::vector<std::string> queryOtherPlugingDir();
+
             void configureAll();
             void runAll();
             void setStyle();

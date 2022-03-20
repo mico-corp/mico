@@ -30,7 +30,8 @@
 using namespace mico;
 using namespace flow;
 
-extern "C" flow::PluginNodeCreator* factory(){
+extern "C" flow::PluginNodeCreator* factory(fs::path _libraryPath){
+    Persistency::setResourceDir(_libraryPath.parent_path().string() + "/resources");
     flow::PluginNodeCreator *creator = new flow::PluginNodeCreator;
 
     creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<StreamDataset, true           >>(); }, "cameras");
