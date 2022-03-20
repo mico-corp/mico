@@ -39,5 +39,5 @@ if(UNIX)
 endif()
 
 install(TARGETS calibration_app
-	RUNTIME DESTINATION bin/apps
+	RUNTIME DESTINATION bin
 )
