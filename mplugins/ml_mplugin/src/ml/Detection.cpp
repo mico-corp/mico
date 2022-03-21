@@ -93,7 +93,9 @@ boost::any DetectionToMat(boost::any &_input){
 }
 
 boost::any StlVectorDetectionToMat(boost::any &_input){
-    return boost::any_cast<StlVectorDetection>(_input)[0].crop_;
+    auto vec = boost::any_cast<StlVectorDetection>(_input);
+    if (vec.size() != 0) return boost::any_cast<StlVectorDetection>(_input)[0].crop_;
+    else return cv::Mat();
 }
 
 FLOW_CONVERSION_REGISTER(micoMlDetection, cvMat, &DetectionToMat);
