@@ -38,7 +38,7 @@ git clone https://github.com/microsoft/vcpkg
 ```
 4. Time to configure the compilation. If you are in Windows, and you use Visual Studio 2022. Just open the repo. If you are in ubuntu, go to the repository folder, open a terminal and type:
 ```
-cmake . --preset=Ubuntu -DCMAKE_TOOLCHAIN_FILE=/home/bardo91/programming/vcpkg/scripts/buildsystems/vcpkg.cmake
+cmake . --preset=Ubuntu -DCMAKE_TOOLCHAIN_FILE=/home/bardo91/programming/vcpkg/scripts/buildsystems/vcpkg.cmake --overlay-ports="../mico/vcpkg/ports"
 ```
 This last step might take some time.... In my case it took 3 hours to compile PCL and Qt5. Be patient.
 
