@@ -27,6 +27,7 @@
 #include <QLabel>
 #include <QTimer>
 #include <QPixmap>
+#include <QPushButton>
 
 namespace mico{
     namespace visualizer{
@@ -62,6 +63,16 @@ namespace mico{
                 delete imageView_;
             } 
         };
+        
+        QWidget* BlockImageVisualizer::customWidget() {
+            reopenButton_ = new QPushButton("Open Viewer");
+
+            QObject::connect(reopenButton_, &QPushButton::clicked, [&]() {
+                if (imageView_) imageView_->show();
+            });
+
+            return reopenButton_;
+        }
 
         bool BlockImageVisualizer::configure(std::vector<flow::ConfigParameterDef> _params) {
             imageView_ = new QLabel();

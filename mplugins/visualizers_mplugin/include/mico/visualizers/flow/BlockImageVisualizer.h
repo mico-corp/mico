@@ -29,6 +29,7 @@
 
 class QLabel;
 class QTimer;
+class QPushButton;
 
 namespace mico{
     namespace visualizer{
@@ -51,6 +52,9 @@ namespace mico{
                 return QIcon((flow::Persistency::resourceDir() / "visualizers" / "block_image_viewer.svg").string().c_str());
             }
 
+            /// Get custom view widget to be display in the graph
+            QWidget* customWidget() override;
+
 
             /// Configure block with given parameters.
             bool configure(std::vector<flow::ConfigParameterDef> _params) override;
@@ -64,6 +68,7 @@ namespace mico{
 
         private:
             QLabel *imageView_ = nullptr;
+            QPushButton *reopenButton_ = nullptr;
             QTimer* imageRefresher_ = nullptr;
             cv::Mat lastImage_;
             std::mutex imgLock_;
