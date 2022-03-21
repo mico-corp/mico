@@ -1,0 +1,13 @@
+{
+  "name": "dv-runtime",
+  "version": "1.4.6",
+  "homepage": "https://gitlab.com/inivation/dv/dv-runtime",
+  "description": "C++ event-based processing framework for neuromorphic cameras, targeting embedded and desktop systems. OPEN-SOURCE RELEASE.",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    "libcaer"
+  ]
+}

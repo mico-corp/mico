@@ -1,0 +1,16 @@
+{
+  "name": "libcaer",
+  "version": "3.3.12",
+  "port-version": 1,
+  "homepage": "https://gitlab.com/inivation/dv/libcaer",
+  "description": "Minimal C library to access, configure and get data from neuromorphic sensors and processors. Currently supported devices are the Dynamic Vision Sensor (DVS), the DAVIS cameras, and the Dynap-SE neuromorphic processor. OPEN-SOURCE RELEASE.",
+  "supports": "linux",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    "libusb",
+    "opencv4"
+  ]
+}

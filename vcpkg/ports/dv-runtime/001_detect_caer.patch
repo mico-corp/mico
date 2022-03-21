@@ -1,0 +1,32 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c8ad827f..f0659f7e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -38,12 +38,14 @@ ADD_DEFINITIONS(-DDV_PROJECT_VERSION="${PROJECT_VERSION}")
+ # Define installation paths
+ INCLUDE(GNUInstallDirs)
+ 
++find_package(libcaer REQUIRED)
+ # Custom CMake base module
+ SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
+ 	${CMAKE_SOURCE_DIR}/cmakemod
+ 	${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/caer ${CMAKE_INSTALL_PREFIX}/share/caer
+ 	/usr/${CMAKE_INSTALL_DATAROOTDIR}/caer /usr/share/caer
+-	/usr/local/${CMAKE_INSTALL_DATAROOTDIR}/caer /usr/local/share/caer)
++	/usr/local/${CMAKE_INSTALL_DATAROOTDIR}/caer /usr/local/share/caer
++	${libcaer_DIR}/../../../share/caer)
+ 
+ # Support new Homebrew paths on MacOS
+ IF (APPLE)
+@@ -268,8 +270,9 @@ INSTALL(FILES cmakemod/dv-modules.cmake DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}
+ 
+ # Install systemd unit file
+ IF (OS_LINUX)
+-	INSTALL(FILES service/dv-runtime.service DESTINATION "/lib/systemd/system/")
+-	INSTALL(FILES service/dv-runtime.sysusers.conf DESTINATION "/usr/lib/sysusers.d/")
++	# 666 Do not install daemon by now... waiting for answer
++	# INSTALL(FILES service/dv-runtime.service DESTINATION "/lib/systemd/system/")
++	# INSTALL(FILES service/dv-runtime.sysusers.conf DESTINATION "/usr/lib/sysusers.d/")
+ ENDIF()
+ 
+ # Support automatic RPM generation
