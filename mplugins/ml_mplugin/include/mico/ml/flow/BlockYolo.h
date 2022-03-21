@@ -45,6 +45,10 @@ namespace mico{
             /// Base constructor. Initializes the neural network.
             BlockYolo();
 
+            /// Retreive icon of block    
+            QIcon icon() const override {
+                return QIcon((flow::Persistency::resourceDir() / "ml" / "block_yolo.svg").string().c_str());
+            }
             
             /// Return if the block is configurable.
             bool isConfigurable() override { return false; };

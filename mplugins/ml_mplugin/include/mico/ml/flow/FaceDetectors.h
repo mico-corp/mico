@@ -40,6 +40,11 @@ namespace mico{
             /// Base constructor. Initializes the classifier.
             BlockHaarCascade();
 
+            /// Retreive icon of block    
+            QIcon icon() const override {
+                return QIcon((flow::Persistency::resourceDir() / "ml" / "block_haar_cascade.svg").string().c_str());
+            }
+
             /// Configure block with given parameters.
             virtual bool configure(std::vector<flow::ConfigParameterDef> _params) override;
 

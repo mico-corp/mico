@@ -46,6 +46,11 @@ namespace mico{
             /// Base constructor that initializes the pipes
             BlockPoseGenerator();
 
+            /// Retreive icon of block    
+            QIcon icon() const override {
+                return QIcon((flow::Persistency::resourceDir() / "ar" / "block_transform_generator.svg").string().c_str());
+            }
+
             /// Configure block with given parameters.
             bool configure(std::vector<flow::ConfigParameterDef> _params) override;
             

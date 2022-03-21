@@ -40,7 +40,12 @@ namespace mico{
 
             /// Get custom view widget to be display in the graph
             QWidget * customWidget() override;
-            
+
+            /// Retreive icon of block    
+            QIcon icon() const override {
+                return QIcon((flow::Persistency::resourceDir() / "arduino" / "block_joypad.svg").string().c_str());
+            }
+
             /// Base constructor
             BlockJoyPad();
 

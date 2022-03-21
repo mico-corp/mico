@@ -44,6 +44,12 @@ namespace mico{
             
             /// Get custom view widget to be display in the graph
             QWidget * customWidget() override;
+
+            /// Retreive icon of block    
+            QIcon icon() const override {
+                return QIcon((flow::Persistency::resourceDir() / "arduino" / "block_toggle.svg").string().c_str());
+            }
+
             
             /// Base constructor
             ToggleButtonBlock();
@@ -70,6 +76,11 @@ namespace mico{
 
             /// Get custom view widget to be display in the graph
             QWidget* customWidget() override;
+
+            /// Retreive icon of block    
+            QIcon icon() const override {
+                return QIcon((flow::Persistency::resourceDir() / "arduino" / "block_slider.svg").string().c_str());
+            }
 
             /// Return if the block is configurable.
             bool isConfigurable() override { return false; };
@@ -126,6 +137,12 @@ namespace mico{
                 );
             }
 
+
+            /// Retreive icon of block    
+            QIcon icon() const override {
+                return QIcon((flow::Persistency::resourceDir() / "arduino" / "block_not.svg").string().c_str());
+            }
+
             /// Get name of block
             std::string name() const override {return "NOT";}     
 
@@ -154,6 +171,11 @@ namespace mico{
                 );
             }
 
+            /// Retreive icon of block    
+            QIcon icon() const override {
+                return QIcon((flow::Persistency::resourceDir() / "arduino" / "block_and.svg").string().c_str());
+            }
+
             /// Get name of block
             std::string name() const override {return "AND";}     
             
@@ -179,6 +201,11 @@ namespace mico{
                         getPipe("out")->flush(res);
                     }
                 );
+            }
+
+            /// Retreive icon of block    
+            QIcon icon() const override {
+                return QIcon((flow::Persistency::resourceDir() / "arduino" / "block_or.svg").string().c_str());
             }
 
             /// Get name of block

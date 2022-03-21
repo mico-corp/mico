@@ -45,6 +45,12 @@ namespace mico{
 
             ~BlockScatterPlot();
 
+            /// Retreive icon of block    
+            QIcon icon() const override {
+                return QIcon((flow::Persistency::resourceDir() / "visualizers" / "block_scatter_plot.svg").string().c_str());
+            }
+
+
             /// Configure block with given parameters.
             bool configure(std::vector<flow::ConfigParameterDef> _params) override;
 

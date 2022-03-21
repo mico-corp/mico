@@ -35,6 +35,11 @@ namespace mico{
             std::string name() const override {return "Comparison";}        
             ComparisonBlock();
 
+            /// Retreive icon of block    
+            QIcon icon() const override {
+                return QIcon((flow::Persistency::resourceDir() / "math" / "block_comparison.svg").string().c_str());
+            }
+
             bool configure(std::vector<flow::ConfigParameterDef> _params) override;
 
             /// Get list of parameters of the block

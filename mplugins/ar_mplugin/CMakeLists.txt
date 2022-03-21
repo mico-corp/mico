@@ -50,6 +50,7 @@ add_mplugin(    PLUGIN_NAME ${PLUGIN_NAME}
                 PLUGIN_SOURCES ${MICO_AR_SOURCE_FILES} ${MOC_FILES}
 				PLUGIN_HEADERS  ${MICO_AR_HEADER_FILES} 
 				MICO_DEPS core
+				HAS_RESOURCES
 				)
 
 ##################################################

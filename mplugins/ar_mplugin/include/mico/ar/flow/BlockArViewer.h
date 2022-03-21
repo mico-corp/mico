@@ -42,6 +42,11 @@ namespace mico{
             /// Base destructor that initializes the pipes
             ~BlockArViewer();
 
+            /// Retreive icon of block    
+            QIcon icon() const override {
+                return QIcon((flow::Persistency::resourceDir() / "ar" / "block_ar_viewer.svg").string().c_str());
+            }
+
             /// Returns a brief description of the block
             std::string description() const override {return    "Block AR viewer"
                                                                 "   - \n";};

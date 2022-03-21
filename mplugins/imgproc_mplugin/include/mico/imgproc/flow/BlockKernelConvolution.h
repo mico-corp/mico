@@ -42,6 +42,11 @@ namespace mico{
 
             /// Base constructor. Initializes the neural network.
             BlockKernelConvolution();
+
+            /// Retreive icon of block    
+            QIcon icon() const override {
+                return QIcon((flow::Persistency::resourceDir() / "img_proc" / "block_convolution.svg").string().c_str());
+            }
             
             /// Return if the block is configurable.
             bool isConfigurable() override { return false; };

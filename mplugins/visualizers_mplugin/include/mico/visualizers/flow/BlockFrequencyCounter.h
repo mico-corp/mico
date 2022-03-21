@@ -41,6 +41,11 @@ namespace mico {
 
             ~BlockFrequencyCounter();
 
+            /// Retreive icon of block    
+            QIcon icon() const override {
+                return QIcon((flow::Persistency::resourceDir() / "visualizers" / "block_frequency_counter.svg").string().c_str());
+            }
+
             /// Returns a brief description of the block
             std::string description() const override { return "Simple stream frequency visualizer block.        \n"
                                                             "   - Inputs: any stream    \n"; };

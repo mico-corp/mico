@@ -42,6 +42,11 @@ namespace mico{
             /// Base constructor that initializes the pipes
             BlockMesh();
 
+            /// Retreive icon of block    
+            QIcon icon() const override {
+                return QIcon((flow::Persistency::resourceDir() / "ar" / "block_mesh.svg").string().c_str());
+            }
+
             /// Configure block with given parameters.
             bool configure(std::vector<flow::ConfigParameterDef> _params) override;
             

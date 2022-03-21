@@ -43,6 +43,12 @@ namespace mico{
 
             /// Base destructor
             ~BlockTrajectoryVisualizerPangolin();
+
+            /// Retreive icon of block    
+            QIcon icon() const override {
+                return QIcon((flow::Persistency::resourceDir() / "visualizers" / "block_trajectory_visualizer.svg").string().c_str());
+            }
+
             
             /// Return if the block is configurable.
             bool isConfigurable() override { return false; };
