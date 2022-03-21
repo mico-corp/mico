@@ -117,10 +117,10 @@ namespace flow{
         /// Disconnect a connected output pipe
         void disconnect(std::string _pipeTag);
 
-        /// Virtual method to be override by sons. Get custom view widget to be display in the graph
+        /// Virtual method to be overrided by sons. Get custom view widget to be display in the graph
         virtual QWidget * customWidget() { return nullptr; };
 
-        /// Virtual method to be override by sons. Get custom view widget to be display in the creation context menu
+        /// Virtual method to be overrided by sons. Get custom view widget to be display in the creation context menu
         virtual QBoxLayout * creationWidget() { return nullptr; };
         
         /// Virtual method to tell the interface if the visual block is resizable or not.
