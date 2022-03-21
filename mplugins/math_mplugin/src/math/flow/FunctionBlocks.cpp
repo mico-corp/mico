@@ -30,6 +30,9 @@
 
 namespace mico{
     namespace math{
+        //-------------------------------------------------------------------------------------------------------------
+        // Block Timer
+        //-------------------------------------------------------------------------------------------------------------
         BlockTimer::BlockTimer(){
                 createPipe<float>("timer");
             }
@@ -65,6 +68,9 @@ namespace mico{
             }
 
 
+        //-------------------------------------------------------------------------------------------------------------
+        // Block Sine
+        //-------------------------------------------------------------------------------------------------------------
         BlockSine::BlockSine(){
             createPipe<float>("result");
 
@@ -99,18 +105,20 @@ namespace mico{
             };
         }
 
-
-        BlockCosine::BlockCosine(){
+        //-------------------------------------------------------------------------------------------------------------
+        // Block Cosine
+        //-------------------------------------------------------------------------------------------------------------
+        BlockCosine::BlockCosine() {
             createPipe<float>("result");
 
-            createPolicy({flow::makeInput<float>("time")});
+            createPolicy({ flow::makeInput<float>("time") });
 
-            registerCallback({"time"}, [&](flow::DataFlow _data){
-                                        auto t = _data.get<float>("time"); 
-                                                
-                                        float result = amplitude_*cos(freq_*t + phase_);
-                                        getPipe("result")->flush(result);
-                                    });
+            registerCallback({ "time" }, [&](flow::DataFlow _data) {
+                auto t = _data.get<float>("time");
+
+                float result = amplitude_ * cos(freq_ * t + phase_);
+                getPipe("result")->flush(result);
+                });
         }
 
         bool BlockCosine::configure(std::vector<flow::ConfigParameterDef> _params) {
@@ -125,13 +133,57 @@ namespace mico{
 
             return true;
         }
-        
-        std::vector<flow::ConfigParameterDef> BlockCosine::parameters(){
+
+        std::vector<flow::ConfigParameterDef> BlockCosine::parameters() {
             return {
-                {"amplitude", flow::ConfigParameterDef::eParameterType::DECIMAL, 1.0f}, 
-                {"frequency", flow::ConfigParameterDef::eParameterType::DECIMAL, 1.0f}, 
+                {"amplitude", flow::ConfigParameterDef::eParameterType::DECIMAL, 1.0f},
+                {"frequency", flow::ConfigParameterDef::eParameterType::DECIMAL, 1.0f},
                 {"phase", flow::ConfigParameterDef::eParameterType::DECIMAL, 0.0f}
             };
         }
+
+
+        //-------------------------------------------------------------------------------------------------------------
+        // Block Linear Map
+        //-------------------------------------------------------------------------------------------------------------
+        BlockLinearMap::BlockLinearMap() {
+            createPipe<float>("output");
+
+            createPolicy({ flow::makeInput<float>("input") });
+
+            registerCallback({ "input" }, [&](flow::DataFlow _data) {
+                auto in = _data.get<float>("input");
+
+                float result = (in - minInput_) / (maxInput_ - minInput_) * (maxOut_ - minOut_) + minOut_;
+                getPipe("output")->flush(result);
+                });
+        }
+
+        bool BlockLinearMap::configure(std::vector<flow::ConfigParameterDef> _params) {
+            if (auto minInput = getParamByName(_params, "min input"); minInput)
+                minInput_ = minInput.value().asDecimal();
+
+            if (auto maxInput = getParamByName(_params, "max input"); maxInput)
+                maxInput_ = maxInput.value().asDecimal();
+
+            if (auto minOutput = getParamByName(_params, "min output"); minOutput)
+                minOutput_ = minOutput.value().asDecimal();
+
+            if (auto maxOutput = getParamByName(_params, "max input"); maxOutput)
+                maxOutput_ = maxOutput.value().asDecimal();
+
+            return true;
+        }
+
+        std::vector<flow::ConfigParameterDef> BlockCosine::parameters() {
+            return {
+                {"min input", flow::ConfigParameterDef::eParameterType::DECIMAL, 0.0f},
+                {"max input", flow::ConfigParameterDef::eParameterType::DECIMAL, 1024.0f},
+                {"min output", flow::ConfigParameterDef::eParameterType::DECIMAL, 0.0f},
+                {"max output", flow::ConfigParameterDef::eParameterType::DECIMAL, 180.0f}
+            };
+        }
+
+
     }
 }

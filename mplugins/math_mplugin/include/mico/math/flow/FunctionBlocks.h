@@ -137,6 +137,43 @@ namespace mico{
             float amplitude_ = 0;
             float phase_ = 0;
         };
+
+        /// Mico block that linearly maps a signal.
+        /// @ingroup  mico_math 
+        class BlockLinearMap :public flow::Block {
+        public:
+            /// Get name of block
+            std::string name() const override { return "Linear Map"; }
+            
+            /// Retreive icon of block    
+            /*QIcon icon() const override {
+                return QIcon((flow::Persistency::resourceDir() / "math" / "cosine-symbol.svg").string().c_str());
+            }*/
+
+            BlockLinearMap();
+
+            /// Configure block with given parameters.
+            bool configure(std::vector<flow::ConfigParameterDef> _params) override;
+
+            /// Get list of parameters of the block
+            std::vector<flow::ConfigParameterDef> parameters() override;
+
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return true; };
+
+            /// Returns a brief description of the block
+            std::string description() const override {
+                return    "Function block."
+                    "   - Input: float number\n";
+                    "   - Outputs: float number\n";
+            };
+
+        private:
+            float minInput_ = 0;
+            float maxInput_ = 1024;
+            float minOutput_ = 0;
+            float maxOutput_ = 180;
+        };
     }
 }
 

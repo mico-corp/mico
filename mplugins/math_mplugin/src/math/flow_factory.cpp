@@ -38,6 +38,7 @@ extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(fs::path _librar
     creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockTimer, true             >>(); }, "math");
     creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockSine                    >>(); }, "math");
     creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockCosine                  >>(); }, "math");
+    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockLinearMap               >>(); }, "math");
 
     // Operators
     creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockSum                      >>(); }, "math");
@@ -45,10 +46,9 @@ extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(fs::path _librar
     creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockMultiply                 >>(); }, "math");
     creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockDivide                   >>(); }, "math");
     creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockSquareRoot               >>(); }, "math");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockPow                     >>(); }, "math");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockIntegrator              >>(); }, "math");
-
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<ComparisonBlock              >>(); }, "math");
+    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockPow                      >>(); }, "math");
+    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockIntegrator               >>(); }, "math");
+    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<ComparisonBlock               >>(); }, "math");
 
     return creator;
 }
