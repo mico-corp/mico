@@ -27,6 +27,8 @@
 
 #include <sstream>
 
+#include <opencv2/core/cuda.hpp>
+
 namespace mico{
     namespace ml{
         BlockYolo::BlockYolo(){
@@ -35,9 +37,13 @@ namespace mico{
                 net_ = cv::dnn::readNetFromDarknet(
                     (flow::Persistency::resourceDir() / "ml"/"yolov3-tiny.cfg").string(), 
                     (flow::Persistency::resourceDir() / "ml"/"yolov3-tiny.weights").string());
-                    
-                net_.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
-                net_.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
+                if(hasCuda()){
+                    net_.setPreferableBackend(cv::dnn::DNN_BACKEND_CUDA);
+                    net_.setPreferableTarget(cv::dnn::DNN_TARGET_CUDA);
+                } else {
+                    net_.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
+                    net_.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
+                }
                 outputs_ = net_.getUnconnectedOutLayersNames();
             }catch(std::exception &_e){
                 std::cerr << "[WARNING] Failed to read YOLO parameters, cant use YOLO ML block" << std::endl;
@@ -144,6 +150,13 @@ namespace mico{
                 }
             }
             return outDetections;
+        }
+
+        bool BlockYolo::hasCuda() {
+            cv::cuda::printShortCudaDeviceInfo(cv::cuda::getDevice());
+            int cuda_devices_number = cv::cuda::getCudaEnabledDeviceCount();
+            cv::cuda::DeviceInfo _deviceInfo;
+            return cuda_devices_number!= 0 && _deviceInfo.isCompatible();
         }
     }
 }

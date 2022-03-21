@@ -10,7 +10,10 @@
     {
       "name": "opencv",
       "features": [
-        "contrib"
+        "contrib",
+        "cuda",
+        "cudnn",
+        "dnn"
       ]
     },
     "boost",

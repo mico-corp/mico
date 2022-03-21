@@ -61,6 +61,8 @@ namespace mico{
         private:
             std::vector<Detection> parseDetections(cv::Mat &_frame, const std::vector<cv::Mat> &_detections);
 
+            bool hasCuda();
+
         private:
             cv::dnn::Net net_;
             std::vector< cv::String > outputs_;

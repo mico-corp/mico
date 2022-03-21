@@ -154,7 +154,7 @@ namespace mico{
             registerCallback({ "input" }, [&](flow::DataFlow _data) {
                 auto in = _data.get<float>("input");
 
-                float result = (in - minInput_) / (maxInput_ - minInput_) * (maxOut_ - minOut_) + minOut_;
+                float result = (in - minInput_) / (maxInput_ - minInput_) * (maxOutput_ - minOutput_) + minOutput_;
                 getPipe("output")->flush(result);
                 });
         }
@@ -175,7 +175,7 @@ namespace mico{
             return true;
         }
 
-        std::vector<flow::ConfigParameterDef> BlockCosine::parameters() {
+        std::vector<flow::ConfigParameterDef> BlockLinearMap::parameters() {
             return {
                 {"min input", flow::ConfigParameterDef::eParameterType::DECIMAL, 0.0f},
                 {"max input", flow::ConfigParameterDef::eParameterType::DECIMAL, 1024.0f},
