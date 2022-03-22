@@ -59,6 +59,8 @@ find_package(OpenCV REQUIRED COMPONENTS core
 										imgproc 
 										highgui 
 										dnn 
+										tracking
+										video
 										#xfeatures2d
 										)
 if(${OpenCV_FOUND})
