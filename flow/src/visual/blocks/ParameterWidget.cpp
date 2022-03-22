@@ -138,6 +138,9 @@ namespace flow{
         case ConfigParameterDef::eParameterType::STRING:
             return { lName_, type_, static_cast<QLineEdit*>(value_)->text().toStdString()};
             break;
+        case ConfigParameterDef::eParameterType::PATH:
+            return { lName_, type_,  fs::path{filePath_->text().toStdString()} };
+            break;
         case ConfigParameterDef::eParameterType::OPTIONS:
             return { lName_, ConfigParameterDef::eParameterType::STRING,  static_cast<QComboBox*>(value_)->currentText().toStdString()};
             break;
@@ -164,7 +167,7 @@ namespace flow{
     }
 
     void ParameterWidget::setValuePath(fs::path _val) {
-
+        filePath_->setText(_val.string().c_str());
     }
 
     void ParameterWidget::browseCallback() {
