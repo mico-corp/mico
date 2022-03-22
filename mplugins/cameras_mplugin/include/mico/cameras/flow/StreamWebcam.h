@@ -26,6 +26,7 @@
 
 #include <flow/Block.h>
 #include <opencv2/opencv.hpp>
+#include <mutex>
 
 class QSpinBox;
 
@@ -71,6 +72,8 @@ namespace mico{
         private:
             cv::VideoCapture *camera_ = nullptr;
             QSpinBox *freqSpinner_;
+            std::mutex safeDeletion_;
+            std::condition_variable cv_;
         };
     }
 }

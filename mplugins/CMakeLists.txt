@@ -35,6 +35,10 @@ if(${BUILD_ML})
 	add_subdirectory(ml_mplugin)
 endif()
 
+if(${BUILD_CUDA})
+	add_subdirectory(cuda_mplugin)
+endif()
+
 if(${BUILD_IMGPROC})
 	add_subdirectory(imgproc_mplugin)
 endif()

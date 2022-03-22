@@ -39,10 +39,14 @@ namespace mico{
 
 
         StreamWebcam::~StreamWebcam() {
+            if (isRunningLoop()) this->stop();
+
             if (camera_) {
                 camera_->release();
                 delete camera_;
             }
+            std::unique_lock lck(safeDeletion_);
+            cv_.wait_for(lck, std::chrono::milliseconds(100));
         };
 
         bool StreamWebcam::configure(std::vector<flow::ConfigParameterDef> _params) {
@@ -96,6 +100,7 @@ namespace mico{
                 int incT = 1.0f / hz * 1000.0f;
                 std::this_thread::sleep_for(std::chrono::milliseconds(incT));
             }
+            cv_.notify_all();
         }
     }
 }
