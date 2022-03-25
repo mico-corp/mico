@@ -169,7 +169,7 @@ namespace mico{
             if (auto minOutput = getParamByName(_params, "min output"); minOutput)
                 minOutput_ = minOutput.value().asDecimal();
 
-            if (auto maxOutput = getParamByName(_params, "max input"); maxOutput)
+            if (auto maxOutput = getParamByName(_params, "max output"); maxOutput)
                 maxOutput_ = maxOutput.value().asDecimal();
 
             return true;

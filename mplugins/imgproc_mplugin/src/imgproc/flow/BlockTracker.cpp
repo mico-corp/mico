@@ -46,14 +46,17 @@ namespace mico{
                                             return;
 
                                         cv::Mat frame = _data.get<cv::Mat>("input");
+
+                                        std::lock_guard<std::mutex> lock(dataLock_);
                                         lastImage_ = frame.clone();
+                                        
 
                                         bool ok = false;
                                         if (isInit_) {
-                                            dataLock_.lock();
                                             // Update the tracking result
+                                            bbox_ = bbox_ & cv::Rect(0, 0, frame.cols - 1, frame.rows - 1);
                                             ok = tracker_->update(frame, bbox_);
-                                            dataLock_.unlock();
+                                            
 
                                             if (!ok) isInit_ = false;
 
@@ -83,6 +86,8 @@ namespace mico{
         }
         
         bool BlockTracker::configure(std::vector<flow::ConfigParameterDef> _params) {
+            while(!idle_){}
+            idle_ = false;
             std::lock_guard<std::mutex> lock(dataLock_);
 
             if(auto param = getParamByName(_params, "Algorithm"); param){
@@ -95,11 +100,10 @@ namespace mico{
                     tracker_ = cv::TrackerGOTURN::create();
                 } else if (featureName == "CSRT") {
                     tracker_ = cv::TrackerCSRT::create();
-                } else {
-                    return false;
-                }
+                } 
             }
 
+            idle_ = true;
             return true;
         }
     
@@ -114,6 +118,7 @@ namespace mico{
         QWidget* BlockTracker::customWidget(){
             initBt_ = new QPushButton("Init box");
             QObject::connect(initBt_, &QPushButton::clicked, [&]() {
+                idle_ = false;
                 isInit_ = false;
                 if (lastImage_.rows != 0) {
                     dataLock_.lock();
@@ -122,6 +127,7 @@ namespace mico{
                     dataLock_.unlock();
                     isInit_ = true;
                 }
+                idle_ = true;
             });
             return initBt_;
         }

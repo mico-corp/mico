@@ -56,8 +56,6 @@ namespace mico{
 
         BlockNumberVisualizer::~BlockNumberVisualizer(){
             refreshTimer_->stop();
-            delete refreshTimer_;
-            delete textDisplay_;
         }
     }
 }

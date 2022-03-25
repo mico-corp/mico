@@ -72,8 +72,8 @@ namespace mico{
         private:
             bool idle_ = true;
             std::mutex dataLock_;
-            cv::Ptr<cv::Tracker> tracker_;
-            QPushButton* initBt_;
+            cv::Ptr<cv::Tracker> tracker_ = nullptr;
+            QPushButton* initBt_ = nullptr;
             bool isInit_ = false;
             cv::Rect bbox_;
             cv::Mat lastImage_;
