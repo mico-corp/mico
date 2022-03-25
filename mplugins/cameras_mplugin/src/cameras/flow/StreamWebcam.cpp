@@ -31,6 +31,8 @@ namespace mico{
     namespace cameras {
         StreamWebcam::StreamWebcam() {
             createPipe<cv::Mat>("Color");
+            createPipe<int>("width");
+            createPipe<int>("height");
             freqSpinner_ = new QSpinBox;
             freqSpinner_->setValue(30);
             freqSpinner_->setMinimum(1);
@@ -93,6 +95,8 @@ namespace mico{
                     cv::Mat image;
                     if(camera_->grab() && camera_->retrieve(image)) {
                         pipe->flush(image);
+                        getPipe("width")->flush(image.cols);
+                        getPipe("height")->flush(image.rows);
                     }
                 }
                 // Approximate sleep
