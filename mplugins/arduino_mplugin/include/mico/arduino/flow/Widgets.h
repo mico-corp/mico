@@ -91,7 +91,7 @@ namespace mico{
             QSlider* slider_;
         };
 
-        /// Mico interactive block that switches between two different signals with an interactive button.
+        /// Mico block that switches between two different signals from a boolean input.
         /// @ingroup  mico_arduino
         class SignalSwitcher :public flow::Block {
         public:
@@ -104,19 +104,23 @@ namespace mico{
             /// Get custom view widget to be display in the graph
             QWidget* customWidget() override;
 
+            /// Retreive icon of block    
+            QIcon icon() const override {
+                return QIcon((flow::Persistency::resourceDir() / "arduino" / "switch_A.svg").string().c_str());
+            }
+
             /// Return if the block is configurable.
             bool isConfigurable() override { return false; };
 
             /// Returns a brief description of the block
             std::string description() const override { return    "Signal Switcher\n"; };
         private:
-            QPushButton* button_;
+            bool flowA_ = true;
             QLabel* img_;
             QGroupBox* customWidget_;
-            std::string fileA = (flow::Persistency::resourceDir() / "arduino"/"switch_A.png").string();
-            std::string fileB = (flow::Persistency::resourceDir() / "arduino"/"switch_B.png").string();
+            std::string fileA = (flow::Persistency::resourceDir() / "arduino" / "switch_A.png").string();
+            std::string fileB = (flow::Persistency::resourceDir() / "arduino" / "switch_B.png").string();
         };
-
 
         /// Mico block that performs a NOT operation on the given input.
         /// @ingroup  mico_arduino

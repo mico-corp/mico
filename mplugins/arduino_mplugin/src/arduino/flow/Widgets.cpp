@@ -75,33 +75,32 @@ namespace mico{
             img_->setPixmap(QIcon(fileA.c_str()).pixmap(50,50));
             l->addWidget(img_);
 
-            button_ = new QPushButton("Toggle Signal");
-            button_->setCheckable(true);
-            l->addWidget(button_);
-
-            QObject::connect(button_, &QPushButton::clicked, [&](bool _checked) {
-                if (_checked) {
-                    img_->setPixmap(QIcon(fileA.c_str()).pixmap(50, 50));
-                }
-                else {
-                    img_->setPixmap(QIcon(fileB.c_str()).pixmap(50, 50));
-                }
-            });
-
             createPipe<boost::any>("Out");
-            createPolicy({  flow::makeInput<boost::any>("A"),
+            createPolicy({  flow::makeInput<bool>("Signal"),
+                            flow::makeInput<boost::any>("A"),
                             flow::makeInput<boost::any>("B")});
+
+            registerCallback({ "Signal" },
+                [&](flow::DataFlow _data) {
+                    flowA_ = _data.get<bool>("Signal");
+                    if (flowA_) {
+                        img_->setPixmap(QIcon(fileA.c_str()).pixmap(50, 50));
+                    } else {
+                        img_->setPixmap(QIcon(fileB.c_str()).pixmap(50, 50));
+                    }
+                }
+            );
 
             registerCallback({ "A" },
                 [&](flow::DataFlow _data) {
-                    if (auto pipe = getPipe("Out"); pipe->registrations() && !button_->isChecked())
+                    if (auto pipe = getPipe("Out"); pipe->registrations() && flowA_)
                         pipe->flush(_data.get<boost::any>("A"));
                 }
             );
 
             registerCallback({ "B" },
                 [&](flow::DataFlow _data) {
-                    if (auto pipe = getPipe("Out"); pipe->registrations() && button_->isChecked())
+                    if (auto pipe = getPipe("Out"); pipe->registrations() && !flowA_)
                         pipe->flush(_data.get<boost::any>("B"));
                 }
             );
