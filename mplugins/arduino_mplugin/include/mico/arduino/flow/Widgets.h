@@ -106,7 +106,7 @@ namespace mico{
 
             /// Retreive icon of block    
             QIcon icon() const override {
-                return QIcon((flow::Persistency::resourceDir() / "arduino" / "switch_A.svg").string().c_str());
+                return QIcon((flow::Persistency::resourceDir() / "arduino" / "switch_A.png").string().c_str());
             }
 
             /// Return if the block is configurable.
