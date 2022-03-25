@@ -7,8 +7,16 @@
   "dependencies": [
     "vtk",
     "pcl",
+    "boost",
+    "zlib",
+    "yaml-cpp",
+    "qt5",
+    "qt5-multimedia",
+    "realsense2",
+    "pangolin",
     {
       "name": "opencv",
+      "platform": "windows",
       "features": [
         "contrib",
         "cuda",
@@ -16,22 +24,16 @@
         "dnn"
       ]
     },
-    "boost",
-    "zlib",
-    "yaml-cpp",
-    "qt5",
-    "qt5-multimedia",
-    "realsense2",
+    {
+      "name": "opencv",
+      "platform": "linux",
+      "features": [
+        "contrib"
+      ]
+    },
     {
       "name":"dlfcn-win32",
     "platform": "windows"
-    },
-    "pangolin",
-    "python3",
-    "pybind11",
-    {
-      "name": "dvsal",
-      "platform": "linux"
     }
   ]
 }

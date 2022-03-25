@@ -27,6 +27,7 @@
 #include <flow/Block.h>
 #include <opencv2/opencv.hpp>
 #include <mutex>
+#include <condition_variable>
 
 class QSpinBox;
 

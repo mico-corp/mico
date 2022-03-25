@@ -27,9 +27,10 @@
 #include <flow/Block.h>
 
 #include <opencv2/opencv.hpp>
-#include <mutex>
-
 #include <opencv2/features2d.hpp>
+
+#include <mutex>
+#include <condition_variable>
 
 #include <QPushButton>
 

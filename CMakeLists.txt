@@ -38,8 +38,8 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/package)
 
+set(LIBRARY_MODE SHARED)
 if(WIN32)
-    set(LIBRARY_MODE SHARED)
     # if(MSVC)
     #     add_compile_options(
     #         $<$<CONFIG:>:/MT> #---------|
@@ -48,7 +48,8 @@ if(WIN32)
     #     )
     # endif()
 elseif(UNIX)
-    set(LIBRARY_MODE SHARED)
+    set(VCPKG_CXX_FLAGS " ${VCPKG_CXX_FLAGS} -fPIC ")
+    set(VCPKG_C_FLAGS " ${VCPKG_C_FLAGS} -fPIC " )
 endif()
 
 if(WIN32)
