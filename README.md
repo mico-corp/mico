@@ -6,7 +6,30 @@ All MICO-plugins in one repository using git submodules.
 
 The easiest way to start using mico is to download it from the last release webpage. Click here and select the proper file for your OS.
 
-## Building for sources
+
+## Building from sources in Ubuntu
+
+You can just call cmake, without specifying the TOOLCHAIN file. To make it work, you need to install all the dependencies manually. In Ubuntu it is not very hard. 
+
+```
+sudo apt-get install qt5-default libeigen3-dev libboost-all-dev libpcl-dev
+```
+* Opencv 4.5.5 https://github.com/opencv/opencv and https://github.com/opencv/opencv_contrib
+* Pangolin: https://github.com/stevenlovegrove/Pangolin
+* Pybind11: https://github.com/pybind/pybind11
+* Python3 with numpy
+* DVSAL Dependencies
+```
+sudo add-apt-repository -y ppa:inivation-ppa/inivation
+sudo apt-get update
+sudo apt-get install -y dv-runtime-dev
+```
+* DVSAL: https://github.com/mgrova/dvsal
+
+
+## Building from sources in Windows using VCPKG
+
+## Building from sources in Ubuntu using VCPKG (Not working yet)
 
 If you want, you can compile it from the sources. To do so, we recomend you to use VCPKG. But first, you need to prepare your system.
 
@@ -47,13 +70,6 @@ And that's it, you are ready to compile. In MSVC you can select the project you 
 
 BTW: If your computer get stuck compiling the dependencies with VPKG (Which happens typically compiling PCL or QT5), I recomend you to limit the number of threads for VCPKG. To do so, befor calling `cmake . --preset....`, type `export VCPKG_MAX_CONCURRENCY=4` in your screen (o whatever number of threads you want). It happens because compiling and linking those libraries consumes a lot of RAM, and if you have many threads compiling/linking at the same time the PC might get run out of memory, and the OS get stuck.
 
-## Alternative to VCPKG in Ubuntu to compile MICO
 
-You can just call cmake, without specifying the TOOLCHAIN file. To make it work, you need to install all the dependencies manually. In Ubuntu it is not very hard. 
 
-```
-sudo apt-get install qt5-default libeigen3-dev libboost-all-dev libpcl-dev libopencv-dev
-```
-* Pangolin: https://github.com/stevenlovegrove/Pangolin
-* Pybind11: https://github.com/pybind/pybind11
-* Python3 with numpy
+## FAQ

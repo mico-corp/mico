@@ -7,6 +7,7 @@
 #include <vector>
 
 #include <QtCore/QString>
+#include <QHash>
 
 #include "NodeDataModel.hpp"
 #include "TypeConverter.hpp"

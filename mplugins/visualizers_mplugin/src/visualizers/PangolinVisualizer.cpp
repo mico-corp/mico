@@ -225,9 +225,10 @@ namespace mico{
             auto text = textToDraw_;
             auto textPosition = textPosition_;
             renderGuard_.unlock();
-            for(unsigned j = 0; j < text.size(); j++){
+            // Failed in Ubuntu GlFont::I()
+            /*for(unsigned j = 0; j < text.size(); j++){
                 pangolin::GlFont::I().Text(text[j].c_str()).Draw(textPosition[j](0),textPosition[j](1),textPosition[j](2));
-            }
+            }*/
 
         }
 

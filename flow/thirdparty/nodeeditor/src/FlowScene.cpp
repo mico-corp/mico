@@ -39,11 +39,7 @@ using QtNodes::TypeConverter;
 
 
 FlowScene::
-FlowScene(std::shared_ptr<DataModelRegistry> registry,
-          QObject * parent)
-  : QGraphicsScene(parent)
-  , _registry(std::move(registry))
-{
+FlowScene(std::shared_ptr<DataModelRegistry> registry, QObject * parent) : QGraphicsScene(parent) , _registry(std::move(registry)) {
   setItemIndexMethod(QGraphicsScene::NoIndex);
 
   // This connection should come first
@@ -52,16 +48,12 @@ FlowScene(std::shared_ptr<DataModelRegistry> registry,
   connect(this, &FlowScene::connectionDeleted, this, &FlowScene::sendConnectionDeletedToNodes);
 }
 
-FlowScene::
-FlowScene(QObject * parent)
-  : FlowScene(std::make_shared<DataModelRegistry>(),
-              parent)
-{}
+FlowScene::FlowScene(QObject * parent): FlowScene( std::make_shared<DataModelRegistry>(), parent) {
+
+}
 
 
-FlowScene::
-~FlowScene()
-{
+FlowScene::~FlowScene() {
   clearScene();
 }
 
