@@ -228,14 +228,13 @@ namespace flow{
     }
 
     std::shared_ptr<QtNodes::DataModelRegistry> FlowVisualInterface::registerDataModels(){
-        // auto registry = std::make_shared<QtNodes::DataModelRegistry>();
+        auto registry = std::make_shared<QtNodes::DataModelRegistry>();
 
-        // loadCustomPlugins(registry);
-        // if(registerFn_ != nullptr)
-        //     registerFn_(registry);
+        loadCustomPlugins(registry);
+        if(registerFn_ != nullptr)
+             registerFn_(registry);
 
-        // return registry;
-        return nullptr;
+        return registry;
     }
 
     struct PathLeafString {
