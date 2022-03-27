@@ -30,6 +30,7 @@ sudo apt-get install -y at curl unzip tar libxt-dev gperf libxaw7-dev cifs-utils
   libxcb-render-util0-dev libxcb-xinerama0-dev libxcb-xkb-dev libxcb-xinput-dev libkrb5-dev \
   libxcb-res0-dev python3-setuptools python3-mako python3-pip python3-venv nodejs libwayland-dev \
   guile-2.2-dev libxdamage-dev liblttng-ust0 libkrb5-3 zlib1g libicu66
+pip3 install meson==0.61.1
 ```
 2. Make sure you have at least CMake 3.21
 3. Clone VCPKG wherever you want. And, if you are using Windows, create a system variable called VCPKG_ROOT pointing to the repository.

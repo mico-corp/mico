@@ -5,15 +5,34 @@
   "homepage": "www.mico-corp.com",
   "description": "Modular Interchangeable Computer prOgraming framework. Yet another zero coding programming library for developers and education..",
   "dependencies": [
-    "vtk",
-    "pcl",
-    "boost",
+    "boost-system",
+    "boost-asio",
+    "boost-program-options",
+    "boost-exception",
+    "boost-filesystem",
     "zlib",
     "yaml-cpp",
-    "qt5",
-    "qt5-multimedia",
     "realsense2",
     "pangolin",
+    {
+      "name": "qt5",
+      "default-features": false,
+      "features": [
+        "multimedia",
+        "svg"
+      ]
+    },
+    {
+      "name": "vtk",
+      "default-features": false
+    },
+    {
+      "name": "pcl",
+      "default-features": false,
+      "features": [
+        "visualization"
+      ]
+    },
     {
       "name": "opencv",
       "platform": "windows",
