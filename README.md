@@ -9,23 +9,28 @@ The easiest way to start using mico is to download it from the last release webp
 
 ## Building from sources in Ubuntu
 
-You can just call cmake, without specifying the TOOLCHAIN file. To make it work, you need to install all the dependencies manually. In Ubuntu it is not very hard. 
+To make it work, you need to install all the dependencies manually. In Ubuntu it is not very hard. 
 
 ```
 sudo apt-get install qt5-default libeigen3-dev libboost-all-dev libpcl-dev
-```
-* Opencv 4.5.5 https://github.com/opencv/opencv and https://github.com/opencv/opencv_contrib
-* Pangolin: https://github.com/stevenlovegrove/Pangolin
-* Pybind11: https://github.com/pybind/pybind11
-* Python3 with numpy
-* DVSAL Dependencies
-```
 sudo add-apt-repository -y ppa:inivation-ppa/inivation
 sudo apt-get update
 sudo apt-get install -y dv-runtime-dev
 ```
-* DVSAL: https://github.com/mgrova/dvsal
+Then, clone the repository, build the package and install it
 
+```
+git clone https://github.com/mico-corp/mico
+cd mico
+mkdir build
+cd build
+cmake .. -DBUILD_XXX=ON # Enable the packages you want...
+make -j4
+make package
+sudo dpkg -i mico-1.1.0-Linux.deb
+```
+
+Now you should be able to run the app by typing in the terminal `flow_kids`
 
 ## Building from sources in Windows using VCPKG
 
