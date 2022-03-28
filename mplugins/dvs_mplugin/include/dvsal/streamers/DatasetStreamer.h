@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------------------------------------------------------
-//  MICO DVS plugin
+//  DVSAL
 //---------------------------------------------------------------------------------------------------------------------
 //  Copyright 2020 - Marco Montes Grova (a.k.a. mgrova) marrcogrova@gmail.com 
 //---------------------------------------------------------------------------------------------------------------------
@@ -19,45 +19,40 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------------------------------------
 
-#ifndef BLOCK_DVS_CLOUD_FROM_EVENTS_H_
-#define BLOCK_DVS_CLOUD_FROM_EVENTS_H_
+#ifndef DATASET_STREAMER_H_
+#define DATASET_STREAMER_H_
 
-#include <flow/flow.h>
+#include <dvsal/streamers/Streamer.h>
 
-#include <dv-sdk/processing.hpp>
-#include <dv-sdk/config.hpp>
-#include <dv-sdk/utils.h>
+#include <fstream>
+#include <sstream>
+#include <string>
 
-namespace pcl{
-    template<typename T_>
-    class PointCloud;
+namespace dvsal{
 
-    class PointXYZRGBNormal;
-}
-
-namespace mico{
-
-namespace dvs{
-
-    class BlockEventsToCloud : public flow::Block{
+    class DatasetStreamer : public Streamer{
     public:
-        typedef boost::shared_ptr<pcl::PointCloud<pcl::PointXYZRGBNormal>> SharedPc;
-        std::string name() const override {return "DVS events to cloud";};
-        std::string description() const override {return "Flow wrapper of conversor";};
-        
-        BlockEventsToCloud();
-        
-        /// Return if the block is configurable.
-        bool isConfigurable() override { return false; };
+        DatasetStreamer(const std::string _string);
 
-    private:
-        bool obtainPointCloudFromEvents(dv::EventStore _events , SharedPc &_cloud);  
+		bool init();
+        bool step();
 
+        void events(dv::EventStore &_events , int _microseconds);
+        bool image(cv::Mat &_image);
+
+        dv::EventStore lastEvents(){
+            return lastEvents_;
+        };
+        
     private:
-        bool idle_ = true;
+        std::ifstream datasetFile_;
+        std::string datasetPath_;
+        
+        dv::EventStore lastEvents_;
 
     };
+
+    
 }
 
-}
 #endif

@@ -21,8 +21,10 @@
 ##---------------------------------------------------------------------------------------------------------------------
 
 
-find_package(dvsal)
-if(${dvsal_FOUND})
+find_package(fmt)
+find_package(libcaer)
+find_package(dv)
+if(${dv_FOUND} AND ${libcaer_FOUND})
   cmake_minimum_required (VERSION 3.10 FATAL_ERROR)
   project(mico VERSION 1.0 LANGUAGES C CXX)
   set(PLUGIN_NAME ${PROJECT_NAME}-dvs)
@@ -41,19 +43,25 @@ if(${dvsal_FOUND})
   SET(MICO_MODULES ${MICO_MODULES} dvs PARENT_SCOPE)
   add_mplugin(    PLUGIN_NAME ${PLUGIN_NAME} 
                   PLUGIN_SOURCES ${MICO_DVS_SOURCE_FILES}
-          PLUGIN_HEADERS  ${MICO_DVS_HEADER_FILES} 
-          MICO_DEPS core)
+                  PLUGIN_HEADERS  ${MICO_DVS_HEADER_FILES} 
+                  MICO_DEPS core)
 
   ##################################################
   ######    Loading 3rd party libraries.    ########
   ##################################################
 
-  find_package(dvsal REQUIRED)
-  if(${dvsal_FOUND})
-    mplugin_include_directory( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_INCLUDES ${OpenCV_INCLUDE_DIRS})
-    mplugin_link_library( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES dvsal::dvsal)
-    mplugin_compile_definition( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_DEFINITIONS HAS_DVS)
-  endif()
+  find_package(Boost REQUIRED)
+  find_package(OpenCV REQUIRED)
+  find_package(Eigen3 REQUIRED)
+  mplugin_include_directory( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_INCLUDES ${OpenCV_INCLUDE_DIRS})
+  mplugin_link_library( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES libcaer::caer dv::dvsdk)
+  mplugin_link_library( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES Eigen3::Eigen)
+  mplugin_compile_definition( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_DEFINITIONS HAS_LIBCAER HAS_DV)
+
+  find_package(PCL  QUIET REQUIRED)
+  mplugin_include_directory( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_INCLUDES ${PCL_INCLUDE_DIRS})
+  mplugin_link_library( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES ${PCL_LIBRARIES})
+  mplugin_compile_definition( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_DEFINITIONS ENABLE_PCL DISABLE_PCAP DISABLE_PNG DISABLE_LIBUSB_1_0)
 
 else()
   set(BUILD_DVS OFF)

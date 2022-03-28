@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------------------------------------------------------
-//  MICO DVS plugin
+//  DVSAL
 //---------------------------------------------------------------------------------------------------------------------
 //  Copyright 2020 - Marco Montes Grova (a.k.a. mgrova) marrcogrova@gmail.com 
 //---------------------------------------------------------------------------------------------------------------------
@@ -19,45 +19,9 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------------------------------------
 
-#ifndef BLOCK_DVS_CLOUD_FROM_EVENTS_H_
-#define BLOCK_DVS_CLOUD_FROM_EVENTS_H_
-
-#include <flow/flow.h>
-
-#include <dv-sdk/processing.hpp>
-#include <dv-sdk/config.hpp>
-#include <dv-sdk/utils.h>
-
-namespace pcl{
-    template<typename T_>
-    class PointCloud;
-
-    class PointXYZRGBNormal;
+namespace dvsal{
+    template<typename _Type, typename... _T>
+    Streamer * Streamer::create(_T&&... _arg) {
+        return new _Type(std::forward<_T>(_arg)...);
+    }
 }
-
-namespace mico{
-
-namespace dvs{
-
-    class BlockEventsToCloud : public flow::Block{
-    public:
-        typedef boost::shared_ptr<pcl::PointCloud<pcl::PointXYZRGBNormal>> SharedPc;
-        std::string name() const override {return "DVS events to cloud";};
-        std::string description() const override {return "Flow wrapper of conversor";};
-        
-        BlockEventsToCloud();
-        
-        /// Return if the block is configurable.
-        bool isConfigurable() override { return false; };
-
-    private:
-        bool obtainPointCloudFromEvents(dv::EventStore _events , SharedPc &_cloud);  
-
-    private:
-        bool idle_ = true;
-
-    };
-}
-
-}
-#endif

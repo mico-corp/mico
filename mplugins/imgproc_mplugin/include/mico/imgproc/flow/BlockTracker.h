@@ -28,6 +28,7 @@
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/features2d.hpp>
+#include <opencv2/tracking.hpp>
 
 #include <mutex>
 #include <condition_variable>
@@ -74,9 +75,11 @@ namespace mico{
             bool idle_ = true;
             std::mutex dataLock_;
             cv::Ptr<cv::Tracker> tracker_ = nullptr;
+            
+            
             QPushButton* initBt_ = nullptr;
             bool isInit_ = false;
-            cv::Rect bbox_;
+            cv::Rect2d bbox_;
             cv::Mat lastImage_;
 
             std::mutex safeDeletion_;

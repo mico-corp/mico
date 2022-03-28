@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------------------------------------------------------
-//  MICO DVS plugin
+//  DVSAL
 //---------------------------------------------------------------------------------------------------------------------
 //  Copyright 2020 - Marco Montes Grova (a.k.a. mgrova) marrcogrova@gmail.com 
 //---------------------------------------------------------------------------------------------------------------------
@@ -19,45 +19,41 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------------------------------------
 
-#ifndef BLOCK_DVS_CLOUD_FROM_EVENTS_H_
-#define BLOCK_DVS_CLOUD_FROM_EVENTS_H_
+#ifndef CAMERA_DVS128_STREAMER_H_
+#define CAMERA_DVS128_STREAMER_H_
 
-#include <flow/flow.h>
+// #define LIBCAER_FRAMECPP_OPENCV_INSTALLED 0
+#include <libcaercpp/devices/dvs128.hpp>
 
-#include <dv-sdk/processing.hpp>
-#include <dv-sdk/config.hpp>
-#include <dv-sdk/utils.h>
+#include <atomic>
+#include <csignal>
 
-namespace pcl{
-    template<typename T_>
-    class PointCloud;
+#include <dvsal/streamers/Streamer.h>
 
-    class PointXYZRGBNormal;
-}
+namespace dvsal{
 
-namespace mico{
-
-namespace dvs{
-
-    class BlockEventsToCloud : public flow::Block{
+    class CameraDVS128Streamer : public Streamer{
     public:
-        typedef boost::shared_ptr<pcl::PointCloud<pcl::PointXYZRGBNormal>> SharedPc;
-        std::string name() const override {return "DVS events to cloud";};
-        std::string description() const override {return "Flow wrapper of conversor";};
-        
-        BlockEventsToCloud();
-        
-        /// Return if the block is configurable.
-        bool isConfigurable() override { return false; };
+        CameraDVS128Streamer(){};
+        ~CameraDVS128Streamer(){};
+
+		bool init();
+		void events(dv::EventStore &_events , int _microseconds);
+        bool image(cv::Mat &_image); // Fake image using events
+        bool step();
+
+        dv::EventStore lastEvents(){
+            return lastEvents_;
+        };
 
     private:
-        bool obtainPointCloudFromEvents(dv::EventStore _events , SharedPc &_cloud);  
-
+        static void usbShutdownHandler(void *_ptr) ;
     private:
-        bool idle_ = true;
+        libcaer::devices::dvs128 *dvs128Handle_ = nullptr;        
+        constexpr static std::atomic<bool> globalShutdown_{false};
 
+        dv::EventStore lastEvents_;
     };
 }
 
-}
 #endif

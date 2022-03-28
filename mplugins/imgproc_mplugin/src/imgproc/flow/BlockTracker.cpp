@@ -54,7 +54,7 @@ namespace mico{
                                         bool ok = false;
                                         if (isInit_) {
                                             // Update the tracking result
-                                            bbox_ = bbox_ & cv::Rect(0, 0, frame.cols - 1, frame.rows - 1);
+                                            bbox_ = bbox_ & cv::Rect2d(0, 0, frame.cols - 1, frame.rows - 1);
                                             ok = tracker_->update(frame, bbox_);
                                             
 
