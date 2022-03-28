@@ -34,9 +34,21 @@ Now you should be able to run the app by typing in the terminal `flow_kids`
 
 ## Building from sources in Windows using VCPKG
 
+If you want, you can compile it from the sources. To do so, we recomend you to use VCPKG. But first, you need to prepare your system.
+
+1. Make sure you have at least CMake 3.21
+2. Clone VCPKG wherever you want. And, if you are using Windows, create a system variable called VCPKG_ROOT pointing to the repository.
+```
+git clone https://github.com/microsoft/vcpkg
+```
+3. Install Visual Studio Community or Code
+4. Open the project and configure it with the given CMakePresets.json file
+
+
 ## Building from sources in Ubuntu using VCPKG (Not working yet)
 
-If you want, you can compile it from the sources. To do so, we recomend you to use VCPKG. But first, you need to prepare your system.
+This method does not work properly yet. VCPKG in Linux compiles libraries as static, which shouldn't be a problem, but one of the libraries it uses 
+does not compiles with fPIC, causing problems when generating mplugins (which are dynamic libraries and requires relocation)... So... Do not use this method yet.
 
 1. If you are using ubuntu, install some dependencies
 ```
