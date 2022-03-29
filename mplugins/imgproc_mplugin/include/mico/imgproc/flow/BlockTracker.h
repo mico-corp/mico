@@ -74,7 +74,7 @@ namespace mico{
         private:
 #if defined(WIN32)
             typedef cv::Rect cvRect;
-#elif defined(UNIX)
+#elif defined(__linux__)
             typedef cv::Rect2d cvRect;
 #endif
             
