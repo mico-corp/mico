@@ -70,7 +70,9 @@ namespace mico{
                                                                 "   - Inputs: Image \n"
                                                                 "   - Outputs: x, y, debug image\n";};
 
-                
+        private:
+            void createTracker(const std::string& _trackerName);
+
         private:
 #if defined(WIN32)
             typedef cv::Rect cvRect;
@@ -81,9 +83,8 @@ namespace mico{
             bool idle_ = true;
             std::mutex dataLock_;
             cv::Ptr<cv::Tracker> tracker_ = nullptr;
+            std::string lastTrackerName_ = "";// App crashes when reinitializing an already runned tracker, so keep track of name to recreate it every initialization.
             
-            
-            QPushButton* initBt_ = nullptr;
             bool isInit_ = false;
             cvRect bbox_;
             cv::Mat lastImage_;

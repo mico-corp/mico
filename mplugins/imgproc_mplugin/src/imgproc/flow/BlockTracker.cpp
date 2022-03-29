@@ -43,6 +43,7 @@ namespace mico{
                     idle_ = false;
                     isInit_ = false;
                     if (lastImage_.rows != 0) {
+                        createTracker(lastTrackerName_);
                         bbox_ = _data.get<cvRect>("initBB");
                         tracker_->init(lastImage_, bbox_);
                         isInit_ = true;
@@ -112,16 +113,8 @@ namespace mico{
             std::lock_guard<std::mutex> lock(dataLock_);
 
             if(auto param = getParamByName(_params, "Algorithm"); param){
-                auto featureName = param.value().asString();
-                if (featureName == "Mil"){
-                    tracker_ = cv::TrackerMIL::create();
-                } else if (featureName == "KCF") {
-                    tracker_ = cv::TrackerKCF::create();
-                } else if (featureName == "Goturn") {
-                    tracker_ = cv::TrackerGOTURN::create();
-                } else if (featureName == "CSRT") {
-                    tracker_ = cv::TrackerCSRT::create();
-                } 
+                lastTrackerName_ = param.value().asString();
+                createTracker(lastTrackerName_);
             }
 
             idle_ = true;
@@ -137,21 +130,48 @@ namespace mico{
         }
 
         QWidget* BlockTracker::customWidget(){
-            initBt_ = new QPushButton("Init box");
-            QObject::connect(initBt_, &QPushButton::clicked, [&]() {
+            auto* w = new QWidget;
+            auto* l = new QVBoxLayout;
+            w->setLayout(l);
+
+            auto *initBt = new QPushButton("Init box");
+            l->addWidget(initBt);
+            QObject::connect(initBt, &QPushButton::clicked, [&]() {
+                std::lock_guard<std::mutex> lock(dataLock_);
                 idle_ = false;
                 isInit_ = false;
                 if (lastImage_.rows != 0) {
-                    std::lock_guard<std::mutex> lock(dataLock_);
                     bbox_ = cv::selectROI(lastImage_);
                     tracker_->init(lastImage_, bbox_);
                     isInit_ = true;
                 }
                 idle_ = true;
             });
-            return initBt_;
+
+            auto *stopBt = new QPushButton("Stop tracker");
+            l->addWidget(stopBt);
+            QObject::connect(stopBt, &QPushButton::clicked, [&]() {
+                std::lock_guard<std::mutex> lock(dataLock_);
+                isInit_ = false;
+            });
+
+            return w;
         }
 
+        void BlockTracker::createTracker(const std::string& _trackerName) {
+            if (_trackerName == "Mil") {
+                tracker_ = cv::TrackerMIL::create();
+            }
+            else if (_trackerName == "KCF") {
+                tracker_ = cv::TrackerKCF::create();
+            }
+            else if (_trackerName == "Goturn") {
+                tracker_ = cv::TrackerGOTURN::create();
+            }
+            else if (_trackerName == "CSRT") {
+                tracker_ = cv::TrackerCSRT::create();
+            }
+        }
 
     }
 }
