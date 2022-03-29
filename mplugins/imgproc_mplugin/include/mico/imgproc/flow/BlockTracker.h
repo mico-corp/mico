@@ -72,6 +72,12 @@ namespace mico{
 
                 
         private:
+#if defined(WIN32)
+            typedef cv::Rect cvRect;
+#elif defined(UNIX)
+            typedef cv::Rect2d cvRect;
+#endif
+            
             bool idle_ = true;
             std::mutex dataLock_;
             cv::Ptr<cv::Tracker> tracker_ = nullptr;
@@ -79,7 +85,7 @@ namespace mico{
             
             QPushButton* initBt_ = nullptr;
             bool isInit_ = false;
-            cv::Rect2d bbox_;
+            cvRect bbox_;
             cv::Mat lastImage_;
 
             std::mutex safeDeletion_;

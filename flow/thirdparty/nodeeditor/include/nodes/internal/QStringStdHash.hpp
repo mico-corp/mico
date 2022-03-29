@@ -5,6 +5,7 @@
 #include <QtCore/QString>
 #include <QtCore/QVariant>
 
+#if !defined(WIN32)
 namespace std {
     template <>
     struct hash<QString> {
@@ -14,3 +15,4 @@ namespace std {
         }
     };
 }
+#endif
