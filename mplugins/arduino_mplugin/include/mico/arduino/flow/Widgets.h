@@ -122,6 +122,39 @@ namespace mico{
             std::string fileB = (flow::Persistency::resourceDir() / "arduino" / "switch_B.png").string();
         };
 
+
+        /// Mico block that allows or not to flow depend on boolean trigger
+        /// @ingroup  mico_arduino
+        class FlowSwitch :public flow::Block {
+        public:
+            /// Base constructor
+            FlowSwitch();
+
+            /// Retreive name of block
+            std::string name() const override { return "Flow Switcher"; }
+
+            /// Get custom view widget to be display in the graph
+            QWidget* customWidget() override;
+
+            /// Retreive icon of block    
+            QIcon icon() const override {
+                return QIcon((flow::Persistency::resourceDir() / "arduino" / "switch_off.png").string().c_str());
+            }
+
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return false; };
+
+            /// Returns a brief description of the block
+            std::string description() const override { return    "Switcher for generic signals\n"; };
+
+        private:
+            bool flow_ = true;
+            QLabel* img_;
+            QGroupBox* customWidget_;
+            std::string fileOn = (flow::Persistency::resourceDir() / "arduino" / "switch_on.png").string();
+            std::string fileOff = (flow::Persistency::resourceDir() / "arduino" / "switch_off.png").string();
+        };
+
         /// Mico block that performs a NOT operation on the given input.
         /// @ingroup  mico_arduino
         class NotOperator :public flow::Block{

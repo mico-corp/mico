@@ -31,38 +31,59 @@ namespace mico{
 
             createPipe<float>("x");
             createPipe<float>("y");
+            createPipe<bool>("isTracking");
             createPipe<cv::Mat>("debug");
 
-            createPolicy({  flow::makeInput<cv::Mat>("input") });
+            createPolicy({ flow::makeInput<cv::Mat>("input"), flow::makeInput<cvRect>("initBB") });
+
+            registerCallback({ "initBB" },
+                [&](flow::DataFlow _data) {
+                    std::lock_guard<std::mutex> lock(dataLock_);
+                    if (isInit_) return;
+                    idle_ = false;
+                    isInit_ = false;
+                    if (lastImage_.rows != 0) {
+                        bbox_ = _data.get<cvRect>("initBB");
+                        tracker_->init(lastImage_, bbox_);
+                        isInit_ = true;
+                    }
+                    idle_ = true;
+
+                }
+            );
 
             registerCallback(   {"input"}, 
                                 [&](flow::DataFlow _data){
-                                    if(!idle_)
+                                    if(!idle_ && isInit_)
                                         return;
 
                                     idle_ = false;
                                     if(getPipe("x")->registrations() || getPipe("y")->registrations() || getPipe("debug")->registrations()){
-                                        if (!tracker_)
+                                        if (!tracker_) {
+                                            idle_ = true;
                                             return;
-
-                                        cv::Mat frame = _data.get<cv::Mat>("input");
-
-                                        std::lock_guard<std::mutex> lock(dataLock_);
-                                        lastImage_ = frame.clone();
-                                        
+                                        }
 
                                         bool ok = false;
+                                        cv::Mat frame = _data.get<cv::Mat>("input");
+                                        {
+                                            std::lock_guard<std::mutex> lock(dataLock_);
+                                            lastImage_ = frame.clone();
+                                        }
                                         if (isInit_) {
                                             // Update the tracking result
-                                            bbox_ = bbox_ & cvRect(0, 0, frame.cols - 1, frame.rows - 1);
-                                            ok = tracker_->update(frame, bbox_);
+                                            {
+                                                bbox_ = bbox_ & cvRect(0, 0, frame.cols - 1, frame.rows - 1);
+                                                std::lock_guard<std::mutex> lock(dataLock_);
+                                                ok = tracker_->update(frame, bbox_);
+                                            }
                                             
-
                                             if (!ok) isInit_ = false;
 
                                             if (getPipe("x")->registrations()) getPipe("x")->flush(bbox_.x + bbox_.width / 2.0f);
                                             if (getPipe("y")->registrations()) getPipe("y")->flush(bbox_.y + bbox_.height / 2.0f);
                                         }
+                                        if (getPipe("isTracking")->registrations()) getPipe("isTracking")->flush(ok);
 
 
                                         if (getPipe("debug")->registrations()) {
@@ -121,10 +142,9 @@ namespace mico{
                 idle_ = false;
                 isInit_ = false;
                 if (lastImage_.rows != 0) {
-                    dataLock_.lock();
+                    std::lock_guard<std::mutex> lock(dataLock_);
                     bbox_ = cv::selectROI(lastImage_);
                     tracker_->init(lastImage_, bbox_);
-                    dataLock_.unlock();
                     isInit_ = true;
                 }
                 idle_ = true;

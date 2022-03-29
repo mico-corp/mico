@@ -109,5 +109,45 @@ namespace mico{
         QWidget* SignalSwitcher::customWidget() {
             return customWidget_;
         }
+
+
+        FlowSwitch::FlowSwitch() {
+
+            customWidget_ = new QGroupBox();
+
+            QVBoxLayout* l = new QVBoxLayout();
+            customWidget_->setLayout(l);
+
+            img_ = new QLabel();
+            img_->setMaximumHeight(50);
+            img_->setMaximumWidth(50);
+            img_->setPixmap(QIcon(fileOff.c_str()).pixmap(50, 50));
+            l->addWidget(img_);
+
+            createPipe<boost::any>("out");
+            createPolicy({ flow::makeInput<bool>("signal"),
+                            flow::makeInput<boost::any>("input") });
+
+            registerCallback({ "signal" },
+                [&](flow::DataFlow _data) {
+                    flow_ = _data.get<bool>("signal");
+                    if (flow_) 
+                        img_->setPixmap(QIcon(fileOn.c_str()).pixmap(50, 50));
+                    else
+                        img_->setPixmap(QIcon(fileOff.c_str()).pixmap(50, 50));
+                }
+            );
+
+            registerCallback({ "input" },
+                [&](flow::DataFlow _data) {
+                    if (auto pipe = getPipe("out"); pipe->registrations() && flow_)
+                        pipe->flush(_data.get<boost::any>("input"));
+                }
+            );
+        }
+
+        QWidget* FlowSwitch::customWidget() {
+            return customWidget_;
+        }
     }
 }

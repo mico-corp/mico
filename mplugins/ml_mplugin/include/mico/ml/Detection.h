@@ -34,7 +34,11 @@ namespace mico{
     namespace ml{
         struct Detection{
             int label_;
-            cv::Rect bb_;
+            #if defined(WIN32)
+                cv::Rect bb_;
+            #elif defined(__linux__)
+                cv::Rect2d bb_;
+            #endif
             cv::Mat crop_;
         };
 

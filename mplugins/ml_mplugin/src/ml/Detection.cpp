@@ -85,6 +85,11 @@ namespace mico{
 typedef std::vector<mico::ml::Detection> StlVectorDetection;
 typedef mico::ml::Detection micoMlDetection;
 typedef cv::Mat cvMat;
+#if defined(WIN32)
+typedef cv::Rect cvRect;
+#elif defined(__linux__)
+typedef cv::Rect2d cvRect;
+#endif
 const auto flatVectorDetectionConversion    = simpleFlatVectorTakeFirst<StlVectorDetection, micoMlDetection>;
 FLOW_CONVERSION_REGISTER(StlVectorDetection, micoMlDetection, flatVectorDetectionConversion);
 
@@ -115,12 +120,25 @@ boost::any DetectionToCvPoint(boost::any &_input){
     return cv::Point2f(x, y);
 }
 
-boost::any DetectionToEigen(boost::any &_input){
+boost::any DetectionToEigen(boost::any& _input) {
     const auto bb = boost::any_cast<mico::ml::Detection>(_input).bb_;
-    float x = bb.x + bb.width/2;
-    float y = bb.y + bb.height/2;
+    float x = bb.x + bb.width / 2;
+    float y = bb.y + bb.height / 2;
     return Eigen::Vector2f(x, y);
 }
+
+
+boost::any DetectionToCvRect(boost::any& _input) {
+    return  boost::any_cast<mico::ml::Detection>(_input).bb_;
+}
+
+
+boost::any VectorDetectionToCvRect(boost::any& _input) {
+    auto v = boost::any_cast<std::vector<mico::ml::Detection>>(_input);
+    if (v.size() != 0) return v[0].bb_;
+    else return cvRect();
+}
+
 
 typedef Eigen::Vector2f EigenVector2f;
 typedef cv::Point2f CvPoint2f;
@@ -128,7 +146,8 @@ typedef std::vector<float> StlVectorFloat;
 FLOW_CONVERSION_REGISTER(micoMlDetection, StlVectorFloat, &DetectionToStlVectorFloat);
 FLOW_CONVERSION_REGISTER(micoMlDetection, CvPoint2f, &DetectionToCvPoint);
 FLOW_CONVERSION_REGISTER(micoMlDetection, EigenVector2f, &DetectionToEigen);
-
+FLOW_CONVERSION_REGISTER(micoMlDetection, cvRect, &DetectionToCvRect);
+FLOW_CONVERSION_REGISTER(StlVectorDetection, cvRect, &VectorDetectionToCvRect);
 
 boost::any StlVectorDetectionToStlVectorFloat(boost::any &_input){
     const auto bb = boost::any_cast<StlVectorDetection>(_input)[0].bb_;
