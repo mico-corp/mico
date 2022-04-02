@@ -32,7 +32,7 @@
 
 #include <opencv2/opencv.hpp>
 
-#include <boost/python/numpy.hpp>
+//#include <boost/python/numpy.hpp>
 
 namespace mico {
     namespace python{

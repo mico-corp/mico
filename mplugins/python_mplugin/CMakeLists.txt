@@ -26,7 +26,7 @@ set(PLUGIN_NAME ${PROJECT_NAME}-python)
 find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
 set(boost-python-module-name "python${Python3_VERSION_MAJOR}${Python3_VERSION_MINOR}" CACHE STRING "Boost::python module name, e.g. 'python-3.6'")
 
-find_package(Boost REQUIRED COMPONENTS ${boost-python-module-name})
+find_package(Boost REQUIRED COMPONENTS ${boost-python-module-name} numpy)
 
 ##################################################
 ###### Create project and configure ALIAS ########
@@ -56,7 +56,7 @@ mplugin_link_library( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES ${OpenCV_LIBS}
 mplugin_compile_definition( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_DEFINITIONS HAS_OPENCV)
     
 mplugin_link_library( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES Python3::Python)
-# mplugin_link_library( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES Python3::NumPy)
+mplugin_link_library( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES Boost::numpy)
 mplugin_link_library( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES "Boost::${boost-python-module-name}")
 mplugin_compile_definition( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_DEFINITIONS HAS_PYTHON)
 
