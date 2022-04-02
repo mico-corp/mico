@@ -40,12 +40,9 @@
 #include <Python.h>
 #include <boost/python.hpp>
 #include <boost/python/dict.hpp>
-#include <numpy/arrayobject.h>
+//#include <numpy/arrayobject.h>
 
 #include <atomic>
-
-#include <pybind11/embed.h> // everything needed for embedding
-#include <pybind11/eigen.h>
 
 namespace mico{
     namespace python{ 
@@ -86,8 +83,8 @@ namespace mico{
 
             void runPythonCode(flow::DataFlow _data, bool _useData);
 
-            void encodeInput(pybind11::dict &_locals, flow::DataFlow _data, std::string _tag, std::string _typeTag);
-            void flushPipe(pybind11::dict &_locals, std::string _tag, std::string _typeTag);
+            void encodeInput(boost::python::dict &locals, flow::DataFlow _data, std::string _tag, std::string _typeTag);
+            void flushPipe(boost::python::dict &_locals, std::string _tag, std::string _typeTag);
 
         private:
             std::atomic<bool> idle_ = true;
@@ -103,9 +100,6 @@ namespace mico{
             QPushButton * runButton_;
             PythonSyntaxHighlighter *highlighter_;
 
-            pybind11::dict* locals_;
-            static int nPythonBlocks_;
-            //pybind11::gil_scoped_release *gilReleaser_; // Needed https://stackoverflow.com/questions/54772595/opencv-functions-lock-when-called-by-a-python-script-itself-called-by-a-c-thre
         };
     }
 

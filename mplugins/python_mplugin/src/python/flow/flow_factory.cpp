@@ -20,12 +20,13 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 #include <flow/flow.h>
+#include <flow/Persistency.h>
 #include <mico/python/flow/BlockPython.h>
 
 namespace mico{
     
     extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(fs::path _libraryPath){
-        Persistency::setResourceDir(_libraryPath.parent_path().string() + "/resources");
+        flow::Persistency::setResourceDir(_libraryPath.parent_path().string() + "/resources");
         flow::PluginNodeCreator *creator = new flow::PluginNodeCreator;
 
         creator->registerNodeCreator([](){ return std::make_unique<flow::FlowVisualBlock<python::BlockPython>>(); }, "contrib");

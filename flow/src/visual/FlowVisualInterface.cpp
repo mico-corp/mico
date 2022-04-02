@@ -282,7 +282,6 @@ namespace flow{
             if(file.find("mico") == std::string::npos)
                 continue;
 
-            std::cout << file << std::endl;
             // Load blocks registered
             void *hndl = dlopen(file.c_str(), RTLD_NOW);
             if(hndl == nullptr){
@@ -294,6 +293,7 @@ namespace flow{
                 void *mkr = dlsym(hndl, "factory");
                 if(mkr == nullptr){
                     std::cerr << "[Warning] Pluging " << file << " does not have factory" << std::endl;
+                    std::cerr << "[Warning]: " << dlerror() << std::endl;
                     continue;
                 }
 

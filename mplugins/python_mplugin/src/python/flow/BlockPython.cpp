@@ -23,6 +23,8 @@
 #include <iostream>
 #include <fstream>
 
+#include <Eigen/Eigen>
+
 #include <flow/flow.h> 
 
 #include <mico/python/flow/BlockPython.h>
@@ -30,23 +32,12 @@
 
 #include <opencv2/opencv.hpp>
 
-#include <pybind11/numpy.h>
-#include <pybind11/stl.h>
-#include <pybind11/pybind11.h>
-#include <pybind11/eval.h>
-
-namespace py = pybind11;
+#include <boost/python/numpy.hpp>
 
 namespace mico {
     namespace python{
-        int BlockPython::nPythonBlocks_ = 0;
 
         BlockPython::BlockPython(){
-            nPythonBlocks_++;
-            if(nPythonBlocks_ == 1){
-                pybind11::initialize_interpreter();
-            }
-
             // Interface constructor
             interfaceSelector_ = new InterfaceSelectorWidget("Python interface Selector");
             interfaceSelector_->callThisIfSmthChangeInside([this](){this->prepareInterfaces();});
@@ -68,16 +59,9 @@ namespace mico {
                     this->runPythonCode(data, false);
                 });
 
-            locals_ = new pybind11::dict();
-            
-            py::gil_scoped_release release;
         }
         BlockPython::~BlockPython(){
-            /*if(nPythonBlocks_== 1){
-                pybind11::finalize_interpreter();
-            }
-            nPythonBlocks_--; ///666 seek for efficiency
-            */
+
         }
 
 
@@ -130,10 +114,7 @@ namespace mico {
                 }
 
                 registerCallback(inTags, [&](flow::DataFlow _data){
-                    py::gil_scoped_release release;
-                    pybind11::gil_scoped_acquire gil;
                     this->runPythonCode(_data, true);
-                    pybind11::gil_scoped_release nogil;
                 });
             }
 
@@ -148,59 +129,74 @@ namespace mico {
             std::string pythonCode = pythonEditor_->toPlainText().toStdString();
             
             try {
+                Py_Initialize();
 
-                py::gil_scoped_release release;
-                pybind11::gil_scoped_acquire gil;
+                boost::python::dict locals;
+
                 if(_useData) { // Encode inputs
                     for(auto [label, type]: inputInfo_){
-                        encodeInput(*locals_, _data, label, type);
+                        encodeInput(locals, _data, label, type);
                     }
                 }
 
-                pybind11::exec(pythonCode, pybind11::globals(), *locals_);  // If this line crashes in Windows when importing numpy or cv2 saying somthing like
+                std::cout << "Hey! " << std::endl;
+                boost::python::object main_module = boost::python::import("__main__");
+                boost::python::object main_namespace = main_module.attr("__dict__");
+                boost::python::object ignored = exec(pythonCode.c_str(), main_namespace, locals);
+
+                std::cout << "Jude! " << std::endl;
+                //pybind11::exec(pythonCode, pybind11::globals(), *locals_);  // If this line crashes in Windows when importing numpy or cv2 saying somthing like
                                                                             //      "Importing the numpy C-extensions failed. This error can happen for
                                                                             //      many reasons, often due to issues with your setup or how NumPy was installed."
                                                                             // Try compiling in release mode as adviced in:
                                                                             //  https://numpy.org/devdocs/user/troubleshooting-importerror.html#debug-build-on-windows
                     
                 for(auto output:outputInfo_){
-                    flushPipe(*locals_, output.first, output.second);
+                    //flushPipe(*locals_, output.first, output.second);
                 }
 
-            }catch(pybind11::error_already_set &_e){
-                std::cout << "Catched pybinds exception: " << _e.what() << "\n";
-            } catch (pybind11::import_error &_e) {
-                std::cout << "Catched pybinds exception: " << _e.what() << "\n";
+            } catch (boost::python::error_already_set const& _e) {
+                // handle the exception in some way
             } catch(const std::exception& _e){
                 std::cout << "Catched std exception: " << _e.what() << "\n";
             }
             
-            pybind11::gil_scoped_release nogil;
-
             idle_ = true;
-
         }
 
-
-        void BlockPython::encodeInput(pybind11::dict &_locals, flow::DataFlow _data, std::string _tag, std::string _typeTag){
-            
+        
+        void BlockPython::encodeInput(boost::python::dict &_locals, flow::DataFlow _data, std::string _tag, std::string _typeTag){
+            //std::cout << _typeTag << " --> ";
             if(_typeTag == typeid(int).name()){
-                _locals[_tag.c_str()] = pybind11::int_(_data.get<int>(_tag));
+                _locals[_tag.c_str()] = _data.get<int>(_tag);
+            //    std::cout << _data.get<int>(_tag) << std::endl;
             }else if(_typeTag == typeid(float).name()){
-                _locals[_tag.c_str()] = pybind11::float_(_data.get<float>(_tag));
-            // }else if(_typeTag == "vec3"){
-            //     _locals[_tag.c_str()] = _data.get<Eigen::Vector3f>(_tag);
-            // }else if(_typeTag == "vec4"){
-            //     _locals[_tag.c_str()] = _data.get<Eigen::Vector4f>(_tag);
+                std::cout << _data.get<float>(_tag) << std::endl;
+            //    _locals[_tag.c_str()] = _data.get<float>(_tag);
+            }else if(_typeTag == "vec3"){
+                 auto vec = _data.get<Eigen::Vector3f>(_tag);
+                 boost::python::list pylist;
+                 pylist.append(vec[0]);
+                 pylist.append(vec[1]);
+                 pylist.append(vec[2]);
+                 _locals[_tag.c_str()] = pylist;
+            }else if(_typeTag == "vec4"){
+                auto vec = _data.get<Eigen::Vector4f>(_tag);
+                boost::python::list pylist;
+                pylist.append(vec[0]);
+                pylist.append(vec[1]);
+                pylist.append(vec[2]);
+                pylist.append(vec[3]);
+                _locals[_tag.c_str()] = pylist;
             // }else if(_typeTag == "map44"){
             //     _locals[_tag.c_str()] = _data.get<Eigen::Matrix4f>(_tag);
             }else if(_typeTag == typeid(cv::Mat).name()){
                 auto image = _data.get<cv::Mat>(_tag);
                 if (image.rows != 0) {
                     if(image.channels() == 1){
-                        _locals[_tag.c_str()] = cv_mat_uint8_1c_to_numpy(image);
+                    //    _locals[_tag.c_str()] = cv_mat_uint8_1c_to_numpy(image);
                     }else if(image.channels() == 3){
-                        _locals[_tag.c_str()] = cv_mat_uint8_3c_to_numpy(image);
+                    //    _locals[_tag.c_str()] = cv_mat_uint8_3c_to_numpy(image);
                     }else{
                         std::cout << "Unsupported image type conversion in Python block" << std::endl;
                     }
@@ -212,13 +208,14 @@ namespace mico {
 
         }
 
-        void BlockPython::flushPipe(pybind11::dict &_locals , std::string _tag, std::string _typeTag){
+        
+        void BlockPython::flushPipe(boost::python::dict &_locals , std::string _tag, std::string _typeTag){
         
             if(_locals.contains(_tag.c_str())){
                 if(_typeTag == typeid(int).name()){
-                    getPipe(_tag)->flush(_locals[_tag.c_str()].cast<int>());
+                    //getPipe(_tag)->flush(_locals[_tag.c_str()].cast<int>());
                 }else if(_typeTag == typeid(float).name()){
-                    getPipe(_tag)->flush(_locals[_tag.c_str()].cast<float>());
+                    //getPipe(_tag)->flush(_locals[_tag.c_str()].cast<float>());
                 // }else if(_typeTag == "vec3"){
                     // getPipe(_tag)->flush(_locals[_tag.c_str()].cast<Eigen::Vector3f>());
                 // }else if(_typeTag == "vec4"){
@@ -226,14 +223,14 @@ namespace mico {
                 // }else if(_typeTag == "mat44"){
                     // getPipe(_tag)->flush(_locals[_tag.c_str()].cast<Eigen::Matrix4f>());
                 }else if(_typeTag == typeid(cv::Mat).name()){
-                    auto pyArray = pybind11::array_t<unsigned char>(_locals[_tag.c_str()]);
-                    if(pyArray.ndim() == 2){
+                    //auto pyArray = pybind11::array_t<unsigned char>(_locals[_tag.c_str()]);
+                    /*if (pyArray.ndim() == 2) {
                         getPipe(_tag)->flush(numpy_uint8_1c_to_cv_mat(pyArray));
                     }else if(pyArray.ndim() == 3){
                         getPipe(_tag)->flush(numpy_uint8_3c_to_cv_mat(pyArray));
                     }else{
                         std::cout << "Unsupported image type conversion in Python block" << std::endl;
-                    }
+                    }*/
                 }else{
                     std::cout << "Type " << _typeTag << " of label "<< _tag << " is not supported yet in python block." << ".It will be initialized as none. Please contact the administrators" << std::endl;
                 }
