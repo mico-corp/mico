@@ -32,8 +32,6 @@
 
 #include <opencv2/opencv.hpp>
 
-//#include <boost/python/numpy.hpp>
-
 namespace mico {
     namespace python{
 
@@ -130,6 +128,7 @@ namespace mico {
             
             try {
                 Py_Initialize();
+                boost::python::numpy::initialize();
 
                 boost::python::dict locals;
 
@@ -152,7 +151,7 @@ namespace mico {
                                                                             //  https://numpy.org/devdocs/user/troubleshooting-importerror.html#debug-build-on-windows
                     
                 for(auto output:outputInfo_){
-                    //flushPipe(*locals_, output.first, output.second);
+                    //flushPipe(locals, output.first, output.second);
                 }
 
             } catch (boost::python::error_already_set const& _e) {
@@ -193,13 +192,7 @@ namespace mico {
             }else if(_typeTag == typeid(cv::Mat).name()){
                 auto image = _data.get<cv::Mat>(_tag);
                 if (image.rows != 0) {
-                    if(image.channels() == 1){
-                    //    _locals[_tag.c_str()] = cv_mat_uint8_1c_to_numpy(image);
-                    }else if(image.channels() == 3){
-                    //    _locals[_tag.c_str()] = cv_mat_uint8_3c_to_numpy(image);
-                    }else{
-                        std::cout << "Unsupported image type conversion in Python block" << std::endl;
-                    }
+                    _locals[_tag.c_str()] = ConvertMatToNDArray(image);
                 }
             }else{
                 std::cout << "Type " << _typeTag << " of label "<< _tag << " is not supported yet in python block." << ".It will be initialized as none. Please contact the administrators" << std::endl;
