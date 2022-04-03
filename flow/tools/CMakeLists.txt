@@ -25,8 +25,7 @@ target_include_directories(flow_kids PUBLIC ../include)
 target_link_libraries(flow_kids LINK_PUBLIC flow)
 
 if(${BUILD_PYTHON})
-    # 666 Ugly workaround to load dynamically numpy libraries. For some reason, it 
-    # that I cannot find, it fails finding python when loading numpy. The error is common, but
+    # 666 Ugly workaround to load dynamically numpy libraries. For some reason, it fails finding python when loading numpy. The error is common, but
     # I all that I find is for applications using python and numpy directly, not a library that is loaded
     # by other app that does not have python I tried. The problem is stated here https://stackoverflow.com/a/56018943 ,
     # But the solution does not work in my case, probably because of the indirect usage of numpy inside of a
