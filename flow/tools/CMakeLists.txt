@@ -24,6 +24,22 @@ add_executable(flow_kids flow_kids.cpp)
 target_include_directories(flow_kids PUBLIC ../include)
 target_link_libraries(flow_kids LINK_PUBLIC flow)
 
+if(${BUILD_PYTHON})
+    # 666 Ugly workaround to load dynamically numpy libraries. For some reason, it 
+    # that I cannot find, it fails finding python when loading numpy. The error is common, but
+    # I all that I find is for applications using python and numpy directly, not a library that is loaded
+    # by other app that does not have python I tried. The problem is stated here https://stackoverflow.com/a/56018943 ,
+    # But the solution does not work in my case, probably because of the indirect usage of numpy inside of a
+    # library, loaded dynamically by an app without python. Apart from this, the main file of flow_kids has been modified.
+    find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
+    set(boost-python-module-name "python${Python3_VERSION_MAJOR}${Python3_VERSION_MINOR}" CACHE STRING "Boost::python module name, e.g. 'python-3.6'")
+    find_package(Boost REQUIRED COMPONENTS ${boost-python-module-name} numpy)
+
+    target_link_libraries(flow_kids PRIVATE Python3::Python)
+    target_link_libraries(flow_kids PRIVATE "Boost::${boost-python-module-name}" Boost::numpy)
+    target_compile_definitions(flow_kids PRIVATE -DINITIALIZE_PYTHON)
+endif()
+
 add_subdirectory(block_creator)
 
 ### Add test with input file

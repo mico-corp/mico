@@ -19,7 +19,10 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------------------------------------
 
-
+#if defined(INITIALIZE_PYTHON)
+#   include <boost/python.hpp>
+#   include <boost/python/numpy.hpp>
+#endif
 #include <flow/visual/FlowVisualInterface.h>
 #include <flow/visual/blocks/FlowVisualBlock.h>
 #include <flow/DataFlow.h>
@@ -34,6 +37,17 @@ using namespace flow;
 
 
 int main(int _argc, char **_argv){
+
+    #if defined(INITIALIZE_PYTHON)  // 666 Ugly workaround to load dynamically numpy libraries. For some reason, it 
+                                    // that I cannot find, it fails finding python when loading numpy. The error is common, but
+                                    // I all that I find is for applications using python and numpy directly, not a library that is loaded
+                                    // by other app that does not have python I tried. The problem is stated here https://stackoverflow.com/a/56018943 ,
+                                    // But the solution does not work in my case, probably because of the indirect usage of numpy inside of a
+                                    // library, loaded dynamically by an app without python. Apart from this, the cmakelists file has been modified
+        Py_Initialize();
+        boost::python::numpy::initialize();
+    #endif
+
     FlowVisualInterface interface;
     interface.init(_argc, _argv);
 }
