@@ -32,10 +32,20 @@ if(${BUILD_PYTHON})
     # library, loaded dynamically by an app without python. Apart from this, the main file of flow_kids has been modified.
     find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
     set(boost-python-module-name "python${Python3_VERSION_MAJOR}${Python3_VERSION_MINOR}" CACHE STRING "Boost::python module name, e.g. 'python-3.6'")
-    find_package(Boost REQUIRED COMPONENTS ${boost-python-module-name} numpy)
+    
+    if (WIN32)
+        find_package(Boost REQUIRED COMPONENTS ${boost-python-module-name})
+    elseif(UNIX)
+        find_package(Boost REQUIRED COMPONENTS ${boost-python-module-name} numpy)
+    endif()
+
 
     target_link_libraries(flow_kids PRIVATE Python3::Python)
-    target_link_libraries(flow_kids PRIVATE "Boost::${boost-python-module-name}" Boost::numpy)
+    if(WIN32)
+        target_link_libraries(flow_kids PRIVATE "C:/vcpkg/packages/boost-python_x64-windows/lib/boost_numpy310-vc140-mt.lib")
+    elseif(UNIX)
+        target_link_libraries(flow_kids PRIVATE Boost::numpy)
+    endif()
     target_compile_definitions(flow_kids PRIVATE -DINITIALIZE_PYTHON)
 endif()
 
