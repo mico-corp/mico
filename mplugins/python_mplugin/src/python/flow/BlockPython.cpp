@@ -32,6 +32,8 @@
 
 #include <opencv2/opencv.hpp>
 
+namespace py = boost::python;
+
 namespace mico {
     namespace python{
 
@@ -127,10 +129,10 @@ namespace mico {
             std::string pythonCode = pythonEditor_->toPlainText().toStdString();
             
             try {
-                Py_Initialize();
-                boost::python::numpy::initialize();
+                // Py_Initialize();
+                // py::numpy::initialize();
 
-                boost::python::dict locals;
+                py::dict locals;
 
                 if(_useData) { // Encode inputs
                     for(auto [label, type]: inputInfo_){
@@ -138,23 +140,15 @@ namespace mico {
                     }
                 }
 
-                std::cout << "Hey! " << std::endl;
-                boost::python::object main_module = boost::python::import("__main__");
-                boost::python::object main_namespace = main_module.attr("__dict__");
-                boost::python::object ignored = exec(pythonCode.c_str(), main_namespace, locals);
+                py::object main_module = py::import("__main__");
+                py::object main_namespace = main_module.attr("__dict__");
+                py::object ignored = exec(pythonCode.c_str(), main_namespace, locals);
 
-                std::cout << "Jude! " << std::endl;
-                //pybind11::exec(pythonCode, pybind11::globals(), *locals_);  // If this line crashes in Windows when importing numpy or cv2 saying somthing like
-                                                                            //      "Importing the numpy C-extensions failed. This error can happen for
-                                                                            //      many reasons, often due to issues with your setup or how NumPy was installed."
-                                                                            // Try compiling in release mode as adviced in:
-                                                                            //  https://numpy.org/devdocs/user/troubleshooting-importerror.html#debug-build-on-windows
-                    
                 for(auto output:outputInfo_){
-                    //flushPipe(locals, output.first, output.second);
+                    flushPipe(locals, output.first, output.second);
                 }
 
-            } catch (boost::python::error_already_set const& _e) {
+            } catch (py::error_already_set const& _e) {
                 // handle the exception in some way
             } catch(const std::exception& _e){
                 std::cout << "Catched std exception: " << _e.what() << "\n";
@@ -164,24 +158,23 @@ namespace mico {
         }
 
         
-        void BlockPython::encodeInput(boost::python::dict &_locals, flow::DataFlow _data, std::string _tag, std::string _typeTag){
+        void BlockPython::encodeInput(py::dict &_locals, flow::DataFlow _data, std::string _tag, std::string _typeTag){
             //std::cout << _typeTag << " --> ";
             if(_typeTag == typeid(int).name()){
                 _locals[_tag.c_str()] = _data.get<int>(_tag);
             //    std::cout << _data.get<int>(_tag) << std::endl;
             }else if(_typeTag == typeid(float).name()){
-                std::cout << _data.get<float>(_tag) << std::endl;
-            //    _locals[_tag.c_str()] = _data.get<float>(_tag);
+                _locals[_tag.c_str()] = _data.get<float>(_tag);
             }else if(_typeTag == "vec3"){
                  auto vec = _data.get<Eigen::Vector3f>(_tag);
-                 boost::python::list pylist;
+                 py::list pylist;
                  pylist.append(vec[0]);
                  pylist.append(vec[1]);
                  pylist.append(vec[2]);
                  _locals[_tag.c_str()] = pylist;
             }else if(_typeTag == "vec4"){
                 auto vec = _data.get<Eigen::Vector4f>(_tag);
-                boost::python::list pylist;
+                py::list pylist;
                 pylist.append(vec[0]);
                 pylist.append(vec[1]);
                 pylist.append(vec[2]);
@@ -202,13 +195,15 @@ namespace mico {
         }
 
         
-        void BlockPython::flushPipe(boost::python::dict &_locals , std::string _tag, std::string _typeTag){
+        void BlockPython::flushPipe(py::dict &_locals , std::string _tag, std::string _typeTag){
         
             if(_locals.contains(_tag.c_str())){
                 if(_typeTag == typeid(int).name()){
-                    //getPipe(_tag)->flush(_locals[_tag.c_str()].cast<int>());
+                    int val = py::extract<int>(_locals[_tag]);
+                    getPipe(_tag)->flush(val);
                 }else if(_typeTag == typeid(float).name()){
-                    //getPipe(_tag)->flush(_locals[_tag.c_str()].cast<float>());
+                    float val = py::extract<float>(_locals[_tag]);
+                    getPipe(_tag)->flush(val);
                 // }else if(_typeTag == "vec3"){
                     // getPipe(_tag)->flush(_locals[_tag.c_str()].cast<Eigen::Vector3f>());
                 // }else if(_typeTag == "vec4"){
@@ -216,14 +211,9 @@ namespace mico {
                 // }else if(_typeTag == "mat44"){
                     // getPipe(_tag)->flush(_locals[_tag.c_str()].cast<Eigen::Matrix4f>());
                 }else if(_typeTag == typeid(cv::Mat).name()){
-                    //auto pyArray = pybind11::array_t<unsigned char>(_locals[_tag.c_str()]);
-                    /*if (pyArray.ndim() == 2) {
-                        getPipe(_tag)->flush(numpy_uint8_1c_to_cv_mat(pyArray));
-                    }else if(pyArray.ndim() == 3){
-                        getPipe(_tag)->flush(numpy_uint8_3c_to_cv_mat(pyArray));
-                    }else{
-                        std::cout << "Unsupported image type conversion in Python block" << std::endl;
-                    }*/
+                    py::numpy::ndarray ndarr = py::numpy::from_object(_locals[_tag]);
+                    cv::Mat val = ConvertNDArrayToMat(ndarr);
+                    getPipe(_tag)->flush(val);
                 }else{
                     std::cout << "Type " << _typeTag << " of label "<< _tag << " is not supported yet in python block." << ".It will be initialized as none. Please contact the administrators" << std::endl;
                 }
