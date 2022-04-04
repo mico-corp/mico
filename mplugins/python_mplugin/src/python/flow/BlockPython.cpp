@@ -153,14 +153,20 @@ namespace mico {
                 }
 
             } catch (py::error_already_set & _e) {
-                // handle the exception in some way
-                std::cout << "error " << std::endl;
+                // Need to fetch data, because if not the interpreter get stuck https://misspent.wordpress.com/2009/10/11/boost-python-and-handling-python-exceptions/
+                PyObject *e, *v, *t;
+                PyErr_Fetch(&e, &v, &t);    
+                //pvalue contains error message
+                //ptraceback contains stack snapshot and many other information
+                //Get error message
+                py::object e_obj(py::handle<>(e));
+                py::object v_obj(py::handle<>(v));
+                py::object t_obj(py::handle<>(t));
+                std::cout << "Error in Python: " << std::endl;
             } catch(const std::exception& _e){
                 std::cout << "Catched std exception: " << _e.what() << "\n";
             }
 
-            Py_Finalize();
-            
             idle_ = true;
         }
 
