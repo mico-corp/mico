@@ -38,6 +38,13 @@ namespace mico {
     namespace python{
 
         BlockPython::BlockPython(){
+
+            if (!isInitialized_) {
+                isInitialized_ = true;
+                Py_Initialize();
+                py::numpy::initialize();
+            }
+
             // Interface constructor
             interfaceSelector_ = new InterfaceSelectorWidget("Python interface Selector");
             interfaceSelector_->callThisIfSmthChangeInside([this](){this->prepareInterfaces();});
@@ -129,9 +136,6 @@ namespace mico {
             std::string pythonCode = pythonEditor_->toPlainText().toStdString();
             
             try {
-                // Py_Initialize();
-                // py::numpy::initialize();
-
                 py::dict locals;
 
                 if(_useData) { // Encode inputs
@@ -148,11 +152,14 @@ namespace mico {
                     flushPipe(locals, output.first, output.second);
                 }
 
-            } catch (py::error_already_set const& _e) {
+            } catch (py::error_already_set & _e) {
                 // handle the exception in some way
+                std::cout << "error " << std::endl;
             } catch(const std::exception& _e){
                 std::cout << "Catched std exception: " << _e.what() << "\n";
             }
+
+            Py_Finalize();
             
             idle_ = true;
         }

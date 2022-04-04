@@ -26,7 +26,12 @@ set(PLUGIN_NAME ${PROJECT_NAME}-python)
 find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
 set(boost-python-module-name "python${Python3_VERSION_MAJOR}${Python3_VERSION_MINOR}" CACHE STRING "Boost::python module name, e.g. 'python-3.6'")
 
-find_package(Boost REQUIRED COMPONENTS ${boost-python-module-name} numpy)
+if (WIN32)
+    find_package(Boost REQUIRED COMPONENTS ${boost-python-module-name})
+elseif(UNIX)
+    find_package(Boost REQUIRED COMPONENTS ${boost-python-module-name} numpy)
+endif()
+
 
 ##################################################
 ###### Create project and configure ALIAS ########
@@ -55,8 +60,12 @@ mplugin_include_directory( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_INCLUDES ${OpenCV_I
 mplugin_link_library( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES ${OpenCV_LIBS})
 mplugin_compile_definition( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_DEFINITIONS HAS_OPENCV)
     
-mplugin_link_library( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES Python3::Python)
-mplugin_link_library( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES Boost::numpy)
-mplugin_link_library( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES "Boost::${boost-python-module-name}")
+mplugin_link_library( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES Python3::Python IS_PUBLIC)
+if(WIN32)
+    mplugin_link_library( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES "C:/vcpkg/packages/boost-python_x64-windows/lib/boost_numpy310-vc140-mt.lib" IS_PUBLIC)
+elseif(UNIX)
+    mplugin_link_library( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES Boost::numpy IS_PUBLIC)
+endif()
+mplugin_link_library( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES "Boost::${boost-python-module-name}" IS_PUBLIC)
 mplugin_compile_definition( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_DEFINITIONS HAS_PYTHON)
 

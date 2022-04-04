@@ -87,6 +87,8 @@ namespace mico{
             void flushPipe(boost::python::dict &_locals, std::string _tag, std::string _typeTag);
 
         private:
+            inline static bool isInitialized_ = false;
+
             std::atomic<bool> idle_ = true;
             bool isReady_ = false;
 
