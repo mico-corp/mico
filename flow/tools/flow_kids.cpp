@@ -19,6 +19,10 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------------------------------------
 
+#if defined(INITIALIZE_PYTHON)
+#   include <boost/python.hpp>
+#   include <boost/python/numpy.hpp>
+#endif
 #include <flow/visual/FlowVisualInterface.h>
 #include <flow/visual/blocks/FlowVisualBlock.h>
 #include <flow/DataFlow.h>
@@ -33,6 +37,12 @@ using namespace flow;
 
 
 int main(int _argc, char **_argv){
+
+    #if defined(INITIALIZE_PYTHON)
+    #   include <boost/python.hpp>
+    #   include <boost/python/numpy.hpp>
+    #endif
+
     FlowVisualInterface interface;
     interface.init(_argc, _argv);
 }
