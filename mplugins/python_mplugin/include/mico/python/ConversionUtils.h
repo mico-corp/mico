@@ -3,16 +3,13 @@
 #ifndef MICO_FLOW_MISC_PYTHON_CONVERSIONUTILS_H_
 #define MICO_FLOW_MISC_PYTHON_CONVERSIONUTILS_H_
 
-#include<opencv2/opencv.hpp>
-#include<pybind11/pybind11.h>
-#include<pybind11/numpy.h>
+#include <boost/python.hpp>
+#include <boost/python/numpy.hpp>
+#include <opencv2/opencv.hpp>
 
-cv::Mat numpy_uint8_1c_to_cv_mat(pybind11::array_t<unsigned char>& input);
+boost::python::numpy::ndarray ConvertMatToNDArray(const cv::Mat& mat);
 
-cv::Mat numpy_uint8_3c_to_cv_mat(pybind11::array_t<unsigned char>& input);
+cv::Mat ConvertNDArrayToMat(const boost::python::numpy::ndarray& ndarr);
 
-pybind11::array_t<unsigned char> cv_mat_uint8_1c_to_numpy(cv::Mat & input);
-
-pybind11::array_t<unsigned char> cv_mat_uint8_3c_to_numpy(cv::Mat & input);
 
 #endif 

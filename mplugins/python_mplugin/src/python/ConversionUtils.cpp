@@ -1,53 +1,48 @@
 
-// Resource from https://www.jianshu.com/p/be16847b0b74
+// Resource from https://gist.github.com/aFewThings/c79e124f649ea9928bfc7bb8827f1a1c
+
+
 
 #include <mico/python/ConversionUtils.h>
-#include <pybind11/numpy.h>
 
-/*
-Python->C++ Mat
-*/
+#include <iostream>
 
+namespace py = boost::python;
+namespace np = boost::python::numpy;
 
-cv::Mat numpy_uint8_1c_to_cv_mat(pybind11::array_t<unsigned char>& input) {
+np::ndarray ConvertMatToNDArray(const cv::Mat& mat) {
+	py::tuple shape = py::make_tuple(mat.rows, mat.cols, mat.channels());
+	py::tuple stride = py::make_tuple(mat.channels() * mat.cols * sizeof(uchar), mat.channels() * sizeof(uchar), sizeof(uchar));
+	np::dtype dt = np::dtype::get_builtin<uchar>();
+	np::ndarray ndImg = np::from_data(mat.data, dt, shape, stride, py::object());
 
-    if (input.ndim() != 2)
-        throw std::runtime_error("1-channel image must be 2 dims ");
-
-    pybind11::buffer_info buf = input.request();
-
-    cv::Mat mat(buf.shape[0], buf.shape[1], CV_8UC1, (unsigned char*)buf.ptr);
-    
-    return mat;
+	return ndImg;
 }
 
+cv::Mat ConvertNDArrayToMat(const np::ndarray& ndarr) {
+	//int length = ndarr.get_nd(); // get_nd() returns num of dimensions. this is used as a length, but we don't need to use in this case. because we know that image has 3 dimensions.
+	const Py_intptr_t* shape = ndarr.get_shape(); // get_shape() returns Py_intptr_t* which we can get the size of n-th dimension of the ndarray.
+	char* dtype_str = py::extract<char*>(py::str(ndarr.get_dtype()));
 
-cv::Mat numpy_uint8_3c_to_cv_mat(pybind11::array_t<unsigned char>& input) {
+	// variables for creating Mat object
+	int rows = shape[0];
+	int cols = shape[1];
+	int channel = shape[2];
+	int depth;
 
-    if (input.ndim() != 3)
-        throw std::runtime_error("3-channel image must be 3 dims ");
+	// you should find proper type for c++. in this case we use 'CV_8UC3' image, so we need to create 'uchar' type Mat.
+	if (!strcmp(dtype_str, "uint8")) {
+		depth = CV_8U;
+	}
+	else {
+		std::cout << "wrong dtype error" << std::endl;
+		return cv::Mat();
+	}
 
-    pybind11::buffer_info buf = input.request();
+	int type = CV_MAKETYPE(depth, channel); // CV_8UC3
 
-    cv::Mat mat(buf.shape[0], buf.shape[1], CV_8UC3, (unsigned char*)buf.ptr);
+	cv::Mat mat = cv::Mat(rows, cols, type);
+	memcpy(mat.data, ndarr.get_data(), sizeof(uchar) * rows * cols * channel);
 
-    return mat;
+	return mat;
 }
-
-
-/*
-C++ Mat ->numpy
-*/
-pybind11::array_t<unsigned char> cv_mat_uint8_1c_to_numpy(cv::Mat& input) {
-
-    pybind11::array_t<unsigned char> dst = pybind11::array_t<unsigned char>({ input.rows,input.cols }, input.data);
-    return dst;
-}
-
-pybind11::array_t<unsigned char> cv_mat_uint8_3c_to_numpy(cv::Mat& input) {
-
-    pybind11::array_t<unsigned char> dst = pybind11::array_t<unsigned char>({ input.rows,input.cols,3}, input.data);
-    return dst;
-}
-
-
