@@ -12,8 +12,8 @@ The easiest way to start using mico is to download it from the last release webp
 To make it work, you need to install all the dependencies manually. In Ubuntu it is not very hard. 
 
 ```
-sudo apt install git cmake qt5-default libeigen3-dev libboost-all-dev libpcl-dev freeglut3-dev  # Common dependencies
-sudo apt install python3 python3-numpy                                                # For python and numpy
+sudo apt install -y git cmake qt5-default qtmultimedia5-dev libeigen3-dev libboost-all-dev libpcl-dev freeglut3-dev libgraphviz-dev # Common dependencies
+sudo apt install -y python3 python3-numpy                                                # For python and numpy
 sudo add-repository -y ppa:inivation-ppa/inivation
 sudo apt update
 sudo apt install -y dv-runtime-dev
