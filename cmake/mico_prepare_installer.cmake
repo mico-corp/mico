@@ -113,24 +113,30 @@ macro(micoPrepareInstaller)
 
 	    else()
 
-            SET(CPACK_DEBIAN_PACKAGE_DEPENDS "libboost-all-dev, \
-            libgraphviz-dev, \
-            libeigen3-dev,  \
-            libflann-dev, \
-            libopencv-dev, \
-            libopencv-contrib-dev, \
-            qt5-qmake, \
-            qt5-default, \
-            libqt5opengl5-dev, \
-            qtbase5-dev, \
-            qttools5-dev-tools, \
-            qtmultimedia5-dev, \
-            libusb-1.0-0-dev, \
-            mesa-common-dev, \
-            libgl1-mesa-dev, \
-            freeglut3-dev, \
-            libglew-dev, \
-            dv-runtime-dev")
+            set(LIST_DEPENDENCIES "libboost-all-dev, 
+            libgraphviz-dev, 
+            libeigen3-dev,  
+            libflann-dev, 
+            libopencv-dev, 
+            libopencv-contrib-dev, 
+            qt5-qmake, 
+            qt5-default, 
+            libqt5opengl5-dev, 
+            qtbase5-dev, 
+            qttools5-dev-tools, 
+            qtmultimedia5-dev, 
+            libusb-1.0-0-dev, 
+            mesa-common-dev, 
+            libgl1-mesa-dev, 
+            freeglut3-dev, 
+            libglew-dev")
+
+            if(${BUILD_DVS})
+                set(LIST_DEPENDENCIES "${LIST_DEPENDENCIES},
+                                       dv-runtime-dev")
+            endif()
+
+            SET(CPACK_DEBIAN_PACKAGE_DEPENDS ${LIST_DEPENDENCIES})
 
 	    endif()
     endif()
