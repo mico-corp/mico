@@ -22,6 +22,7 @@
 #ifndef FLOW_THREADPOOL_H_
 #define FLOW_THREADPOOL_H_
 
+#include <flow/Export.h>
 #include <condition_variable>
 #include <cstdint>
 #include <queue>
@@ -36,11 +37,11 @@ namespace flow{
     /// Base class of flow that handles the creation of multiple threads to optimize their usage
     /// over the flow architecture.
     /// @ingroup  flow
-    class ThreadPool{
+    class FLOW_DECL ThreadPool{
     public:
         using Task = std::function<void()>;
 
-        static void init(size_t _nThreads);
+        static void init();
         static std::shared_ptr<ThreadPool> get();
     
         void emplace(Task _task);
@@ -52,6 +53,10 @@ namespace flow{
             return tasks_.size();
         }
         
+        float loadRatio() {
+            return float(tasks_.size()) / nThreads_;
+        }
+
     private:
         ThreadPool(size_t _nThreads);
     

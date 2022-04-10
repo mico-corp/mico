@@ -20,21 +20,36 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 
-#include <flow/flow.h>
-#include <mico/core/flow/BlockSwitchFlow.h>
-#include <mico/core/flow/BlockVectorSplitter.h>
 #include <mico/core/flow/BlockFlowPerformance.h>
+#include <flow/Outpipe.h>
+#include <flow/Policy.h>
+#include <flow/ThreadPool.h>
 
-using namespace mico::core;
-using namespace flow;
+#include <cmath>
+#include <sstream>
 
-extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(fs::path _libraryPath){
-    Persistency::setResourceDir(_libraryPath.parent_path().string() + "/resources");
-    flow::PluginNodeCreator *creator = new flow::PluginNodeCreator;
+#include <QLabel>
+#include <QTimer>
 
-//    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockSwitchFlow                    >>(); }, "core");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockVectorSplitter                    >>(); }, "core");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockFlowPerformance                    >>(); }, "core");
-   
-    return creator;
+namespace mico{
+    namespace core{
+        BlockFlowPerformance::BlockFlowPerformance(){
+            textDisplay_ = new QLabel("0.000000");
+            refreshTimer_ = new QTimer();
+            QObject::connect(refreshTimer_, &QTimer::timeout, [&]() {
+                textDisplay_->setText(std::to_string(flow::ThreadPool::get()->loadRatio()).c_str());
+            });
+            refreshTimer_->start(100);
+        }
+
+        BlockFlowPerformance::~BlockFlowPerformance() {
+            refreshTimer_->stop();
+        }
+
+
+        QWidget* BlockFlowPerformance::customWidget() {
+            return textDisplay_;
+        }
+
+    }
 }

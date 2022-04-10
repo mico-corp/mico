@@ -21,17 +21,32 @@
 
 #include <flow/ThreadPool.h>
 
+#include <cstdlib>
+#include <string>
+
 namespace flow{
     std::shared_ptr<ThreadPool> ThreadPool::instance_ = nullptr;
 
-    void ThreadPool::init(size_t _nThreads){
+    void ThreadPool::init(){
+        size_t nThreads = std::thread::hardware_concurrency();
+        if (const char* nThreadsVar = std::getenv("FLOW_N_THREADS_POOL"); nThreadsVar != nullptr) {
+            try {
+                nThreads = std::stoi(nThreadsVar);
+            }
+            catch (const std::invalid_argument& _e) {
+                _e.what();
+            }
+            catch (const std::out_of_range& _e) {
+                _e.what();
+            }
+        }
         if(!instance_)
-            instance_ = std::shared_ptr<ThreadPool>(new ThreadPool(_nThreads));
+            instance_ = std::shared_ptr<ThreadPool>(new ThreadPool(nThreads));
     }
 
     std::shared_ptr<ThreadPool> ThreadPool::get(){
         if(!instance_)
-            init(std::thread::hardware_concurrency());
+            init();
         return instance_;
     }
 
@@ -62,7 +77,7 @@ namespace flow{
                     {
                         std::unique_lock<std::mutex> lock(threadLock_);
                         waitEvent_.wait(lock, [&](){return !isRunning_ || !tasks_.empty();});
-                    
+                        
                         task = std::move(tasks_.front());
                         tasks_.pop();
                     }

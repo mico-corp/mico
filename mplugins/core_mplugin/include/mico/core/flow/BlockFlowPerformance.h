@@ -20,21 +20,43 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 
-#include <flow/flow.h>
-#include <mico/core/flow/BlockSwitchFlow.h>
-#include <mico/core/flow/BlockVectorSplitter.h>
-#include <mico/core/flow/BlockFlowPerformance.h>
 
-using namespace mico::core;
-using namespace flow;
+#ifndef MICO_FLOW_BLOCKS_BLOCKFLOWPERFORMANCE_H_
+#define MICO_FLOW_BLOCKS_BLOCKFLOWPERFORMANCE_H_
 
-extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(fs::path _libraryPath){
-    Persistency::setResourceDir(_libraryPath.parent_path().string() + "/resources");
-    flow::PluginNodeCreator *creator = new flow::PluginNodeCreator;
+#include <flow/Block.h>
 
-//    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockSwitchFlow                    >>(); }, "core");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockVectorSplitter                    >>(); }, "core");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockFlowPerformance                    >>(); }, "core");
-   
-    return creator;
+class QLabel;
+class QTimer;
+
+namespace mico{
+    namespace core{
+        /// Mico block Switches between two input streams using a third boolean input.
+        /// @ingroup  mico_core
+        class BlockFlowPerformance :public flow::Block{
+        public:
+            /// Get name of block
+            virtual std::string name() const override {return "Block Flow Performance";}        
+
+            /// Base constructor
+            BlockFlowPerformance();
+            ~BlockFlowPerformance();
+
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return false; };
+
+            /// Returns a brief description of the block
+            std::string description() const override {return    "Data about flow performance";};
+
+            QWidget* customWidget();
+
+        private:
+            QLabel* textDisplay_;
+            QTimer* refreshTimer_;
+        };
+    }
 }
+
+
+
+#endif
