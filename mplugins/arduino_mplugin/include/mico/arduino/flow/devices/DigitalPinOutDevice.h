@@ -19,37 +19,26 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------------------------------------
 
-
-
-#ifndef MICO_ARDUINO_FLOW_FUNCTIONBLOCKS_H_
-#define MICO_ARDUINO_FLOW_FUNCTIONBLOCKS_H_
-
 #include <flow/Block.h>
 
+class QSpinBox;
 
-class QLineEdit;
-class SerialPort;
+namespace mico {
+	namespace arduino {
 
-namespace mico{
-    namespace arduino{
-        /// Mico block is used to connecto a physical arduino. With this block, it is possible to send and receive signals
-        /// from the arduino for any purpose.
-        /// @ingroup  mico_arduino
-        class ArduinoDeviceBlock:public flow::Block{
-        public:
+		class DigitalPinOutDevice: public flow::Block {
+		public:
+			// Block interface
+
+            DigitalPinOutDevice();
+
             /// Get name of block
-            std::string name() const override {return "Arduino Device";} 
+            std::string name() const override { return "Digital Pin Output"; }
 
             /// Retreive icon of block    
-            QIcon icon() const override { 
-                return QIcon((flow::Persistency::resourceDir()/"arduino"/"arduino_icon.png").string().c_str());
-            }
-
-            /// Base constructor
-            ArduinoDeviceBlock();
-
-            /// Base destructor
-            ~ArduinoDeviceBlock();
+            // QIcon icon() const override {
+            //     return QIcon((flow::Persistency::resourceDir() / "arduino" / "arduino_icon.png").string().c_str());
+            // }
 
             /// Configure block with given parameters.
             bool configure(std::vector<flow::ConfigParameterDef> _params) override;
@@ -61,27 +50,18 @@ namespace mico{
             bool isConfigurable() override { return true; };
 
             /// Returns a brief description of the block
-            std::string description() const override {return    "Arduino Device. Configure connection with"
-                                                                "arduino device to use the rest of the blocks\n";};
+            std::string description() const override {
+                return    "Digital pin\n";
+            };
 
-        protected:
-            void readLoop();
+            void initialize();
+            void uninitialize();
 
-            void parseArduinoMessage();
+		private:
+            int currentPin_ = 0;
+            std::string deviceId_ = "";
+            bool idle_ = true;
+		};
 
-            std::vector<std::string> getListOfDevices();
-
-        private:
-            std::shared_ptr<SerialPort> arduino_;
-            bool isBeingUsed_ = false;
-            bool isRunning_ = true;
-            std::thread readThread_;
-        };
-
-    }
-
+	}
 }
-
-
-
-#endif

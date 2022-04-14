@@ -19,58 +19,48 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------------------------------------
 
+#include <flow/Block.h>
 
-#include "ArduinoJson.h"
-#include "DeviceManager.h"
+class QSpinBox;
 
-StaticJsonDocument<512> doc;
+namespace mico {
+	namespace arduino {
 
-bool getJsonIfAvailable();
+		class DigitalPinInDevice: public flow::Block {
+		public:
+			// Block interface
 
-void setup() {
-  Serial.begin(115200);
-}
+            DigitalPinInDevice();
 
-void loop() {
-  // put your main code here, to run repeatedly:
-  getJsonIfAvailable();
-  DeviceManager::runDevices();
-  delay(30);
-}
+            /// Get name of block
+            std::string name() const override { return "Digital Pin Input"; }
 
-bool getJsonIfAvailable(){
-  if(Serial.available()){
-    String json ="";
-    int c = '\0';
-    while(c != '\n'){
-      c = Serial.read();
-      if(c == -1)
-        delay(1);
-      else
-        json += char(c);
-    }
-    DeserializationError error = deserializeJson(doc, json);
-    if (error) {
-      // Serial.print(F("deserializeJson() failed: "));
-      // Serial.println(error.f_str());
-      return false;
-    }else{
-      JsonObject jsonObj = doc.as<JsonObject>();
-      int type = jsonObj["type"];
-      switch (type) {
-      case 0: // Register
-        DeviceManager::registerDevice(jsonObj);
-        break;
-      case 1: // unregister
-        DeviceManager::unregisterDevice(jsonObj);
-        break;
-      case 2: // Write data
-        DeviceManager::processMessage(jsonObj);
-      default:
-        break;
-      }      
-    }
-  }else{
-    return false;
-  }
+            /// Retreive icon of block    
+            // QIcon icon() const override {
+            //     return QIcon((flow::Persistency::resourceDir() / "arduino" / "arduino_icon.png").string().c_str());
+            // }
+
+            /// Configure block with given parameters.
+            bool configure(std::vector<flow::ConfigParameterDef> _params) override;
+
+            /// Get list of parameters of the block
+            std::vector<flow::ConfigParameterDef> parameters() override;
+
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return true; };
+
+            /// Returns a brief description of the block
+            std::string description() const override {
+                return    "Digital pin\n";
+            };
+
+            void initialize();
+            void uninitialize();
+
+		private:
+            int currentPin_ = 0;
+            std::string deviceId_ = "";
+		};
+
+	}
 }

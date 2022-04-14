@@ -19,58 +19,57 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------------------------------------
 
+#include "DeviceDigitalPin.h"
 
-#include "ArduinoJson.h"
-#include "DeviceManager.h"
-
-StaticJsonDocument<512> doc;
-
-bool getJsonIfAvailable();
-
-void setup() {
-  Serial.begin(115200);
-}
-
-void loop() {
-  // put your main code here, to run repeatedly:
-  getJsonIfAvailable();
-  DeviceManager::runDevices();
-  delay(30);
-}
-
-bool getJsonIfAvailable(){
-  if(Serial.available()){
-    String json ="";
-    int c = '\0';
-    while(c != '\n'){
-      c = Serial.read();
-      if(c == -1)
-        delay(1);
-      else
-        json += char(c);
-    }
-    DeserializationError error = deserializeJson(doc, json);
-    if (error) {
-      // Serial.print(F("deserializeJson() failed: "));
-      // Serial.println(error.f_str());
-      return false;
+DeviceDigitalOutPin *DeviceDigitalOutPin::createPin(const JsonObject &_config){
+    int pin =  _config["config"]["pin"];
+    if(registerPin("D" + ('0'+pin))){
+        return new DeviceDigitalOutPin(_config["id"], pin);
     }else{
-      JsonObject jsonObj = doc.as<JsonObject>();
-      int type = jsonObj["type"];
-      switch (type) {
-      case 0: // Register
-        DeviceManager::registerDevice(jsonObj);
-        break;
-      case 1: // unregister
-        DeviceManager::unregisterDevice(jsonObj);
-        break;
-      case 2: // Write data
-        DeviceManager::processMessage(jsonObj);
-      default:
-        break;
-      }      
+        return nullptr;
     }
-  }else{
-    return false;
-  }
+}
+
+void DeviceDigitalOutPin::deinitialize(){
+   unregisterPin("D" + ('0'+pin_));
+}
+
+void DeviceDigitalOutPin::execute(){
+    StaticJsonDocument<32> doc;
+    doc["id"] = id_;
+    doc["data"] = digitalRead(pin_);
+    serializeJson(doc, Serial);
+    Serial.print('\n');
+}
+
+DeviceDigitalOutPin::DeviceDigitalOutPin(const std::string &_id, int _pin){
+    id_ = _id;
+    pin_ = _pin;
+    pinMode(pin_, INPUT);
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+DeviceDigitalInPin *DeviceDigitalInPin::createPin(const JsonObject &_config){
+    int pin =  _config["config"]["pin"];
+    if(registerPin("D" + ('0'+pin))){
+        return new DeviceDigitalInPin(_config["id"], pin);
+    }else{
+        return nullptr;
+    }
+}
+
+
+void DeviceDigitalInPin::process(JsonObject &_json) {
+    bool level = _json["data"];
+    digitalWrite(pin_, level);
+}
+
+void DeviceDigitalInPin::deinitialize(){
+   unregisterPin("D" + ('0'+pin_));
+}
+
+DeviceDigitalInPin::DeviceDigitalInPin(const std::string &_id, int _pin){
+    id_ = _id;
+    pin_ = _pin;
+    pinMode(pin_, OUTPUT);
 }

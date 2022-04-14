@@ -19,33 +19,52 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------------------------------------
 
-#ifndef MICO_ARDUINO_CMDRUNNER_H_
-#define MICO_ARDUINO_CMDRUNNER_H_
 
-#include <ArduinoSTL.h>
-#include <map>
-#include <Servo.h>
+#include "DeviceManager.h"
+#include "DeviceDigitalPin.h"
 
-#include "CmdParser.h"
-
-namespace mico{
-  class CmdRunner{
-    public:
-      void init();
-      void run(const Command &_cmd);
-      void sendInputs();
-      
-    private:
-      void runDigital(const Command &_cmd);
-      void runAnalog(const Command &_cmd);
-      void runPwm(const Command &_cmd);
-      void runSerial(const Command &_cmd);
+std::map<std::string, DeviceBackend*> DeviceManager::devices_;
 
 
-    private:
-      std::map<int, bool> digitalInputs_;
-      Servo pwm0, pwm1, pwm2;
-  };
+void DeviceManager::registerDevice(JsonObject &_json){
+    std::string key = _json["id"];
+    if(devices_.find(key) == devices_.end()){
+      std::string backend = _json["bknd"];
+  
+      auto device = createDevice(backend, _json);
+      if(device){
+        devices_[key] = device;
+      }
+    }
 }
 
-#endif
+void DeviceManager::unregisterDevice(JsonObject &_json){
+    std::string key = _json["id"];
+    devices_.erase(key);
+}
+
+void DeviceManager::runDevices(){
+    for(auto &device : devices_){
+       device.second->execute();
+    }
+}
+void DeviceManager::processMessage(JsonObject &_json){
+  std::string key = _json["id"];
+  auto it = devices_.find(key);
+  if(it != devices_.end())
+    it->second->process(_json);
+}
+
+DeviceBackend* DeviceManager::createDevice(std::string _backend, JsonObject &_config){
+  if(_backend == DeviceDigitalOutPin::backendName()){
+    return DeviceDigitalOutPin::createPin(_config);
+  }else if(_backend == DeviceDigitalInPin::backendName()){
+    return DeviceDigitalInPin::createPin(_config);
+  }
+}
+
+void DeviceManager::listDevices(){
+    for(auto &device : devices_){
+       Serial.println(device.first.c_str());
+    }
+}

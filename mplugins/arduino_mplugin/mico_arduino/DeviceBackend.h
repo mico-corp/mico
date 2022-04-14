@@ -19,56 +19,42 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------------------------------------
 
-#include "CmdParser.h"
+#ifndef MICOARDUINO_DEVICEBACKEND_H_
+#define MICOARDUINO_DEVICEBACKEND_H_
 
-namespace mico{
-  
-  std::vector<Command> CmdParser::parseMessage(StaticJsonDocument<200> &_data){
-    std::vector<Command> cmds;
-    JsonObject root = _data.as<JsonObject>();
-    for (const JsonPair& keyValue: root) {
-      Command cmd = CmdParser::parseCmd(keyValue);
-      cmds.push_back(cmd);
-    }
+#include "ArduinoSTL.h"
+#include "ArduinoJson.h"
+
+#include "set"
+#include "string"
+#include "vector"
+
+class DeviceBackend{
+public:
+    virtual void execute() = 0;
+    virtual void deinitialize() = 0;
+    virtual void process(JsonObject &_json) = 0;
     
-    return cmds;
-  }
-      
-  Command CmdParser::parseCmd(const JsonPair&  _cmd){
-    Command cmd;
-    cmd.content_ = _cmd.value();
-    String key = _cmd.key().c_str();
-    if(key[0] == 'D'){
-      cmd.type_ = CMD_TYPE::DIGITAL;
-      cmd.pin_ = key[1] - '0';
-      //Serial.print("Digital cmd with pin ");
-      //Serial.print(cmd.pin_);
-      //Serial.print(" and value ");
-      //Serial.println(cmd.content_.as<bool>());
-    }else if(key[0] == 'A'){
-      cmd.type_ = CMD_TYPE::ANALOG;
-      cmd.pin_ = key[1] - '0';
-      //Serial.print("Analog cmd with pin ");
-      //Serial.print(cmd.pin_);
-      //Serial.print(" and value ");
-      //Serial.println(cmd.content_.as<int>());
-    }else if(key.indexOf("PWM") > -1){
-      cmd.type_ = CMD_TYPE::PWM;
-      cmd.pin_ = key[3] - '0' + 9;
-      //Serial.print("Pwm cmd with pin ");
-      //Serial.print(cmd.pin_);
-      //Serial.print(" and value ");
-      //Serial.println(cmd.content_.as<int>());
-    }else{  // 
-      //Serial.print("None cmd with key ");
-      //Serial.print(key);
-      //Serial.print(" and content ");
-      //Serial.println(cmd.content_.as<int>());
-      cmd.type_ = CMD_TYPE::NONE;
+protected:
+    static bool registerPin(const String &_pin){
+        if(usedPins_.find(_pin) == usedPins_.end()){
+            usedPins_.insert(_pin);
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
-    return cmd;
-    
-  }
-      
-}
+    static bool unregisterPin(const String &_pin){
+        if(usedPins_.find(_pin) != usedPins_.end()){
+            usedPins_.erase(_pin);
+        }
+    }
+
+private:
+    static std::set<String> usedPins_;
+};
+
+
+#endif

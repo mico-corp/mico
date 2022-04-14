@@ -19,58 +19,40 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------------------------------------
 
+#ifndef MICOARDUINO_DEVICEDIGITALPIN_H_
+#define MICOARDUINO_DEVICEDIGITALPIN_H_
 
-#include "ArduinoJson.h"
-#include "DeviceManager.h"
+#include "DeviceBackend.h"
 
-StaticJsonDocument<512> doc;
+class DeviceDigitalOutPin: public DeviceBackend{
+public:
+    static DeviceDigitalOutPin *createPin(const JsonObject &_config);
+    inline static std::string backendName() { return "dpo";};
+    void execute() override;
+    void deinitialize() override;
+    void process(JsonObject &_json) override{};
 
-bool getJsonIfAvailable();
+private:
+    DeviceDigitalOutPin(const std::string &_id, int _pin);
+    int pin_ = 0;
+    std::string id_;
+};
 
-void setup() {
-  Serial.begin(115200);
-}
 
-void loop() {
-  // put your main code here, to run repeatedly:
-  getJsonIfAvailable();
-  DeviceManager::runDevices();
-  delay(30);
-}
+class DeviceDigitalInPin: public DeviceBackend{
+public:
+    static DeviceDigitalInPin *createPin(const JsonObject &_config);
+    inline static std::string backendName() { return "dpi";};
 
-bool getJsonIfAvailable(){
-  if(Serial.available()){
-    String json ="";
-    int c = '\0';
-    while(c != '\n'){
-      c = Serial.read();
-      if(c == -1)
-        delay(1);
-      else
-        json += char(c);
-    }
-    DeserializationError error = deserializeJson(doc, json);
-    if (error) {
-      // Serial.print(F("deserializeJson() failed: "));
-      // Serial.println(error.f_str());
-      return false;
-    }else{
-      JsonObject jsonObj = doc.as<JsonObject>();
-      int type = jsonObj["type"];
-      switch (type) {
-      case 0: // Register
-        DeviceManager::registerDevice(jsonObj);
-        break;
-      case 1: // unregister
-        DeviceManager::unregisterDevice(jsonObj);
-        break;
-      case 2: // Write data
-        DeviceManager::processMessage(jsonObj);
-      default:
-        break;
-      }      
-    }
-  }else{
-    return false;
-  }
-}
+    void execute() override {};
+    void deinitialize() override;
+    void process(JsonObject &_json) override;
+    
+private:
+    DeviceDigitalInPin(const std::string &_id, int _pin);
+    int pin_ = 0;
+    std::string id_;
+};
+
+
+#endif

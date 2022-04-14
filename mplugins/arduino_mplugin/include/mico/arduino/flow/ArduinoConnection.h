@@ -19,30 +19,72 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------------------------------------
 
-#ifndef MICO_ARDUINO_CMDPARSER_H_
-#define MICO_ARDUINO_CMDPARSER_H_
+#ifndef MICO_ARDUINO_FLOW_ARDUINOCONNECTION_H_
+#define MICO_ARDUINO_FLOW_ARDUINOCONNECTION_H_
 
+#include <mutex>
+#include <unordered_map>
+#include <thread>
 
-#include <ArduinoSTL.h>
-#include <vector>
-#include <ArduinoJson.h>
+#include <mico/arduino/json.hpp>
 
-namespace mico{
-  enum class CMD_TYPE { NONE, DIGITAL, ANALOG, PWM, SOFT_SERIAL };
+class SerialPort;
 
-  struct Command{
-    CMD_TYPE type_;
-    int pin_;
-    JsonVariant content_;
-  };
+// MESSAGES PROTOCOL
+//
+// Register device
+//		{	"type": 0, 
+//			"id": 1234,
+//			"bknd": "type_device",
+//			"config": { "":""...}
+//		}
+// 
+// Unregister device
+//		{	"type": 1, 
+//			"id": 1234
+//		}
+//
+// Data to device
+//		{	"type": 2, 
+//			"id": 1234,
+//			"data": ...
+//		}
 
-  class CmdParser{
-    public:
-      static std::vector<Command> parseMessage(StaticJsonDocument<200> &_data);
+namespace mico {
+	namespace arduino {
+		class ArduinoDevice;
 
-    private:
-      static Command parseCmd(const JsonPair& _cmd);
-      
-  };
+		class ArduinoConnection {
+		public:
+			typedef std::function<void(nlohmann::json &)> ReadCallback;
+
+			ArduinoConnection(const std::string& _port, int baudrate);
+			~ArduinoConnection();
+
+			std::string createUniqueKey();
+
+			void registerDevice(nlohmann::json _config, ReadCallback _readCb = [](const auto &_cb){});
+			
+			void unregisterDevice(nlohmann::json _config);
+
+			void write(nlohmann::json _config);
+
+			void close();
+
+		private:
+			std::unordered_map<int, ArduinoDevice*> devices_;
+			std::shared_ptr<SerialPort> port_;
+
+			inline static int uniqueId_ = 0;
+			
+			std::unordered_map<std::string, ReadCallback> callbacks_;
+			std::thread readThread_;
+			bool run_ = true;
+
+			std::mutex mutex_;
+		};
+	}
 }
+
+
 #endif
