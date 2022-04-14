@@ -69,7 +69,8 @@ namespace mico {
             config["bknd"] = "dpo";
             config["config"]["pin"] = currentPin_;
             ArduinoConnectionBlock::get()->registerDevice(config, [&](nlohmann::json& _data) {
-                getPipe("out")->flush((bool) _data["data"]);
+                int level = _data["data"];
+                getPipe("out")->flush((bool) level);
             });
         }
 

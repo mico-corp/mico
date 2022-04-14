@@ -29,15 +29,15 @@ namespace mico {
 			run_ = true;
 			readThread_ = std::thread([&]() {
 				while (run_) {
-					/*auto str = port_->readLine();
+					auto str = port_->readLine();
 					
-					nlohmann::json msg(str);
+					auto msg = nlohmann::json::parse(str);
 					if (msg.is_object()) {
 						std::string id = msg["id"];
-						if (callbacks_.find(id) == callbacks_.end()) {
+						if (callbacks_.find(id) != callbacks_.end()) {
 							callbacks_[id](msg);
 						}
-					}*/
+					}
 
 				}
 			});
