@@ -23,6 +23,7 @@
 #include "DeviceManager.h"
 #include "DeviceDigitalPin.h"
 #include "DeviceMpu6050.h"
+#include "DeviceUltrasonicSensor.h"
 
 std::map<std::string, DeviceBackend*> DeviceManager::devices_;
 
@@ -72,6 +73,8 @@ DeviceBackend* DeviceManager::createDevice(const std::string &_id, const std::st
     return DeviceDigitalPin::createPin(_id, _config);
   }else if(_backend == DeviceMpu6050::backendName()){
     return DeviceMpu6050::create(_id);
+  }else if(_backend == DeviceUltrasonicSensor::backendName()){
+    return DeviceUltrasonicSensor::create(_id, _config);
   }
 }
 
