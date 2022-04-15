@@ -22,13 +22,13 @@
 
 #include "ArduinoJson.h"
 #include "DeviceManager.h"
+#include <vector>
 
-StaticJsonDocument<512> doc;
-
+StaticJsonDocument<128> doc;
 bool getJsonIfAvailable();
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin( 115200 ); // Instead of 'Serial1'
 }
 
 void loop() {
@@ -38,39 +38,41 @@ void loop() {
   delay(30);
 }
 
-bool getJsonIfAvailable(){
-  if(Serial.available()){
-    String json ="";
+bool getJsonIfAvailable() {
+  if (Serial.available()) {
+    String json = "";
     int c = '\0';
-    while(c != '\n'){
+    while (c != '\n') {
       c = Serial.read();
-      if(c == -1)
-        delay(1);
+      Serial.print((char)c);
+      if (c == -1)
+        break;
       else
         json += char(c);
     }
+    
     DeserializationError error = deserializeJson(doc, json);
     if (error) {
-      // Serial.print(F("deserializeJson() failed: "));
-      // Serial.println(error.f_str());
+      Serial.print(F("deserializeJson() failed: "));
+      Serial.println(error.f_str());
       return false;
-    }else{
+    } else {
       JsonObject jsonObj = doc.as<JsonObject>();
       int type = jsonObj["type"];
       switch (type) {
-      case 0: // Register
-        DeviceManager::registerDevice(jsonObj);
-        break;
-      case 1: // unregister
-        DeviceManager::unregisterDevice(jsonObj);
-        break;
-      case 2: // Write data
-        DeviceManager::processMessage(jsonObj);
-      default:
-        break;
-      }      
+        case 0: // Register
+          DeviceManager::registerDevice(jsonObj);
+          break;
+        case 1: // unregister
+          DeviceManager::unregisterDevice(jsonObj);
+          break;
+        case 2: // Write data
+          DeviceManager::processMessage(jsonObj);
+        default:
+          break;
+      }
     }
-  }else{
+  } else {
     return false;
   }
 }

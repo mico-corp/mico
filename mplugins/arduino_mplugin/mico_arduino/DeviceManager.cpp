@@ -22,6 +22,7 @@
 
 #include "DeviceManager.h"
 #include "DeviceDigitalPin.h"
+#include "DeviceMpu6050.h"
 
 std::map<std::string, DeviceBackend*> DeviceManager::devices_;
 
@@ -45,7 +46,7 @@ void DeviceManager::unregisterDevice(JsonObject &_json){
 
 void DeviceManager::runDevices(){
     for(auto &device : devices_){
-       device.second->execute();
+      device.second->execute();
     }
 }
 void DeviceManager::processMessage(JsonObject &_json){
@@ -55,16 +56,26 @@ void DeviceManager::processMessage(JsonObject &_json){
     it->second->process(_json);
 }
 
+DeviceBackend* DeviceManager::device(const std::string &_devName){
+  if(devices_.find(_devName) != devices_.end()){
+    return devices_[_devName];
+  }else{
+    return nullptr;
+  }
+  
+}
+    
 DeviceBackend* DeviceManager::createDevice(std::string _backend, JsonObject &_config){
-  if(_backend == DeviceDigitalOutPin::backendName()){
-    return DeviceDigitalOutPin::createPin(_config);
-  }else if(_backend == DeviceDigitalInPin::backendName()){
-    return DeviceDigitalInPin::createPin(_config);
+  if(_backend == DeviceDigitalPin::backendName()){
+    return DeviceDigitalPin::createPin(_config);
+  }else if(_backend == DeviceMpu6050::backendName()){
+       Serial.println("mpu");
+    return DeviceMpu6050::create(_config);
   }
 }
 
 void DeviceManager::listDevices(){
     for(auto &device : devices_){
-       Serial.println(device.first.c_str());
+//       Serial.println(device.first.c_str());
     }
 }

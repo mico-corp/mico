@@ -24,34 +24,19 @@
 
 #include "DeviceBackend.h"
 
-class DeviceDigitalOutPin: public DeviceBackend{
+class DeviceDigitalPin: public DeviceBackend{
 public:
-    static DeviceDigitalOutPin *createPin(const JsonObject &_config);
-    inline static std::string backendName() { return "dpo";};
+    static DeviceDigitalPin *createPin(const JsonObject &_config);
+    inline static std::string backendName() { return "dp";};
     void execute() override;
     void deinitialize() override;
-    void process(JsonObject &_json) override{};
-
-private:
-    DeviceDigitalOutPin(const std::string &_id, int _pin);
-    int pin_ = 0;
-    std::string id_;
-};
-
-
-class DeviceDigitalInPin: public DeviceBackend{
-public:
-    static DeviceDigitalInPin *createPin(const JsonObject &_config);
-    inline static std::string backendName() { return "dpi";};
-
-    void execute() override {};
-    void deinitialize() override;
     void process(JsonObject &_json) override;
-    
+
 private:
-    DeviceDigitalInPin(const std::string &_id, int _pin);
+    DeviceDigitalPin(const std::string &_id, int _pin, bool _isOut);
     int pin_ = 0;
     std::string id_;
+    bool isOut_ = false;
 };
 
 

@@ -35,6 +35,8 @@ public:
 
     static void runDevices();
     static void processMessage(JsonObject &_json);
+
+    static DeviceBackend* device(const std::string &_devName);
 private:
   static DeviceBackend* createDevice(std::string _backend, JsonObject &_config);
 

@@ -18,3 +18,27 @@
 //  OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------------------------------------
+
+#ifndef MICOARDUINO_DEVICEMPU6050_H_
+#define MICOARDUINO_DEVICEMPU6050_H_
+
+#include "DeviceBackend.h"
+
+#include <Adafruit_MPU6050.h>
+
+class DeviceMpu6050: public DeviceBackend{
+public:
+    static DeviceMpu6050 *create(const JsonObject &_config);
+    inline static std::string backendName() { return "mpu6050";};
+    void execute() override;
+    void deinitialize() override;
+    void process(JsonObject &_json) override{};
+
+private:
+    DeviceMpu6050(const JsonObject &_config);
+    Adafruit_MPU6050 mpu_;
+    std::string id_;
+};
+
+
+#endif

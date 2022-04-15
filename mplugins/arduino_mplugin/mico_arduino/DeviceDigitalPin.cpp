@@ -21,55 +21,44 @@
 
 #include "DeviceDigitalPin.h"
 
-DeviceDigitalOutPin *DeviceDigitalOutPin::createPin(const JsonObject &_config){
+DeviceDigitalPin *DeviceDigitalPin::createPin(const JsonObject &_config){
     int pin =  _config["config"]["pin"];
+    bool isOut_ = _config["config"]["is_out"];
     if(registerPin("D" + ('0'+pin))){
-        return new DeviceDigitalOutPin(_config["id"], pin);
+        return new DeviceDigitalPin(_config["id"], pin, isOut_);
     }else{
         return nullptr;
     }
 }
 
-void DeviceDigitalOutPin::deinitialize(){
+void DeviceDigitalPin::deinitialize(){
    unregisterPin("D" + ('0'+pin_));
 }
 
-void DeviceDigitalOutPin::execute(){
-    StaticJsonDocument<32> doc;
+void DeviceDigitalPin::execute(){
+  if(isOut_){
+    StaticJsonDocument<16> doc;
     doc["id"] = id_;
     doc["data"] = digitalRead(pin_);
     serializeJson(doc, Serial);
     Serial.print('\n');
+  }
 }
 
-DeviceDigitalOutPin::DeviceDigitalOutPin(const std::string &_id, int _pin){
-    id_ = _id;
-    pin_ = _pin;
-    pinMode(pin_, INPUT);
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-DeviceDigitalInPin *DeviceDigitalInPin::createPin(const JsonObject &_config){
-    int pin =  _config["config"]["pin"];
-    if(registerPin("D" + ('0'+pin))){
-        return new DeviceDigitalInPin(_config["id"], pin);
-    }else{
-        return nullptr;
-    }
-}
-
-
-void DeviceDigitalInPin::process(JsonObject &_json) {
+void DeviceDigitalPin::process(JsonObject &_json) {
+  if(!isOut_){
     bool level = _json["data"];
+    Serial.println(level);
     digitalWrite(pin_, level);
+  }
 }
 
-void DeviceDigitalInPin::deinitialize(){
-   unregisterPin("D" + ('0'+pin_));
-}
-
-DeviceDigitalInPin::DeviceDigitalInPin(const std::string &_id, int _pin){
+DeviceDigitalPin::DeviceDigitalPin(const std::string &_id, int _pin, bool _isOut){
     id_ = _id;
     pin_ = _pin;
+    isOut_ = _isOut;
+  if(isOut_)
     pinMode(pin_, OUTPUT);
+  else
+    pinMode(pin_, INPUT);
 }

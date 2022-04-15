@@ -27,7 +27,6 @@
 
 #include "set"
 #include "string"
-#include "vector"
 
 class DeviceBackend{
 public:
@@ -50,6 +49,7 @@ protected:
         if(usedPins_.find(_pin) != usedPins_.end()){
             usedPins_.erase(_pin);
         }
+        return true;
     }
 
 private:

@@ -18,3 +18,50 @@
 //  OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------------------------------------
+
+#include "DeviceMpu6050.h"
+#include <Adafruit_Sensor.h>
+#include <Wire.h>
+
+DeviceMpu6050 *DeviceMpu6050::create(const JsonObject &_config){
+  String sda =  _config["config"]["sda"];
+  String scl =  _config["config"]["scl"];
+  Serial.println("trying reg");
+    if(registerPin(sda) && registerPin(scl)){
+      Serial.println("all right");
+        return new DeviceMpu6050(_config);
+    }else{
+        unregisterPin(sda); 
+        unregisterPin(scl);
+        return nullptr;
+    }
+}
+
+void DeviceMpu6050::execute(){
+  sensors_event_t a, g, temp;
+  mpu_.getEvent(&a, &g, &temp);
+  StaticJsonDocument<64> doc;
+  doc["id"] = id_;
+  doc["data"]["ax"] = a.acceleration.x;
+  doc["data"]["ay"] = a.acceleration.y;
+  doc["data"]["az"] = a.acceleration.z;
+  doc["data"]["gx"] = g.gyro.x;
+  doc["data"]["gy"] = g.gyro.y;
+  doc["data"]["gz"] = g.gyro.z;
+  serializeJson(doc, Serial);
+  Serial.print('\n');
+}
+
+void DeviceMpu6050::deinitialize(){
+  
+}
+
+DeviceMpu6050::DeviceMpu6050(const JsonObject &_config){
+  Serial.println("Beggining");
+  id_ = _config["id"].as<std::string>();
+  mpu_.begin();
+  mpu_.setAccelerometerRange(MPU6050_RANGE_8_G);
+  mpu_.setGyroRange(MPU6050_RANGE_500_DEG);
+  mpu_.setFilterBandwidth(MPU6050_BAND_21_HZ);
+  Serial.println("started");
+}
