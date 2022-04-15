@@ -23,22 +23,21 @@
 #define MICOARDUINO_DEVICEMANAGER_H_
 
 #include "ArduinoSTL.h"
-#include "ArduinoJson.h"
 #include "map"
 
 class DeviceBackend;
 
 class DeviceManager{
 public:
-    static void registerDevice(JsonObject &_json);
-    static void unregisterDevice(JsonObject &_json);
+    static bool registerDevice(const std::string &_id, std::string _data);
+    static void unregisterDevice(const std::string &_id);
 
     static void runDevices();
-    static void processMessage(JsonObject &_json);
+    static void processMessage(const std::string &_id, const std::string &_data);
 
     static DeviceBackend* device(const std::string &_devName);
 private:
-  static DeviceBackend* createDevice(std::string _backend, JsonObject &_config);
+  static DeviceBackend* createDevice(const std::string &_id, const std::string &_backend, const std::string &_config);
 
   static void listDevices();
 

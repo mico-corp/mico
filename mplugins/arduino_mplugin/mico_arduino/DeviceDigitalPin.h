@@ -26,11 +26,11 @@
 
 class DeviceDigitalPin: public DeviceBackend{
 public:
-    static DeviceDigitalPin *createPin(const JsonObject &_config);
+    static DeviceDigitalPin *createPin(const std::string &_id, std::string _config);
     inline static std::string backendName() { return "dp";};
     void execute() override;
     void deinitialize() override;
-    void process(JsonObject &_json) override;
+    void process(const std::string &_data) override;
 
 private:
     DeviceDigitalPin(const std::string &_id, int _pin, bool _isOut);

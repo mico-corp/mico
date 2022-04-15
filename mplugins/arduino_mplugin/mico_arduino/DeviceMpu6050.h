@@ -28,14 +28,14 @@
 
 class DeviceMpu6050: public DeviceBackend{
 public:
-    static DeviceMpu6050 *create(const JsonObject &_config);
+    static DeviceMpu6050 *create(const std::string &_id);
     inline static std::string backendName() { return "mpu6050";};
     void execute() override;
     void deinitialize() override;
-    void process(JsonObject &_json) override{};
+    void process(const std::string &_json) override{};
 
 private:
-    DeviceMpu6050(const JsonObject &_config);
+    DeviceMpu6050(const std::string &_id);
     Adafruit_MPU6050 mpu_;
     std::string id_;
 };

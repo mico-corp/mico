@@ -20,35 +20,37 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 #include "DeviceDigitalPin.h"
+#include "sstream"
 
-DeviceDigitalPin *DeviceDigitalPin::createPin(const JsonObject &_config){
-    int pin =  _config["config"]["pin"];
-    bool isOut_ = _config["config"]["is_out"];
-    if(registerPin("D" + ('0'+pin))){
-        return new DeviceDigitalPin(_config["id"], pin, isOut_);
+DeviceDigitalPin *DeviceDigitalPin::createPin(const std::string &_id, std::string _config){
+    int idx = _config.find(',');
+    if(idx == _config.npos) return nullptr;
+    
+    int pin =  atoi(_config.substr(0,idx).c_str());
+    bool isOut =  atoi(_config.substr(idx+1).c_str());
+    
+    if(registerPin(pin)){
+        return new DeviceDigitalPin(_id, pin, isOut);
     }else{
         return nullptr;
     }
 }
 
 void DeviceDigitalPin::deinitialize(){
-   unregisterPin("D" + ('0'+pin_));
+   unregisterPin(pin_);
 }
 
 void DeviceDigitalPin::execute(){
   if(isOut_){
-    StaticJsonDocument<16> doc;
-    doc["id"] = id_;
-    doc["data"] = digitalRead(pin_);
-    serializeJson(doc, Serial);
-    Serial.print('\n');
+    std::stringstream ss;
+    ss << "2@" << id_<<"@"<<digitalRead(pin_);
+    Serial.println(ss.str().c_str());
   }
 }
 
-void DeviceDigitalPin::process(JsonObject &_json) {
+void DeviceDigitalPin::process(const std::string &_data) {
   if(!isOut_){
-    bool level = _json["data"];
-    Serial.println(level);
+    bool level = atoi(_data.c_str());
     digitalWrite(pin_, level);
   }
 }

@@ -23,37 +23,35 @@
 #define MICOARDUINO_DEVICEBACKEND_H_
 
 #include "ArduinoSTL.h"
-#include "ArduinoJson.h"
-
-#include "set"
 #include "string"
 
 class DeviceBackend{
 public:
     virtual void execute() = 0;
     virtual void deinitialize() = 0;
-    virtual void process(JsonObject &_json) = 0;
+    virtual void process(const std::string &_json) = 0;
     
 protected:
-    static bool registerPin(const String &_pin){
-        if(usedPins_.find(_pin) == usedPins_.end()){
-            usedPins_.insert(_pin);
-            return true;
-        }
-        else{
+    static bool registerPin(int _pin){
+        if(!usedPins_[_pin]){
+          usedPins_[_pin] = true;
+          return true;
+        } else{
             return false;
         }
     }
 
-    static bool unregisterPin(const String &_pin){
-        if(usedPins_.find(_pin) != usedPins_.end()){
-            usedPins_.erase(_pin);
-        }
+    static bool unregisterPin(int _pin){
+        usedPins_[_pin] = false;
         return true;
     }
 
+    static bool isFree(int _pin){
+      return usedPins_[_pin];
+    }
+
 private:
-    static std::set<String> usedPins_;
+    inline static bool usedPins_[20];
 };
 
 

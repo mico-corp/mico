@@ -27,21 +27,24 @@
 std::map<std::string, DeviceBackend*> DeviceManager::devices_;
 
 
-void DeviceManager::registerDevice(JsonObject &_json){
-    std::string key = _json["id"];
-    if(devices_.find(key) == devices_.end()){
-      std::string backend = _json["bknd"];
-  
-      auto device = createDevice(backend, _json);
+bool DeviceManager::registerDevice(const std::string &_id, std::string _data){
+    int idx = _data.find('@');
+    if(idx == _data.npos) return false;
+    std::string backend = _data.substr(0,idx);
+    _data = _data.substr(idx+1);
+    
+    if(devices_.find(_id) == devices_.end()){
+      auto device = createDevice(_id, backend, _data);
       if(device){
-        devices_[key] = device;
+        devices_[_id] = device;
+        std::string msg = "3@"+_id;
+        Serial.println(msg.c_str());
       }
     }
 }
 
-void DeviceManager::unregisterDevice(JsonObject &_json){
-    std::string key = _json["id"];
-    devices_.erase(key);
+void DeviceManager::unregisterDevice(const std::string &_id){
+    devices_.erase(_id);
 }
 
 void DeviceManager::runDevices(){
@@ -49,11 +52,10 @@ void DeviceManager::runDevices(){
       device.second->execute();
     }
 }
-void DeviceManager::processMessage(JsonObject &_json){
-  std::string key = _json["id"];
-  auto it = devices_.find(key);
+void DeviceManager::processMessage(const std::string &_id, const std::string &_data){
+  auto it = devices_.find(_id);
   if(it != devices_.end())
-    it->second->process(_json);
+    it->second->process(_data);
 }
 
 DeviceBackend* DeviceManager::device(const std::string &_devName){
@@ -65,12 +67,11 @@ DeviceBackend* DeviceManager::device(const std::string &_devName){
   
 }
     
-DeviceBackend* DeviceManager::createDevice(std::string _backend, JsonObject &_config){
+DeviceBackend* DeviceManager::createDevice(const std::string &_id, const std::string &_backend, const std::string &_config){
   if(_backend == DeviceDigitalPin::backendName()){
-    return DeviceDigitalPin::createPin(_config);
+    return DeviceDigitalPin::createPin(_id, _config);
   }else if(_backend == DeviceMpu6050::backendName()){
-       Serial.println("mpu");
-    return DeviceMpu6050::create(_config);
+    return DeviceMpu6050::create(_id);
   }
 }
 

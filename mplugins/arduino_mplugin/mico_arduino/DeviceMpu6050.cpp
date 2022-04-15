@@ -22,17 +22,14 @@
 #include "DeviceMpu6050.h"
 #include <Adafruit_Sensor.h>
 #include <Wire.h>
+#include "sstream"
 
-DeviceMpu6050 *DeviceMpu6050::create(const JsonObject &_config){
-  String sda =  _config["config"]["sda"];
-  String scl =  _config["config"]["scl"];
-  Serial.println("trying reg");
-    if(registerPin(sda) && registerPin(scl)){
-      Serial.println("all right");
-        return new DeviceMpu6050(_config);
+DeviceMpu6050 *DeviceMpu6050::create(const std::string &_id){ 
+    if(isFree(A4) && isFree(A5)){
+      registerPin(A4);
+      registerPin(A5);
+      return new DeviceMpu6050(_id);
     }else{
-        unregisterPin(sda); 
-        unregisterPin(scl);
         return nullptr;
     }
 }
@@ -40,25 +37,19 @@ DeviceMpu6050 *DeviceMpu6050::create(const JsonObject &_config){
 void DeviceMpu6050::execute(){
   sensors_event_t a, g, temp;
   mpu_.getEvent(&a, &g, &temp);
-  StaticJsonDocument<64> doc;
-  doc["id"] = id_;
-  doc["data"]["ax"] = a.acceleration.x;
-  doc["data"]["ay"] = a.acceleration.y;
-  doc["data"]["az"] = a.acceleration.z;
-  doc["data"]["gx"] = g.gyro.x;
-  doc["data"]["gy"] = g.gyro.y;
-  doc["data"]["gz"] = g.gyro.z;
-  serializeJson(doc, Serial);
-  Serial.print('\n');
+  std::stringstream ss;
+  ss << "2@"<<id_<<"@"<< a.acceleration.x<< "," << a.acceleration.y<< "," <<a.acceleration.z<<"," << g.gyro.x <<"," <<g.gyro.y << "," << g.gyro.z;
+  Serial.println(ss.str().c_str());
 }
 
 void DeviceMpu6050::deinitialize(){
-  
+    unregisterPin(A4);
+    unregisterPin(A5);
 }
 
-DeviceMpu6050::DeviceMpu6050(const JsonObject &_config){
-  Serial.println("Beggining");
-  id_ = _config["id"].as<std::string>();
+DeviceMpu6050::DeviceMpu6050(const std::string &_id){
+  Serial.println("Beginning");
+  id_ = _id;
   mpu_.begin();
   mpu_.setAccelerometerRange(MPU6050_RANGE_8_G);
   mpu_.setGyroRange(MPU6050_RANGE_500_DEG);
