@@ -37,8 +37,7 @@ bool DeviceManager::registerDevice(const std::string &_id, std::string _data){
       auto device = createDevice(_id, backend, _data);
       if(device){
         devices_[_id] = device;
-        std::string msg = "3@"+_id;
-        Serial.println(msg.c_str());
+  Serial.println("Device created");
       }
     }
 }
@@ -48,6 +47,7 @@ void DeviceManager::unregisterDevice(const std::string &_id){
 }
 
 void DeviceManager::runDevices(){
+  //Serial.println("start run");
     for(auto &device : devices_){
       device.second->execute();
     }

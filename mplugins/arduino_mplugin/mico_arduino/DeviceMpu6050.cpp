@@ -25,7 +25,7 @@
 #include "sstream"
 
 DeviceMpu6050 *DeviceMpu6050::create(const std::string &_id){ 
-    if(isFree(A4) && isFree(A5)){
+    if(!isFree(A4) && !isFree(A5)){
       registerPin(A4);
       registerPin(A5);
       return new DeviceMpu6050(_id);
