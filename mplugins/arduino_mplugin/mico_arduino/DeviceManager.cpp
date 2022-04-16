@@ -21,7 +21,7 @@
 
 
 #include "DeviceManager.h"
-#include "DeviceDigitalPin.h"
+#include "DevicePin.h"
 #include "DeviceMpu6050.h"
 #include "DeviceUltrasonicSensor.h"
 
@@ -44,6 +44,7 @@ bool DeviceManager::registerDevice(const std::string &_id, std::string _data){
 }
 
 void DeviceManager::unregisterDevice(const std::string &_id){
+    devices_[_id]->deinitialize();
     devices_.erase(_id);
 }
 
@@ -69,8 +70,8 @@ DeviceBackend* DeviceManager::device(const std::string &_devName){
 }
     
 DeviceBackend* DeviceManager::createDevice(const std::string &_id, const std::string &_backend, const std::string &_config){
-  if(_backend == DeviceDigitalPin::backendName()){
-    return DeviceDigitalPin::createPin(_id, _config);
+  if(_backend == DevicePin::backendName()){
+    return DevicePin::createPin(_id, _config);
   }else if(_backend == DeviceMpu6050::backendName()){
     return DeviceMpu6050::create(_id);
   }else if(_backend == DeviceUltrasonicSensor::backendName()){

@@ -20,6 +20,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 #include "DeviceManager.h"
+#include "DeviceBackend.h"
 #include <vector>
 
 bool getJsonIfAvailable();
@@ -71,6 +72,7 @@ bool getJsonIfAvailable() {
       default:
         break;
     }
+    DeviceBackend::checkUsed();
 
   } else {
     return false;

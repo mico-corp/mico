@@ -19,48 +19,81 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------------------------------------
 
-#include "DeviceDigitalPin.h"
+#include "DevicePin.h"
 #include "sstream"
 
-DeviceDigitalPin *DeviceDigitalPin::createPin(const std::string &_id, std::string _config){
+DevicePin *DevicePin::createPin(const std::string &_id, std::string _config){
     int idx = _config.find(',');
     if(idx == _config.npos) return nullptr;
-    
+
     int pin =  atoi(_config.substr(0,idx).c_str());
+    _config = _config.substr(idx+1);
+    idx = _config.find(',');
+    if(idx == _config.npos) return nullptr;
+    bool isAnalog =  atoi(_config.substr(0,idx).c_str());
     bool isOut =  atoi(_config.substr(idx+1).c_str());
+
+    if(isAnalog)
+        pin = getAnalogPin(pin);
     
     if(registerPin(pin)){
-        return new DeviceDigitalPin(_id, pin, isOut);
+        return new DevicePin(_id, pin, isAnalog, isOut);
     }else{
         return nullptr;
     }
 }
 
-void DeviceDigitalPin::deinitialize(){
+void DevicePin::deinitialize(){
    unregisterPin(pin_);
 }
 
-void DeviceDigitalPin::execute(){
-  if(isOut_){
-    std::stringstream ss;
-    ss << "2@" << id_<<"@"<<digitalRead(pin_);
-    Serial.println(ss.str().c_str());
+void DevicePin::execute(){
+  if(isAnalog_){
+      std::stringstream ss;
+      ss << "2@" << id_<<"@"<<analogRead(getAnalogPin(pin_));
+      Serial.println(ss.str().c_str());
+  }else{
+    if(isOut_){
+      std::stringstream ss;
+      ss << "2@" << id_<<"@"<<digitalRead(pin_);
+      Serial.println(ss.str().c_str());
+    }
   }
 }
 
-void DeviceDigitalPin::process(const std::string &_data) {
+void DevicePin::process(const std::string &_data) {
   if(!isOut_){
     bool level = atoi(_data.c_str());
     digitalWrite(pin_, level);
   }
 }
 
-DeviceDigitalPin::DeviceDigitalPin(const std::string &_id, int _pin, bool _isOut){
+int DevicePin::getAnalogPin(int _pinIdx){
+  switch(_pinIdx){
+    case 0:
+      return A0;
+    case 1:
+      return A1;
+    case 2:
+      return A2;
+    case 3:
+      return A3;
+    case 4:
+      return A4;
+    case 5:
+      return A5;
+  }
+}
+
+DevicePin::DevicePin(const std::string &_id, int _pin, bool _isAnalog, bool _isOut){
     id_ = _id;
-    pin_ = _pin;
     isOut_ = _isOut;
-  if(isOut_)
-    pinMode(pin_, OUTPUT);
-  else
-    pinMode(pin_, INPUT);
+    isAnalog_ = _isAnalog;
+    pin_ = _pin;
+    if(!isAnalog_){   
+      if(isOut_)
+        pinMode(pin_, OUTPUT);
+      else
+        pinMode(pin_, INPUT);
+    }
 }

@@ -30,20 +30,22 @@ public:
     virtual void execute() = 0;
     virtual void deinitialize() = 0;
     virtual void process(const std::string &_json) = 0;
-    
+  
+    static void checkUsed(){
+       for(unsigned i = 0; i < 20; i++){
+          Serial.print(i);
+          Serial.print('\t');
+        }
+        Serial.println();
+        for(unsigned i = 0; i < 20; i++){
+          Serial.print(usedPins_[i]);
+          Serial.print('\t');
+        }
+        Serial.println();
+    }
+  
 protected:
-  static void checkUsed(){
-     for(unsigned i = 0; i < 20; i++){
-        Serial.print(i);
-        Serial.print('\t');
-      }
-      Serial.println();
-      for(unsigned i = 0; i < 20; i++){
-        Serial.print(usedPins_[i]);
-        Serial.print('\t');
-      }
-      Serial.println();
-  }
+  
 
     static bool registerPin(int _pin){
         if(!usedPins_[_pin]){

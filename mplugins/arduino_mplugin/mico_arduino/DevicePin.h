@@ -19,24 +19,29 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------------------------------------
 
-#ifndef MICOARDUINO_DEVICEDIGITALPIN_H_
-#define MICOARDUINO_DEVICEDIGITALPIN_H_
+#ifndef MICOARDUINO_DevicePin_H_
+#define MICOARDUINO_DevicePin_H_
 
 #include "DeviceBackend.h"
 
-class DeviceDigitalPin: public DeviceBackend{
+class DevicePin: public DeviceBackend{
 public:
-    static DeviceDigitalPin *createPin(const std::string &_id, std::string _config);
+    static DevicePin *createPin(const std::string &_id, std::string _config);
     inline static std::string backendName() { return "dp";};
     void execute() override;
     void deinitialize() override;
     void process(const std::string &_data) override;
 
 private:
-    DeviceDigitalPin(const std::string &_id, int _pin, bool _isOut);
+    DevicePin(const std::string &_id, int _pin, bool _isAnalog, bool _isOut);
+    static int getAnalogPin(int _pinIdx);
+    
+private:
+    
     int pin_ = 0;
     std::string id_;
     bool isOut_ = false;
+    bool isAnalog_ = false;
 };
 
 
