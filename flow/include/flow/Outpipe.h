@@ -65,7 +65,7 @@ namespace flow{
             void unregisterPolicy(Policy* _pol);
 
             /// Get number of registered inputs
-            inline int registrations();
+            int registrations();
 
             /// Flush data through the pipe
             void flush(boost::any _data);
