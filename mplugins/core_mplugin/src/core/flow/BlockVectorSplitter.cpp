@@ -38,7 +38,8 @@ namespace mico{
             registerCallback({"vector"},
                                     [&](flow::DataFlow _data){
                                         auto v = _data.get<std::vector<float>>("vector");
-                                        
+                                        if (v.size() != nTrajs_) return;
+
                                         for(unsigned i = 0; i < nTrajs_; i++){
                                             getPipe("v" +std::to_string(i))->flush(v[i]);
                                         }
