@@ -53,11 +53,13 @@ namespace mico {
 										while (std::getline(iss, token, ',')) {
 											vdata.push_back(std::stoi(token));
 										}
+										data = vdata;
 									} else { // Float
 										std::vector<float> vdata;
 										while (std::getline(iss, token, ',')) {
 											vdata.push_back(std::stof(token));
 										}
+										data = vdata;
 									}
 								}
 								std::lock_guard<std::mutex> lock(mutex_);

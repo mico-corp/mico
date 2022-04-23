@@ -33,8 +33,11 @@ void loop() {
   MicoChannel.pull();
   if(MicoChannel.readFrom(1, levelPin2)){
     digitalWrite(2, levelPin2);  
-  }  
+  }
 
-  MicoChannel.sendTo(2, sin(float(counter++)/1000));
+  MicoChannel.sendTo(2, counter);
+  MicoChannel.sendTo(3, sin(float(counter++)/1000));
+  MicoChannel.sendTo(4, std::vector<int>({counter, counter*2, counter*3}));
+  MicoChannel.sendTo(5, std::vector<float>({counter, counter*2, counter*3}));
   delay(5);
 }
