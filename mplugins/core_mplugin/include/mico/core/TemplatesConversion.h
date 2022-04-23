@@ -36,4 +36,12 @@ boost::any simpleFlatVectorTakeFirst(boost::any &_input){
     return (OutT_) boost::any_cast<InT_>(_input)[0];
 }
 
+
+// Add concepts for compile time safety
+template<typename InT_, typename OutT_>
+boost::any vectorToVector(boost::any& _input) {
+    auto vin = boost::any_cast<InT_>(_input);
+    return OutT_(vin.begin(), vin.end());
+}
+
 #endif

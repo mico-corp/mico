@@ -21,7 +21,8 @@
 
 
 #include <mico/core/TemplatesConversion.h>
-
+#include <vector>
+using std::vector;
 //
 //#ifdef _WIN32
 //	// https://stackoverflow.com/a/12229732/1304903
@@ -38,10 +39,19 @@ const auto directConversionIntBool      = directConversionType<int, bool>;
 const auto directConversionBoolInt      = directConversionType<bool, int>;
 const auto directConversionBoolFloat    = directConversionType<bool, float>;
 
+typedef vector<int> vectorInteger;
+typedef vector<float> vectorFloat;
+const auto vectorIntToVectorFloat		= vectorToVector<vectorInteger, vectorFloat>;
+const auto vectorFloatToVectorIntt		= vectorToVector<vectorFloat, vectorInteger>;
+
+
+
 FLOW_CONVERSION_REGISTER(float, int, directConversionFloatInt);
 FLOW_CONVERSION_REGISTER(float, bool, directConversionFloatBool);
 FLOW_CONVERSION_REGISTER(int, float, directConversionIntFloat);
 FLOW_CONVERSION_REGISTER(int, bool, directConversionIntBool);
 FLOW_CONVERSION_REGISTER(bool, int, directConversionBoolInt);
 FLOW_CONVERSION_REGISTER(bool, float, directConversionBoolFloat);
+FLOW_CONVERSION_REGISTER(vectorInteger, vectorFloat, vectorIntToVectorFloat);
+FLOW_CONVERSION_REGISTER(vectorFloat, vectorInteger, vectorFloatToVectorIntt);
 
