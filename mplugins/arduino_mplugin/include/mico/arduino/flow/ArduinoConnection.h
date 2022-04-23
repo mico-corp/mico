@@ -56,18 +56,17 @@ namespace mico {
 
 		class ArduinoConnection {
 		public:
-			typedef std::function<void(nlohmann::json &)> ReadCallback;
+			typedef std::function<void(std::vector<uint8_t> &)> ReadCallback;
 
 			ArduinoConnection(const std::string& _port, int baudrate);
 			~ArduinoConnection();
 
-			std::string createUniqueKey();
-
-			void registerDevice(nlohmann::json _config, ReadCallback _readCb = [](const auto &_cb){});
+			bool registerCallback(int _id, ReadCallback _readCb = [](const auto &_cb){});
 			
-			void unregisterDevice(nlohmann::json _config);
+			void unregisterCallback(int _id);
 
-			void write(nlohmann::json _config);
+			template<typename T_>
+			void write(int _id, const T_ &_dat);
 
 			void close();
 
@@ -77,7 +76,7 @@ namespace mico {
 
 			inline static int uniqueId_ = 0;
 			
-			std::unordered_map<std::string, ReadCallback> callbacks_;
+			std::unordered_map<int, ReadCallback> callbacks_;
 			std::thread readThread_;
 			bool run_ = true;
 

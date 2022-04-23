@@ -19,49 +19,48 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------------------------------------
 
-#include <flow/Block.h>
 
-class QSpinBox;
+#ifndef MICO_ARDUINO_MESSAGEDEALER_H_
+#define MICO_ARDUINO_MESSAGEDEALER_H_
 
-namespace mico {
-	namespace arduino {
+#include <Arduino.h>
+#include <ArduinoSTL.h>
+#include <map>
+#include <queue>
+#include <vector>
 
-		class DigitalPinOutDevice: public flow::Block {
-		public:
-			// Block interface
+/// 
+/// Intermadiate class to read and write messages from and to MICO marduino plugin
+///
+class MessageDealer{
+public:
+    bool init(){
+        Serial.begin(115200);
+    }
 
-            DigitalPinOutDevice();
+    /// Send data to MICO
+    /// \param _id: ID to associate to the message
+    /// \param _data: Data to be sent
+    template<typename T_>
+    void sendTo(int _id, T_ _data);
+    
+    /// Pull data from Serial port
+    void pull();
 
-            /// Get name of block
-            std::string name() const override { return "Digital Pin Output"; }
+    /// Check if there is any message available from MICO
+    /// \return True if there is data False if not
+    bool isDataAvailable(int _id);
 
-            /// Retreive icon of block    
-            // QIcon icon() const override {
-            //     return QIcon((flow::Persistency::resourceDir() / "arduino" / "arduino_icon.png").string().c_str());
-            // }
+    /// Read next message with given ID
+    /// \param _id: ID to query data from
+    /// \param _data: variable to contain data
+    /// \return True if succeeded false if not.
+    template<typename T_>
+    bool readFrom(int _id, T_ &_data);
+private:
+    std::map<int, std::queue<String>> data_;
+};
 
-            /// Configure block with given parameters.
-            bool configure(std::vector<flow::ConfigParameterDef> _params) override;
+#include "MessageDealer.hpp"
 
-            /// Get list of parameters of the block
-            std::vector<flow::ConfigParameterDef> parameters() override;
-
-            /// Return if the block is configurable.
-            bool isConfigurable() override { return true; };
-
-            /// Returns a brief description of the block
-            std::string description() const override {
-                return    "Digital pin\n";
-            };
-
-            void initialize();
-            void uninitialize();
-
-		private:
-            int currentPin_ = 0;
-            std::string deviceId_ = "";
-            bool idle_ = true;
-		};
-
-	}
-}
+#endif

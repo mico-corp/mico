@@ -19,62 +19,29 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------------------------------------
 
-#include "DeviceManager.h"
-#include "DeviceBackend.h"
-#include <vector>
-
-bool getJsonIfAvailable();
+#include "MessageDealer.h"
 
 void setup() {
-  Serial.begin( 115200 ); // Instead of 'Serial1'
+  MicoChannel.init();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  getJsonIfAvailable();
-  DeviceManager::runDevices();
-  delay(5);
-}
-
-bool getJsonIfAvailable() {
-  if (Serial.available()) {
-    std::string data = "";
-    int c = '\0';
-    while (c != '\n') {
-      c = Serial.read();
-      Serial.print((char)c);
-      if (c == -1)
-        break;
-      else
-        data += char(c);
+  float f;
+  std::vector<float> vf;
+  MicoChannel.pull();
+  if(MicoChannel.readFrom(1, f)){
+    Serial.print("Received data: ");
+    Serial.println(f);
+    MicoChannel.sendTo(5, f);
+  }  
+  if(MicoChannel.readFrom(3, vf)){
+    Serial.print("Received data: ");
+    for(auto &e:vf){
+      Serial.print(e);
+      Serial.print(", ");
     }
-
-    // Parse data
-    int idx = data.find('@');
-    if(idx == data.npos) return false;
-    int type = atoi(data.substr(0,idx).c_str());
-    data = data.substr(idx+1);
-    idx = data.find('@');
-    if(idx == data.npos) return false;
-    std::string id = data.substr(0,idx);
-    data = data.substr(idx+1);
-
-    // Run
-    switch (type) {
-      case 0: // Register
-        DeviceManager::registerDevice(id, data);
-        break;
-      case 1: // unregister
-        DeviceManager::unregisterDevice(id);
-        break;
-      case 2: // Write data
-        DeviceManager::processMessage(id, data);
-      default:
-        break;
-    }
-    DeviceBackend::checkUsed();
-
-  } else {
-    return false;
+      Serial.print("\n");
+    MicoChannel.sendTo(7, vf);
   }
+  delay(5);
 }

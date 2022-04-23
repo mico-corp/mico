@@ -53,7 +53,7 @@ namespace mico {
 			return std::to_string(uniqueId_++);
 		}
 
-		void ArduinoConnection::registerDevice(nlohmann::json _config, ReadCallback _readCb ) {
+		void ArduinoConnection::registerCallback(int _id, ReadCallback _readCb ) {
 			std::lock_guard<std::mutex> lock(mutex_);
 			port_->writeString(_config.dump() + "\n");	// 666 It might be good to have a confirmation here
 			std::string id = _config["id"];
@@ -67,10 +67,6 @@ namespace mico {
 			}
 		}
 
-		void ArduinoConnection::unregisterDevice(nlohmann::json _config) {
-			std::lock_guard<std::mutex> lock(mutex_);
-			port_->writeString(_config.dump() + "\n");	// 666 It might be good to have a confirmation here
-		}
 
 		void ArduinoConnection::write(nlohmann::json _config) {
 			std::lock_guard<std::mutex> lock(mutex_);

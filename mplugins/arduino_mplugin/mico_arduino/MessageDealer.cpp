@@ -19,31 +19,41 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------------------------------------
 
-#ifndef MICOARDUINO_DEVICEMANAGER_H_
-#define MICOARDUINO_DEVICEMANAGER_H_
 
-#include "ArduinoSTL.h"
-#include "map"
+#include "MessageDealer.h"
 
-class DeviceBackend;
+MessageDealer MicoChannel;
 
-class DeviceManager{
-public:
-    static bool registerDevice(const std::string &_id, std::string _data);
-    static void unregisterDevice(const std::string &_id);
+void MessageDealer::pull(){
+    String data ="";
+    String id = "";
+    if(Serial.available()){
+        char c = 0;
+        int idx = 0;
+        for(;;){
+            c = Serial.read();
+            if(c == -1) return; // Error
+            if(c == '@') break; // Got id, read data
+            id += c;
+        }
+        for(;;){
+            c = Serial.read();
+            if(c == -1) return; // Error
+            if(c == '\n'){
+                break;
+            }else{
+                data += c;
+            }
+        }
+        Serial.print("id: ");
+        Serial.print(id);
+        Serial.print(". Data: ");
+        Serial.println(data);
+        data_[atoi(id.c_str())].push(data);
+    }
+}
 
-    static void runDevices();
-    static void processMessage(const std::string &_id, const std::string &_data);
 
-    static DeviceBackend* device(const std::string &_devName);
-private:
-  static DeviceBackend* createDevice(const std::string &_id, const std::string &_backend, const std::string &_config);
-
-  static void listDevices();
-
-private:
-  static std::map<std::string, DeviceBackend*> devices_;
-};
-
-
-#endif
+bool MessageDealer::isDataAvailable(int _id){
+  return data_.find(_id) != data_.end();
+}

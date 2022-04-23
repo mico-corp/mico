@@ -19,30 +19,56 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------------------------------------
 
-#ifndef MICOARDUINO_DevicePin_H_
-#define MICOARDUINO_DevicePin_H_
 
-#include "DeviceBackend.h"
 
-class DevicePin: public DeviceBackend{
-public:
-    static DevicePin *createPin(const std::string &_id, std::string _config);
-    inline static std::string backendName() { return "dp";};
-    void execute() override;
-    void deinitialize() override;
-    void process(const std::string &_data) override;
+#ifndef MICO_ARDUINO_FLOW_ARDUINOINPUTBLOCK_H_
+#define MICO_ARDUINO_FLOW_ARDUINOINPUTBLOCK_H_
 
-private:
-    DevicePin(const std::string &_id, int _pin, bool _isAnalog, bool _isOut);
-    static int getAnalogPin(int _pinIdx);
-    
-private:
-    
-    int pin_ = 0;
-    std::string id_;
-    bool isOut_ = false;
-    bool isAnalog_ = false;
-};
+#include <flow/Block.h>
+
+
+class QLineEdit;
+
+namespace mico{
+    namespace arduino{
+
+        /// Mico block is used to connecto a physical arduino. With this block, it is possible to send and receive signals
+        /// from the arduino for any purpose.
+        /// @ingroup  mico_arduino
+        class ArduinoOutputBlock:public flow::Block{
+        public:
+            /// Get name of block
+            std::string name() const override {return "Arduino Output";} 
+
+            /// Retreive icon of block    
+            QIcon icon() const override { 
+                return QIcon((flow::Persistency::resourceDir()/"arduino"/"arduino_output.png").string().c_str());
+            }
+
+            /// Base constructor
+            ArduinoOutputBlock();
+
+            /// Base destructor
+            ~ArduinoOutputBlock();
+
+            /// Configure block with given parameters.
+            bool configure(std::vector<flow::ConfigParameterDef> _params) override;
+
+            /// Get list of parameters of the block
+            std::vector<flow::ConfigParameterDef> parameters() override;
+
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return true; };
+
+            /// Returns a brief description of the block
+            std::string description() const override {return    "\n";};
+
+        };
+
+    }
+
+}
+
 
 
 #endif
