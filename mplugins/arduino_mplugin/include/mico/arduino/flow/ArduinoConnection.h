@@ -25,8 +25,8 @@
 #include <mutex>
 #include <unordered_map>
 #include <thread>
-
-#include <mico/arduino/json.hpp>
+#include <boost/any.hpp>
+#include <functional>
 
 class SerialPort;
 
@@ -56,12 +56,12 @@ namespace mico {
 
 		class ArduinoConnection {
 		public:
-			typedef std::function<void(std::vector<uint8_t> &)> ReadCallback;
+			typedef std::function<void(boost::any &)> ReadCallback;
 
 			ArduinoConnection(const std::string& _port, int baudrate);
 			~ArduinoConnection();
 
-			bool registerCallback(int _id, ReadCallback _readCb = [](const auto &_cb){});
+			bool registerCallback(int _id, ReadCallback _readCb);
 			
 			void unregisterCallback(int _id);
 
@@ -85,5 +85,6 @@ namespace mico {
 	}
 }
 
+#include <mico/arduino/flow/ArduinoConnection.inl>
 
 #endif

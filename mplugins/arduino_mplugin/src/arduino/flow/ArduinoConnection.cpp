@@ -21,6 +21,7 @@
 
 #include <mico/arduino/flow/ArduinoConnection.h>
 #include <mico/arduino/SerialPort.h>
+#include <QMessageBox>
 
 namespace mico {
 	namespace arduino {
@@ -31,14 +32,41 @@ namespace mico {
 				while (run_) {
 					auto str = port_->readLine();
 					
-					auto msg = nlohmann::json::parse(str);
-					if (msg.is_object()) {
-						std::string id = msg["id"];
-						if (callbacks_.find(id) != callbacks_.end()) {
-							callbacks_[id](msg);
+					int idx = str.find("@");
+					if (idx != str.npos) {
+						boost::any data;
+						try {
+							int id = std::stoi(str.substr(0, idx));
+							if (callbacks_.find(id) != callbacks_.end()) {
+								auto dataRaw = str.substr(idx + 1);
+								if (dataRaw.find(",") == dataRaw.npos) { // Scalar
+									if (dataRaw.find(".") == dataRaw.npos) { // int
+										data = std::stoi(dataRaw);
+									} else { // Float
+										data = std::stof(dataRaw);
+									}
+								} else { // Vector
+									std::istringstream iss(dataRaw);
+									std::string token;
+									if (dataRaw.find(".") == dataRaw.npos) { // int
+										std::vector<int> vdata;
+										while (std::getline(iss, token, ',')) {
+											vdata.push_back(std::stoi(token));
+										}
+									} else { // Float
+										std::vector<float> vdata;
+										while (std::getline(iss, token, ',')) {
+											vdata.push_back(std::stof(token));
+										}
+									}
+								}
+								std::lock_guard<std::mutex> lock(mutex_);
+								callbacks_[id](data);
+							}
+						} catch (std::invalid_argument& _e) {
+
 						}
 					}
-
 				}
 			});
 		}
@@ -49,33 +77,29 @@ namespace mico {
 				readThread_.join();
 		}
 
-		std::string ArduinoConnection::createUniqueKey() {
-			return std::to_string(uniqueId_++);
-		}
-
-		void ArduinoConnection::registerCallback(int _id, ReadCallback _readCb ) {
+		bool ArduinoConnection::registerCallback(int _id, ReadCallback _readCb ) {
 			std::lock_guard<std::mutex> lock(mutex_);
-			port_->writeString(_config.dump() + "\n");	// 666 It might be good to have a confirmation here
-			std::string id = _config["id"];
-			if (_readCb) {
-				if (callbacks_.find(id) == callbacks_.end()) {
-					callbacks_[id] = _readCb;
-				}
-				else {
-					throw std::invalid_argument("Id of device already registered");
-				}
+			if (callbacks_.find(_id) == callbacks_.end()) {
+				callbacks_[_id] = _readCb;
+				return true;
+			}
+			else {
+				QMessageBox::warning(nullptr, "Bad Id", "Cannot register the given ID, please select a different one.");
+				return false;
 			}
 		}
 
-
-		void ArduinoConnection::write(nlohmann::json _config) {
+		void ArduinoConnection::unregisterCallback(int _id) {
 			std::lock_guard<std::mutex> lock(mutex_);
-			port_->writeString(_config.dump() + "\n");	// 666 It might be good to have a confirmation here
+			if (callbacks_.find(_id) != callbacks_.end()) {
+				callbacks_.erase(_id);
+			}
 		}
 
 
 		void ArduinoConnection::close() {
 			std::lock_guard<std::mutex> lock(mutex_);
+			callbacks_.clear();	// 666 Notify blocks to put as unconfigured.
 			port_->close();
 		}
 	}

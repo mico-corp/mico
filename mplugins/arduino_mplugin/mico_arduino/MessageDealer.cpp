@@ -45,10 +45,10 @@ void MessageDealer::pull(){
                 data += c;
             }
         }
-        Serial.print("id: ");
-        Serial.print(id);
-        Serial.print(". Data: ");
-        Serial.println(data);
+        //Serial.print("id: ");
+        //Serial.print(id);
+        //Serial.print(". Data: ");
+        //Serial.println(data);
         data_[atoi(id.c_str())].push(data);
     }
 }

@@ -19,6 +19,7 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------------------------------------
 
+// 666 TODO ugly, but want to see it working now :/
 template<typename T_>
 inline void MessageDealer::sendTo(int _id, T_ _data){
       Serial.print(_id);

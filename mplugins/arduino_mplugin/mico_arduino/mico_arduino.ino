@@ -23,25 +23,18 @@
 
 void setup() {
   MicoChannel.init();
+  pinMode(2, OUTPUT);
 }
 
+int counter = 0;
+
 void loop() {
-  float f;
-  std::vector<float> vf;
+  int levelPin2 = 0;
   MicoChannel.pull();
-  if(MicoChannel.readFrom(1, f)){
-    Serial.print("Received data: ");
-    Serial.println(f);
-    MicoChannel.sendTo(5, f);
+  if(MicoChannel.readFrom(1, levelPin2)){
+    digitalWrite(2, levelPin2);  
   }  
-  if(MicoChannel.readFrom(3, vf)){
-    Serial.print("Received data: ");
-    for(auto &e:vf){
-      Serial.print(e);
-      Serial.print(", ");
-    }
-      Serial.print("\n");
-    MicoChannel.sendTo(7, vf);
-  }
+
+  MicoChannel.sendTo(2, sin(float(counter++)/1000));
   delay(5);
 }

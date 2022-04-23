@@ -22,8 +22,8 @@
 
 #include <flow/flow.h>
 #include <mico/arduino/flow/ArduinoConnectionBlock.h>
-#include <mico/arduino/flow/devices/DigitalPinInDevice.h>
-#include <mico/arduino/flow/devices/DigitalPinOutDevice.h>
+#include <mico/arduino/flow/ArduinoInputBlock.h>
+#include <mico/arduino/flow/ArduinoOutputBlock.h>
 #include <mico/arduino/flow/RaspberryGpioBlock.h>
 #include <mico/arduino/flow/Widgets.h>
 #include <mico/arduino/flow/BlockJoyPad.h>
@@ -37,8 +37,8 @@ extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(fs::path _librar
 
     // Functions
     creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<ArduinoConnectionBlock>>(); }, "arduino");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<DigitalPinInDevice>>(); }, "arduino");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<DigitalPinOutDevice>>(); }, "arduino");
+    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<ArduinoInputBlock>>(); }, "arduino");
+    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<ArduinoOutputBlock>>(); }, "arduino");
     #ifdef MICO_IS_RASPBIAN
         creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<RaspberryGpioBlock>>(); }, "Raspberry Gpio");
     #endif

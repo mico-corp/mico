@@ -21,8 +21,8 @@
 
 
 
-#ifndef MICO_ARDUINO_FLOW_ARDUINOINPUTBLOCK_H_
-#define MICO_ARDUINO_FLOW_ARDUINOINPUTBLOCK_H_
+#ifndef MICO_ARDUINO_FLOW_ARDUINOOUTPUTBLOCK_H_
+#define MICO_ARDUINO_FLOW_ARDUINOOUTPUTBLOCK_H_
 
 #include <flow/Block.h>
 
@@ -62,7 +62,8 @@ namespace mico{
 
             /// Returns a brief description of the block
             std::string description() const override {return    "\n";};
-
+        private:
+            int id_ = -1;
         };
 
     }

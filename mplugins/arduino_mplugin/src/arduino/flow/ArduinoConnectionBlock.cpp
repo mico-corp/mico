@@ -22,7 +22,6 @@
 
 #include <mico/arduino/flow/ArduinoConnectionBlock.h>
 #include <mico/arduino/flow/ArduinoConnection.h>
-#include <mico/arduino/json.hpp>
 #include <flow/Outpipe.h>
 
 #include <sstream>
@@ -35,7 +34,6 @@
 namespace mico{
     namespace arduino{
         ArduinoConnectionBlock::ArduinoConnectionBlock(){
-           
 
         }
 

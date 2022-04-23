@@ -19,50 +19,38 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------------------------------------
 
-#include <mico/arduino/flow/ArduinoOutputBlock.h>
-#include <mico/arduino/flow/ArduinoConnection.h>
-#include <mico/arduino/flow/ArduinoConnectionBlock.h>
-#include <QMessageBox>
+#include <mico/arduino/SerialPort.h>
 
 namespace mico {
-    namespace arduino {
+	namespace arduino {
+		template<>
+		inline void ArduinoConnection::write<int>(int _id, const int& _data) {
+			std::string msg = std::to_string(_id) + "@" + std::to_string(_data);
+			port_->writeString(msg + "\n");
+		}
 
-        ArduinoOutputBlock::ArduinoOutputBlock() {
-            createPipe<boost::any>("output");
-        }
+		template<>
+		inline void ArduinoConnection::write<float>(int _id, const float& _data) {
+			std::string msg = std::to_string(_id) + "@" + std::to_string(_data);
+			port_->writeString(msg + "\n");
+		}
 
+		template<>
+		inline void ArduinoConnection::write<std::vector<int>>(int _id, const std::vector<int>& _data) {
+			std::string msg = std::to_string(_id) + "@";
+			for (auto& e : _data) {
+				msg += std::to_string(e) + ",";
+			}
+			port_->writeString(msg + "\n");
+		}
 
-        ArduinoOutputBlock::~ArduinoOutputBlock() {
-            
-        }
-
-        bool ArduinoOutputBlock::configure(std::vector<flow::ConfigParameterDef> _params) {
-            if (auto param = getParamByName(_params, "MsgID"); param) {
-                try {
-                    id_ = param.value().asInteger();
-                    if (!ArduinoConnectionBlock::get()) {
-                        QMessageBox::warning(nullptr, "Arduino not connected", "Please, connect the arduino block first.");
-                        return false;
-                    }
-                    ArduinoConnectionBlock::get()->registerCallback(id_, [&](boost::any& _data) {
-                        if (getPipe("output")->registrations()) {
-                            getPipe("output")->flush(_data);
-                        }
-                    });
-                }
-                catch (std::exception& _e) {
-                    std::cout << _e.what();
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        std::vector<flow::ConfigParameterDef> ArduinoOutputBlock::parameters() {
-            return {
-                {"MsgID", flow::ConfigParameterDef::eParameterType::INTEGER, 0}
-            };
-        }
-
-    }
+		template<>
+		inline void ArduinoConnection::write<std::vector<float>>(int _id, const std::vector<float>& _data) {
+			std::string msg = std::to_string(_id) + "@";
+			for (auto& e : _data) {
+				msg += std::to_string(e) + ",";
+			}
+			port_->writeString(msg + "\n");
+		}
+	}
 }
