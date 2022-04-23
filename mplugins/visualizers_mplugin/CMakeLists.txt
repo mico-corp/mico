@@ -75,13 +75,6 @@ mplugin_compile_definition(PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_DEFINITIONS QCUSTOM
 ######    Loading 3rd party libraries.    ########
 ##################################################
 
-find_package(Pangolin)
-if(${Pangolin_FOUND})
-  mplugin_include_directory( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_INCLUDES ${Pangolin_INCLUDE_DIRS})
-  mplugin_link_library( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES ${Pangolin_LIBRARIES})
-  mplugin_compile_definition( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_DEFINITIONS "MICO_HAS_PANGOLIN")
-endif()
-
 find_package(OpenCV REQUIRED)
 mplugin_include_directory( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_INCLUDES ${OpenCV_INCLUDE_DIRS})
 mplugin_link_library( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES ${OpenCV_LIBS})

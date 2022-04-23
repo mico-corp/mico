@@ -26,8 +26,6 @@
 #include <mico/visualizers/flow/BlockFrequencyCounter.h>
 #include <mico/visualizers/flow/BlockPointCloudVisualizer.h>
 #include <mico/visualizers/flow/BlockSceneVisualizer.h>
-#include <mico/visualizers/flow/BlockSceneVisualizerPangolin.h>
-#include <mico/visualizers/flow/BlockTrajectoryVisualizerPangolin.h>
 #include <mico/visualizers/flow/BlockQCustomPlot.h>
 #include <mico/visualizers/flow/BlockScatterPlot.h>
 
@@ -45,13 +43,9 @@ extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(fs::path _librar
     creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockScatterPlot > >(); },       "Visualizers");
     creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockFrequencyCounter > >(); },  "Visualizers");
 
-    #ifdef MICO_HAS_PANGOLIN
-        creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockTrajectoryVisualizerPangolin > >(); }, "Visualizers");
-    #endif
     #ifdef HAS_MICO_SLAM
         creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockPointCloudVisualizer> >(); }, "Visualizers");
         creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockSceneVisualizer> >(); }, "Visualizers");
-        creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockSceneVisualizerPangolin> >(); }, "Visualizers");
     #endif
     
     return creator;
