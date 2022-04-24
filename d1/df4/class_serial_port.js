@@ -5,7 +5,7 @@ var class_serial_port =
     [ "close", "d1/df4/class_serial_port.html#a94d1ee3a3af45ef4f74a77f2dea2ec56", null ],
     [ "close", "d1/df4/class_serial_port.html#a94d1ee3a3af45ef4f74a77f2dea2ec56", null ],
     [ "isOpen", "d1/df4/class_serial_port.html#a6c38d0fb8e2d471564978458bf2e64e5", null ],
-    [ "isOpen", "d1/df4/class_serial_port.html#a6c38d0fb8e2d471564978458bf2e64e5", null ],
+    [ "isOpen", "d1/df4/class_serial_port.html#a2b94e2e9b66728fc35edd3cb6adba395", null ],
     [ "readByte", "d1/df4/class_serial_port.html#aa04b25b26e8a6994ead854d48b6698d0", null ],
     [ "readBytes", "d1/df4/class_serial_port.html#aec939633137bc8180559d5b67e6c1afa", null ],
     [ "readBytes", "d1/df4/class_serial_port.html#aec939633137bc8180559d5b67e6c1afa", null ],

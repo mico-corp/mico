@@ -1,32 +1,30 @@
 /*
- @licstart  The following is the entire license notice for the JavaScript code in this file.
+@licstart  The following is the entire license notice for the
+JavaScript code in this file.
 
- The MIT License (MIT)
+Copyright (C) 1997-2019 by Dimitri van Heesch
 
- Copyright (C) 1997-2020 by Dimitri van Heesch
+This program is free software; you can redistribute it and/or modify
+it under the terms of version 2 of the GNU General Public License as published by
+the Free Software Foundation
 
- Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- and associated documentation files (the "Software"), to deal in the Software without restriction,
- including without limitation the rights to use, copy, modify, merge, publish, distribute,
- sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
- furnished to do so, subject to the following conditions:
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
 
- The above copyright notice and this permission notice shall be included in all copies or
- substantial portions of the Software.
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
- BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
- @licend  The above is the entire license notice for the JavaScript code in this file
+@licend  The above is the entire license notice
+for the JavaScript code in this file
 */
 var NAVTREE =
 [
   [ "MICO", "index.html", [
     [ "What is MICO?", "index.html#what_is_mico", null ],
-    [ "Examples", "index.html#autotoc_md11", null ],
+    [ "Examples", "index.html#autotoc_md10", null ],
     [ "Content list MICO Wiki", "d8/d2a/content_list_mico_wiki.html", "d8/d2a/content_list_mico_wiki" ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
@@ -42,10 +40,11 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"annotated.html",
-"d5/dae/classmico_1_1arduino_1_1_toggle_button_block.html#ac8e7a2379df13a1c55a2f705b557759b",
-"da/d42/classmico_1_1arduino_1_1_arduino_device_block.html#a820e9c379aba5abcbe0c0b375b0a4bce",
-"dd/de6/classmico_1_1math_1_1_const_streamer.html#acfaacd85a7b121f8a77a673d7146e9e1"
+".html",
+"d4/dab/classmico_1_1arduino_1_1_arduino_input_block.html#ad67a6acd68978e260e462c9d04fb5f5b",
+"d8/df6/classflow_1_1_flow_visual_block.html#aa1bbef30209d6a1bd595e85d58e5d18e",
+"dc/d68/classflow_1_1_thread_pool.html#ae8e55d46797613b0b4d206fb4195e50a",
+"df/dee/classmico_1_1visualizer_1_1_block_scatter_plot.html#a44b2e6ed25d1e96be2c17fad84a31dc5"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

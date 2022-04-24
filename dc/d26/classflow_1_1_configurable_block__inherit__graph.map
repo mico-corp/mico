@@ -1,4 +1,4 @@
 <map id="flow::ConfigurableBlock" name="flow::ConfigurableBlock">
-<area shape="rect" id="node1" title="Interface to allow dynamic cast of MicoBlocks." alt="" coords="17,5,173,32"/>
-<area shape="rect" id="node2" href="$d8/df6/classflow_1_1_flow_visual_block.html" title=" " alt="" coords="5,80,184,121"/>
+<area shape="rect" id="node1" title="Interface to allow dynamic cast of MicoBlocks." alt="" coords="16,5,191,32"/>
+<area shape="rect" id="node2" href="$d8/df6/classflow_1_1_flow_visual_block.html" title=" " alt="" coords="5,80,201,121"/>
 </map>

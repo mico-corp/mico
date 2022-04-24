@@ -1,5 +1,5 @@
 <map id="mico::visualizer::BlockPointCloudVisualizer" name="mico::visualizer::BlockPointCloudVisualizer">
-<area shape="rect" id="node1" title=" " alt="" coords="27,80,210,121"/>
-<area shape="rect" id="node2" href="$da/dc0/classflow_1_1_block.html" title=" " alt="" coords="5,5,91,32"/>
-<area shape="rect" id="node3" href="$dc/dd0/classmico_1_1_vtk_visualizer3_d.html" title="Base class that handles the basic creation of VTK interfaces." alt="" coords="115,5,266,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="26,80,229,121"/>
+<area shape="rect" id="node2" href="$da/dc0/classflow_1_1_block.html" title=" " alt="" coords="5,5,97,32"/>
+<area shape="rect" id="node3" href="$dc/dd0/classmico_1_1_vtk_visualizer3_d.html" title="Base class that handles the basic creation of VTK interfaces." alt="" coords="121,5,288,32"/>
 </map>
