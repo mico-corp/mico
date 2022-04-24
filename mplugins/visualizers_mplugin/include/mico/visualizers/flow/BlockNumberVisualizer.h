@@ -33,6 +33,12 @@ namespace mico {
     
     /// Mico block for visualizing streams of numbers.
     /// @ingroup  mico_visualizer
+        ///
+        /// @image html blocks/visualizers/visualizers_block_number.png width=480px
+        ///
+        /// __Inputs__:
+        ///     * Number: number to be displayed
+        ///
         class BlockNumberVisualizer : public flow::Block {
         public:
             /// Get name of block

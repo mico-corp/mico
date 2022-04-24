@@ -35,6 +35,14 @@ namespace mico{
         /// Mico block is used to connecto a physical arduino. With this block, it is possible to send and receive signals
         /// from the arduino for any purpose.
         /// @ingroup  mico_arduino
+        ///
+        /// @image html blocks/arduino/arduino_block_arduino_input.png width=480px
+        ///
+        /// __inputs__:
+        ///     * data: data to be sent to the arduino. It can be int, float, std::vector<int> or std::vector<float>.
+        /// __parameters__:
+        ///     * MsgID: User selected ID to me packed with the input data.
+        ///
         class ArduinoInputBlock:public flow::Block{
         public:
             /// Get name of block

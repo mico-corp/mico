@@ -38,6 +38,15 @@ namespace mico{
         /// Mico block that computes the inverse transformation of a given 4x4 matrix that typically
         /// represents a 3D coordinate in the space.
         /// @ingroup  mico_ar
+        ///
+        /// @image html blocks/ar/ar_block_inverse_transform.png width=480px
+        ///
+        /// __Inputs__:
+        ///     * all_coordinates: 4x4 matrix of type Eigen::Matrix4f.
+        ///
+        /// __Outputs__:
+        ///     * coordinates: inverted 4x4 matrix of type Eigen::Matrix4f of input.
+        ///
         class BlockInverseTransform:public flow::Block{
         public:
             /// Get name of block

@@ -31,8 +31,11 @@ class QTimer;
 
 namespace mico{
     namespace core{
-        /// Mico block Switches between two input streams using a third boolean input.
+        /// Mico block That shows the % of usage of threads reserved by mico-flow threadpool.
         /// @ingroup  mico_core
+        ///
+        /// @image html blocks/core/core_block_flow_performance.png width=480px
+        ///
         class BlockFlowPerformance :public flow::Block{
         public:
             /// Get name of block

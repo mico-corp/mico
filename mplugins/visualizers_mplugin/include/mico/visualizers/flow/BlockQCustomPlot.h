@@ -37,6 +37,14 @@ namespace mico{
     
         /// Mico block for visualizing continuous numberical streams of data.
         /// @ingroup  mico_visualizer
+        ///
+        /// @image html blocks/visualizers/visualizers_block_plotter.png width=480px
+        ///
+        /// __Inputs__:
+        ///     * signal1: 1D signal to be plotted overtime.
+        ///     * signal2: 1D signal to be plotted overtime.
+        ///     * signal3: 1D signal to be plotted overtime.
+        ///
         class BlockQCustomPlot: public flow::Block{
         public:
             /// Get name of block

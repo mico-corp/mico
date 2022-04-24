@@ -32,6 +32,15 @@ namespace mico{
     namespace core{
         /// Mico block that splits a vector type signal into X signals.
         /// @ingroup  mico_core
+        ///
+        /// @image html blocks/core/core_blocl_vector_splitter.png width=480px
+        ///
+        /// __Inputs__:
+        ///     * vector: std::vector of any type.
+        ///
+        /// __Outputs__:
+        ///     * vX: X conponent of the input vector
+        ///
         class BlockVectorSplitter:public flow::Block{
         public:
             /// Get name of block

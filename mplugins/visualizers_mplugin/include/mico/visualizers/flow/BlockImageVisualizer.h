@@ -36,6 +36,12 @@ namespace mico{
         
         /// Mico block for visualizing streams of images.
         /// @ingroup  mico_visualizer
+        ///
+        /// @image html blocks/visualizers/visualizers_block_image.png width=480px
+        ///
+        /// __Inputs__:
+        ///     * Image: image to be display
+        ///
         class BlockImageVisualizer: public flow::Block{
         public:
             /// Get name of block

@@ -35,8 +35,24 @@ namespace cv{
 
 namespace mico{
     namespace ar {
+        ///
         /// Mico block that detects aruco markers and computes the 3D coordinate frame associated to them.
         /// @ingroup  mico_ar
+        ///
+        /// @image html blocks/ar/ar_block_aruco_detector.png width=480px
+        ///
+        /// __Inputs__:
+        ///     * image: image of type cv::Mat where to find aruco tags
+        ///
+        /// __Outputs__:
+        ///     * coordinates: 4x4 matrix of type Eigen::Matrix4f representing the coordinate frame of the aruco tag with selected ID.
+        ///     * all_coordinates: vector of 4x4 matrices of type Eigen::Matrix4f representing the coordinate frames of all the aruco tags in the image.
+        ///     * output_image: Debug image in cv::Mat format with the detections overlaid.
+        ///
+        /// __parameters__:
+        ///     * id: ID to filter aruco tags.
+        ///     * calibration_file: YAML file containing intrinsic parameters of the camera, used to estimate the 3D pose of the aruco tags.
+        ///
         class BlockArucoCoordinates:public flow::Block{
         public:
             /// Get name of block

@@ -38,6 +38,23 @@ namespace mico{
         /// Mico block that generates a 3D pose in the space from given position and orientation
         /// parameters.
         /// @ingroup  mico_ar
+        ///
+        /// @image html blocks/ar/ar_block_filter_aruco_cs.png width=480px
+        ///
+        /// __Inputs__:
+        ///     * x: component x of the translation
+        ///     * y: component y of the translation
+        ///     * z: component z of the translation
+        ///     * roll: Rotation over the X axis
+        ///     * pitch: Rotation over the Y axis
+        ///     * yaw: Rotation over the Z axis
+        ///
+        /// __Outputs__:
+        ///     * pose: 4x4 matrix of type Eigen::Matrix4f representing a 3D pose.
+        ///
+        /// __parameters__:
+        ///     * absolute: 
+        ///
         class BlockPoseGenerator:public flow::Block{
         public:
             /// Get name of block

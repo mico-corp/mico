@@ -37,6 +37,16 @@ namespace mico{
     namespace ml{
         /// Mico block uses  YOLO DNN to generate an stream of detections.
         /// @ingroup  mico_ml
+        ///
+        /// @image html blocks/ml/ml_block_yolo.png width=480px
+        ///
+        /// __Inputs__:
+        ///     * image: image as cv::Mat to detect instances of objects using YOLO.
+        ///
+        /// __Outputs__:
+        ///     * image: debug image with detections highlighted
+        ///     * detections: std::vector of detections containing bounding boxes and labels
+        ///
         class BlockYolo:public flow::Block{
         public:
             /// Get name of block

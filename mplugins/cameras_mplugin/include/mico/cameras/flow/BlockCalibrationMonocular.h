@@ -38,6 +38,17 @@ namespace mico {
     namespace cameras {
         /// Mico block that opens USB camera devices and flush images out on a stream.
         /// @ingroup  mico_cameras
+        ///
+        /// @image html blocks/cameras/cameras_block_calibrate_monocular.png width=480px
+        ///
+        /// __Inputs__:
+        ///     * Image: image as cv::Mat to be used to generate a calibration file.
+        ///
+        /// __parameters__:
+        ///     * Horizontal Size: Number of horizontal divisions of the calibration pattern.
+        ///     * Vertical Size: Number of vertical divisions of the calibration pattern.
+        ///     * Square size: size of squares in calibration pattern in millimeters.
+        ///
         class BlockCalibrationMonocular :public flow::Block {
         public:
             /// Get name of block

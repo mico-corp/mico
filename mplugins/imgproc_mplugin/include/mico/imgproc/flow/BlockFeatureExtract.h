@@ -35,8 +35,22 @@ class QTableWidget;
 
 namespace mico{
     namespace imgproc{
-        /// Mico block uses  YOLO DNN to generate an stream of detections.
-        /// @ingroup  mico_ml
+        /// Mico block to extract 2D features in images
+        /// @ingroup  mico_imgproc
+        ///
+        /// @image html blocks/imgproc/imgproc_block_feature_detector width=480px
+        ///
+        /// __Inputs__:
+        ///     * input: image as cv::Mat for detecting features.
+        ///
+        /// __Outputs__:
+        ///     * features: vector of features detected by the detector as std::vector<cv::Keypoint> type.
+        ///     * descriptors: descriptors computed by the detector in cv::Mat format.
+        ///     * debug: debug image as cv::Mat.
+        ///
+        /// __parameters__:
+        ///     * Features: type of detector to be used
+        ///
         class BlockFeatureExtract:public flow::Block{
         public:
             /// Get name of block

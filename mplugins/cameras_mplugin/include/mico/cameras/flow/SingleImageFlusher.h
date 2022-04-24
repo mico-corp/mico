@@ -34,6 +34,15 @@ namespace mico{
     namespace cameras{
         /// Mico block that opens USB camera devices and flush images out on a stream.
         /// @ingroup  mico_cameras
+        ///
+        /// @image html blocks/cameras/cameras_block_image_flusher.png width=480px
+        ///
+        /// __Outputs__:
+        ///     * Image: image as cv::Mat loaded from given path.
+        ///
+        /// __parameters__:
+        ///     * Path to image to be openned.
+        ///
         class SingleImageFlusher:public flow::Block{
         public:
             /// Get name of block

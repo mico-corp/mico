@@ -32,6 +32,15 @@ namespace mico {
     namespace visualizer{
     /// Mico block for visualizing streams of numbers.
     /// @ingroup  mico_visualizer
+        ///
+        /// @image html blocks/visualizers/visualizers_block_stream_frequency.png width=480px
+        ///
+        /// __Inputs__:
+        ///     * stream: stream of any type to measure its frequency
+        ///
+        /// __Outputs__:
+        ///     * hz: output frequency to be used in the pipeline
+        ///
         class BlockFrequencyCounter : public flow::Block {
         public:
             /// Get name of block

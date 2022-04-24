@@ -35,6 +35,18 @@ namespace mico{
     namespace cameras{
         /// Mico block that opens USB camera devices and flush images out on a stream.
         /// @ingroup  mico_cameras
+        ///
+        /// @image html blocks/cameras/cameras_block_streamer_webcam.png width=480px
+        ///
+        /// __Outputs__:
+        ///     * Image: image as cv::Mat obtained from webcam
+        ///     * width: width of output images.
+        ///     * height: height of output images.
+        ///
+        /// __parameters__:
+        ///     * Frequency: speed of output stream
+        ///     * device_id: id of the camera, depend on operative system. Typically starts from 0.
+        ///
         class StreamWebcam:public flow::Block{
         public:
             /// Get name of block

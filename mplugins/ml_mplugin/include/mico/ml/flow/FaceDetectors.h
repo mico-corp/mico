@@ -32,6 +32,19 @@ namespace mico{
     namespace ml{
         /// Mico block that detects different objects using a Haar Cascade classifier.
         /// @ingroup  mico_ml
+        ///
+        /// @image html blocks/ml/ml_block_haarcascade.png width=480px
+        ///
+        /// __Inputs__:
+        ///     * image: image as cv::Mat to detect instances of objects using haarcascade detector.
+        ///
+        /// __Outputs__:
+        ///     * image: debug image with detections highlighted
+        ///     * detections: std::vector of detections containing bounding boxes and labels
+        ///
+        /// __Parameters__:
+        ///     * List of available detectors. 
+        ///
         class BlockHaarCascade:public flow::Block{
         public:
             /// Get name of block

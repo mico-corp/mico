@@ -34,6 +34,15 @@ namespace mico{
         /// Mico block that loads an STL mesh into the AR viewer. Its pose in the space is fed
         /// by te input stream.
         /// @ingroup  mico_ar
+        ///
+        /// @image html blocks/ar/ar_block_mesh.png width=480px
+        ///
+        /// __Inputs__:
+        ///     * coordinates: 4x4 matrix of type Eigen::Matrix4f representing the pose where to draw the mesh.
+        ///
+        /// __parameters__:
+        ///     * mesh_path: path to an stl file to be displayed in the enabled Block AR Viewer.
+        ///
         class BlockMesh:public flow::Block{
         public:
             /// Get name of block

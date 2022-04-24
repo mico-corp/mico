@@ -32,6 +32,18 @@ namespace mico{
     namespace ar {
         /// Mico block that Filters aruco detections by ID.
         /// @ingroup  mico_ar
+        ///
+        /// @image html blocks/ar/ar_block_filter_aruco_cs.png width=480px
+        ///
+        /// __Inputs__:
+        ///     * all_coordinates: vector of 4x4 matrices of type Eigen::Matrix4f representing the coordinate frames of multiple aruco tags.
+        ///
+        /// __Outputs__:
+        ///     * coordinates: 4x4 matrix of type Eigen::Matrix4f representing the coordinate frame of the aruco tag with selected ID.
+        ///
+        /// __parameters__:
+        ///     * id: ID to filter aruco tag.
+        ///
         class BlockFilterAruco:public flow::Block{
         public:
             /// Get name of block

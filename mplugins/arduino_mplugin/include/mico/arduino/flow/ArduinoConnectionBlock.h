@@ -36,6 +36,12 @@ namespace mico{
         /// Mico block is used to connecto a physical arduino. With this block, it is possible to send and receive signals
         /// from the arduino for any purpose.
         /// @ingroup  mico_arduino
+        ///
+        /// @image html blocks/arduino/arduino_block_arduino_device.png width=480px
+        ///
+        /// __parameters__:
+        ///     * device: list of available USB connections for arduino.
+        ///
         class ArduinoConnectionBlock:public flow::Block{
         public:
             /// Get name of block

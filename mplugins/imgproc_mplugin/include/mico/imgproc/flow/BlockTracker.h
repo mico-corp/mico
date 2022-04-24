@@ -37,8 +37,24 @@
 
 namespace mico{
     namespace imgproc{
-        /// Mico block uses  YOLO DNN to generate an stream of detections.
-        /// @ingroup  mico_ml
+        /// Mico block that implements an object tracker for 2d images.
+        /// @ingroup  mico_imgproc
+        ///
+        /// @image html blocks/imgproc/imgproc_block_object_tracker width=480px
+        ///
+        /// __Inputs__:
+        ///     * input: image as cv::Mat to apply the convolution.
+        ///     * initBB: initial bounding box as cv::Rect to start tracker.
+        ///
+        /// __Outputs__:
+        ///     * x: X coordinate of the center of the tracked object as float.
+        ///     * y: Y coordinate of the center of the tracked object as float.
+        ///     * isTracking: boolean to indicate if the tracker has lost or not the object
+        ///     * debug: debug image as cv::Mat to be displayed.
+        ///
+        /// __parameters__:
+        ///     * Algorithm: available object trackers.
+        ///
         class BlockTracker:public flow::Block{
         public:
             /// Get name of block

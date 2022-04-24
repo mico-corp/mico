@@ -37,6 +37,12 @@ namespace mico{
     namespace arduino {
         /// Mico interactive block that simulates a toggle button.
         /// @ingroup  mico_arduino
+        ///
+        /// @image html blocks/interactive/interactive_block_toggle_buton.png width=480px
+        ///
+        /// __outputs__:
+        ///     * state: boolean, true if pressed false if not. Single trigger
+        ///
         class ToggleButtonBlock:public flow::Block{
         public:
             /// Retrieve name of block
@@ -66,6 +72,12 @@ namespace mico{
 
         /// Mico interactive block that simulates a slider bar to generate integer values.
         /// @ingroup  mico_arduino
+        ///
+        /// @image html blocks/interactive/interactive_block_slider_pwm.png width=480px
+        ///
+        /// __outputs__:
+        ///     * pwm: Integer from 0 to 1028.
+        ///
         class SliderPwm :public flow::Block {
         public:
             /// Base constructor
@@ -93,6 +105,16 @@ namespace mico{
 
         /// Mico block that switches between two different signals from a boolean input.
         /// @ingroup  mico_arduino
+        ///
+        /// @image html blocks/interactive/interactive_block_signal_switcher.png width=480px
+        ///
+        /// __inputs__:
+        ///     * Signal: boolean, if true, it enables flow from "A" to "Out". If false, it enables flow from "B" to "Out".
+        ///     * A: channel to be outputted if Signal is true.
+        ///     * B: channel to be outputted if Signal is false.
+        /// __outputs__:
+        ///     * Out: outputs flow depend on Signal input.
+        ///
         class SignalSwitcher :public flow::Block {
         public:
             /// Base constructor
@@ -125,6 +147,15 @@ namespace mico{
 
         /// Mico block that allows or not to flow depend on boolean trigger
         /// @ingroup  mico_arduino
+        ///
+        /// @image html blocks/interactive/interactive_block_flow_switcher.png width=480px
+        ///
+        /// __inputs__:
+        ///     * Signal: boolean, if true, it enables flow from "A" to "Out". If false, it disable the flow
+        ///     * input: channel to be outputted if Signal is true.
+        /// __outputs__:
+        ///     * Out: outputs flow if Signal is true
+        ///
         class FlowSwitch :public flow::Block {
         public:
             /// Base constructor

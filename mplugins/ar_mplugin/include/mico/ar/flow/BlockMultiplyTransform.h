@@ -38,6 +38,16 @@ namespace mico{
         /// Mico block that multiply two input matrices. This block is typically used to
         /// concatenate transformations in the space.
         /// @ingroup  mico_ar
+        ///
+        /// @image html blocks/ar/ar_block_multiply_transform.png width=480px
+        ///
+        /// __Inputs__:
+        ///     * T1: 4x4 matrix of type Eigen::Matrix4f
+        ///     * T2: 4x4 matrix of type Eigen::Matrix4f
+        ///
+        /// __Outputs__:
+        ///     * T1*T2: 4x4 matrix of type Eigen::Matrix4f result of multiplying the input matrices.
+        ///
         class BlockMultiplyTransform:public flow::Block{
         public:
             /// Get name of block

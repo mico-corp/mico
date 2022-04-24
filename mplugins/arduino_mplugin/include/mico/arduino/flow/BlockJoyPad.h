@@ -33,6 +33,13 @@ namespace mico{
     namespace arduino {
         /// Mico interactive block that simulates a joypad to generate -+1 signals in two axis
         /// @ingroup  mico_arduino
+        ///
+        /// @image html blocks/interactive/interactive_block_joypad.png width=480px
+        ///
+        /// __outputs__:
+        ///     * x: X component of the joypad as float from -1 to 1.
+        ///     * y: Y component of the joypad as float from -1 to 1.
+        ///
         class BlockJoyPad:public flow::Block{
         public:
             /// Retreive name of block;

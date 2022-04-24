@@ -31,6 +31,13 @@ namespace mico{
     namespace ar {
         /// Mico block instantiate a 3D visualizer for AR blocks.
         /// @ingroup  mico_ar
+        ///
+        /// @image html blocks/ar/ar_block_ar_viewer.png width=480px
+        ///
+        /// __Inputs__:
+        ///     * coordinates: 4x4 matrix of type Eigen::Matrix4f representing the position of the camera 
+        ///     * image: image of type cv::Mat showing cameras PoV
+        ///
         class BlockArViewer:public flow::Block{
         public:
             /// Get name of block

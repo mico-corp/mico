@@ -36,6 +36,13 @@ namespace mico{
     
         /// Mico block for visualizing scattered streams of data in 2D.
         /// @ingroup  mico_visualizer
+        ///
+        /// @image html blocks/visualizers/visualizers_block_scatter.png width=480px
+        ///
+        /// __Inputs__:
+        ///     * x: X coordinate of next point to be plot
+        ///     * y: Y coordinate of next point to be plot
+        ///
         class BlockScatterPlot: public flow::Block{
         public:
             /// Get name of block

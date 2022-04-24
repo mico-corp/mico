@@ -33,8 +33,20 @@ class QTableWidget;
 
 namespace mico{
     namespace imgproc{
-        /// Mico block uses  YOLO DNN to generate an stream of detections.
-        /// @ingroup  mico_ml
+        /// Mico block that performs a convolution on an image with the given kernel
+        /// @ingroup  mico_imgproc
+        ///
+        /// @image html blocks/imgproc/imgproc_block_kernel_convolution width=480px
+        ///
+        /// __Inputs__:
+        ///     * input: image as cv::Mat to apply the convolution.
+        ///
+        /// __Outputs__:
+        ///     * output: image as cv::Mat with applied the convolution.
+        ///
+        /// __parameters__:
+        ///     * Table to write the kernel 
+        ///
         class BlockKernelConvolution:public flow::Block{
         public:
             /// Get name of block
