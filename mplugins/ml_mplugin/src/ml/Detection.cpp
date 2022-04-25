@@ -77,6 +77,27 @@ namespace mico{
             l->addWidget(labelSelection_);
             return gb;
         }
+
+        BlockDetectionsCounter::BlockDetectionsCounter() {
+
+            createPipe<int>("counter");
+            createPolicy({ flow::makeInput<std::vector<Detection>>("detections") });
+
+            registerCallback({ "detections" },
+                [&](flow::DataFlow _data) {
+                    if (!idle_)
+                        return;
+
+                    idle_ = false;
+                    if (getPipe("counter")->registrations()) {
+                        auto detections = _data.get<std::vector<Detection>>("detections");
+                        getPipe("counter")->flush((int) detections.size());
+                    }
+                    idle_ = true;
+                }
+            );
+        }
+        
     }
 }
 

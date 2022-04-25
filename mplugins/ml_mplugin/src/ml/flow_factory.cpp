@@ -25,6 +25,7 @@
 #include <mico/ml/flow/BlockYolo.h>
 
 
+
 using namespace mico::ml;
 using namespace flow;
 
@@ -36,7 +37,8 @@ extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(fs::path _librar
     creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockHaarCascade>>(); }, "ml");
     creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockYolo>>(); }, "ml");
     creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockTriggerDetection>>(); }, "ml");
-
+    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockDetectionsCounter>>(); }, "ml");
+    
 
     return creator;
 }

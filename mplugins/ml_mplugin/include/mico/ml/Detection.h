@@ -68,6 +68,30 @@ namespace mico{
             QSpinBox * labelSelection_;
 
         };
+
+
+        /// Mico block counts number of detections
+        /// @ingroup  mico_ml
+        class BlockDetectionsCounter :public flow::Block {
+        public:
+            /// Get name of block
+            virtual std::string name() const override { return "Detections counter"; }
+
+            BlockDetectionsCounter();
+
+            /// Returns a brief description of the block
+            std::string description() const override {
+                return    ""
+                    "   - Inputs: \n"
+                    "   - Outputs: \n";
+            };
+
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return false; };
+
+        private:
+            bool idle_ = true;
+        };
     }
 }
 
