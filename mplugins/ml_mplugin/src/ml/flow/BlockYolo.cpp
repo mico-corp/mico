@@ -45,6 +45,7 @@ namespace mico{
             }
 
             
+            createPipe<int>("n_detections");
             createPipe<cv::Mat>("image");
             createPipe<std::vector<Detection>>("detections");
 
@@ -56,7 +57,7 @@ namespace mico{
                                         return;
 
                                     idle_ = false;
-                                    if(getPipe("image")->registrations() || getPipe("detections")->registrations()){
+                                    if(getPipe("image")->registrations() || getPipe("detections")->registrations() || getPipe("n_detections")->registrations() != 0){
                                         cv::Mat frame = _data.get<cv::Mat>("input").clone(); 
                                         cv::Mat blob;        
                                         std::vector<cv::Mat> result;
@@ -70,12 +71,9 @@ namespace mico{
                                         }
 
                                         auto detections = parseDetections(frame, result);
-                                        if(getPipe("image")->registrations()){
-                                            getPipe("image")->flush(frame);
-                                        }
-                                        if(getPipe("detections")->registrations()){
-                                            getPipe("detections")->flush(detections);
-                                        }
+                                        if (getPipe("image")->registrations()) getPipe("image")->flush(frame);
+                                        if (getPipe("detections")->registrations()) getPipe("detections")->flush(detections);
+                                        if (getPipe("n_detections")->registrations()) getPipe("n_detections")->flush((int) detections.size());
 
                                     }
                                     idle_ = true;

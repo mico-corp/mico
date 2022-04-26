@@ -33,6 +33,7 @@ namespace mico{
         BlockHaarCascade::BlockHaarCascade(){
             createPipe<cv::Mat>("result");
             createPipe<std::vector<Detection>>("detections");
+            createPipe<int>("n_detections");
 
             createPolicy({  flow::makeInput<cv::Mat>("input")  });
 
@@ -42,7 +43,7 @@ namespace mico{
                                         return;
 
                                     idle_ = false;
-                                    if(getPipe("result")->registrations() != 0 || getPipe("detections")->registrations() != 0){
+                                    if(getPipe("result")->registrations() != 0 || getPipe("detections")->registrations() != 0 || getPipe("n_detections")->registrations() != 0){
                                         cv::Mat frame = _data.get<cv::Mat>("input").clone();
                                         cv::Mat frame_gray;
                                         cv::cvtColor( frame, frame_gray, cv::COLOR_BGR2GRAY );
@@ -58,9 +59,9 @@ namespace mico{
                                                 
                                                 detections.push_back({ 0, faces[i], frame(faces[i])});
                                             }
-                                            if(getPipe("result")->registrations() != 0 ) getPipe("result")->flush(frame);
-                                            if(getPipe("detections")->registrations() != 0) 
-                                                getPipe("detections")->flush(detections);
+                                            if (getPipe("result")->registrations() != 0 ) getPipe("result")->flush(frame);
+                                            if (getPipe("detections")->registrations() != 0) getPipe("detections")->flush(detections);
+                                            if (getPipe("n_detections")->registrations() != 0) getPipe("n_detections")->flush((int) detections.size());
                                             
                                         }
 
