@@ -40,8 +40,6 @@
       "platform": "windows",
       "features": [
         "contrib",
-        "cuda",
-        "cudnn",
         "dnn"
       ]
     },
