@@ -39,7 +39,7 @@ namespace mico{
             
             /// Retreive icon of block    
             QIcon icon() const override { 
-                return QIcon((flow::Persistency::resourceDir()/"math"/"vecto_norm.svg").string().c_str());
+                return QIcon((flow::Persistency::resourceDir()/"math"/"vector_norm.svg").string().c_str());
             }
 
             /// Base constructor
@@ -64,7 +64,7 @@ namespace mico{
 
             /// Retreive icon of block    
             QIcon icon() const override { 
-                return QIcon((flow::Persistency::resourceDir()/"math"/"vector_element_wise_operator.svg").string().c_str());
+                return QIcon((flow::Persistency::resourceDir()/"math"/"vector_element_wise_operation.svg").string().c_str());
             }
 
             /// Base constructor
