@@ -53,9 +53,10 @@ namespace mico{
                                             // Resize ro 150x150. Should normalize too but I am tired now 666 TODO
                                             cv::resize(frame, frame, cv::Size(150, 150));
 
-                                            dlib::cv_image<dlib::bgr_pixel> image(frame);
-                                            dlib::matrix<dlib::rgb_pixel> faceImg;
-                                            dlib::assign_image(faceImg, image);
+                                            dlib::matrix<dlib::rgb_pixel> faceImg;        
+                                            IplImage iplImg = cvIplImage(frame);
+                                            dlib::cv_image<dlib::bgr_pixel> cimg(&iplImg);                                    
+                                            dlib::assign_image(faceImg, cimg);
 
                                             std::vector<dlib::matrix<dlib::rgb_pixel>> faces = { faceImg };
                                             std::vector<dlib::matrix<float, 0, 1>> faceDescriptors = featureDetector_(faces);

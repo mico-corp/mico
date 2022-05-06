@@ -38,7 +38,16 @@ namespace mico{
                    
                     auto data = _data.get<std::vector<float>>("histogram");
 
-                    QVector<qreal> yData(data.begin(), data.end());
+                    QVector<qreal> yData;
+                    yData.resize(data.size());
+                    auto it1 = data.begin();
+                    auto it2 = yData.begin();
+                    while(it1 != data.end()){
+                        *it2 = *it1;
+                        it1++;
+                        it2++;
+                    }
+
                     if (xData_.size() != yData.size()) {
                         xData_.resize(yData.size());
                         for (int i = 0; i < yData.size(); i++) xData_[i] = i;
