@@ -23,6 +23,7 @@
 #include <flow/flow.h>
 #include <mico/ml/flow/FaceDetectors.h>
 #include <mico/ml/flow/BlockYolo.h>
+#include <mico/ml/flow/BlockFaceFeatures.h>
 
 
 
@@ -37,6 +38,7 @@ extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(fs::path _librar
     creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockHaarCascade>>(); }, "ml");
     creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockYolo>>(); }, "ml");
     creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockTriggerDetection>>(); }, "ml");
+    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockFaceFeatures>>(); }, "ml");
     
 
     return creator;

@@ -28,6 +28,7 @@
 #include <mico/visualizers/flow/BlockSceneVisualizer.h>
 #include <mico/visualizers/flow/BlockQCustomPlot.h>
 #include <mico/visualizers/flow/BlockScatterPlot.h>
+#include <mico/visualizers/flow/BlockHistogramVisualizer.h>
 
 
 using namespace mico::visualizer;
@@ -37,11 +38,12 @@ extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(fs::path _librar
     Persistency::setResourceDir(_libraryPath.parent_path().string() + "/resources");
     flow::PluginNodeCreator *creator = new flow::PluginNodeCreator;
 
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockNumberVisualizer > >(); },  "Visualizers");
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockImageVisualizer > >(); },   "Visualizers");
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockQCustomPlot > >(); },       "Visualizers");
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockScatterPlot > >(); },       "Visualizers");
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockFrequencyCounter > >(); },  "Visualizers");
+    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockNumberVisualizer > >(); },  "Visualizers");
+    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockImageVisualizer > >(); },   "Visualizers");
+    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockQCustomPlot > >(); },       "Visualizers");
+    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockScatterPlot > >(); },       "Visualizers");
+    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockFrequencyCounter > >(); }, "Visualizers");
+    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockHistogramVisualizer > >(); }, "Visualizers");
 
     #ifdef HAS_MICO_SLAM
         creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockPointCloudVisualizer> >(); }, "Visualizers");

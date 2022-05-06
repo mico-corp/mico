@@ -25,6 +25,7 @@
 #include <mico/math/flow/ConstStreamer.h>
 #include <mico/math/flow/ArithmeticBlocks.h>
 #include <mico/math/flow/ComparisonBlocks.h>
+#include <mico/math/flow/VectorBlocks.h>
 
 using namespace mico::math;
 using namespace flow;
@@ -49,6 +50,10 @@ extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(fs::path _librar
     creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockPow                      >>(); }, "math");
     creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockIntegrator               >>(); }, "math");
     creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<ComparisonBlock               >>(); }, "math");
+
+    // Vector blocks
+    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockVectorNorm               >>(); }, "math");
+    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockVectorElementWiseOperator>>(); }, "math");
 
     return creator;
 }
