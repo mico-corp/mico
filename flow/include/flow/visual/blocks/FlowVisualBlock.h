@@ -27,6 +27,7 @@
 #include <flow/Export.h>
 
 #include <flow/visual/blocks/ParameterWidget.h>
+#include <flow/visual/blocks/Switch.h>
 
 #include <nodes/NodeDataModel>
 #include <nodes/Connection>
@@ -36,7 +37,6 @@
 #include <QGroupBox>
 #include <QVBoxLayout>
 #include <QPushButton>
-#include <QCheckBox>
 #include <QToolButton>
 
 #include <iostream>
@@ -126,7 +126,7 @@ namespace flow{
         QGroupBox *configBox_ = nullptr;
         QToolButton *configButton_  = nullptr;
         QIcon   *configStateIcon_ = nullptr;
-        QCheckBox *streamActionButton_ = nullptr;
+        Switch *streamActionButton_ = nullptr;
     };
 }
 

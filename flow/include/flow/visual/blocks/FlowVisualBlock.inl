@@ -68,8 +68,12 @@ namespace flow{
 
         // Autoloop button
         if(HasAutoLoop_){
-            streamActionButton_ = new QCheckBox("Run");
-            configsLayout_->addWidget(streamActionButton_);
+            auto layout = new QHBoxLayout();
+            configsLayout_->addLayout(layout);
+            layout->addWidget(new QLabel("Run"),Qt::AlignLeft);
+            streamActionButton_ = new Switch();
+            streamActionButton_->setFixedWidth(100);
+            layout->addWidget(streamActionButton_, Qt::AlignRight);
             connect(    streamActionButton_, &QCheckBox::toggled,
                         [=](bool checked) { 
                                 if(checked){

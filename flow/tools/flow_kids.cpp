@@ -43,6 +43,6 @@ int main(int _argc, char **_argv){
     #   include <boost/python/numpy.hpp>
     #endif
 
-    FlowVisualInterface interface;
-    interface.init(_argc, _argv);
+    FlowVisualInterface fvi;
+    fvi.init(_argc, _argv);
 }

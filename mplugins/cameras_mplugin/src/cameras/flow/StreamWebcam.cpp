@@ -90,6 +90,10 @@ namespace mico{
         };
 
         void StreamWebcam::loopCallback() {
+            while(!camera_) {
+                std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            }
+
             while (isRunningLoop()) {
                 if (auto pipe = getPipe("Color"); pipe->registrations() != 0) {
                     cv::Mat image;

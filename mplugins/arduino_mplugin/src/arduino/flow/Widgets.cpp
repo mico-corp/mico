@@ -21,6 +21,7 @@
 
 
 #include <mico/arduino/flow/Widgets.h>
+#include <flow/visual/blocks/Switch.h>
 
 #include <QVBoxLayout>
 #include <QPushButton>
@@ -34,10 +35,9 @@ namespace mico{
         ToggleButtonBlock::ToggleButtonBlock(){
             createPipe<bool>("state");
 
-            button_ = new QPushButton("Toggle me");
-            button_->setCheckable(true);
-            QObject::connect(button_, &QPushButton::clicked,[&](){
-                getPipe("state")->flush((bool)button_->isChecked());
+            button_ = new Switch();
+            QObject::connect(button_, &QPushButton::toggled ,[&](bool _state){
+                getPipe("state")->flush(_state);
             });
         }
 

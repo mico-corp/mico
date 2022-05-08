@@ -27,7 +27,7 @@
 #include <flow/Block.h>
 #include <flow/Outpipe.h>
 
-class QPushButton;
+class Switch;
 class QSlider;
 class QLabel;
 class QGroupBox;
@@ -66,7 +66,7 @@ namespace mico{
             /// Returns a brief description of the block
             std::string description() const override {return    "ToggleButton\n";};
         private:
-            QPushButton *button_;
+            Switch *button_;
         };
 
 

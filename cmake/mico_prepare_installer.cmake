@@ -129,7 +129,8 @@ macro(micoPrepareInstaller)
             mesa-common-dev, 
             libgl1-mesa-dev, 
             freeglut3-dev, 
-            libglew-dev")
+            libglew-dev,
+            libdlib-dev")
 
             if(${BUILD_DVS})
                 set(LIST_DEPENDENCIES "${LIST_DEPENDENCIES},
