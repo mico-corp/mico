@@ -32,6 +32,8 @@ namespace mico {
 
             registerCallback({ "data" },
                 [&](flow::DataFlow _data) {
+                    if (!ArduinoConnectionBlock::get()) return;
+
                     auto data = _data.get<boost::any>("data");
                     if (strcmp(typeid(bool).name(), data.type().name()) == 0) {  // 666 TODO Not fancy but want to see it working nowwww!
                         ArduinoConnectionBlock::get()->write(id_, (int) boost::any_cast<bool>(data));
