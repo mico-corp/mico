@@ -165,7 +165,7 @@ namespace flow{
         for(auto &param: flowBlock_->parameters()){
             QJsonValue type = _json["params"].toObject()[param.name_.c_str()].toObject()["type"];
             QJsonValue value = _json["params"].toObject()[param.name_.c_str()].toObject()["value"];
-            if (!type.isUndefined() && !value.isUndefined()) {
+            if (!type.isNull() && !value.isNull()) {
                 switch (type.toInt()) {
                 case flow::ConfigParameterDef::eParameterType::STRING:
                     configParams_[counter]->setValueString(value.toString().toStdString());
