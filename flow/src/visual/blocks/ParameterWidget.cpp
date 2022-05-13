@@ -48,7 +48,7 @@ namespace flow{
     //---------------------------------------------------------------------------------------------------------------------
     ParameterWidget::ParameterWidget(   const ConfigParameterDef &_param, 
                                         QWidget *_parent, 
-                                        const char *_name){
+                                        const char *_name): param_(_param) {
         lName_ = _param.name_;
         type_ = _param.type_;
         label_ = new QLabel(_param.name_.c_str());
@@ -142,8 +142,11 @@ namespace flow{
             return { lName_, type_,  fs::path{filePath_->text().toStdString()} };
             break;
         case ConfigParameterDef::eParameterType::OPTIONS:
-            return { lName_, ConfigParameterDef::eParameterType::STRING,  static_cast<QComboBox*>(value_)->currentText().toStdString()};
+        {
+            std::vector<std::string> selected = { static_cast<QComboBox*>(value_)->currentText().toStdString() };
+            return { lName_, ConfigParameterDef::eParameterType::OPTIONS, selected };
             break;
+        }
         default:
             assert(false);
             break;
@@ -168,6 +171,12 @@ namespace flow{
 
     void ParameterWidget::setValuePath(fs::path _val) {
         filePath_->setText(_val.string().c_str());
+    }
+
+    void ParameterWidget::setValueOption(std::string _val) {
+        if (int idx = static_cast<QComboBox*>(value_)->findText(_val.c_str()); idx != -1) {
+            static_cast<QComboBox*>(value_)->setCurrentIndex(idx);
+        }
     }
 
     void ParameterWidget::browseCallback() {

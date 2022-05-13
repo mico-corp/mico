@@ -103,20 +103,23 @@ namespace flow{
             QJsonObject jParam;
             jParam["type"] = configParams_[counter]->type();
             switch (configParams_[counter]->type()) {
-                case flow::ConfigParameterDef::eParameterType::STRING:
-                    jParam["value"] = configParams_[counter]->getParam().asString().c_str();
-                    break;
-                case flow::ConfigParameterDef::eParameterType::DECIMAL:
-                    jParam["value"] = configParams_[counter]->getParam().asDecimal();
+                case flow::ConfigParameterDef::eParameterType::BOOLEAN:
+                    jParam["value"] = configParams_[counter]->getParam().asBool();
                     break;
                 case flow::ConfigParameterDef::eParameterType::INTEGER:
                     jParam["value"] = configParams_[counter]->getParam().asInteger();
                     break;
+                case flow::ConfigParameterDef::eParameterType::DECIMAL:
+                    jParam["value"] = configParams_[counter]->getParam().asDecimal();
+                    break;
+                case flow::ConfigParameterDef::eParameterType::STRING:
+                    jParam["value"] = configParams_[counter]->getParam().asString().c_str();
+                    break;
                 case flow::ConfigParameterDef::eParameterType::PATH:
                     jParam["value"] = configParams_[counter]->getParam().asPath().string().c_str();
                     break;
-                case flow::ConfigParameterDef::eParameterType::BOOLEAN:
-                    jParam["value"] = configParams_[counter]->getParam().asBool();
+                case flow::ConfigParameterDef::eParameterType::OPTIONS:
+                    jParam["value"] = configParams_[counter]->getParam().asOptions()[0].c_str();
                     break;
             }
 
@@ -167,20 +170,23 @@ namespace flow{
             QJsonValue value = _json["params"].toObject()[param.name_.c_str()].toObject()["value"];
             if (!type.isNull() && !value.isNull()) {
                 switch (type.toInt()) {
-                case flow::ConfigParameterDef::eParameterType::STRING:
-                    configParams_[counter]->setValueString(value.toString().toStdString());
-                    break;
-                case flow::ConfigParameterDef::eParameterType::DECIMAL:
-                    configParams_[counter]->setValueDec(value.toDouble());
+                case flow::ConfigParameterDef::eParameterType::BOOLEAN:
+                    configParams_[counter]->setValueBool(value.toBool());
                     break;
                 case flow::ConfigParameterDef::eParameterType::INTEGER:
                     configParams_[counter]->setValueInt(value.toInt());
                     break;
-                case flow::ConfigParameterDef::eParameterType::BOOLEAN:
-                    configParams_[counter]->setValueBool(value.toBool());
+                case flow::ConfigParameterDef::eParameterType::DECIMAL:
+                    configParams_[counter]->setValueDec(value.toDouble());
+                    break;
+                case flow::ConfigParameterDef::eParameterType::STRING:
+                    configParams_[counter]->setValueString(value.toString().toStdString());
                     break;
                 case flow::ConfigParameterDef::eParameterType::PATH:
                     configParams_[counter]->setValuePath(value.toString().toStdString());
+                    break;
+                case flow::ConfigParameterDef::eParameterType::OPTIONS:
+                    configParams_[counter]->setValueOption(value.toString().toStdString());
                     break;
             }
                 

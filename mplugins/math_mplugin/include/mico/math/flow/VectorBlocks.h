@@ -80,8 +80,8 @@ namespace mico{
 
             /// Returns a brief description of the block
             std::string description() const override {
-                return    "Perform an element wise operation"
-                    "   - Output: norm of vector\n";
+                return      "Perform an element wise operation"
+                            "   - Output: vector of the same size as inputs with the operation of each pair of elements.\n";
             };
         private:
             std::function<float(float, float)> fn_;

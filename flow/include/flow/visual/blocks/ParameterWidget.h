@@ -54,6 +54,7 @@ namespace flow{
         void setValueDec(float _val);
         void setValueBool(bool _val);
         void setValuePath(fs::path _val);
+        void setValueOption(std::string _val);
 
         ConfigParameterDef::eParameterType type() { return type_; };
 
@@ -67,7 +68,7 @@ namespace flow{
         QLineEdit *filePath_;
         QPushButton *browseButton_;
         flow::ConfigParameterDef::eParameterType type_;
-
+        const ConfigParameterDef param_;
     };
 
 
