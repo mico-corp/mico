@@ -38,23 +38,28 @@ namespace mico{
                    
                     auto data = _data.get<std::vector<float>>("histogram");
 
-                    QVector<qreal> yData;
-                    yData.resize(data.size());
+                    if (yData_.size() != data.size()) {
+                        std::lock_guard<std::mutex> lock(dataLock_);
+                        yData_.resize(data.size());
+                    }
+    
                     auto it1 = data.begin();
-                    auto it2 = yData.begin();
+                    auto it2 = yData_.begin();
                     while(it1 != data.end()){
                         *it2 = *it1;
                         it1++;
                         it2++;
                     }
 
-                    if (xData_.size() != yData.size()) {
-                        xData_.resize(yData.size());
-                        for (int i = 0; i < yData.size(); i++) xData_[i] = i;
+                    if (xData_.size() != yData_.size()) {
+                        std::lock_guard<std::mutex> lock(dataLock_);
+                        xData_.resize(yData_.size());
+                        for (int i = 0; i < yData_.size(); i++) xData_[i] = i;
                     }
 
                     std::lock_guard<std::mutex> lock(dataLock_);
-                    barPlot_->setData(xData_, yData, true);
+                    if(barPlot_)
+                        barPlot_->setData(xData_, yData_, true);
                 }
             );
         }
@@ -70,6 +75,7 @@ namespace mico{
             plot_->setWindowFlags(Qt::WindowStaysOnTopHint);
             plot_->show();
             barPlot_ = new QCPBars(plot_->xAxis, plot_->yAxis);
+            barPlot_->setData(xData_, yData_, true);
             refresher_ = new QTimer();
             QObject::connect(refresher_, &QTimer::timeout, [&]() { 
                 std::lock_guard<std::mutex> lock(dataLock_);

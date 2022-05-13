@@ -70,6 +70,7 @@ namespace mico{
             QCustomPlot *plot_ = nullptr;
             QCPBars* barPlot_ = nullptr;
             QVector<qreal> xData_;
+            QVector<qreal> yData_;
             QTimer* refresher_ = nullptr;
         };
     }
