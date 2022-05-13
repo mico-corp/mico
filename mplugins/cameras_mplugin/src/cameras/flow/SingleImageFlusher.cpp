@@ -24,10 +24,7 @@
 #include <flow/Outpipe.h>
 
 
-#include <QGroupBox>
-#include <QLineEdit>
 #include <QPushButton>
-#include <QFileDialog>
 
 
 namespace mico{
@@ -35,53 +32,30 @@ namespace mico{
         SingleImageFlusher::SingleImageFlusher() {
             createPipe<cv::Mat>("Image");
             
-            customWidget_ = new QGroupBox();
-
-            QVBoxLayout* l = new QVBoxLayout();
-            customWidget_->setLayout(l);
-
-            auto entryLay = new QHBoxLayout();
-            filePathLe_ = new QLineEdit("Write full image path");
-            entryLay->addWidget(filePathLe_);
-
-            auto browseBt = new QPushButton("Browse");
-            entryLay->addWidget(browseBt);
-            QObject::connect(browseBt, &QPushButton::clicked, [&]() {
-                QString directory = QFileDialog::getOpenFileName(Q_NULLPTR, "Choose file", "", "All Files (*)", Q_NULLPTR, QFileDialog::DontUseNativeDialog);
-
-                if (!directory.isEmpty()) {
-                    filePathLe_->setText(directory);
-                }
-            });
-
-            l->addLayout(entryLay);
-
-            auto qPushBt = new QPushButton("Flush image");
-            l->addWidget(qPushBt);
-
-            QObject::connect(qPushBt, &QPushButton::clicked, [&](){
-                auto filePath = filePathLe_->text().toStdString();
-                auto image = cv::imread(filePath, -1);
-                if(image.rows != 0 && getPipe("Image")->registrations() != 0){
-                    getPipe("Image")->flush(image);
-                }else{
-                    filePathLe_->setText("Bad Image Path");
+            centralWidget_ = new QPushButton("Flush image");
+            QObject::connect(centralWidget_, &QPushButton::clicked, [&](){
+                if(loadedImage_.rows != 0 && getPipe("Image")->registrations() != 0){
+                    getPipe("Image")->flush(loadedImage_);
                 }
             });
 
         }
 
 
-        SingleImageFlusher::~SingleImageFlusher() {
-            if (camera_) {
-                camera_->release();
-                delete camera_;
+        bool SingleImageFlusher::configure(std::vector<flow::ConfigParameterDef> _params) {
+            if (auto param = getParamByName(_params, "image_path"); param) {
+                loadedImage_ = cv::imread(param.value().asPath().string());
+                return loadedImage_.rows != 0;
             }
-        };
+        }
 
-
-        QWidget* SingleImageFlusher::customWidget() { 
-            return customWidget_; 
-        };
+        std::vector<flow::ConfigParameterDef> SingleImageFlusher::parameters() {
+            return {
+                {"image_path", flow::ConfigParameterDef::eParameterType::PATH, "Browse Path"}
+            };
+        }
+        QWidget* SingleImageFlusher::customWidget() {
+            return centralWidget_;
+        }
     }
 }

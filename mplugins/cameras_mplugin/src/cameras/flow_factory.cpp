@@ -22,6 +22,7 @@
 
 #include <flow/flow.h>
 #include <mico/cameras/flow/StreamWebcam.h>
+#include <mico/cameras/flow/StreamVideo.h>
 #include <mico/cameras/flow/SingleImageFlusher.h>
 #include <mico/cameras/flow/RaspiCam.h>
 #include <mico/cameras/flow/BlockCalibrationMonocular.h>
@@ -35,6 +36,7 @@ extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(fs::path _librar
     flow::PluginNodeCreator *creator = new flow::PluginNodeCreator;
 
     creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<StreamWebcam, true           >>(); }, "cameras");
+    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<StreamVideo, true           >>(); }, "cameras");
     creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<SingleImageFlusher          >>(); }, "cameras");
     creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockCalibrationMonocular   >>(); }, "cameras");
     #ifdef MICO_IS_RASPBIAN

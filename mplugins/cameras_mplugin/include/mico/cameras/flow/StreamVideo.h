@@ -21,58 +21,69 @@
 
 
 
-#ifndef MICO_FLOW_BLOCKS_STREAMERS_SINGLEIMAGEFLUSHER_H_
-#define MICO_FLOW_BLOCKS_STREAMERS_SINGLEIMAGEFLUSHER_H_
+#ifndef MICO_FLOW_BLOCKS_STREAMERS_STREAMVIDEO_H_
+#define MICO_FLOW_BLOCKS_STREAMERS_STREAMVIDEO_H_
 
 #include <flow/Block.h>
 #include <opencv2/opencv.hpp>
+#include <mutex>
+#include <condition_variable>
 
-class QPushButton;
+class QSpinBox;
 
 namespace mico{
     namespace cameras{
-        /// Mico block that opens USB camera devices and flush images out on a stream.
+        /// Mico block that opens video files to stream
         /// @ingroup  mico_cameras
         ///
-        /// @image html blocks/cameras/cameras_block_image_flusher.png width=480px
+        /// @image html blocks/cameras/cameras_block_streamer_webcam.png width=480px
         ///
         /// __Outputs__:
-        ///     * Image: image as cv::Mat loaded from given path.
+        ///     * Image: image as cv::Mat obtained from webcam
+        ///     * width: width of output images.
+        ///     * height: height of output images.
         ///
         /// __parameters__:
-        ///     * Path to image to be openned.
+        ///     * Frequency: speed of output stream
+        ///     * device_id: id of the camera, depend on operative system. Typically starts from 0.
         ///
-        class SingleImageFlusher:public flow::Block{
+        class StreamVideo:public flow::Block{
         public:
             /// Get name of block
-            std::string name() const override {return "Single Image Flusher";}     
+            std::string name() const override {return "Streamer Video";}     
             
             /// Retreive icon of block    
-            QIcon icon() const override {
-                return QIcon((flow::Persistency::resourceDir() / "cameras" / "single_image.png").string().c_str());
-            };
+            QIcon icon() const override { 
+                return QIcon((flow::Persistency::resourceDir() / "cameras"/"webcam_icon.svg").string().c_str());
+            }
             
             /// Base constructor
-            SingleImageFlusher();
-            
-            /// Return if the block is configurable.
-            bool isConfigurable() override { return true; };
+            StreamVideo();
 
+            /// Base destructor
+            ~StreamVideo();
+            
             /// Configure block with given parameters.
             bool configure(std::vector<flow::ConfigParameterDef> _params) override;
 
             /// Get list of parameters of the block
             std::vector<flow::ConfigParameterDef> parameters() override;
+            
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return true; };
 
             /// Returns a brief description of the block
-            std::string description() const override {return    "Simple block that outputs a single image when a button is clicked.\n"
+            std::string description() const override {return    "Streamer block that reads from usb ready cameras "
+                                                                "connected to the computer and streams its images.\n"
                                                                 "   - Outputs: \n";};
 
-            /// Get custom view widget to be display in the graph
-            QWidget* customWidget() override;
+        protected:
+            void loopCallback() override;
+
         private:
-            cv::Mat loadedImage_;
-            QPushButton* centralWidget_;
+            cv::VideoCapture * videoFile_ = nullptr;
+            std::mutex safeDeletion_;
+            std::condition_variable cv_;
         };
     }
 }
