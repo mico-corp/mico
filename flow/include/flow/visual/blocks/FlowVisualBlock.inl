@@ -119,7 +119,7 @@ namespace flow{
                     jParam["value"] = configParams_[counter]->getParam().asPath().string().c_str();
                     break;
                 case flow::ConfigParameterDef::eParameterType::OPTIONS:
-                    jParam["value"] = configParams_[counter]->getParam().asOptions()[0].c_str();
+                    jParam["value"] = configParams_[counter]->getParam().selectedOption().c_str();
                     break;
             }
 

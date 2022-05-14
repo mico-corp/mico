@@ -39,7 +39,11 @@ namespace mico{
 
             registerCallback(   {"input"}, 
                                 [&](flow::DataFlow _data){
-                                    if(!idle_ || !isConfigured_)
+                                    if(!isConfigured_)
+                                        return;
+
+                                    std::lock_guard<std::mutex> lock(safeDestroy_);
+                                    if (!idle_)
                                         return;
 
                                     idle_ = false;
@@ -71,14 +75,18 @@ namespace mico{
             );
         }
 
-        
+        BlockHaarCascade::~BlockHaarCascade() {
+            std::lock_guard<std::mutex> lock(safeDestroy_);
+            idle_ = false;
+        }
+
         bool BlockHaarCascade::configure(std::vector<flow::ConfigParameterDef> _params) {
             while (!idle_) {    // 666 This blocks the GUI, but it is a quick fix needed to release a working version.
                 std::this_thread::sleep_for(std::chrono::milliseconds(30));
             }
             isConfigured_ = false;
             if(auto detector = getParamByName(_params, "Detector"); detector){
-                if( !face_cascade.load( detectors[detector.value().asString()])) {
+                if( !face_cascade.load( detectors[detector.value().selectedOption()])) {
                     return false;
                 }
             }

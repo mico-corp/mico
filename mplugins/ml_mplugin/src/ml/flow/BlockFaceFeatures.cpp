@@ -72,5 +72,9 @@ namespace mico{
             );
         }
 
+        BlockFaceFeatures::~BlockFaceFeatures() {
+            while(!idle_){ }
+            idle_ = false;
+        }
     }
 }

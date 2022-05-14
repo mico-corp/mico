@@ -77,7 +77,7 @@ namespace mico{
 
 
         bool BlockVectorElementWiseOperator::configure(std::vector<flow::ConfigParameterDef> _params) {
-            std::string param = _params[0].asString();
+            std::string param = _params[0].selectedOption();
             if (param == "+") {
                 fn_ = [](float a, float b) {return a + b; };
             }

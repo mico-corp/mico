@@ -143,8 +143,8 @@ namespace flow{
             break;
         case ConfigParameterDef::eParameterType::OPTIONS:
         {
-            std::vector<std::string> selected = { static_cast<QComboBox*>(value_)->currentText().toStdString() };
-            return { lName_, ConfigParameterDef::eParameterType::OPTIONS, selected };
+            std::string selected = static_cast<QComboBox*>(value_)->currentText().toStdString() ;
+            return { lName_, ConfigParameterDef::eParameterType::OPTIONS, param_.asOptions(), selected };
             break;
         }
         default:

@@ -53,6 +53,9 @@ namespace mico{
             /// Base constructor. Initializes the classifier.
             BlockHaarCascade();
 
+            /// Destroy block safely
+            ~BlockHaarCascade();
+
             /// Retreive icon of block    
             QIcon icon() const override {
                 return QIcon((flow::Persistency::resourceDir() / "ml" / "block_haar_cascade.svg").string().c_str());
@@ -76,6 +79,7 @@ namespace mico{
             cv::CascadeClassifier face_cascade;
             bool idle_ = true;
             bool isConfigured_ = false;
+            std::mutex safeDestroy_;
 
             std::map<std::string, std::string> detectors = {
                 {"Face detector",  (flow::Persistency::resourceDir() / "ml"/"haarcascade_frontalface_alt.xml").string()},

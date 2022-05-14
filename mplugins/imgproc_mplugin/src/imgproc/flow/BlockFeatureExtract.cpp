@@ -80,7 +80,7 @@ namespace mico{
             std::lock_guard<std::mutex> lock(dataLock_);
 
             if(auto param = getParamByName(_params, "Features"); param){
-                auto featureName = param.value().asString();
+                auto featureName = param.value().selectedOption();
                 if (featureName == "ORB") {
                     detector_ = cv::ORB::create();
                 } else if (featureName == "AKAZE"){

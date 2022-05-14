@@ -49,7 +49,7 @@ namespace mico {
 
 
         bool ComparisonBlock::configure(std::vector<flow::ConfigParameterDef> _params) {
-            std::string param = _params[0].asString();
+            std::string param = _params[0].selectedOption();
             if (param == "A==B") {
                 fn_ = [](float a, float b) {return a == b; };
             }

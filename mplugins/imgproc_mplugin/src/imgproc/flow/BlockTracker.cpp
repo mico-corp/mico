@@ -45,8 +45,10 @@ namespace mico{
                     if (lastImage_.rows != 0) {
                         createTracker(lastTrackerName_);
                         bbox_ = _data.get<cvRect>("initBB");
-                        tracker_->init(lastImage_, bbox_);
-                        isInit_ = true;
+                        if (bbox_.width > 10 && bbox_.height > 10) {
+                            tracker_->init(lastImage_, bbox_);
+                            isInit_ = true;
+                        }
                     }
                     idle_ = true;
 
@@ -113,7 +115,7 @@ namespace mico{
             std::lock_guard<std::mutex> lock(dataLock_);
 
             if(auto param = getParamByName(_params, "Algorithm"); param){
-                lastTrackerName_ = param.value().asString();
+                lastTrackerName_ = param.value().selectedOption();
                 createTracker(lastTrackerName_);
             }
 
