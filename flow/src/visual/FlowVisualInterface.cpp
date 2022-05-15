@@ -178,7 +178,7 @@ namespace flow{
             CodeGenerator::compile(cppFolder);
         });
 
-        mainWidget.setWindowTitle("Node-based flow editor");
+        mainWidget.setWindowTitle("MICO flow editor");
         mainWidget.resize(800, 600);
         
         if (vm.count("mico_graph")) {

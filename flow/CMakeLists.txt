@@ -176,7 +176,7 @@ install(FILES
         )
 
 if(${BUILD_TOOLS})
-  install(TARGETS flow_kids
+  install(TARGETS MICO
     LIBRARY DESTINATION bin
     ARCHIVE DESTINATION bin
     RUNTIME DESTINATION bin

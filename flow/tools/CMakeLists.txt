@@ -20,9 +20,9 @@
 ##  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ##---------------------------------------------------------------------------------------------------------------------
 
-add_executable(flow_kids flow_kids.cpp)
-target_include_directories(flow_kids PUBLIC ../include)
-target_link_libraries(flow_kids LINK_PUBLIC flow)
+add_executable(MICO flow_kids.cpp)
+target_include_directories(MICO PUBLIC ../include)
+target_link_libraries(MICO LINK_PUBLIC flow)
 
 if(${BUILD_PYTHON})
     # 666 Ugly workaround to load dynamically numpy libraries. For some reason, it fails finding python when loading numpy. The error is common, but
@@ -40,13 +40,13 @@ if(${BUILD_PYTHON})
     endif()
 
 
-    target_link_libraries(flow_kids PRIVATE Python3::Python)
+    target_link_libraries(MICO PRIVATE Python3::Python)
     if(WIN32)
-        target_link_libraries(flow_kids PRIVATE "C:/vcpkg/packages/boost-python_x64-windows/lib/boost_numpy310-vc140-mt.lib")
+        target_link_libraries(MICO PRIVATE "C:/vcpkg/packages/boost-python_x64-windows/lib/boost_numpy310-vc140-mt.lib")
     elseif(UNIX)
-        target_link_libraries(flow_kids PRIVATE Boost::numpy)
+        target_link_libraries(MICO PRIVATE Boost::numpy)
     endif()
-    target_compile_definitions(flow_kids PRIVATE -DINITIALIZE_PYTHON)
+    target_compile_definitions(MICO PRIVATE -DINITIALIZE_PYTHON)
 endif()
 
 
