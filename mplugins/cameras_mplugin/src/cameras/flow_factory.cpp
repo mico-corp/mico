@@ -26,6 +26,7 @@
 #include <mico/cameras/flow/SingleImageFlusher.h>
 #include <mico/cameras/flow/RaspiCam.h>
 #include <mico/cameras/flow/BlockCalibrationMonocular.h>
+#include <mico/cameras/flow/BlockImageResize.h>
 
 using namespace mico::cameras;
 using namespace flow;
@@ -39,6 +40,7 @@ extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(fs::path _librar
     creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<StreamVideo, true           >>(); }, "cameras");
     creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<SingleImageFlusher          >>(); }, "cameras");
     creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockCalibrationMonocular   >>(); }, "cameras");
+    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockImageResize            >>(); }, "cameras");
     #ifdef MICO_IS_RASPBIAN
         creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<RaspiCam, true           >>(); }, "cameras");
     #endif
