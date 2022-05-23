@@ -48,7 +48,7 @@ namespace mico{
 
             if(auto param = getParamByName(_params, "device"); param){
                 try{
-                    arduino_ = std::shared_ptr<ArduinoConnection>(new ArduinoConnection(param.value().asString(), 115200));
+                    arduino_ = std::shared_ptr<ArduinoConnection>(new ArduinoConnection(param.value().selectedOption(), 115200));
                 }catch(std::exception &_e){
                     std::cout << _e.what();
                     return false;
