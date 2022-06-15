@@ -59,13 +59,8 @@ namespace flow{
     };
 
     template<typename T_>
-    struct PolicyInputTemplate: public PolicyInput {
-        PolicyInputTemplate(std::string const &_tag): PolicyInput(_tag, typeid(T_).name()){ }
-    };
-
-    template<typename T_>
     PolicyInput* makeInput(std::string const &_tag){
-        return new PolicyInputTemplate<T_>(_tag);
+        return new PolicyInput(_tag, typeid(T_).name());
     }
 
 

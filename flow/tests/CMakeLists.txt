@@ -22,6 +22,6 @@
 ### Add test with input file
 add_executable(policy_stream policy_stream.cpp)
 target_link_libraries(policy_stream LINK_PRIVATE flow)
-target_link_libraries(policy_stream LINK_PRIVATE gtest gtest_main)
+target_link_libraries(policy_stream PRIVATE GTest::gmock GTest::gtest GTest::gmock_main GTest::gtest_main)
 add_test(test_policy_stream policy_stream)
 

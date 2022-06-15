@@ -34,8 +34,8 @@ add_subdirectory(thirdparty/nodeeditor)
 #########################################
 find_package(Qt5 REQUIRED COMPONENTS Core Widgets Gui)
 
-option(BUILD_EXAMPLES   "Compile examples"              OFF)
-option(BUILD_TESTS      "Prepare tests"                 OFF)
+option(BUILD_EXAMPLES   "Compile examples"              ON)
+option(BUILD_TESTS      "Prepare tests"                 ON)
 option(BUILD_TOOLS      "Build tools"                   ON)
 
 set(CMAKE_AUTOMOC ON)
@@ -102,7 +102,7 @@ add_custom_target(flow_resources ALL
 ######    Test.                           ########
 ##################################################
 if(${BUILD_TESTS})
-  find_package(GTest)
+  find_package(GTest CONFIG REQUIRED)
   if(${GTest_FOUND})
     enable_testing()
     add_subdirectory(tests)
@@ -201,7 +201,7 @@ if(WIN32)
 
     # ucrtbase.dll y VCRUNTIME140D make it automatic please.... 
     install(    FILES 
-                "C:/Program Files (x86)/Windows Kits/10/bin/10.0.19041.0/x64/ucrt/ucrtbased.dll"
+                "C:/Program Files (x86)/Windows Kits/10/bin/10.0.20348.0/x64/ucrt/ucrtbased.dll"
                 "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Redist/MSVC/14.31.31103/debug_nonredist/x64/Microsoft.VC143.DebugCRT/vcruntime140d.dll"
                 "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Redist/MSVC/14.31.31103/debug_nonredist/x64/Microsoft.VC143.DebugCRT/vcruntime140_1d.dll"
                 "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Redist/MSVC/14.31.31103/debug_nonredist/x64/Microsoft.VC143.DebugCRT/msvcp140d.dll"

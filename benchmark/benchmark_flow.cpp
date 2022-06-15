@@ -124,7 +124,7 @@ void multipleIntStream(int nStreams, int nIters){
 
         pipes[i]->registerPolicy(policies[i], "pol1");
         policies[i]->registerCallback({"pol1"},
-        std::bind([&](DataFlow _data, int id){
+        std::bind([&](DataFlow &_data, int id){
             auto t1 = std::chrono::system_clock::now();
             int iter = _data.get<int>("pol1");
             times[id][iter] = std::chrono::duration_cast<std::chrono::nanoseconds>(t1-t0s[id][iter]).count();

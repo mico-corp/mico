@@ -14,7 +14,7 @@ As middlewares and robotics frameworks, MICO and ROS share some apparent similar
         <code>
             ThreadPool::init(4);<br><br><br><br><br>
             auto pol1 = new Policy( { makeInput<int>("pol1") } );<br>
-            pol1->registerCallback({"pol1"},  [&](DataFlow _data){      ...   });<br><br>
+            pol1->registerCallback({"pol1"},  [&](DataFlow &_data){      ...   });<br><br>
             auto pipe1 = new Outpipe("pol1", typeid(int).name());<br>
             pipe1->registerPolicy(pol1, "pol1");<br><br>
             for(int i = 0 ; i < nIters ; i++) pipe1->flush(i); <br>

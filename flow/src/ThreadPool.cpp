@@ -51,11 +51,9 @@ namespace flow{
     }
 
     void ThreadPool::emplace(Task _task){
-        {
-            std::unique_lock<std::mutex> lock(threadLock_);
-            tasks_.emplace(std::move(_task));
-            waitEvent_.notify_one();
-        }
+        std::unique_lock<std::mutex> lock(threadLock_);
+        tasks_.emplace(std::move(_task));
+        waitEvent_.notify_one();
     }
 
     ThreadPool::~ThreadPool(){

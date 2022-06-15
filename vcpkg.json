@@ -12,10 +12,10 @@
     "boost-filesystem",
     "zlib",
     "yaml-cpp",
-    "realsense2",
     "pangolin",
     "boost-python",
     "zstd",
+    "gtest",
     "dlib",
     {
       "name": "qt5",
@@ -52,8 +52,8 @@
       ]
     },
     {
-      "name":"dlfcn-win32",
-    "platform": "windows"
+      "name": "dlfcn-win32",
+      "platform": "windows"
     }
   ]
 }

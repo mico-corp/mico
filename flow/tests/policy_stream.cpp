@@ -30,11 +30,11 @@
 using namespace flow;
 
 TEST(policy_creation, policy_creation)  {
-    Policy pol1({{"time", "float"}});
-    Policy pol2({{"time", "float"}, {"counter", "int"}});
-    EXPECT_THROW(Policy pol3({{"", ""}}), std::invalid_argument);
-    EXPECT_THROW(Policy pol4({{"", "int"}}), std::invalid_argument);
-    EXPECT_THROW(Policy pol5({{"time", ""}}), std::invalid_argument);
+    Policy pol1({makeInput<float>("time")});
+    Policy pol2({makeInput<float>("time"), makeInput<int>("counter")});
+    EXPECT_THROW(Policy pol3({new PolicyInput("", "")}), std::invalid_argument);
+    EXPECT_THROW(Policy pol4({new PolicyInput("", "int")}), std::invalid_argument);
+    EXPECT_THROW(Policy pol5({new PolicyInput("time", "")}), std::invalid_argument);
 }
 
 TEST(pipe_creation, pipe_creation)  {
@@ -44,7 +44,8 @@ TEST(pipe_creation, pipe_creation)  {
     Outpipe op1("A","int");
     Outpipe op2("B","float");
     Outpipe op3("A","float");
-    Policy pol({{"A","int"},{"B","float"}});
+    Policy pol({    makeInput<int>("A"),
+                    makeInput<float>("B") });
 
 }
 
@@ -56,7 +57,7 @@ TEST(registration, registration)  {
     ASSERT_STREQ("o1", op.tag().c_str());
     ASSERT_EQ(0, op.registrations());
 
-    Policy pol({{"o1", "int"}});
+    Policy pol({makeInput<int>("o1")});
     ASSERT_TRUE(op.registerPolicy(&pol, "o1"));
     ASSERT_FALSE(op.registerPolicy(&pol, "o"));
     ASSERT_EQ(1, op.registrations());
@@ -65,7 +66,8 @@ TEST(registration, registration)  {
     Outpipe op1("A","int");
     Outpipe op2("B","float");
     Outpipe op3("A","float");
-    Policy pol1({{"A","int"},{"B","float"}});
+    Policy pol1({ makeInput<int>("A"),
+                    makeInput<float>("B") });
 
     ASSERT_TRUE(op1.registerPolicy(&pol1, "A"));
     ASSERT_TRUE(op2.registerPolicy(&pol1, "B"));
@@ -78,7 +80,7 @@ TEST(registration, registration)  {
 TEST(transmission_int_1, transmission_int)  {
     Outpipe op("counter", "int");
 
-    Policy pol({{"counter", "int"}});
+    Policy pol({makeInput<int>("counter")});
 
     int res = 0;
     pol.registerCallback({"counter"}, [&](DataFlow _f){
@@ -92,17 +94,17 @@ TEST(transmission_int_1, transmission_int)  {
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     ASSERT_EQ(res, 1);
 
-    // Bad type flush
-    EXPECT_THROW(
+    // Bad type flush   This is not true anymore.... more user-friendly for non-developers
+    /*EXPECT_THROW(
         op.flush(5.312f);
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    , std::bad_any_cast);
+    , boost::bad_any_cast);*/
 }
 
 
 TEST(disconnect, disconnect)  {
     Outpipe op("counter","int");
-    Policy pol({{"counter","int"}});
+    Policy pol({ makeInput<int>("counter") });
 
     int res = 0;
     bool goodCallback = pol.registerCallback({"counter"}, [&](DataFlow _f){
@@ -130,8 +132,8 @@ TEST(disconnect, disconnect)  {
 TEST(transmission_int_2, transmission_int)  {
     Outpipe op("counter","int");
 
-    Policy pol1({{"counter","int"}});
-    Policy pol2({{"counter","int"}});
+    Policy pol1({ makeInput<int>("counter") });
+    Policy pol2({ makeInput<int>("counter") });
 
     int counterCall1 = 0;
     std::mutex guardCall1;
@@ -168,7 +170,7 @@ TEST(sync_policy, sync_policy)  {
     Outpipe op1("counter", "int");
     Outpipe op2("clock", "float");
 
-    Policy pol({{"counter", "int"}, {"clock", "float"}});
+    Policy pol({ makeInput<int>("counter"), makeInput<float>("clock") });
 
     int counterCallInt = 0;
     int counterCallFloat = 0;
@@ -202,15 +204,15 @@ TEST(sync_policy, sync_policy)  {
 
 TEST(deep_chain, deep_chain)  {
     Outpipe op("counter", "int");
-    Policy pol({{"ticks", "int"}});
+    Policy pol({ makeInput<int>("ticks") });
     op.registerPolicy(&pol, "ticks");
 
     Outpipe op2("accum", "int");
-    Policy pol2({{"subs", "int"}});
+    Policy pol2({ makeInput<int>("subs") });
     op2.registerPolicy(&pol2, "subs");
 
     Outpipe op3("josua", "int");
-    Policy pol3({{"johny", "int"}});
+    Policy pol3({ makeInput<int>("johny") });
     op3.registerPolicy(&pol3, "johny");
 
 
@@ -253,7 +255,7 @@ TEST(deep_chain_split, deep_chain_split)  {
 
     for(unsigned i = 0; i < 7; i++){
         pipes.push_back(new Outpipe("counter", "int"));
-        policies.push_back(new Policy({{"counter", "int"}}));
+        policies.push_back(new Policy({makeInput<int>("counter")}));
         pipes.back()->registerPolicy(policies.back(), "counter");
     }
 
@@ -319,20 +321,21 @@ TEST(loop_chain_split, loop_chain_split)  {
 
     // Create pipes and connections
     Outpipe o0("counter","int");
-    Policy p0({{"counter","int"}, {"msg","string"}});
+    Policy p0({ makeInput<int>("counter"), makeInput<std::string>("msg") });
+
     o0.registerPolicy(&p0, "counter");
 
     Outpipe o1("ticks","int");
-    Policy p1({{"tocks","int"}});
+    Policy p1({ makeInput<int>("tocks") });
     o1.registerPolicy(&p1, "tocks");
 
-    Outpipe o3("msg","string");
-    Policy p3({{"message","string"}});
+    Outpipe o3("msg",typeid(std::string).name());
+    Policy p3({ makeInput<std::string>("message") });
     o3.registerPolicy(&p0, "msg");
     o3.registerPolicy(&p3, "message");
 
     Outpipe o4("cnt", "int");
-    Policy p4({{"counter", "int"}});
+    Policy p4({ makeInput<int>("counter") });
     o4.registerPolicy(&p4, "counter");
 
     // Set callbacks
@@ -381,7 +384,7 @@ TEST(loop_chain_split, loop_chain_split)  {
 TEST(concurrency_attack_test, concurrency_attack_test)  {
     Outpipe op("counter","int");
 
-    Policy pol({{"cnt", "int"}});
+    Policy pol({makeInput<int>("cnt")});
 
     int counterCall1 = 0;
     bool idle = true;
@@ -427,6 +430,110 @@ TEST(concurrency_attack_test, concurrency_attack_test)  {
 }
 
 
+TEST(multiple_register_policies_test, multiple_register_policies_test) {
+
+    // This does not work yet 666
+    // 
+    // o1  ---------------------  i1
+    //       |
+    //       |------------------  i2
+    //
+    // o2  ---------------------  i3
+    //
+
+
+    //Policy p({ makeInput<int>("i1") , makeInput<int>("i2"), makeInput<int>("i3") });
+
+
+    //Outpipe* o1 = makeOutput<int>("o1");
+    //o1->registerPolicy(&p, "i1");
+    //o1->registerPolicy(&p, "i2");
+
+    //Outpipe* o2 = makeOutput<int>("o2");
+
+}
+
+
+TEST(clear_data_test, clear_data_test) {
+
+    // Prepare a simple policy with 2 inputs
+    Policy p({ makeInput<int>("i1") , makeInput<int>("i2") });
+
+    // Prepare two outputs to feed the policy
+    Outpipe* o1 = makeOutput<int>("o1");
+    o1->registerPolicy(&p, "i1");
+
+    Outpipe* o2 = makeOutput<int>("o2");
+    o2->registerPolicy(&p, "i2");
+
+    // Register a callback for one tag
+    int i1 = 0;
+    bool ci1 = false;
+    p.registerCallback({ "i1" }, [&](DataFlow _data) {
+        i1 = _data.get<int>("i1");
+        ci1 = true;
+        });
+
+    // Register a callback for the other tag
+    int i2 = 0;
+    bool ci2 = false;
+    p.registerCallback({ "i2" }, [&](DataFlow _data) {
+        i2 = _data.get<int>("i2");
+        ci2 = true;
+        });
+
+
+    // Register a callback for both, this callback do not clear data flows. 
+    int iCombi = 0;
+    bool ccombi1 = false;
+    p.registerCallback({ "i1", "i2"}, [&](DataFlow _data) {
+        iCombi = _data.get<int>("i1") + _data.get<int>("i2");
+        ccombi1 = true;
+        });
+
+    // At the moment just one input has data, so the combination is still 0
+    o1->flush(1);
+    while (!ci1); ci1 = false;
+    ASSERT_EQ(i1, 1);
+    ASSERT_EQ(iCombi, 0);
+
+    // Now both inputs are fed, the combined is called
+    o2->flush(3);
+    while (!ci2 || !ccombi1); ci2 = false; ccombi1 = false;
+    ASSERT_EQ(i2, 3);
+    ASSERT_EQ(iCombi, 4);
+
+    // Register a new callback for both, but in this case, the callback clears the data used
+    int iCombi2 = 0;
+    bool ccombi2 = false;
+    p.registerCallback({ "i1", "i2" }, [&](DataFlow _data) {
+        iCombi2 = _data.get<int>("i1") + _data.get<int>("i2");
+        ccombi2 = true;
+    });
+
+
+    // The first combi already has data, so it changes
+    o1->flush(5);
+    while (!ci1 || !ccombi1); ci1 = false; ccombi1 = false;
+    ASSERT_EQ(i1, 5);
+    ASSERT_EQ(iCombi, 8);
+    ASSERT_EQ(iCombi2, 0);
+
+    // Now both data input are fed, second combi is called, but flags are cleared
+    o2->flush(0);
+    while (!ci2 || !ccombi1 || !ccombi2); ci2 = false; ccombi1 = false; ccombi2 = false;
+    ASSERT_EQ(i2, 0);
+    ASSERT_EQ(iCombi, 5);
+    ASSERT_EQ(iCombi2, 5);
+
+    // As expected, the second combi value did not change because i2 input is not fed again
+    o1->flush(10);
+    while (!ci1 || !ccombi1); ci1 = false; ccombi1 = false;
+    ASSERT_EQ(i1, 10);
+    ASSERT_EQ(iCombi, 10);
+    ASSERT_EQ(iCombi2, 5);
+
+}
  
 int main(int _argc, char **_argv)  {
     testing::InitGoogleTest(&_argc, _argv);

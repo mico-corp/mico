@@ -52,8 +52,13 @@ namespace flow{
                 flows[iter->first] = iter->second;
             }
         }
-        flows_.push_back(new DataFlow(flows, _callback));
-        return true;
+        if (flows.size()) {
+            flows_.push_back(new DataFlow(flows, _callback));
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     void Policy::update(std::string _tag, boost::any _data){
