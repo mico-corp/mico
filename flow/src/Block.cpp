@@ -149,15 +149,5 @@ namespace flow{
             delete iPolicy_;
         iPolicy_ = nullptr;
     }
-        
-
-    bool Block::registerCallback(Policy::PolicyMask _mask, Policy::PolicyCallback _callback){
-        if(iPolicy_){
-            iPolicy_->registerCallback( _mask,  _callback );
-            return true;
-        }else{
-            return false;
-        }
-    }
 
 }

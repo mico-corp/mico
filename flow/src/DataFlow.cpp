@@ -27,9 +27,10 @@ namespace flow{
 
     std::map<std::string, std::map<std::string, std::function<boost::any(boost::any&)>>> DataFlow::conversions_ = {};
 
-    DataFlow::DataFlow(std::map<std::string, std::string> _flows, std::function<void(DataFlow _f)> _callback){
+
+    DataFlow::DataFlow(const std::map<std::string, std::string>& _mapTags, std::function<void(const std::map<std::string, boost::any>&)> _callback){
         callback_ = _callback;
-        for(auto &f:_flows){
+        for(auto &f: _mapTags){
             types_[f.first] = f.second;
             data_[f.first] = boost::any();
             updated_[f.first] = false;
@@ -54,7 +55,7 @@ namespace flow{
             if(flag->second) flagCounter++;
         }
         if(flagCounter == updated_.size()){
-            ThreadPool::get()->emplace(std::bind(callback_, *this));
+            ThreadPool::get()->emplace(std::bind(callback_, data_));            ;
             // std::thread(callback_, *this).detach(); // 666 Smthg is not completelly thread safe and produces crash
             auto currT = std::chrono::system_clock::now();
             float incT = std::chrono::duration_cast<std::chrono::microseconds>(currT-lastUsageT_).count();

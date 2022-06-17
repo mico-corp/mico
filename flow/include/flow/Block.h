@@ -148,7 +148,8 @@ namespace flow{
         bool createPolicy(std::vector<PolicyInput*> _inputs);
         void removePolicy();
         
-        bool registerCallback(Policy::PolicyMask _mask, Policy::PolicyCallback _callback);
+        template<typename ...Argumens>
+        bool registerCallback(Policy::PolicyMask _mask, std::function<void(Argumens ... _args)> _callback);
 
     protected:
         virtual void loopCallback() {};
@@ -173,6 +174,10 @@ namespace flow{
     }
 
 
+    template<typename ...Argumens>
+    bool Block::registerCallback(Policy::PolicyMask _mask, std::function<void(Argumens ... _args)> _callback){
+        return iPolicy_ && iPolicy_->registerCallback(_mask, _callback);
+    }
 
 }
 

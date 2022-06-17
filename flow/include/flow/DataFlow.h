@@ -24,6 +24,7 @@
 #define FLOW_DATAFLOW_H_
 
 #include <flow/Export.h>
+#include <flow/ThreadPool.h>
 
 #include <boost/any.hpp>
 #include <chrono>
@@ -42,8 +43,8 @@ namespace flow{
     /// @ingroup  flow
     class FLOW_DECL DataFlow{
     public:
-        /// Construct a data flow with a set if input flows and associate a callback to it.
-        DataFlow(std::map<std::string, std::string> _flows, std::function<void(DataFlow _f)> _callback);
+        template <typename ...Arguments>
+        static DataFlow* create(const std::map<std::string, std::string>& _mapTags, std::function<void(Arguments ... _args)> _callback);
 
         /// Update an specific input tag. If all the inputs have been satisfied then the callback is called.
         void update(std::string _tag, boost::any _data);
@@ -59,10 +60,20 @@ namespace flow{
         float frequency() const;
 
     private:
-        std::map<std::string, std::string>  types_;
-        std::map<std::string, boost::any>     data_;
-        std::map<std::string, bool>         updated_;
-        std::function<void(DataFlow _f)> callback_;
+        template<typename T_>
+        static T_ castData(boost::any _data) {
+            return boost::any_cast<T_>(_data);
+        }
+
+        /// Construct a data flow with a set if input flows and associate a callback to it.
+        DataFlow(const std::map<std::string, std::string>& _mapTags, std::function<void(const std::map<std::string, boost::any> &)> _callback);
+
+
+    private:
+        std::map<std::string, std::string>                          types_;
+        std::map<std::string, boost::any>                           data_;
+        std::map<std::string, bool>                                 updated_;
+        std::function<void(const std::map<std::string, boost::any> &)>   callback_;
         
         std::chrono::time_point<std::chrono::system_clock> lastUsageT_;
         float usageFreq_ = 0;
@@ -75,6 +86,40 @@ namespace flow{
 }
 
 namespace flow {
+
+
+    template <typename ...Arguments>
+    DataFlow* DataFlow::create(const std::map<std::string, std::string>& _mapTags, std::function<void(Arguments ... _args)> _callback){
+    
+        auto tmpCb = [&]<std::size_t ...Is>   (	std::map<std::string, boost::any> _data,
+												std::vector<std::string> _tags,  
+												std::function<void(Arguments... _args)> _insideCb, 
+												std::index_sequence<Is...> const &) {
+			
+			std::vector<boost::any> parsedData;
+			for (const auto& t : _tags) {
+				if (_data.find(t) != _data.end()) {
+					parsedData.push_back(_data[t]);
+				} else {
+					return; // One of the inputs is not present, do not proceed or will crash
+				}
+			}
+			
+            _insideCb(castData<Arguments>(parsedData[Is])...);
+
+		};
+
+        std::vector<std::string> listTags;
+        for (const auto& [tag, type] : _mapTags) {
+            listTags.push_back(tag);
+        }
+
+		auto finalCb = std::bind(tmpCb, std::placeholders::_1, listTags, _callback, std::make_index_sequence<sizeof...(Arguments)>{});
+
+        return new DataFlow(_mapTags, finalCb);
+
+    }
+
 
     template<typename T_>
     inline T_ DataFlow::get(std::string const &_tag){

@@ -67,10 +67,12 @@ namespace flow{
     class FLOW_DECL Policy{
         public:
             typedef std::vector<std::string> PolicyMask;
-            typedef std::function<void(DataFlow _f)> PolicyCallback;
 
             Policy(std::vector<PolicyInput*> _inputs);
-            bool registerCallback(PolicyMask _mask, PolicyCallback _callback);
+
+            template<typename ...Arguments>
+            bool registerCallback(PolicyMask _mask, std::function<void(Arguments..._args)> _callback);
+
             void update(std::string _tag, boost::any _data);
     
             int nInputs();
@@ -91,6 +93,28 @@ namespace flow{
             
             std::unordered_map<std::string, Outpipe*>   connetedPipes_; 
     };
+}
+
+namespace flow {
+
+    template<typename ...Arguments>
+    bool Policy::registerCallback(PolicyMask _mask, std::function<void(Arguments..._args)> _callback){
+        std::map<std::string, std::string> flows;
+        for (auto& m : _mask) {
+            // auto iter = std::find_if(inputs_.begin(), inputs_.end(), [&](const std::pair<std::string, std::string>& _in){return _in.first == m;});
+            auto iter = inputs_.find(m);
+            if (iter != inputs_.end()) {
+                flows[iter->first] = iter->second;
+            }
+        }
+        if (flows.size()) {
+            flows_.push_back(DataFlow::create(flows, _callback));
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 }
 
 

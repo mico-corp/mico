@@ -20,15 +20,75 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 #include <flow/DataFlow.h>
+#include <flow/Policy.h>
+#include <flow/Outpipe.h>
 #include <iostream>
+
+using namespace flow;
+
+void testDataFlowCreation();
+void testPolicyCreation();
 
 int main(int _argc, char **_argv){
 
-    auto types = flow::TypeLog::registeredTypes();
-    std::cout << "size: " << types.size() << std::endl;
-    for(auto &type:types){
-        std::cout << type << std::endl;
-    }
+	testDataFlowCreation();
+	testPolicyCreation();
+}
 
 
+void testDataFlowCreation() {
+
+	std::map<std::string, std::string> tags = {
+		{"i1", "int"},
+		{"i2", "int"}
+	};
+
+	std::function<void(int, int)> cb = [](int _i1, int _i2) {
+		std::cout << "I am " << _i1 + _i2 << std::endl;
+	};
+
+	DataFlow* df = DataFlow::create(tags, cb);
+
+	df->update("i1", 1);
+	df->update("i2", 1);
+
+	std::this_thread::sleep_for(std::chrono::seconds(1));
+
+}
+
+
+void testPolicyCreation() {
+	Policy pol({
+		makeInput<int>("i1"),
+		makeInput<std::string>("i2"),
+		makeInput<float>("i3")
+		});
+
+	std::function<void(int)> cb1 = [](int _i1) {
+		std::cout << "I am cb1 and just have one argument which value is " << _i1 << std::endl;
+	};
+
+	pol.registerCallback({ "i1"}, cb1);
+
+	std::function<void(std::string, float)> cb2 = [](std::string _i2, float _i3) {
+		std::cout << "I am cb2, and I have two arguments which values are " << _i2 << " and " << _i3 << std::endl;
+	};
+
+	pol.registerCallback({ "i2", "i3" }, cb2);
+
+
+	auto* o1 = makeOutput<int>("o1");
+	auto* o2 = makeOutput<std::string>("o2");
+	auto* o3 = makeOutput<float>("o3");
+
+
+	o1->registerPolicy(&pol, "i1");
+	o2->registerPolicy(&pol, "i2");
+	o3->registerPolicy(&pol, "i3");
+
+	o1->flush(1);
+	o2->flush(std::string("hola"));
+	o3->flush(1.0f);
+
+	std::this_thread::sleep_for(std::chrono::seconds(1));
 }
