@@ -78,7 +78,7 @@ TEST(registration, registration)  {
 }
 
 TEST(transmission_int_1, transmission_int)  {
-    Outpipe op("counter", "int");
+    Outpipe op("number", "int"); // Tags of Output and Policy do not need to be the same.
 
     Policy pol({makeInput<int>("counter")});
 

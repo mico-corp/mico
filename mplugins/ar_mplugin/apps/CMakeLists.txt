@@ -26,7 +26,7 @@
 ##############################################################################
 
 add_executable(calibration_app calibration_app.cpp)
-set_target_properties(calibration_app PROPERTIES CXX_STANDARD 17)
+target_compile_features(calibration_app PRIVATE cxx_std_20)
 
 # OpenCV
 find_package(OpenCV REQUIRED COMPONENTS core highgui features2d tracking)
