@@ -197,10 +197,9 @@ namespace mico{
                 
                 createPolicy({  flow::makeInput<bool>("A")});
 
-                registerCallback({"A"}, 
-                    [&](flow::DataFlow _data){
-                        bool res = !_data.get<bool>("A");
-                        getPipe("NoA")->flush(res);
+                registerCallback<bool>({"A"}, 
+                    [&](bool _a){
+                        getPipe("NoA")->flush(!_a);
                     }
                 );
             }
@@ -231,10 +230,10 @@ namespace mico{
                 createPipe<bool>("out");
                 createPolicy({  flow::makeInput<bool>("A"),
                                 flow::makeInput<bool>("B") });
-                registerCallback({"A", "B"}, 
-                    [&](flow::DataFlow _data){
-                        bool res = _data.get<bool>("A") && _data.get<bool>("B");
-                        getPipe("out")->flush(res);
+                registerCallback<bool, bool>(
+                    {"A", "B"},
+                    [&](bool _a, bool _b){
+                        getPipe("out")->flush(_a && _b);
                     }
                 );
             }
@@ -263,10 +262,10 @@ namespace mico{
                 createPipe<bool>("out");
                 createPolicy({  flow::makeInput<bool>("A"),
                                 flow::makeInput<bool>("B") });
-                registerCallback({"in"}, 
-                    [&](flow::DataFlow _data){
-                        bool res = _data.get<bool>("A") || _data.get<bool>("B");
-                        getPipe("out")->flush(res);
+                registerCallback<bool, bool>(
+                    {"A", "B"},
+                    [&](bool _a, bool _b){
+                        getPipe("out")->flush(_a || _b);
                     }
                 );
             }

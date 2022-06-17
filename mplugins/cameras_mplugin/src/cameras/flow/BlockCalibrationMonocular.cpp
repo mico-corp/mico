@@ -39,12 +39,12 @@ namespace mico {
         BlockCalibrationMonocular::BlockCalibrationMonocular() {
             createPolicy({ flow::makeInput<cv::Mat>("Image") });
 
-            registerCallback({ "Image" },
-                [&](flow::DataFlow  _data) {
+            registerCallback<cv::Mat>({ "Image" },
+                [&](cv::Mat  _image) {
                     if (idle_) {
                         idle_ = false;
 
-                        cv::Mat image = _data.get<cv::Mat>("Image");
+                        cv::Mat image = _image;
                         if (image.rows != 0) {
 
                             std::vector<cv::Point2f> points;

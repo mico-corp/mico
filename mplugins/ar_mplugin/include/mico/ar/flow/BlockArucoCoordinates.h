@@ -80,6 +80,9 @@ namespace mico{
                                                                 "   - \n";};
 
         private:
+            void policyCallback(cv::Mat _image);
+
+        private:
             int id_ = 1;
             cv::Ptr<cv::aruco::Dictionary> dictionary_;
 

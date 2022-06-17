@@ -36,14 +36,13 @@ namespace mico{
 
             createPolicy({  flow::makeInput<Eigen::Matrix4f>("T") });
 
-            registerCallback({"T"}, 
-                [&](flow::DataFlow _data){
+            registerCallback<Eigen::Matrix4f>({"T"},
+                [&](Eigen::Matrix4f _t){
                     if (!idle_) return;
                     idle_ = false;
 
-                    auto T = _data.get<Eigen::Matrix4f>("T");
                     if (getPipe("Inverse")->registrations()) {
-                        Eigen::Matrix4f inv = T.inverse().eval();
+                        Eigen::Matrix4f inv = _t.inverse().eval();
                         getPipe("Inverse")->flush(inv);
                     }
                                 

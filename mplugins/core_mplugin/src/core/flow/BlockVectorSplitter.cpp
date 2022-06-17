@@ -35,13 +35,12 @@ namespace mico{
         BlockVectorSplitter::BlockVectorSplitter(){
             createPolicy({  flow::makeInput<std::vector<float>>("vector") });
             
-            registerCallback({"vector"},
-                                    [&](flow::DataFlow _data){
-                                        auto v = _data.get<std::vector<float>>("vector");
-                                        if (v.size() != nTrajs_) return;
+            registerCallback<std::vector<float>>({"vector"},
+                                    [&](std::vector<float> _v){
+                                        if (_v.size() != nTrajs_) return;
 
                                         for(unsigned i = 0; i < nTrajs_; i++){
-                                            getPipe("v" +std::to_string(i))->flush(v[i]);
+                                            getPipe("v" +std::to_string(i))->flush(_v[i]);
                                         }
                                     }
             );

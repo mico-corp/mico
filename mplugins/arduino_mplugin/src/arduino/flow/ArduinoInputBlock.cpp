@@ -30,22 +30,21 @@ namespace mico {
         ArduinoInputBlock::ArduinoInputBlock() {
             createPolicy({ flow::makeInput<bool>("data") });
 
-            registerCallback({ "data" },
-                [&](flow::DataFlow _data) {
+            registerCallback<boost::any>({ "data" },
+                [&](boost::any _data) {
                     if (!ArduinoConnectionBlock::get()) return;
 
-                    auto data = _data.get<boost::any>("data");
-                    if (strcmp(typeid(bool).name(), data.type().name()) == 0) {  // 666 TODO Not fancy but want to see it working nowwww!
-                        ArduinoConnectionBlock::get()->write(id_, (int) boost::any_cast<bool>(data));
-                    } else if(strcmp(typeid(int).name(), data.type().name()) == 0) {  // 666 TODO Not fancy but want to see it working nowwww!
-                        ArduinoConnectionBlock::get()->write(id_, boost::any_cast<int>(data));
+                    if (strcmp(typeid(bool).name(), _data.type().name()) == 0) {  // 666 TODO Not fancy but want to see it working nowwww!
+                        ArduinoConnectionBlock::get()->write(id_, (int) boost::any_cast<bool>(_data));
+                    } else if(strcmp(typeid(int).name(), _data.type().name()) == 0) {  // 666 TODO Not fancy but want to see it working nowwww!
+                        ArduinoConnectionBlock::get()->write(id_, boost::any_cast<int>(_data));
                     }
-                    else if (strcmp(typeid(float).name(), data.type().name()) == 0) {
-                        ArduinoConnectionBlock::get()->write(id_, boost::any_cast<float>(data));
-                    }else if (strcmp(typeid(std::vector<int>).name(), data.type().name()) == 0) {
-                        ArduinoConnectionBlock::get()->write(id_, boost::any_cast<std::vector<int>>(data));
-                    }else if (strcmp(typeid(std::vector<float>).name(), data.type().name()) == 0) {
-                        ArduinoConnectionBlock::get()->write(id_, boost::any_cast<std::vector<float>>(data));
+                    else if (strcmp(typeid(float).name(), _data.type().name()) == 0) {
+                        ArduinoConnectionBlock::get()->write(id_, boost::any_cast<float>(_data));
+                    }else if (strcmp(typeid(std::vector<int>).name(), _data.type().name()) == 0) {
+                        ArduinoConnectionBlock::get()->write(id_, boost::any_cast<std::vector<int>>(_data));
+                    }else if (strcmp(typeid(std::vector<float>).name(), _data.type().name()) == 0) {
+                        ArduinoConnectionBlock::get()->write(id_, boost::any_cast<std::vector<float>>(_data));
                     }
                 }
             );

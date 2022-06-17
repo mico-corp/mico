@@ -38,15 +38,13 @@ namespace mico{
                             flow::makeInput<boost::any>("B") ,
                             flow::makeInput<float>("condition") });
             
-            registerCallback({"A", "B", "condition"},
-                                    [&](flow::DataFlow _data){
-                                        auto condition = _data.get<bool>("condition");
+            registerCallback<boost::any, boost::any, bool> ({"A", "B", "condition"},
+                                    [&](boost::any _a, boost::any _b, bool _condition){
+                                        auto condition = _condition;
                                         if(condition){
-                                            auto v1 = _data.get<boost::any>("A");
-                                            getPipe("output")->flush(v1);
+                                            getPipe("output")->flush(_a);
                                         }else {
-                                            auto v2 = _data.get<boost::any>("B");
-                                            getPipe("output")->flush(v2);
+                                            getPipe("output")->flush(_b);
                                         }
                                     }
             );

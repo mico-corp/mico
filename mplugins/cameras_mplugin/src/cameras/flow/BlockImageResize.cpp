@@ -40,12 +40,12 @@ namespace mico {
             createPipe<cv::Mat>("out");
             createPolicy({ flow::makeInput<cv::Mat>("in") });
 
-            registerCallback({ "in" },
-                [&](flow::DataFlow  _data) {
+            registerCallback<cv::Mat>({ "in" },
+                [&](cv::Mat _image) {
                     if (idle_) {
                         idle_ = false;
 
-                        cv::Mat image = _data.get<cv::Mat>("in").clone();
+                        cv::Mat image = _image.clone();
                         if (image.rows != 0) {
                             if(getPipe("out")->registrations()){
                                 cv::resize(image, image, cv::Size(width_, height_));

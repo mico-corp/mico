@@ -80,9 +80,9 @@ namespace mico{
                             flow::makeInput<boost::any>("A"),
                             flow::makeInput<boost::any>("B")});
 
-            registerCallback({ "Signal" },
-                [&](flow::DataFlow _data) {
-                    flowA_ = _data.get<bool>("Signal");
+            registerCallback<bool>({ "Signal" },
+                [&](bool _signal) {
+                    flowA_ = _signal;
                     if (flowA_) {
                         img_->setPixmap(QIcon(fileA.c_str()).pixmap(50, 50));
                     } else {
@@ -91,17 +91,17 @@ namespace mico{
                 }
             );
 
-            registerCallback({ "A" },
-                [&](flow::DataFlow _data) {
+            registerCallback<boost::any>({ "A" },
+                [&](boost::any _a) {
                     if (auto pipe = getPipe("Out"); pipe->registrations() && flowA_)
-                        pipe->flush(_data.get<boost::any>("A"));
+                        pipe->flush(_a);
                 }
             );
 
-            registerCallback({ "B" },
-                [&](flow::DataFlow _data) {
+            registerCallback<boost::any>({ "B" },
+                [&](boost::any _b) {
                     if (auto pipe = getPipe("Out"); pipe->registrations() && !flowA_)
-                        pipe->flush(_data.get<boost::any>("B"));
+                        pipe->flush(_b);
                 }
             );
         }
@@ -128,9 +128,9 @@ namespace mico{
             createPolicy({ flow::makeInput<bool>("signal"),
                             flow::makeInput<boost::any>("input") });
 
-            registerCallback({ "signal" },
-                [&](flow::DataFlow _data) {
-                    flow_ = _data.get<bool>("signal");
+            registerCallback<bool>({ "signal" },
+                [&](bool _signal) {
+                    flow_ = _signal;
                     if (flow_) 
                         img_->setPixmap(QIcon(fileOn.c_str()).pixmap(50, 50));
                     else
@@ -138,10 +138,10 @@ namespace mico{
                 }
             );
 
-            registerCallback({ "input" },
-                [&](flow::DataFlow _data) {
+            registerCallback<boost::any>({ "input" },
+                [&](boost::any _input) {
                     if (auto pipe = getPipe("out"); pipe->registrations() && flow_)
-                        pipe->flush(_data.get<boost::any>("input"));
+                        pipe->flush(_input);
                 }
             );
         }

@@ -42,23 +42,17 @@ namespace mico{
                             flow::makeInput<float>("pitch"),
                             flow::makeInput<float>("yaw") });
 
-            registerCallback({"x", "y", "z", "roll", "pitch", "yaw"}, 
-                [&](flow::DataFlow _data){
-                    auto x = _data.get<float>("x");
-                    auto y = _data.get<float>("y");
-                    auto z = _data.get<float>("z");
-                    auto roll = _data.get<float>("roll");
-                    auto pitch = _data.get<float>("pitch");
-                    auto yaw = _data.get<float>("yaw");
-
+            registerCallback<float, float, float, float, float, float> (
+                {"x", "y", "z", "roll", "pitch", "yaw"}, 
+                [&](float _x, float _y, float _z, float _roll, float _pitch, float _yaw){
                     Eigen::Matrix4f coordinates = Eigen::Matrix4f::Identity();
-                    coordinates.block<3,3>(0,0) =    Eigen::AngleAxisf(roll, Eigen::Vector3f::UnitX()).matrix()*
-                                                    Eigen::AngleAxisf(pitch, Eigen::Vector3f::UnitY()).matrix() *
-                                                    Eigen::AngleAxisf(yaw, Eigen::Vector3f::UnitZ()).matrix();
+                    coordinates.block<3,3>(0,0) =    Eigen::AngleAxisf(_roll, Eigen::Vector3f::UnitX()).matrix()*
+                                                     Eigen::AngleAxisf(_pitch, Eigen::Vector3f::UnitY()).matrix() *
+                                                     Eigen::AngleAxisf(_yaw, Eigen::Vector3f::UnitZ()).matrix();
 
-                    coordinates(0,3) = x;
-                    coordinates(1,3) = y;
-                    coordinates(2,3) = z;
+                    coordinates(0,3) = _x;
+                    coordinates(1,3) = _y;
+                    coordinates(2,3) = _z;
 
 
                     if (getPipe("pose")->registrations()) {

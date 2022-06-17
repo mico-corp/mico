@@ -33,17 +33,15 @@ namespace mico{
             createPolicy({  flow::makeInput<Eigen::Matrix4f>("coordinates"),
                             flow::makeInput<cv::Mat>("image") });
 
-            registerCallback({ "coordinates", "image" },
-                [&](flow::DataFlow _data) {
+            registerCallback<Eigen::Matrix4f, cv::Mat> ({ "coordinates", "image" },
+                [&](Eigen::Matrix4f _coordinates, cv::Mat _image) {
                     if (!idle_) return;
                     if (!widget_) return;
 
                     idle_ = false;
-                    Eigen::Matrix4f coordinates = _data.get<Eigen::Matrix4f>("coordinates");
-                    cv::Mat image = _data.get<cv::Mat>("image");
                     //std::cout << coordinates << std::endl;
-                    widget_->updatePose(coordinates);
-                    widget_->updateBackgroundImage(image);
+                    widget_->updatePose(_coordinates);
+                    widget_->updateBackgroundImage(_image);
                     idle_ = true;
                 }
             );

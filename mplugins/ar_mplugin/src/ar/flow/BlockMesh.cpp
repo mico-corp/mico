@@ -34,14 +34,14 @@ namespace mico{
 
             createPolicy({  flow::makeInput<Eigen::Matrix4f>("coordinates")});
 
-            registerCallback({ "coordinates" },
-                [&](flow::DataFlow _data) {
+            registerCallback<Eigen::Matrix4f>(
+                { "coordinates" },
+                [&](Eigen::Matrix4f _coordinates) {
                     if (!idle_) return;
                     
                     idle_ = false;
-                    Eigen::Matrix4f coordinates = _data.get<Eigen::Matrix4f>("coordinates");
                     if(mesh_){
-                        mesh_->transform(coordinates);
+                        mesh_->transform(_coordinates);
                     }
                     idle_ = true;
                 }
