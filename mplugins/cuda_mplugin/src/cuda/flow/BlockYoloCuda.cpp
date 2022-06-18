@@ -57,10 +57,7 @@ namespace mico{
 
             registerCallback<cv::Mat>(   {"input"}, 
                                 [&](cv::Mat _image){
-                                    if(!idle_)
-                                        return;
 
-                                    idle_ = false;
                                     if(getPipe("image")->registrations() || getPipe("detections")->registrations()){
                                         cv::Mat frame = _image.clone();
                                         cv::Mat blob;        
@@ -83,7 +80,6 @@ namespace mico{
                                         }
 
                                     }
-                                    idle_ = true;
                                 }
             );
         }

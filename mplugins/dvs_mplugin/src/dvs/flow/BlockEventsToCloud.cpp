@@ -35,19 +35,15 @@ namespace dvs{
         createPolicy({flow::makeInput<dv::EventStore>("events")});
         registerCallback< dv::EventStore>({"events"},
                                 [&](dv::EventStore _events){
-                                    if(idle_){
-                                        idle_ = false;
-                                        auto events = _events;
+                                    auto events = _events;
                                         
-                                        pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr eventsCloud(new pcl::PointCloud<pcl::PointXYZRGBNormal>());
-                                        if( obtainPointCloudFromEvents(events,eventsCloud) ){
+                                    pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr eventsCloud(new pcl::PointCloud<pcl::PointXYZRGBNormal>());
+                                    if( obtainPointCloudFromEvents(events,eventsCloud) ){
 
-                                            if(getPipe("cloud")->registrations() !=0 )
-                                                getPipe("cloud")->flush(eventsCloud); 
-                                        }
-
-                                        idle_ = true;
+                                        if(getPipe("cloud")->registrations() !=0 )
+                                            getPipe("cloud")->flush(eventsCloud); 
                                     }
+
                                 }
         );
     }

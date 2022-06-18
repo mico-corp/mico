@@ -40,16 +40,12 @@ namespace fastcom_wrapper{
         static std::string inputType(){ return InputType_; };
 
         auto dataCallback(flow::DataFlow _data) {
-            if(pub_!= nullptr && idle_){
-                idle_ = false;
+            if(pub_!= nullptr){
                 auto flowData = _data.get<FlowType_>(inputName());
                 auto fastcomData(flowData);
                 pub_->publish(fastcomData);
-                idle_ = true;  
             }
         }
-
-        bool idle_ = true;
         Publisher_ *pub_;
 
     };

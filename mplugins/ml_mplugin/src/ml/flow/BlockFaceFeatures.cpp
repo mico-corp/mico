@@ -43,10 +43,6 @@ namespace mico{
 
             registerCallback<cv::Mat>(   {"face"}, 
                                 [&](cv::Mat _image){
-                                    if(!idle_)
-                                        return;
-
-                                    idle_ = false;
                                     if(getPipe("descriptor")->registrations()){
                                         cv::Mat frame = _image.clone();
                                         if (frame.rows != 0) {
@@ -67,14 +63,12 @@ namespace mico{
                                             if (getPipe("descriptor")->registrations()) getPipe("descriptor")->flush(features);
                                         }
                                     }
-                                    idle_ = true;
                                 }
             );
         }
 
         BlockFaceFeatures::~BlockFaceFeatures() {
-            while(!idle_){ }
-            idle_ = false;
+            
         }
     }
 }

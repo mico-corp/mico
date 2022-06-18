@@ -96,7 +96,6 @@ namespace mico{
             typedef cv::Rect2d cvRect;
 #endif
             
-            bool idle_ = true;
             std::mutex dataLock_;
             cv::Ptr<cv::Tracker> tracker_ = nullptr;
             std::string lastTrackerName_ = "";// App crashes when reinitializing an already runned tracker, so keep track of name to recreate it every initialization.

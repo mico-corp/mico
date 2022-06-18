@@ -35,14 +35,9 @@ namespace mico{
 
             registerCallback<Eigen::Matrix4f, cv::Mat> ({ "coordinates", "image" },
                 [&](Eigen::Matrix4f _coordinates, cv::Mat _image) {
-                    if (!idle_) return;
                     if (!widget_) return;
-
-                    idle_ = false;
-                    //std::cout << coordinates << std::endl;
                     widget_->updatePose(_coordinates);
                     widget_->updateBackgroundImage(_image);
-                    idle_ = true;
                 }
             );
 

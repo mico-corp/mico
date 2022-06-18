@@ -80,7 +80,6 @@ namespace mico{
 
                 
         private:
-            bool idle_ = true;
             std::mutex dataLock_;
             cv::Ptr<cv::Feature2D> detector_;
         };

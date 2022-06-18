@@ -93,7 +93,6 @@ namespace mico {
             QLabel* imageView_ = nullptr;
             QTimer* imageRefresher_ = nullptr;
             cv::Mat lastImage_;
-            bool idle_ = true;
 
             QProgressBar* progressX_ = nullptr;
             QProgressBar* progressY_ = nullptr;

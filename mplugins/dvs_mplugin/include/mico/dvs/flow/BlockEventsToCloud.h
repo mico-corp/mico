@@ -53,8 +53,6 @@ namespace dvs{
     private:
         bool obtainPointCloudFromEvents(dv::EventStore _events , SharedPc &_cloud);  
 
-    private:
-        bool idle_ = true;
 
     };
 }

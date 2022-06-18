@@ -68,7 +68,6 @@ namespace mico{
 
         private:
             int id_ = 0;
-            bool idle_ = true;
         };
     }
 

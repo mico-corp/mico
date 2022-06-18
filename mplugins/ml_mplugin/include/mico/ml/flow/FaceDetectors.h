@@ -77,7 +77,7 @@ namespace mico{
 
         private:
             cv::CascadeClassifier face_cascade;
-            bool idle_ = true;
+
             bool isConfigured_ = false;
             std::mutex safeDestroy_;
 

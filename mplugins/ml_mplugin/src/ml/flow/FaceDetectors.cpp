@@ -43,10 +43,7 @@ namespace mico{
                                         return;
 
                                     std::lock_guard<std::mutex> lock(safeDestroy_);
-                                    if (!idle_)
-                                        return;
 
-                                    idle_ = false;
                                     if(getPipe("result")->registrations() != 0 || getPipe("detections")->registrations() != 0 || getPipe("n_detections")->registrations() != 0){
                                         cv::Mat frame = _image.clone();
                                         cv::Mat frame_gray;
@@ -70,20 +67,16 @@ namespace mico{
                                         }
 
                                     }
-                                    idle_ = true;
                                 }
             );
         }
 
         BlockHaarCascade::~BlockHaarCascade() {
             std::lock_guard<std::mutex> lock(safeDestroy_);
-            idle_ = false;
         }
 
         bool BlockHaarCascade::configure(std::vector<flow::ConfigParameterDef> _params) {
-            while (!idle_) {    // 666 This blocks the GUI, but it is a quick fix needed to release a working version.
-                std::this_thread::sleep_for(std::chrono::milliseconds(30));
-            }
+            
             isConfigured_ = false;
             if(auto detector = getParamByName(_params, "Detector"); detector){
                 if( !face_cascade.load( detectors[detector.value().selectedOption()])) {

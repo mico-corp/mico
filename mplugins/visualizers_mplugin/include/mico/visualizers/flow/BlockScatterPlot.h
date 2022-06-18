@@ -77,7 +77,6 @@ namespace mico{
             QCustomPlot *plot_ = nullptr;
             QTimer *dataTimer_ = nullptr;
             std::mutex imgLock_;
-            bool idle_ = true;
         };
     }
 }

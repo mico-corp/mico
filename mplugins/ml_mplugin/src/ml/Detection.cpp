@@ -47,10 +47,7 @@ namespace mico{
 
             registerCallback<std::vector<Detection>>(   {"detections"}, 
                                 [&](std::vector<Detection> _detections){
-                                    if(!idle_)
-                                        return;
-
-                                    idle_ = false;
+                                   
                                     if(getPipe("trigger")->registrations()){
                                         auto result = std::find_if(_detections.begin(), _detections.end(), [&](const Detection &_d){
                                             return _d.label_ == labelSelection_->value();
@@ -62,7 +59,6 @@ namespace mico{
                                             getPipe("trigger")->flush(result == _detections.end());
                                         }
                                     }
-                                    idle_ = true;
                                 }
             );
         }

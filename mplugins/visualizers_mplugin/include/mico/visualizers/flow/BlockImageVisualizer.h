@@ -78,7 +78,6 @@ namespace mico{
             QTimer* imageRefresher_ = nullptr;
             cv::Mat lastImage_;
             std::mutex imgLock_;
-            bool idle_ = true;
         };
     }
 }

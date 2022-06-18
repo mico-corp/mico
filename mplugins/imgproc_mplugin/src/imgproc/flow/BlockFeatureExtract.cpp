@@ -37,10 +37,6 @@ namespace mico{
 
             registerCallback<cv::Mat>(   {"input"},
                                 [&](cv::Mat _img){
-                                    if(!idle_)
-                                        return;
-
-                                    idle_ = false;
                                     if(getPipe("features")->registrations() || getPipe("descriptors")->registrations() || getPipe("debug")->registrations()){
                                         if (!detector_)
                                             return;
@@ -70,7 +66,6 @@ namespace mico{
                                             getPipe("debug")->flush(debug);
                                         }
                                     }
-                                    idle_ = true;
                                 }
             );
         }

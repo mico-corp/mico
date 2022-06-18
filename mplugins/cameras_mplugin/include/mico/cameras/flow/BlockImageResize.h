@@ -76,7 +76,6 @@ namespace mico {
             };
 
         private:
-            bool idle_ = true;
             int width_ = 640;
             int height_ = 480;
 

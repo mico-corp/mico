@@ -128,11 +128,6 @@ namespace mico {
         }
 
         void BlockPython::runPythonCode(flow::DataFlow _data, bool _useData){
-            if(!idle_)
-                return;
-            
-            idle_ = false;
-
             std::string pythonCode = pythonEditor_->toPlainText().toStdString();
             
             try {
@@ -167,7 +162,6 @@ namespace mico {
                 std::cout << "Catched std exception: " << _e.what() << "\n";
             }
 
-            idle_ = true;
         }
 
         

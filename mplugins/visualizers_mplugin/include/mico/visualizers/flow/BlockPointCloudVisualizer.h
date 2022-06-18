@@ -72,7 +72,6 @@ namespace mico{
             vtkSmartPointer<vtkActor> prevActor = nullptr;
             
             std::mutex actorGuard_;
-            bool idle_ = true;
             int currentIdx_ = 0;
 
         };

@@ -63,7 +63,6 @@ namespace mico{
 
             std::thread spinnerThread_;
             bool run_ = true;
-            bool idle_ = true;
             bool hasBeenInitialized_ = false;
 
 

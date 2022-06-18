@@ -73,7 +73,6 @@ namespace mico{
             Scene3d * scene_;
             std::shared_ptr<Mesh> mesh_;
 
-            bool idle_ = true;
         };
 
     }

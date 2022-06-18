@@ -37,13 +37,7 @@ namespace mico{
             registerCallback<Eigen::Matrix4f>(
                 { "coordinates" },
                 [&](Eigen::Matrix4f _coordinates) {
-                    if (!idle_) return;
-                    
-                    idle_ = false;
-                    if(mesh_){
-                        mesh_->transform(_coordinates);
-                    }
-                    idle_ = true;
+                    if(mesh_) mesh_->transform(_coordinates);
                 }
             );
 

@@ -40,14 +40,10 @@ namespace mico{
             registerCallback< Eigen::Matrix4f, Eigen::Matrix4f>({"T1", "T2"},
                 [&](Eigen::Matrix4f _t1, Eigen::Matrix4f _t2){
 
-                    if (!idle_) return;
-
-                    idle_ = false;
                     if (getPipe("T1*T2")->registrations()) {
                         Eigen::Matrix4f mul = _t1 * _t2;
                         getPipe("T1*T2")->flush(mul);
                     }
-                    idle_ = true;
 
 
                 

@@ -66,8 +66,7 @@ namespace mico{
 
             /// Return if the block is configurable.
             bool isConfigurable() override { return false; };
-        private:
-            bool idle_ = true;
+
         };
 
     }

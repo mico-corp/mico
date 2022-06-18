@@ -66,7 +66,6 @@ namespace mico{
         private:
             cv::dnn::Net net_;
             std::vector< cv::String > outputs_;
-            bool idle_ = true;
 
         };
     }

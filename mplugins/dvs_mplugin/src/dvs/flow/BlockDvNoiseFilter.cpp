@@ -51,13 +51,11 @@ namespace dvs{
         createPolicy({flow::makeInput<PolarityPacket>("events")});
         registerCallback<PolarityPacket>({"events"}, 
                                 [&](PolarityPacket _events){
-                                    if(idle_){
-                                        idle_ = false;
-                                        if(filterEvents(_events)){
-                                            getPipe("events")->flush(_events);
-                                        }
-                                        idle_ = true;
+                                    
+                                    if(filterEvents(_events)){
+                                        getPipe("events")->flush(_events);
                                     }
+                                    
                                 }
         );
     }

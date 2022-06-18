@@ -40,7 +40,7 @@ namespace mico{
                 [&](cvRect _bb) {
                     std::lock_guard<std::mutex> lock(dataLock_);
                     if (isInit_) return;
-                    idle_ = false;
+                    
                     isInit_ = false;
                     if (lastImage_.rows != 0) {
                         createTracker(lastTrackerName_);
@@ -50,20 +50,17 @@ namespace mico{
                             isInit_ = true;
                         }
                     }
-                    idle_ = true;
 
                 }
             );
 
             registerCallback<cv::Mat>(   {"input"}, 
                                 [&](cv::Mat  _img){
-                                    if(!idle_ && isInit_)
+                                    if(isInit_)
                                         return;
 
-                                    idle_ = false;
                                     if(getPipe("x")->registrations() || getPipe("y")->registrations() || getPipe("debug")->registrations()){
                                         if (!tracker_) {
-                                            idle_ = true;
                                             return;
                                         }
 
@@ -98,20 +95,15 @@ namespace mico{
                                             getPipe("debug")->flush(frame);
                                         }
                                     }
-                                    idle_ = true;
                                 }
             );
         }
 
         BlockTracker::~BlockTracker() {
-            std::unique_lock lck(safeDeletion_);
-            cv_.wait_for(lck, std::chrono::milliseconds(500), [&]() {return idle_; });
-            idle_ = false;
+
         }
         
         bool BlockTracker::configure(std::vector<flow::ConfigParameterDef> _params) {
-            while(!idle_){}
-            idle_ = false;
             std::lock_guard<std::mutex> lock(dataLock_);
 
             if(auto param = getParamByName(_params, "Algorithm"); param){
@@ -119,7 +111,6 @@ namespace mico{
                 createTracker(lastTrackerName_);
             }
 
-            idle_ = true;
             return true;
         }
     
@@ -140,14 +131,12 @@ namespace mico{
             l->addWidget(initBt);
             QObject::connect(initBt, &QPushButton::clicked, [&]() {
                 std::lock_guard<std::mutex> lock(dataLock_);
-                idle_ = false;
                 isInit_ = false;
                 if (lastImage_.rows != 0) {
                     bbox_ = cv::selectROI(lastImage_);
                     tracker_->init(lastImage_, bbox_);
                     isInit_ = true;
                 }
-                idle_ = true;
             });
 
             auto *stopBt = new QPushButton("Stop tracker");

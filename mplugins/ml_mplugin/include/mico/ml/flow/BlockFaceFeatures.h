@@ -104,7 +104,6 @@ namespace mico{
         
 
         private:
-            bool idle_ = true;
             anet_type featureDetector_;
         };
     }

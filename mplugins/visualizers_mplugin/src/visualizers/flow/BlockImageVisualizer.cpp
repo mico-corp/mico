@@ -37,15 +37,11 @@ namespace mico{
 
             registerCallback<cv::Mat>({"Image"}, 
                                     [&](cv::Mat _image){
-                                        if(idle_){
-                                            idle_ = false;  
-                                            
-                                            if(_image.rows != 0){
-                                                imgLock_.lock();
-                                                lastImage_ = _image;
-                                                imgLock_.unlock();
-                                            }
-                                            idle_ = true;
+                                        
+                                        if(_image.rows != 0){
+                                            imgLock_.lock();
+                                            lastImage_ = _image;
+                                            imgLock_.unlock();
                                         }
 
                                     }

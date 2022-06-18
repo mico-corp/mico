@@ -37,38 +37,29 @@ namespace mico{
 
             registerCallback<float>({ "signal1" },
                 [&](float _signal) {
-                    if (idle_) {
-                        idle_ = false;
-                        dataLock_.lock();
-                        pendingData1_.push_back(_signal);
-                        dataLock_.unlock();
-                        idle_ = true;
-                    }
+                    
+                    dataLock_.lock();
+                    pendingData1_.push_back(_signal);
+                    dataLock_.unlock();
+
                 }
             );
 
             registerCallback<float>({ "signal2" },
                 [&](float  _signal) {
-                    if (idle_) {
-                        idle_ = false;
-                        dataLock_.lock();
-                        pendingData2_.push_back(_signal);
-                        dataLock_.unlock();
-                        idle_ = true;
-                    }
+                    dataLock_.lock();
+                    pendingData2_.push_back(_signal);
+                    dataLock_.unlock();
 
                 }
             );
 
             registerCallback<float>({ "signal3" },
                 [&](float  _signal) {
-                    if (idle_) {
-                        idle_ = false;
-                        dataLock_.lock();
-                        pendingData3_.push_back(_signal);
-                        dataLock_.unlock();
-                        idle_ = true;
-                    }
+                
+                    dataLock_.lock();
+                    pendingData3_.push_back(_signal);
+                    dataLock_.unlock();
 
                 }
             );

@@ -63,7 +63,6 @@ namespace mico{
             void changeDetector(int _index);
 
         private:
-            bool idle_ = true;
 
             std::mutex detectorGuard_;
             std::vector<Detector*> detectorList_;

@@ -79,7 +79,6 @@ namespace mico{
         
         private:
             std::vector< cv::String > outputs_;
-            bool idle_ = true;
 
             QTableWidget *table_;
             std::mutex dataLock_;

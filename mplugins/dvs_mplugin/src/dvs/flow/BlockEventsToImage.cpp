@@ -34,15 +34,10 @@ namespace dvs{
         createPolicy({flow::makeInput<PolarityPacket>("events")});
         registerCallback< PolarityPacket>({"events"},
                                 [&](PolarityPacket _events){
-                                    if(idle_){
-                                        idle_ = false;
-                                        cv::Mat image = cv::Mat::zeros(cv::Size(imageWidth_,imageHeight_), CV_8UC3);
-                                        if(obtainImageFromEvents(_events,image))
-                                            if(getPipe("image")->registrations() !=0 )
-                                                getPipe("image")->flush(image); 
-
-                                        idle_ = true;
-                                    }
+                                    cv::Mat image = cv::Mat::zeros(cv::Size(imageWidth_,imageHeight_), CV_8UC3);
+                                    if(obtainImageFromEvents(_events,image))
+                                        if(getPipe("image")->registrations() !=0 )
+                                            getPipe("image")->flush(image); 
                                 }
         );
     }

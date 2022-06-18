@@ -38,15 +38,10 @@ namespace mico{
 
             registerCallback<Eigen::Matrix4f>({"T"},
                 [&](Eigen::Matrix4f _t){
-                    if (!idle_) return;
-                    idle_ = false;
-
                     if (getPipe("Inverse")->registrations()) {
                         Eigen::Matrix4f inv = _t.inverse().eval();
                         getPipe("Inverse")->flush(inv);
                     }
-                                
-                    idle_ = true;
                 }
             );
 

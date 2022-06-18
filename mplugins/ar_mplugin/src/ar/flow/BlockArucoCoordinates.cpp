@@ -83,13 +83,9 @@ namespace mico{
 
 
         void BlockArucoCoordinates::policyCallback(cv::Mat _image) {
-            if (!idle_) return;
-            idle_ = false;
+            
             auto image = _image.clone();
-            if (!image.rows) {
-                idle_ = true;
-                return;
-            }
+            if (!image.rows)  return;
 
             cv::rotate(image, image, cv::ROTATE_180);
 
@@ -153,8 +149,6 @@ namespace mico{
             if (getPipe("output_image")->registrations()) {
                 getPipe("output_image")->flush(image);
             }
-
-            idle_ = true;
         }
     }
 

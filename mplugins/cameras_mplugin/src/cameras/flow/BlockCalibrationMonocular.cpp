@@ -41,28 +41,24 @@ namespace mico {
 
             registerCallback<cv::Mat>({ "Image" },
                 [&](cv::Mat  _image) {
-                    if (idle_) {
-                        idle_ = false;
 
-                        cv::Mat image = _image;
-                        if (image.rows != 0) {
+                    cv::Mat image = _image;
+                    if (image.rows != 0) {
 
-                            std::vector<cv::Point2f> points;
-                            cv::Mat gray;
-                            cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
-                            bool found = cv::findChessboardCorners(gray, cv::Size(hSize_, vSize_), points, cv::CALIB_CB_ADAPTIVE_THRESH | cv::CALIB_CB_FAST_CHECK);
+                        std::vector<cv::Point2f> points;
+                        cv::Mat gray;
+                        cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
+                        bool found = cv::findChessboardCorners(gray, cv::Size(hSize_, vSize_), points, cv::CALIB_CB_ADAPTIVE_THRESH | cv::CALIB_CB_FAST_CHECK);
 
-                            if(found)
-                                drawChessboardCorners(image, cv::Size(hSize_, vSize_), points, found);
+                        if(found)
+                            drawChessboardCorners(image, cv::Size(hSize_, vSize_), points, found);
 
-                            imgLock_.lock();
-                            lastImage_ = image;
-                            imgLock_.unlock();
+                        imgLock_.lock();
+                        lastImage_ = image;
+                        imgLock_.unlock();
 
-                            if(found)
-                                checkRefineAndAdd(gray, points);
-                        }
-                        idle_ = true;
+                        if(found)
+                            checkRefineAndAdd(gray, points);
                     }
 
                 }

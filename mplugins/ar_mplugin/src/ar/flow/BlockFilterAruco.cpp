@@ -40,8 +40,6 @@ namespace mico{
             registerCallback<std::map<int, Eigen::Matrix4f>>(
                 {"all_coordinates"},
                 [&](std::map<int, Eigen::Matrix4f> _coordinates){
-                    if(!idle_) return;
-                    idle_ = false;
                     auto options = _coordinates;
 
                     if(options.find(id_) != options.end()){
@@ -49,8 +47,6 @@ namespace mico{
                             getPipe("coordinates")->flush(options[id_]);
                         }
                     }
-                                   
-                    idle_ = true;
                 }
             );
 
