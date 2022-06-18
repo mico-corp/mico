@@ -52,22 +52,22 @@ namespace flow{
         /// Query to check internal status of data and update the DataFlow
         void checkData();
 
-        /// Templatized method to get data of any type. Get methods are implemented all around the different plugins
-        template<typename T_>
-        T_ get(std::string const &_tag);
+        // 666 OLD INTERFACE Templatized method to get data of any type. Get methods are implemented all around the different plugins
+        // template<typename T_>
+        // T_ get(std::string const &_tag);
 
         /// Get the current frequency at which the DataFlow is triggering the callback.
         float frequency() const;
 
     private:
         template<typename T_>
-        static T_ castData(boost::any _data) {
-            return boost::any_cast<T_>(_data);
-        }
+        static T_ castData(boost::any _data);
 
         /// Construct a data flow with a set if input flows and associate a callback to it.
-        DataFlow(const std::map<std::string, std::string>& _mapTags, std::function<void(const std::map<std::string, boost::any> &)> _callback);
+        DataFlow(const std::map<std::string, std::string>& _mapTags);
 
+        template<typename... Arguments>
+        void prepareCallback(const std::vector<std::string>& _listTags, std::function<void(Arguments ... _args)> _callback);
 
     private:
         std::map<std::string, std::string>                          types_;
@@ -77,6 +77,8 @@ namespace flow{
         
         std::chrono::time_point<std::chrono::system_clock> lastUsageT_;
         float usageFreq_ = 0;
+
+        bool isRunning_ = false;
 
     public:
         static std::map<std::string, std::map<std::string, std::function<boost::any(boost::any&)>>> conversions_;
@@ -89,67 +91,105 @@ namespace flow {
 
 
     template <typename ...Arguments>
-    DataFlow* DataFlow::create(const std::map<std::string, std::string>& _mapTags, std::function<void(Arguments ... _args)> _callback){
+    inline DataFlow* DataFlow::create(const std::map<std::string, std::string>& _mapTags, std::function<void(Arguments ... _args)> _callback){
     
-        auto tmpCb = [&]<std::size_t ...Is>   (	std::map<std::string, boost::any> _data,
-												std::vector<std::string> _tags,  
-												std::function<void(Arguments... _args)> _insideCb, 
-												std::index_sequence<Is...> const &) {
-			
-			std::vector<boost::any> parsedData;
-			for (const auto& t : _tags) {
-				if (_data.find(t) != _data.end()) {
-					parsedData.push_back(_data[t]);
-				} else {
-					return; // One of the inputs is not present, do not proceed or will crash
-				}
-			}
-			
-            _insideCb(castData<Arguments>(parsedData[Is])...);
-
-		};
-
         std::vector<std::string> listTags;
         for (const auto& [tag, type] : _mapTags) {
             listTags.push_back(tag);
         }
 
-		auto finalCb = std::bind(tmpCb, std::placeholders::_1, listTags, _callback, std::make_index_sequence<sizeof...(Arguments)>{});
+        auto *df = new DataFlow(_mapTags);
+        df->prepareCallback(listTags, _callback);
 
-        return new DataFlow(_mapTags, finalCb);
+        return df;
 
+    }
+
+    template<typename... Arguments>
+    void DataFlow::prepareCallback(const std::vector<std::string>& _listTags, std::function<void(Arguments ... _args)> _callback) {
+        
+        // We need to create a template lambda to autoexpand the index_sequence to the size of the template parameter Arguments...
+        auto tmpCb = [&]<std::size_t ...Is>   (std::map<std::string, boost::any> _data,
+            std::vector<std::string> _tags,
+            std::function<void(Arguments... _args)> _insideCb,
+            std::index_sequence<Is...> const&) {
+
+            std::vector<boost::any> parsedData;
+            for (const auto& t : _tags) {
+                if (_data.find(t) != _data.end()) {
+                    parsedData.push_back(_data[t]);
+                }
+                else {
+                    return; // One of the inputs is not present, do not proceed or will crash
+                }
+            }
+
+            _insideCb(castData<Arguments>(parsedData[Is])...);
+            isRunning_ = false; // Finished running, can release the "resource"
+        };
+
+        // Then se save and pack everything inside of a simple functor.
+        callback_ = std::bind(tmpCb, std::placeholders::_1, _listTags, _callback, std::make_index_sequence<sizeof...(Arguments)>{});
     }
 
 
     template<typename T_>
-    inline T_ DataFlow::get(std::string const &_tag){
-        if(types_.find(_tag) != types_.end()){
-            //throw std::invalid_argument("Input tag does not exist, Add it as policy");
-            if(strcmp(typeid(T_).name(), data_[_tag].type().name()) == 0 ){
-                return boost::any_cast<T_>(data_[_tag]);                
-            }else{
-                if( auto iter = conversions_.find(data_[_tag].type().name()); iter != conversions_.end()){
-                    if(iter->second.find(typeid(T_).name()) != iter->second.end()){
-                        std::function<boost::any(boost::any&)> fn = iter->second[typeid(T_).name()];
-                        return boost::any_cast<T_>(fn(data_[_tag]));
-                    }
+    inline T_ DataFlow::castData(boost::any _data) {
+        if (strcmp(typeid(T_).name(), _data.type().name()) == 0) {
+            return boost::any_cast<T_>(_data);
+        }
+        else {
+            if (auto iter = conversions_.find(_data.type().name()); iter != conversions_.end()) {
+                if (iter->second.find(typeid(T_).name()) != iter->second.end()) {
+                    std::function<boost::any(boost::any&)> fn = iter->second[typeid(T_).name()];
+                    return boost::any_cast<T_>(fn(_data));
                 }
             }
-        } 
-        
-
-        if constexpr (std::is_arithmetic_v<T_>)
-            return 0;
-        else if constexpr (std::is_default_constructible_v<T_>)
-            return T_();
-        else
-            throw std::invalid_argument("Bad tag type when getting data from DataFlow");
+            // No data conversion is available... Then try some basic creations
+            if constexpr (std::is_arithmetic_v<T_>)
+                return 0;
+            else if constexpr (std::is_default_constructible_v<T_>)
+                return T_();
+            else
+                throw std::invalid_argument("Bad tag type when getting data from DataFlow");
+        }
     }
 
     template<>
-    inline boost::any DataFlow::get(std::string const& _tag) {
-        return data_[_tag];
+    inline boost::any DataFlow::castData(boost::any _data) {
+        return _data;
     }
+
+    // 666 OLD INTERFACE, about to be removed
+    //template<typename T_>
+    //inline T_ DataFlow::get(std::string const &_tag){
+    //    if(types_.find(_tag) != types_.end()){
+    //        //throw std::invalid_argument("Input tag does not exist, Add it as policy");
+    //        if(strcmp(typeid(T_).name(), data_[_tag].type().name()) == 0 ){
+    //            return boost::any_cast<T_>(data_[_tag]);                
+    //        }else{
+    //            if( auto iter = conversions_.find(data_[_tag].type().name()); iter != conversions_.end()){
+    //                if(iter->second.find(typeid(T_).name()) != iter->second.end()){
+    //                    std::function<boost::any(boost::any&)> fn = iter->second[typeid(T_).name()];
+    //                    return boost::any_cast<T_>(fn(data_[_tag]));
+    //                }
+    //            }
+    //        }
+    //    } 
+    //    
+
+    //    if constexpr (std::is_arithmetic_v<T_>)
+    //        return 0;
+    //    else if constexpr (std::is_default_constructible_v<T_>)
+    //        return T_();
+    //    else
+    //        throw std::invalid_argument("Bad tag type when getting data from DataFlow");
+    //}
+
+    //template<>
+    //inline boost::any DataFlow::get(std::string const& _tag) {
+    //    return data_[_tag];
+    //}
 }                                                                                \
 
 #define FLOW_CONVERSION_REGISTER(Type1_, Type2_, conversion_)                                                       \

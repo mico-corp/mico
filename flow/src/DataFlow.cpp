@@ -27,17 +27,6 @@ namespace flow{
 
     std::map<std::string, std::map<std::string, std::function<boost::any(boost::any&)>>> DataFlow::conversions_ = {};
 
-
-    DataFlow::DataFlow(const std::map<std::string, std::string>& _mapTags, std::function<void(const std::map<std::string, boost::any>&)> _callback){
-        callback_ = _callback;
-        for(auto &f: _mapTags){
-            types_[f.first] = f.second;
-            data_[f.first] = boost::any();
-            updated_[f.first] = false;
-        }
-        lastUsageT_ = std::chrono::system_clock::now();
-    }
-
     void DataFlow::update(std::string _tag, boost::any _data){
         if(data_.find(_tag)!= data_.end()){
             // Can we check here the type?
@@ -50,6 +39,8 @@ namespace flow{
     }
 
     void DataFlow::checkData(){
+        if (isRunning_) return; // Don't even try to run it if it is busy.
+
         int flagCounter = 0;
         for(auto flag = updated_.begin(); flag != updated_.end(); flag++){
             if(flag->second) flagCounter++;
@@ -87,4 +78,14 @@ namespace flow{
 
         return false;
     }
+
+    DataFlow::DataFlow(const std::map<std::string, std::string>& _mapTags) {
+        for (auto& f : _mapTags) {
+            types_[f.first] = f.second;
+            data_[f.first] = boost::any();
+            updated_[f.first] = false;
+        }
+        lastUsageT_ = std::chrono::system_clock::now();
+    }
+
 }
