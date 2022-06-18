@@ -33,19 +33,16 @@ namespace mico{
         BlockHistogramVisualizer::BlockHistogramVisualizer(){
             createPolicy({  flow::makeInput<std::vector<float>>("histogram") });
 
-            registerCallback({ "histogram" },
-                [&](flow::DataFlow  _data) {
-                   
-                    auto data = _data.get<std::vector<float>>("histogram");
-
-                    if (yData_.size() != data.size()) {
+            registerCallback<std::vector<float>>({ "histogram" },
+                [&](std::vector<float> _histogram) {
+                    if (yData_.size() != _histogram.size()) {
                         std::lock_guard<std::mutex> lock(dataLock_);
-                        yData_.resize(data.size());
+                        yData_.resize(_histogram.size());
                     }
     
-                    auto it1 = data.begin();
+                    auto it1 = _histogram.begin();
                     auto it2 = yData_.begin();
-                    while(it1 != data.end()){
+                    while(it1 != _histogram.end()){
                         *it2 = *it1;
                         it1++;
                         it2++;

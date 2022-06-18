@@ -76,10 +76,8 @@ namespace mico{
 
             createPolicy({flow::makeInput<float>("time")});
 
-            registerCallback({"time"}, [&](flow::DataFlow _data){
-                                        auto t = _data.get<float>("time"); 
-                                                
-                                        float result = amplitude_*sin(freq_*t + phase_);
+            registerCallback<float>({"time"}, [&](float _time){                                                
+                                        float result = amplitude_*sin(freq_*_time + phase_);
                                         getPipe("result")->flush(result);
                                     });
         }
@@ -113,10 +111,8 @@ namespace mico{
 
             createPolicy({ flow::makeInput<float>("time") });
 
-            registerCallback({ "time" }, [&](flow::DataFlow _data) {
-                auto t = _data.get<float>("time");
-
-                float result = amplitude_ * cos(freq_ * t + phase_);
+            registerCallback<float>({ "time" }, [&](float _time) {
+                float result = amplitude_ * cos(freq_ * _time + phase_);
                 getPipe("result")->flush(result);
                 });
         }
@@ -151,10 +147,8 @@ namespace mico{
 
             createPolicy({ flow::makeInput<float>("input") });
 
-            registerCallback({ "input" }, [&](flow::DataFlow _data) {
-                auto in = _data.get<float>("input");
-
-                float result = (in - minInput_) / (maxInput_ - minInput_) * (maxOutput_ - minOutput_) + minOutput_;
+            registerCallback<float>({ "input" }, [&](float _input) {
+                float result = (_input - minInput_) / (maxInput_ - minInput_) * (maxOutput_ - minOutput_) + minOutput_;
                 getPipe("output")->flush(result);
                 });
         }

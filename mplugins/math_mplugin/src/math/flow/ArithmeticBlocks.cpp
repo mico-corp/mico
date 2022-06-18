@@ -37,12 +37,9 @@ namespace mico{
             createPolicy({  flow::makeInput<float>("in_1"),
                             flow::makeInput<float>("in_2") });
 
-            registerCallback({"in_1", "in_2"}, 
-                                    [&](flow::DataFlow _data){
-                                        auto v1 = _data.get<float>("in_1");
-                                        auto v2 = _data.get<float>("in_2"); 
-                                             
-                                        getPipe("result")->flush(v1+v2);
+            registerCallback<float, float>({"in_1", "in_2"}, 
+                                    [&](float _i1, float _i2){
+                                        getPipe("result")->flush(_i1 + _i2);
                                     }
             );
         }
@@ -55,12 +52,9 @@ namespace mico{
                             flow::makeInput<float>("in_2")});
 
 
-            registerCallback({"in_1", "in_2"}, 
-                                    [&](flow::DataFlow _data){
-                                        auto v1 = _data.get<float>("in_1");
-                                        auto v2 = _data.get<float>("in_2"); 
-                                             
-                                        getPipe("result")->flush(v1-v2);
+            registerCallback<float, float>({"in_1", "in_2"}, 
+                                    [&](float _i1, float _i2){                                             
+                                        getPipe("result")->flush(_i1-_i2);
                                     }
             );
         }
@@ -73,12 +67,9 @@ namespace mico{
                             flow::makeInput<float>("in_2")});
 
 
-            registerCallback({"in_1", "in_2"}, 
-                                    [&](flow::DataFlow _data){
-                                        auto v1 = _data.get<float>("in_1");
-                                        auto v2 = _data.get<float>("in_2"); 
-                                             
-                                        getPipe("result")->flush(v1*v2);
+            registerCallback<float, float>({"in_1", "in_2"}, 
+                                    [&](float _i1, float _i2){
+                                        getPipe("result")->flush(_i1*_i2);
                                     }
             );
         }
@@ -91,12 +82,9 @@ namespace mico{
                             flow::makeInput<float>("in_2")});
 
 
-            registerCallback({"in_1", "in_2"}, 
-                                    [&](flow::DataFlow _data){
-                                        auto v1 = _data.get<float>("in_1");
-                                        auto v2 = _data.get<float>("in_2"); 
-                                             
-                                        getPipe("result")->flush(v1/v2);
+            registerCallback<float, float>({"in_1", "in_2"}, 
+                                    [&](float _i1, float _i2){
+                                        getPipe("result")->flush(_i1/_i2);
                                     }
             );
         }
@@ -108,10 +96,9 @@ namespace mico{
             createPolicy({  flow::makeInput<float>("in")});
 
 
-            registerCallback({"in"}, 
-                                    [&](flow::DataFlow _data){
-                                        auto v1 = _data.get<float>("in");
-                                        getPipe("result")->flush(sqrt(v1));
+            registerCallback<float>({"in"}, 
+                                    [&](float _in){
+                                        getPipe("result")->flush(sqrt(_in));
                                     }
             );
         }
@@ -123,12 +110,9 @@ namespace mico{
                             flow::makeInput<float>("exp")});
 
 
-            registerCallback({"base", "exp"}, 
-                                    [&](flow::DataFlow _data){
-                                        auto v1 = _data.get<float>("base");
-                                        auto v2 = _data.get<float>("exp");
-                                             
-                                        getPipe("result")->flush(float(pow(v1,v2)));
+            registerCallback<float, float>({"base", "exp"}, 
+                                    [&](float _i1, float _i2){                                             
+                                        getPipe("result")->flush(float(pow(_i1, _i2)));
                                     }
             );
         }
@@ -144,9 +128,9 @@ namespace mico{
 
             createPolicy({ flow::makeInput<float>("input") });
 
-            registerCallback({ "input" },
-                [&](flow::DataFlow _data) {
-                    acc_ += _data.get<float>("input");
+            registerCallback<float>({ "input" },
+                [&](float _in) {
+                    acc_ += _in;
 
                     getPipe("output")->flush(acc_);
             }

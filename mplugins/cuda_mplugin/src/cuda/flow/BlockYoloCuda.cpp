@@ -55,14 +55,14 @@ namespace mico{
 
             createPolicy({  flow::makeInput<cv::Mat>("input") });
 
-            registerCallback(   {"input"}, 
-                                [&](flow::DataFlow _data){
+            registerCallback<cv::Mat>(   {"input"}, 
+                                [&](cv::Mat _image){
                                     if(!idle_)
                                         return;
 
                                     idle_ = false;
                                     if(getPipe("image")->registrations() || getPipe("detections")->registrations()){
-                                        cv::Mat frame = _data.get<cv::Mat>("input").clone(); 
+                                        cv::Mat frame = _image.clone();
                                         cv::Mat blob;        
                                         std::vector<cv::Mat> result;
                                         try {

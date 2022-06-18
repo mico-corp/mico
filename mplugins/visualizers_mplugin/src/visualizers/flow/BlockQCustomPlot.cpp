@@ -35,36 +35,37 @@ namespace mico{
                             flow::makeInput<float>("signal2"), 
                             flow::makeInput<float>("signal3") });
 
-            registerCallback({ "signal1" },
-                [&](flow::DataFlow  _data) {
-                    float data = _data.get<float>("signal1");
-                    dataLock_.lock();
-                    pendingData1_.push_back(data);
-                    dataLock_.unlock();
-                }
-            );
-            registerCallback({ "signal2" },
-                [&](flow::DataFlow  _data) {
+            registerCallback<float>({ "signal1" },
+                [&](float _signal) {
                     if (idle_) {
                         idle_ = false;
-
-                        float data = _data.get<float>("signal2");
                         dataLock_.lock();
-                        pendingData2_.push_back(data);
+                        pendingData1_.push_back(_signal);
+                        dataLock_.unlock();
+                        idle_ = true;
+                    }
+                }
+            );
+
+            registerCallback<float>({ "signal2" },
+                [&](float  _signal) {
+                    if (idle_) {
+                        idle_ = false;
+                        dataLock_.lock();
+                        pendingData2_.push_back(_signal);
                         dataLock_.unlock();
                         idle_ = true;
                     }
 
                 }
             );
-            registerCallback({ "signal3" },
-                [&](flow::DataFlow  _data) {
+
+            registerCallback<float>({ "signal3" },
+                [&](float  _signal) {
                     if (idle_) {
                         idle_ = false;
-
-                        float data = _data.get<float>("signal3");
                         dataLock_.lock();
-                        pendingData3_.push_back(data);
+                        pendingData3_.push_back(_signal);
                         dataLock_.unlock();
                         idle_ = true;
                     }

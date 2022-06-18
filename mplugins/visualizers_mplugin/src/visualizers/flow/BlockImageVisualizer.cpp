@@ -35,15 +35,14 @@ namespace mico{
             
             createPolicy({  flow::makeInput<cv::Mat>("Image") });
 
-            registerCallback({"Image"}, 
-                                    [&](flow::DataFlow  _data){
+            registerCallback<cv::Mat>({"Image"}, 
+                                    [&](cv::Mat _image){
                                         if(idle_){
                                             idle_ = false;  
                                             
-                                            cv::Mat image = _data.get<cv::Mat>("Image");
-                                            if(image.rows != 0){
+                                            if(_image.rows != 0){
                                                 imgLock_.lock();
-                                                lastImage_ = image;
+                                                lastImage_ = _image;
                                                 imgLock_.unlock();
                                             }
                                             idle_ = true;

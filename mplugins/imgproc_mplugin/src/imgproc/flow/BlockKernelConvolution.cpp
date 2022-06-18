@@ -42,14 +42,14 @@ namespace mico{
             createPipe<cv::Mat>("image");
             createPolicy({  flow::makeInput<cv::Mat>("input") });
 
-            registerCallback(   {"input"}, 
-                                [&](flow::DataFlow _data){
+            registerCallback<cv::Mat>(   {"input"}, 
+                                [&](cv::Mat _img){
                                     if(!idle_)
                                         return;
 
                                     idle_ = false;
                                     if(getPipe("image")->registrations()){
-                                        cv::Mat frame = _data.get<cv::Mat>("input").clone(); 
+                                        cv::Mat frame = _img.clone();
                                         cv::Mat result;
                                         if (frame.channels() == 1) {
                                             std::lock_guard<std::mutex> lock(dataLock_);

@@ -31,8 +31,8 @@ namespace mico {
 
             createPolicy({ flow::makeInput<float>("x")});
 
-            registerCallback(   {"x"}, 
-                                [&](flow::DataFlow _data){
+            registerCallback<float>(   {"x"}, 
+                                [&](float _x){
                                     if (getPipe("u")->registrations()) {
                                         if(firstTime_){
                                             t0_ = std::chrono::steady_clock::now();
@@ -43,8 +43,7 @@ namespace mico {
                                             incT /= 1000.0;
                                             t0_ = t1;
 
-                                            float x = _data.get<float>("x");
-                                            float u = pid_->update(x, incT);
+                                            float u = pid_->update(_x, incT);
                                             getPipe("u")->flush(u);
 
                                         }

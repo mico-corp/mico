@@ -37,8 +37,8 @@ namespace mico{
 
             createPolicy({  flow::makeInput<cv::Mat>("input")  });
 
-            registerCallback(   {"input"}, 
-                                [&](flow::DataFlow _data){
+            registerCallback<cv::Mat>(   {"input"}, 
+                                [&](cv::Mat _image){
                                     if(!isConfigured_)
                                         return;
 
@@ -48,7 +48,7 @@ namespace mico{
 
                                     idle_ = false;
                                     if(getPipe("result")->registrations() != 0 || getPipe("detections")->registrations() != 0 || getPipe("n_detections")->registrations() != 0){
-                                        cv::Mat frame = _data.get<cv::Mat>("input").clone();
+                                        cv::Mat frame = _image.clone();
                                         cv::Mat frame_gray;
                                         cv::cvtColor( frame, frame_gray, cv::COLOR_BGR2GRAY );
                                         cv::equalizeHist( frame_gray, frame_gray );

@@ -33,11 +33,11 @@ namespace dvs{
         createPipe<pcl::PointXYZRGBNormal>("cloud");
         
         createPolicy({flow::makeInput<dv::EventStore>("events")});
-        registerCallback({"events"}, 
-                                [&](flow::DataFlow _data){
+        registerCallback< dv::EventStore>({"events"},
+                                [&](dv::EventStore _events){
                                     if(idle_){
                                         idle_ = false;
-                                        auto events = _data.get<dv::EventStore>("events");
+                                        auto events = _events;
                                         
                                         pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr eventsCloud(new pcl::PointCloud<pcl::PointXYZRGBNormal>());
                                         if( obtainPointCloudFromEvents(events,eventsCloud) ){

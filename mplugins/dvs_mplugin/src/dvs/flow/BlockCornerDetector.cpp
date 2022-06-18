@@ -35,11 +35,11 @@ namespace mico{
             createPipe<PolarityPacket>("corners");
             
             createPolicy({flow::makeInput<PolarityPacket>("events")});
-            registerCallback({"events"}, 
-                                    [&](flow::DataFlow _data){
+            registerCallback< PolarityPacket>({"events"},
+                                    [&](PolarityPacket _events){
                                         if(idle_){
                                             idle_ = false;
-                                            auto events = _data.get<PolarityPacket>("events");
+                                            auto events = _events;
                                             FastDetector detector;
                                             detectorGuard_.lock();
                                             auto cornerEvents = std::make_shared<libcaer::events::PolarityEventPacket>(

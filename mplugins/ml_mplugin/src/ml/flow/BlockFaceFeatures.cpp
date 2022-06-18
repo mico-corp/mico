@@ -41,14 +41,14 @@ namespace mico{
 
             createPolicy({  flow::makeInput<cv::Mat>("face") });
 
-            registerCallback(   {"face"}, 
-                                [&](flow::DataFlow _data){
+            registerCallback<cv::Mat>(   {"face"}, 
+                                [&](cv::Mat _image){
                                     if(!idle_)
                                         return;
 
                                     idle_ = false;
                                     if(getPipe("descriptor")->registrations()){
-                                        cv::Mat frame = _data.get<cv::Mat>("face").clone(); 
+                                        cv::Mat frame = _image.clone();
                                         if (frame.rows != 0) {
                                             // Resize ro 150x150. Should normalize too but I am tired now 666 TODO
                                             cv::resize(frame, frame, cv::Size(150, 150));

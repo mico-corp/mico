@@ -32,15 +32,12 @@ namespace dvs{
         createPipe<cv::Mat>("image");
         
         createPolicy({flow::makeInput<PolarityPacket>("events")});
-        registerCallback({"events"}, 
-                                [&](flow::DataFlow _data){
+        registerCallback< PolarityPacket>({"events"},
+                                [&](PolarityPacket _events){
                                     if(idle_){
                                         idle_ = false;
-                                        auto events = _data.get<PolarityPacket>("events");
-
                                         cv::Mat image = cv::Mat::zeros(cv::Size(imageWidth_,imageHeight_), CV_8UC3);
-                                        
-                                        if(obtainImageFromEvents(events,image))
+                                        if(obtainImageFromEvents(_events,image))
                                             if(getPipe("image")->registrations() !=0 )
                                                 getPipe("image")->flush(image); 
 

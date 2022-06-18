@@ -41,8 +41,8 @@ namespace mico{
             createPipe<float>("Hz");
 
             t0_ = std::chrono::steady_clock::now();
-            registerCallback({"Stream"}, 
-                                    [&](flow::DataFlow  _data){
+            registerCallback<boost::any>({"Stream"}, 
+                                    [&](boost::any){
                                         auto t1 = std::chrono::steady_clock::now();
                                         auto incT = std::chrono::duration_cast<std::chrono::milliseconds>(t1-t0_).count();
                                         if(incT <= 0) return;

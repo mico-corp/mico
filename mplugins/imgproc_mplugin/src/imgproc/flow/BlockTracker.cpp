@@ -36,15 +36,15 @@ namespace mico{
 
             createPolicy({ flow::makeInput<cv::Mat>("input"), flow::makeInput<cvRect>("initBB") });
 
-            registerCallback({ "initBB" },
-                [&](flow::DataFlow _data) {
+            registerCallback<cvRect>({ "initBB" },
+                [&](cvRect _bb) {
                     std::lock_guard<std::mutex> lock(dataLock_);
                     if (isInit_) return;
                     idle_ = false;
                     isInit_ = false;
                     if (lastImage_.rows != 0) {
                         createTracker(lastTrackerName_);
-                        bbox_ = _data.get<cvRect>("initBB");
+                        bbox_ = _bb;
                         if (bbox_.width > 10 && bbox_.height > 10) {
                             tracker_->init(lastImage_, bbox_);
                             isInit_ = true;
@@ -55,8 +55,8 @@ namespace mico{
                 }
             );
 
-            registerCallback(   {"input"}, 
-                                [&](flow::DataFlow _data){
+            registerCallback<cv::Mat>(   {"input"}, 
+                                [&](cv::Mat  _img){
                                     if(!idle_ && isInit_)
                                         return;
 
@@ -68,7 +68,7 @@ namespace mico{
                                         }
 
                                         bool ok = false;
-                                        cv::Mat frame = _data.get<cv::Mat>("input");
+                                        cv::Mat frame = _img.clone();
                                         {
                                             std::lock_guard<std::mutex> lock(dataLock_);
                                             lastImage_ = frame.clone();
