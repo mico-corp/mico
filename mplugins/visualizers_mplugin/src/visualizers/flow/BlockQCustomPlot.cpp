@@ -37,9 +37,12 @@ namespace mico{
 
             registerCallback<float>({ "signal1" },
                 [&](float _signal) {
-                    
+
+                    auto t1 = std::chrono::steady_clock::now();
+                    double key = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0_).count() / 1000.0f;
+
                     dataLock_.lock();
-                    pendingData1_.push_back(_signal);
+                    pendingData1_.push_back({key, _signal});
                     dataLock_.unlock();
 
                 }
@@ -47,8 +50,12 @@ namespace mico{
 
             registerCallback<float>({ "signal2" },
                 [&](float  _signal) {
+
+                    auto t1 = std::chrono::steady_clock::now();
+                    double key = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0_).count() / 1000.0f;
+
                     dataLock_.lock();
-                    pendingData2_.push_back(_signal);
+                    pendingData2_.push_back({ key, _signal });
                     dataLock_.unlock();
 
                 }
@@ -56,9 +63,12 @@ namespace mico{
 
             registerCallback<float>({ "signal3" },
                 [&](float  _signal) {
-                
+
+                    auto t1 = std::chrono::steady_clock::now();
+                    double key = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0_).count() / 1000.0f;
+
                     dataLock_.lock();
-                    pendingData3_.push_back(_signal);
+                    pendingData3_.push_back({ key, _signal });
                     dataLock_.unlock();
 
                 }
@@ -101,26 +111,31 @@ namespace mico{
 
         //---------------------------------------------------------------------------------------------------------------------
         void BlockQCustomPlot::realTimePlot(){
-            auto t1 = std::chrono::steady_clock::now();
-            double key = std::chrono::duration_cast<std::chrono::milliseconds>(t1-t0_).count()/1000.0f;
-
             dataLock_.lock();
-            for (auto& d : pendingData1_) {
-                plot_->graph(0)->addData(key, d);
-            }
+            auto data1 = pendingData1_;
             pendingData1_.clear();
-            for (auto& d : pendingData2_) {
-                plot_->graph(1)->addData(key, d);
-            }
+            auto data2 = pendingData2_;
             pendingData2_.clear();
-            for (auto& d : pendingData3_) {
-                plot_->graph(2)->addData(key, d);
-            }
+            auto data3 = pendingData3_;
             pendingData3_.clear();
             dataLock_.unlock();
 
+            for (auto& [key, data] : data1) {
+                plot_->graph(0)->addData(key, data);
+            }
+            for (auto& [key, data] : data2) {
+                plot_->graph(1)->addData(key, data);
+            }
+            for (auto& [key, data] : data3) {
+                plot_->graph(2)->addData(key, data);
+            }
+
             // ui_->w_plot->yAxis->rescale(true);
-            plot_->xAxis->setRange(key, 10.0, Qt::AlignRight);
+            float keyRange = 0;
+            if (data1.size() && data1.back().first > keyRange) keyRange = data1.back().first;
+            if (data2.size() && data2.back().first > keyRange) keyRange = data2.back().first;
+            if (data3.size() && data3.back().first > keyRange) keyRange = data3.back().first;
+            plot_->xAxis->setRange(keyRange, 10.0, Qt::AlignRight);
 
             // make key axis range scroll with the data (at a constant range size of 8):
             plot_->replot();
