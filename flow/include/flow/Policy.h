@@ -73,6 +73,9 @@ namespace flow{
             template<typename ...Arguments>
             bool registerCallback(PolicyMask _mask, std::function<void(Arguments..._args)> _callback);
 
+            template<typename T_, typename ...Arguments>
+            bool registerCallback(PolicyMask _mask, void (T_::*_callback)(Arguments..._args), T_ *obj);
+
             void update(std::string _tag, boost::any _data);
     
             int nInputs();
@@ -114,6 +117,15 @@ namespace flow {
         else {
             return false;
         }
+    }
+
+
+    template<typename T_, typename ...Arguments>
+    bool Policy::registerCallback(PolicyMask _mask, void (T_::* _cb)(Arguments..._args), T_* _obj) {
+        std::function<void(Arguments..._args)> fn = [_cb, _obj](Arguments..._args) {
+            (_obj->*_cb)(_args...);
+        };
+        registerCallback(_mask, fn);
     }
 }
 

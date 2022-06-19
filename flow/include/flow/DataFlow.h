@@ -43,8 +43,13 @@ namespace flow{
     /// @ingroup  flow
     class FLOW_DECL DataFlow{
     public:
+        /// Creates a new dataflow with a set of tags (including types) and a callback to be called when the data arrives
         template <typename ...Arguments>
         static DataFlow* create(const std::map<std::string, std::string>& _mapTags, std::function<void(Arguments ... _args)> _callback);
+
+        /// Creates a new dataflow with a set of tags (including types) and a method and a class instance to be called when the data arrives.
+        template <typename T_, typename ...Arguments>
+        static DataFlow* create(const std::map<std::string, std::string>& _mapTags, void (T_::* _callback)(Arguments ... _args), T_* _obj);
 
         /// Update an specific input tag. If all the inputs have been satisfied then the callback is called.
         void update(std::string _tag, boost::any _data);
@@ -104,6 +109,16 @@ namespace flow {
         return df;
 
     }
+
+    template <typename T_, typename ...Arguments>
+    inline DataFlow* DataFlow::create(const std::map<std::string, std::string>& _mapTags, void (T_::* _cb)(Arguments ... _args), T_* _obj) {
+        std::function<void(Arguments..._args)> fn = [_cb, _obj](Arguments..._args) {
+            (_obj->*_cb)(_args...);
+        };
+
+        return create(_mapTags, fn);
+    }
+
 
     template<typename... Arguments>
     void DataFlow::prepareCallback(const std::vector<std::string>& _listTags, std::function<void(Arguments ... _args)> _callback) {

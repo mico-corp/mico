@@ -58,7 +58,7 @@ namespace flow{
     }
 
     
-    int Block::nInputs(){
+    size_t Block::nInputs(){
         if(iPolicy_)
             return iPolicy_->nInputs();
         else
@@ -72,7 +72,7 @@ namespace flow{
             return {};
     }
 
-    int Block::nOutputs(){
+    size_t Block::nOutputs(){
         return opipes_.size();
     }
 

@@ -49,7 +49,7 @@ namespace flow{
         ~ThreadPool();
       
         /// Get size of task queue
-        unsigned queueSize() {
+        size_t queueSize() {
             return tasks_.size();
         }
         

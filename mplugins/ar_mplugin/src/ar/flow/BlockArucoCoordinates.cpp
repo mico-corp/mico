@@ -40,7 +40,7 @@ namespace mico{
 
             createPolicy({  flow::makeInput<cv::Mat>("image") });
 
-            registerCallback<cv::Mat>({ "image" }, [&](cv::Mat _image) {policyCallback(_image); });
+            registerCallback({ "image" }, &BlockArucoCoordinates::policyCallback, this);
 
         }
 
