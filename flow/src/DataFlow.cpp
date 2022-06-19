@@ -33,8 +33,6 @@ namespace flow{
             data_[_tag] = _data;
             updated_[_tag] = true;
             checkData();
-        }else{
-            throw std::invalid_argument("Bad tag type while updating Dataflow");
         }
     }
 
