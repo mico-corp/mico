@@ -56,6 +56,8 @@ namespace mico{
             /// Base destructor
             ~BlockQCustomPlot();
 
+            std::vector<flow::ConfigParameterDef> parameters() override;
+
             /// Configure block with given parameters.
             bool configure(std::vector<flow::ConfigParameterDef> _params) override;
 
@@ -75,6 +77,9 @@ namespace mico{
             QCustomPlot *plot_ = nullptr;
             QTimer *dataTimer_ = nullptr;
             std::mutex imgLock_;
+            bool trackPlot_ = true;
+            float rangePlot_ = 10.0f;
+            float lastKey_ = 0.0f;
 
             std::chrono::steady_clock::time_point t0_;
         };

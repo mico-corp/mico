@@ -81,30 +81,50 @@ namespace mico{
             if(plot_) plot_->hide();
         };
 
+        std::vector<flow::ConfigParameterDef> BlockQCustomPlot::parameters() {
+            return {
+                {"TrackPlot", flow::ConfigParameterDef::eParameterType::BOOLEAN, true},
+                {"RangePlot", flow::ConfigParameterDef::eParameterType::DECIMAL, 10.0f}
+            };
+        }
+
+
         bool BlockQCustomPlot::configure(std::vector<flow::ConfigParameterDef> _params) {
-            plot_ = new QCustomPlot();
-            t0_ = std::chrono::steady_clock::now();
-            QSharedPointer<QCPAxisTickerTime> timeTicker(new QCPAxisTickerTime);
-            timeTicker->setTimeFormat("%h:%m:%s");
-            plot_->xAxis->setTicker(timeTicker);
+            if (!plot_) {
+                plot_ = new QCustomPlot();
+                t0_ = std::chrono::steady_clock::now();
+                QSharedPointer<QCPAxisTickerTime> timeTicker(new QCPAxisTickerTime);
+                timeTicker->setTimeFormat("%h:%m:%s");
+                plot_->xAxis->setTicker(timeTicker);
 
-            plot_->xAxis->setLabel("time");
-            plot_->yAxis->setLabel("value");
+                plot_->xAxis->setLabel("time");
+                plot_->yAxis->setLabel("value");
 
-            plot_->setInteractions(   QCP::iRangeDrag | QCP::iRangeZoom  | QCP::iSelectPlottables );
+                plot_->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
 
-            plot_->addGraph()->setPen(QPen(QColor(255,0,0)));;
-            plot_->addGraph()->setPen(QPen(QColor(0,255,0)));;
-            plot_->addGraph()->setPen(QPen(QColor(0,0,255)));;
+                plot_->addGraph()->setPen(QPen(QColor(255, 0, 0)));;
+                plot_->addGraph()->setPen(QPen(QColor(0, 255, 0)));;
+                plot_->addGraph()->setPen(QPen(QColor(0, 0, 255)));;
 
-            dataTimer_ = new QTimer();
-            QObject::connect(dataTimer_, &QTimer::timeout , [this](){this->realTimePlot();});
-            dataTimer_->start(30);
+                dataTimer_ = new QTimer();
+                QObject::connect(dataTimer_, &QTimer::timeout, [this]() {this->realTimePlot(); });
+                dataTimer_->start(30);
 
-            plot_->setGeometry(0, 0, 400, 400);
-            plot_->setWindowFlags(Qt::WindowStaysOnTopHint);
-            plot_->show();
+                plot_->setGeometry(0, 0, 400, 400);
+                plot_->setWindowFlags(Qt::WindowStaysOnTopHint);
+                plot_->show();
+            }
 
+            if (auto param = getParamByName(_params, "TrackPlot"); param) {
+                trackPlot_ = param.value().asBool();
+            }
+            if (auto param = getParamByName(_params, "RangePlot"); param) {
+                rangePlot_= param.value().asDecimal();
+                plot_->xAxis->setRange(lastKey_, rangePlot_, Qt::AlignRight);
+            }
+
+
+            
             return true;
         }
 
@@ -131,11 +151,12 @@ namespace mico{
             }
 
             // ui_->w_plot->yAxis->rescale(true);
-            float keyRange = 0;
-            if (data1.size() && data1.back().first > keyRange) keyRange = data1.back().first;
-            if (data2.size() && data2.back().first > keyRange) keyRange = data2.back().first;
-            if (data3.size() && data3.back().first > keyRange) keyRange = data3.back().first;
-            plot_->xAxis->setRange(keyRange, 10.0, Qt::AlignRight);
+            if (trackPlot_) {
+                if (data1.size() && data1.back().first > lastKey_ ) lastKey_  = data1.back().first;
+                if (data2.size() && data2.back().first > lastKey_ ) lastKey_  = data2.back().first;
+                if (data3.size() && data3.back().first > lastKey_ ) lastKey_  = data3.back().first;
+                plot_->xAxis->setRange(lastKey_, rangePlot_, Qt::AlignRight);
+            }
 
             // make key axis range scroll with the data (at a constant range size of 8):
             plot_->replot();
