@@ -96,8 +96,6 @@ namespace mico{
             // Saturate signal
             float saturated = std::min(std::max(unsaturated, minSat_), maxSat_);
             lastResult_ = saturated;
-            
-            std::cout << dt << ", " << err << ", " << up << ", " << ui << ", " << ud << std::endl;
 
             return lastResult_;
 
