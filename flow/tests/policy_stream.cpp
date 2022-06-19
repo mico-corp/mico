@@ -136,7 +136,6 @@ TEST(transmission_int_2, transmission_int)  {
     Policy pol2({ makeInput<int>("counter") });
 
     int counterCall1 = 0;
-    std::mutex guardCall1;
     pol1.registerCallback<int>({"counter"}, [&](int _in){
         counterCall1++; 
     });
@@ -468,70 +467,62 @@ TEST(clear_data_test, clear_data_test) {
     o2->registerPolicy(&p, "i2");
 
     // Register a callback for one tag
-    int i1 = 0;
-    bool ci1 = false;
+    volatile int i1 = 0;
     p.registerCallback<int>({ "i1" }, [&](int _in) {
         i1 =_in;
-        ci1 = true;
         });
 
     // Register a callback for the other tag
-    int i2 = 0;
-    bool ci2 = false;
+    volatile int i2 = 0;
     p.registerCallback<int>({ "i2" }, [&](int _in) {
         i2 = _in;
-        ci2 = true;
         });
 
 
     // Register a callback for both, this callback do not clear data flows. 
-    int iCombi = 0;
-    bool ccombi1 = false;
+    volatile int iCombi1 = 0;
     p.registerCallback<int, int>({ "i1", "i2"}, [&](int _i1, int _i2) {
-        iCombi = _i1 + _i2;
-        ccombi1 = true;
+        iCombi1 = _i1 + _i2;
         });
 
     // At the moment just one input has data, so the combination is still 0
     o1->flush(1);
-    while (!ci1); ci1 = false;
+    while (!i1); 
     ASSERT_EQ(i1, 1);
-    ASSERT_EQ(iCombi, 0);
+    ASSERT_EQ(iCombi1, 0);
 
     // Now both inputs are fed, the combined is called
     o2->flush(3);
-    while (!ci2 || !ccombi1); ci2 = false; ccombi1 = false;
+    while (!i2 || !iCombi1);
     ASSERT_EQ(i2, 3);
-    ASSERT_EQ(iCombi, 4);
+    ASSERT_EQ(iCombi1, 4);
 
     // Register a new callback for both, but in this case, the callback clears the data used
     int iCombi2 = 0;
-    bool ccombi2 = false;
     p.registerCallback<int, int>({ "i1", "i2" }, [&](int _i1, int _i2) {
         iCombi2 = _i1 + _i2;
-        ccombi2 = true;
     });
 
 
     // The first combi already has data, so it changes
     o1->flush(5);
-    while (!ci1 || !ccombi1); ci1 = false; ccombi1 = false;
+    while (i1==1 || iCombi1 == 4);
     ASSERT_EQ(i1, 5);
-    ASSERT_EQ(iCombi, 8);
+    ASSERT_EQ(iCombi1, 8);
     ASSERT_EQ(iCombi2, 0);
 
     // Now both data input are fed, second combi is called, but flags are cleared
     o2->flush(0);
-    while (!ci2 || !ccombi1 || !ccombi2); ci2 = false; ccombi1 = false; ccombi2 = false;
+    while (i2==3 || iCombi1 == 8 || iCombi2 == 0);
     ASSERT_EQ(i2, 0);
-    ASSERT_EQ(iCombi, 5);
+    ASSERT_EQ(iCombi1, 5);
     ASSERT_EQ(iCombi2, 5);
 
     // As expected, the second combi value did not change because i2 input is not fed again
     o1->flush(10);
-    while (!ci1 || !ccombi1); ci1 = false; ccombi1 = false;
+    while (i1==5 || iCombi1 ==5);
     ASSERT_EQ(i1, 10);
-    ASSERT_EQ(iCombi, 10);
+    ASSERT_EQ(iCombi1, 10);
     ASSERT_EQ(iCombi2, 5);
 
 }
