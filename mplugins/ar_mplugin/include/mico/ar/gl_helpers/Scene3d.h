@@ -122,7 +122,7 @@ namespace mico{
             std::vector<Point> centers_;
             std::map<int, Eigen::Matrix4f> axis_;
             int counterAxis_ = 0;
-            float side_ = 0.1;
+            float side_ = 0.1f;
 
             Eigen::Matrix4f cameraPose_;
 

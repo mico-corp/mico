@@ -50,7 +50,7 @@ namespace flow{
         }
     }
 
-    int Policy::nInputs(){
+    size_t Policy::nInputs(){
         return tags_.size();
     }
 
@@ -74,14 +74,4 @@ namespace flow{
             return false;
         }
     }
-
-
-    std::vector<float> Policy::masksFrequencies() const{
-        std::vector<float> freqs;
-        for(auto &flow: flows_){
-            freqs.push_back(flow->frequency());
-        }
-        return freqs;
-    }
-
 }

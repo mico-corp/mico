@@ -53,9 +53,9 @@ namespace mico {
             glLoadIdentity();                       // Reset the model-view matrix
             
             glTranslatef(translation_[0], translation_[1], translation_[2]);
-            glRotatef(rpy_[0]/M_PI*180.0f, 1,0,0);
-            glRotatef(rpy_[1]/M_PI*180.0f, 0,1,0);
-            glRotatef(rpy_[2]/M_PI*180.0f, 0,0,1);
+            glRotatef(float(rpy_[0]/M_PI*180.0f), 1,0,0);
+            glRotatef(float(rpy_[1]/M_PI*180.0f), 0,1,0);
+            glRotatef(float(rpy_[2]/M_PI*180.0f), 0,0,1);
             
             setMaterial({r_, g_, b_, a_}, {r_, g_, b_, a_}, {0,0,0,0}, 1.0f);
             

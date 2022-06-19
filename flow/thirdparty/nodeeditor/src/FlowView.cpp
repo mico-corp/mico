@@ -238,7 +238,7 @@ contextMenuEvent(QContextMenuEvent *event)
 
     // treeView->expandAll();
     if (lastCategory_ != "") {
-        for (unsigned i = 0; i < nodeTypeSelector->count(); i++) {
+        for (int i = 0; i < nodeTypeSelector->count(); i++) {
             if (nodeTypeSelector->itemText(i) == lastCategory_) {
                 nodeTypeSelector->setCurrentIndex(i);
                 break;

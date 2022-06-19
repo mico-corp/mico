@@ -47,7 +47,7 @@
 namespace flow{
 
     struct ConfigParameterDef {
-        enum eParameterType { BOOLEAN, INTEGER, DECIMAL, STRING, PATH, OPTIONS };
+        enum class eParameterType { BOOLEAN, INTEGER, DECIMAL, STRING, PATH, OPTIONS };
         std::string name_;
         eParameterType type_;
         boost::any value_;

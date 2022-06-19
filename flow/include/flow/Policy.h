@@ -43,16 +43,16 @@ namespace flow{
 
     /// Base class of flow that represents a single input stream.
     /// @ingroup  flow
-    class FLOW_DECL PolicyInput{
+    class PolicyInput{
     public:
         /// Build an input stream with a given name and type
-        PolicyInput(std::string _tag, std::string _type) :tag_(_tag), typeName_(_type) {};
+        FLOW_DECL PolicyInput(std::string _tag, std::string _type) :tag_(_tag), typeName_(_type) {};
 
         /// Get stream name
-        std::string tag(){return tag_;};
+        FLOW_DECL std::string tag(){return tag_;};
         
         /// Get stream type
-        std::string typeName(){return typeName_;};
+        FLOW_DECL std::string typeName(){return typeName_;};
     protected:
         std::string tag_;
         std::string typeName_;
@@ -64,11 +64,11 @@ namespace flow{
     }
 
 
-    class FLOW_DECL Policy{
+    class Policy{
         public:
             typedef std::vector<std::string> PolicyMask;
 
-            Policy(std::vector<PolicyInput*> _inputs);
+            FLOW_DECL Policy(std::vector<PolicyInput*> _inputs);
 
             template<typename ...Arguments>
             bool registerCallback(PolicyMask _mask, std::function<void(Arguments..._args)> _callback);
@@ -76,18 +76,16 @@ namespace flow{
             template<typename T_, typename ...Arguments>
             bool registerCallback(PolicyMask _mask, void (T_::*_callback)(Arguments..._args), T_ *obj);
 
-            void update(std::string _tag, boost::any _data);
+            FLOW_DECL void update(std::string _tag, boost::any _data);
     
-            int nInputs();
-            std::vector<std::string> inputTags();
+            FLOW_DECL size_t nInputs();
+            FLOW_DECL std::vector<std::string> inputTags();
 
-            std::string type(std::string _tag);
+            FLOW_DECL std::string type(std::string _tag);
 
-            void associatePipe(std::string _tag, Outpipe* _pipe);
+            FLOW_DECL void associatePipe(std::string _tag, Outpipe* _pipe);
 
-            bool disconnect(std::string _tag);
-
-            std::vector<float> masksFrequencies() const;
+            FLOW_DECL bool disconnect(std::string _tag);
 
         private:
             std::map<std::string, std::string> inputs_;
@@ -125,7 +123,7 @@ namespace flow {
         std::function<void(Arguments..._args)> fn = [_cb, _obj](Arguments..._args) {
             (_obj->*_cb)(_args...);
         };
-        registerCallback(_mask, fn);
+        return registerCallback(_mask, fn);
     }
 }
 

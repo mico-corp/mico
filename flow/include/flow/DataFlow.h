@@ -41,7 +41,7 @@ namespace flow{
     /// Base class of flow that a flow of data. It manages the implicit conversion of data through the streams and call the 
     /// associated callbacks. It is used in input policies to generate automatic data flows.
     /// @ingroup  flow
-    class FLOW_DECL DataFlow{
+    class DataFlow{
     public:
         /// Creates a new dataflow with a set of tags (including types) and a callback to be called when the data arrives
         template <typename ...Arguments>
@@ -53,23 +53,19 @@ namespace flow{
 
         /// Update an specific input tag. If all the inputs have been satisfied then the callback is called.
         void update(std::string _tag, boost::any _data);
-
-        /// Query to check internal status of data and update the DataFlow
-        void checkData();
-
         // 666 OLD INTERFACE Templatized method to get data of any type. Get methods are implemented all around the different plugins
         // template<typename T_>
         // T_ get(std::string const &_tag);
 
-        /// Get the current frequency at which the DataFlow is triggering the callback.
-        float frequency() const;
-
     private:
+        /// Query to check internal status of data and update the DataFlow
+        void checkData();
+
         template<typename T_>
         static T_ castData(boost::any _data);
 
         /// Construct a data flow with a set if input flows and associate a callback to it.
-        DataFlow(const std::map<std::string, std::string>& _mapTags);
+        FLOW_DECL DataFlow(const std::map<std::string, std::string>& _mapTags);
 
         template<typename... Arguments>
         void prepareCallback(const std::vector<std::string>& _listTags, std::function<void(Arguments ... _args)> _callback);
@@ -79,14 +75,11 @@ namespace flow{
         std::map<std::string, boost::any>                           data_;
         std::map<std::string, bool>                                 updated_;
         std::function<void(const std::map<std::string, boost::any> &)>   callback_;
-        
-        std::chrono::time_point<std::chrono::system_clock> lastUsageT_;
-        float usageFreq_ = 0;
 
         bool isRunning_ = false;
 
     public:
-        static std::map<std::string, std::map<std::string, std::function<boost::any(boost::any&)>>> conversions_;
+        static FLOW_DECL std::map<std::string, std::map<std::string, std::function<boost::any(boost::any&)>>> conversions_;
         static bool checkIfConversionAvailable(std::string const &_from, std::string const &_to);
     };
 
@@ -96,7 +89,7 @@ namespace flow {
 
 
     template <typename ...Arguments>
-    inline DataFlow* DataFlow::create(const std::map<std::string, std::string>& _mapTags, std::function<void(Arguments ... _args)> _callback){
+    DataFlow* DataFlow::create(const std::map<std::string, std::string>& _mapTags, std::function<void(Arguments ... _args)> _callback){
     
         std::vector<std::string> listTags;
         for (const auto& [tag, type] : _mapTags) {
@@ -111,7 +104,7 @@ namespace flow {
     }
 
     template <typename T_, typename ...Arguments>
-    inline DataFlow* DataFlow::create(const std::map<std::string, std::string>& _mapTags, void (T_::* _cb)(Arguments ... _args), T_* _obj) {
+    DataFlow* DataFlow::create(const std::map<std::string, std::string>& _mapTags, void (T_::* _cb)(Arguments ... _args), T_* _obj) {
         std::function<void(Arguments..._args)> fn = [_cb, _obj](Arguments..._args) {
             (_obj->*_cb)(_args...);
         };

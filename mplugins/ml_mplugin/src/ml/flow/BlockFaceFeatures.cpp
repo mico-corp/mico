@@ -33,7 +33,7 @@ namespace mico{
             try{
                 dlib::deserialize((flow::Persistency::resourceDir() / "ml" / "dlib_face_recognition_resnet_model_v1.dat").string()) >> featureDetector_;
             }catch(std::exception &_e){
-                std::cerr << "[WARNING] Failed to read YOLO parameters, cant use YOLO ML block" << std::endl;
+                std::cerr << "[WARNING] Failed to read YOLO parameters, cant use YOLO ML block." << _e.what() << std::endl;
             }
 
             

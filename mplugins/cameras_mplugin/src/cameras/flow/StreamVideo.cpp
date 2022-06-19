@@ -61,7 +61,7 @@ namespace mico{
 
                 return videoFile_->isOpened();
             }
-
+            return false;
         }
 
         std::vector<flow::ConfigParameterDef> StreamVideo::parameters() {

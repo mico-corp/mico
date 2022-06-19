@@ -46,28 +46,28 @@ namespace flow{
     
     /// Base class of flow that represents an output stream of data.
     /// @ingroup  flow
-    class FLOW_DECL Outpipe{
+    class Outpipe{
         public:
             /// Create an output pipe with a given name and type.
-            Outpipe(std::string _tag, std::string _type);
+            FLOW_DECL Outpipe(std::string _tag, std::string _type);
 
             /// Associate an input stream to the pipe to be updated when the pipe flushes data.
-            bool registerPolicy(Policy * _pol, std::string _policyTag);
+            FLOW_DECL bool registerPolicy(Policy * _pol, std::string _policyTag);
 
             /// Deassociate an input stream.
-            void unregisterPolicy(Policy* _pol);
+            FLOW_DECL void unregisterPolicy(Policy* _pol);
 
             /// Get number of registered inputs
-            int registrations();
+            FLOW_DECL size_t registrations();
 
             /// Flush data through the pipe
-            void flush(boost::any _data);
+            FLOW_DECL void flush(boost::any _data);
 
             /// Get name of the pipe
-            std::string tag() const;
+            FLOW_DECL std::string tag() const;
 
             /// Get type of the pipe
-            std::string type() const;
+            FLOW_DECL std::string type() const;
             
 
         protected:

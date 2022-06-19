@@ -41,7 +41,7 @@ namespace mico{
 
                 outputs_ = net_.getUnconnectedOutLayersNames();
             }catch(std::exception &_e){
-                std::cerr << "[WARNING] Failed to read YOLO parameters, cant use YOLO ML block" << std::endl;
+                std::cerr << "[WARNING] Failed to read YOLO parameters, cant use YOLO ML block" << _e.what() << std::endl;
             }
 
             

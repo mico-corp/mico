@@ -203,8 +203,8 @@ namespace mico {
                 avgX += p.x;
                 avgY += p.y;
             }
-            _x = avgX / _points.size();
-            _y = avgY / _points.size();
+            _x = avgX / int(_points.size());
+            _y = avgY / int(_points.size());
             _size = abs(maxX - minX);
         }
 

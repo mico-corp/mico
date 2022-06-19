@@ -34,7 +34,7 @@ namespace flow{
             updated_[_tag] = true;
             checkData();
         }else{
-            std::invalid_argument("Bad tag type while updating Dataflow");
+            throw std::invalid_argument("Bad tag type while updating Dataflow");
         }
     }
 
@@ -48,19 +48,8 @@ namespace flow{
         }
         if(flagCounter == updated_.size()){
             ThreadPool::get()->emplace(std::bind(callback_, data_));            ;
-            // std::thread(callback_, *this).detach(); // 666 Smthg is not completelly thread safe and produces crash
-            auto currT = std::chrono::system_clock::now();
-            float incT = std::chrono::duration_cast<std::chrono::microseconds>(currT-lastUsageT_).count();
-            lastUsageT_ = currT;
-            usageFreq_ = 1/(incT*1e-6);
         }
     }
-
-
-    float DataFlow::frequency() const{
-        return usageFreq_;
-    }
-
 
     bool DataFlow::checkIfConversionAvailable(std::string const &_from, std::string const &_to){
         if(_from == _to)
@@ -86,7 +75,6 @@ namespace flow{
             data_[f.first] = boost::any();
             updated_[f.first] = false;
         }
-        lastUsageT_ = std::chrono::system_clock::now();
     }
 
 }

@@ -120,37 +120,37 @@ namespace flow{
 
     ConfigParameterDef ParameterWidget::getParam(){
         switch (type_){
-        case ConfigParameterDef::eParameterType::BOOLEAN:
-            return { lName_, type_, static_cast<QCheckBox*>(value_)->isChecked()};
-            break;
-        case ConfigParameterDef::eParameterType::INTEGER:
-            return { lName_, type_, static_cast<QSpinBox*>(value_)->value()};
-            break;
-        case ConfigParameterDef::eParameterType::DECIMAL:
-        {
-            std::stringstream ss;
-            ss << static_cast<QLineEdit*>(value_)->text().toStdString();
-            float val;
-            ss >> val;
-            return { lName_, type_, val};
-            break;
+            case ConfigParameterDef::eParameterType::BOOLEAN:
+                return { lName_, type_, static_cast<QCheckBox*>(value_)->isChecked()};
+                break;
+            case ConfigParameterDef::eParameterType::INTEGER:
+                return { lName_, type_, static_cast<QSpinBox*>(value_)->value()};
+                break;
+            case ConfigParameterDef::eParameterType::DECIMAL:
+            {
+                std::stringstream ss;
+                ss << static_cast<QLineEdit*>(value_)->text().toStdString();
+                float val;
+                ss >> val;
+                return { lName_, type_, val};
+                break;
+            }
+            case ConfigParameterDef::eParameterType::STRING:
+                return { lName_, type_, static_cast<QLineEdit*>(value_)->text().toStdString()};
+                break;
+            case ConfigParameterDef::eParameterType::PATH:
+                return { lName_, type_,  fs::path{filePath_->text().toStdString()} };
+                break;
+            case ConfigParameterDef::eParameterType::OPTIONS:
+            {
+                std::string selected = static_cast<QComboBox*>(value_)->currentText().toStdString() ;
+                return { lName_, ConfigParameterDef::eParameterType::OPTIONS, param_.asOptions(), selected };
+                break;
+            }
         }
-        case ConfigParameterDef::eParameterType::STRING:
-            return { lName_, type_, static_cast<QLineEdit*>(value_)->text().toStdString()};
-            break;
-        case ConfigParameterDef::eParameterType::PATH:
-            return { lName_, type_,  fs::path{filePath_->text().toStdString()} };
-            break;
-        case ConfigParameterDef::eParameterType::OPTIONS:
-        {
-            std::string selected = static_cast<QComboBox*>(value_)->currentText().toStdString() ;
-            return { lName_, ConfigParameterDef::eParameterType::OPTIONS, param_.asOptions(), selected };
-            break;
-        }
-        default:
-            assert(false);
-            break;
-        }
+
+        assert(false);
+        return { "fail", ConfigParameterDef::eParameterType::BOOLEAN, false }; //Supposed to not to be reached
     }
 
     void ParameterWidget::setValueString(std::string _val){

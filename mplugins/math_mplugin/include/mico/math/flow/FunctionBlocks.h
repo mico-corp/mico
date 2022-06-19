@@ -64,7 +64,7 @@ namespace mico{
             void loopCallback() override;
 
         private:
-            float resolution_ = 0.001; // FPS
+            float resolution_ = 0.001f; // FPS
 
             QLineEdit *valueView_;
         };
