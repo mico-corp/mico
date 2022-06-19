@@ -23,9 +23,10 @@
 
 #include <cstdlib>
 #include <string>
+#include <iostream>
 
 namespace flow{
-    std::shared_ptr<ThreadPool> ThreadPool::instance_ = nullptr;
+    ThreadPool *ThreadPool::instance_ = nullptr;
 
     void ThreadPool::init(){
         size_t nThreads = std::thread::hardware_concurrency();
@@ -34,17 +35,17 @@ namespace flow{
                 nThreads = std::stoi(nThreadsVar);
             }
             catch (const std::invalid_argument& _e) {
-                _e.what();
+                std::cout << _e.what() << std::endl;
             }
             catch (const std::out_of_range& _e) {
-                _e.what();
+                std::cout << _e.what() << std::endl;
             }
         }
         if(!instance_)
-            instance_ = std::shared_ptr<ThreadPool>(new ThreadPool(nThreads));
+            instance_ = new ThreadPool(nThreads);
     }
 
-    std::shared_ptr<ThreadPool> ThreadPool::get(){
+    ThreadPool *ThreadPool::get(){
         if(!instance_)
             init();
         return instance_;
@@ -68,7 +69,7 @@ namespace flow{
     ThreadPool::ThreadPool(size_t _nThreads){
         nThreads_ = _nThreads;
         threads_.reserve(nThreads_);
-        for(unsigned i =0; i < nThreads_; i++){
+        for(size_t i =0; i < nThreads_; i++){
             threads_.emplace_back([&](){
                 while(isRunning_){
                     Task task;
