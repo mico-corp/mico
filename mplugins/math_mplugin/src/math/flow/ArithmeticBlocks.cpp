@@ -136,5 +136,39 @@ namespace mico{
             }
             );
         }
+
+
+        BlockDerivative::BlockDerivative() {
+            resetBt_ = new QPushButton("Reset");
+            QObject::connect(resetBt_, &QPushButton::clicked, [&]() {
+                lastVal_ = 0.0f;
+                isFirst_ = true;
+                t0_ = std::chrono::high_resolution_clock::now();
+                });
+
+            createPipe<float>("output");
+            createPolicy({ flow::makeInput<float>("input") });
+
+            registerCallback<float>({ "input" },
+                [&](float _in) {
+                    if (isFirst_) {
+                        t0_ = std::chrono::high_resolution_clock::now();
+                        lastVal_ = _in;
+                        isFirst_ = false;
+                    }
+                    else {
+                        auto t1 = std::chrono::high_resolution_clock::now();
+                        float incT = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0_).count();
+                        t0_ = t1;
+                        incT /= 1e6;
+                        float deriv = (_in - lastVal_) / incT;
+                        getPipe("output")->flush(deriv);
+
+                        lastVal_ = _in;
+
+                    }
+                }
+            );
+        }
     }
 }
