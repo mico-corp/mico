@@ -35,9 +35,11 @@
 #include <string>
 #include <vector>
 #include <cstring>
+#include <flow/PolicyInput.h>
+
 
 namespace flow{
-        
+
     /// Base class of flow that a flow of data. It manages the implicit conversion of data through the streams and call the 
     /// associated callbacks. It is used in input policies to generate automatic data flows.
     /// @ingroup  flow
@@ -45,11 +47,11 @@ namespace flow{
     public:
         /// Creates a new dataflow with a set of tags (including types) and a callback to be called when the data arrives
         template <typename ...Arguments>
-        static DataFlow* create(const std::map<std::string, std::string>& _mapTags, std::function<void(Arguments ... _args)> _callback);
+        static DataFlow* create(const std::vector<PolicyInput>& _inputs, std::function<void(Arguments ... _args)> _callback);
 
         /// Creates a new dataflow with a set of tags (including types) and a method and a class instance to be called when the data arrives.
         template <typename T_, typename ...Arguments>
-        static DataFlow* create(const std::map<std::string, std::string>& _mapTags, void (T_::* _callback)(Arguments ... _args), T_* _obj);
+        static DataFlow* create(const std::vector<PolicyInput>& _inputs, void (T_::* _callback)(Arguments ... _args), T_* _obj);
 
         /// Update an specific input tag. If all the inputs have been satisfied then the callback is called.
         void update(std::string _tag, boost::any _data);
@@ -65,7 +67,7 @@ namespace flow{
         static T_ castData(boost::any _data);
 
         /// Construct a data flow with a set if input flows and associate a callback to it.
-        FLOW_DECL DataFlow(const std::map<std::string, std::string>& _mapTags);
+        FLOW_DECL DataFlow(const std::vector<PolicyInput>& _inputs);
 
         template<typename... Arguments>
         void prepareCallback(const std::vector<std::string>& _listTags, std::function<void(Arguments ... _args)> _callback);
@@ -74,6 +76,7 @@ namespace flow{
         std::map<std::string, std::string>                          types_;
         std::map<std::string, boost::any>                           data_;
         std::map<std::string, bool>                                 updated_;
+        std::map<std::string, bool>                                 isConsumable_;
         std::function<void(const std::map<std::string, boost::any> &)>   callback_;
 
         bool isRunning_ = false;
@@ -89,14 +92,14 @@ namespace flow {
 
 
     template <typename ...Arguments>
-    DataFlow* DataFlow::create(const std::map<std::string, std::string>& _mapTags, std::function<void(Arguments ... _args)> _callback){
+    DataFlow* DataFlow::create(const std::vector<PolicyInput>& _inputs, std::function<void(Arguments ... _args)> _callback){
     
         std::vector<std::string> listTags;
-        for (const auto& [tag, type] : _mapTags) {
-            listTags.push_back(tag);
+        for (const auto& input : _inputs) {
+            listTags.push_back(input.tag());
         }
 
-        auto *df = new DataFlow(_mapTags);
+        auto *df = new DataFlow(_inputs);
         df->prepareCallback(listTags, _callback);
 
         return df;
@@ -104,12 +107,12 @@ namespace flow {
     }
 
     template <typename T_, typename ...Arguments>
-    DataFlow* DataFlow::create(const std::map<std::string, std::string>& _mapTags, void (T_::* _cb)(Arguments ... _args), T_* _obj) {
+    DataFlow* DataFlow::create(const std::vector<PolicyInput>& _inputs, void (T_::* _cb)(Arguments ... _args), T_* _obj) {
         std::function<void(Arguments..._args)> fn = [_cb, _obj](Arguments..._args) {
             (_obj->*_cb)(_args...);
         };
 
-        return create(_mapTags, fn);
+        return create(_inputs, fn);
     }
 
 

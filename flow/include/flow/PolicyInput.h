@@ -19,68 +19,44 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------------------------------------
 
-#include <flow/Policy.h>
 
-#include <flow/Outpipe.h>
+#ifndef FLOW_POLICYINPUT_H_
+#define FLOW_POLICYINPUT_H_
 
-#include <cassert>
-#include <stdexcept>
-
-
-namespace flow{
-
-    Policy::Policy(std::vector<PolicyInput> _inputs){
-        if(_inputs.size() == 0){
-            throw std::invalid_argument( "A Policy cannot be constructed with an empty list of input pipe tags." );
-        }
-
-        for(auto &input:_inputs){
-            if(input.tag() == "" || input.typeName() == ""){
-                throw std::invalid_argument( "A Policy cannot be constructed with an empty list of input pipe tags." );
-            }
-            inputs_.push_back(input);
-            tags_.push_back(input.tag());
-        }
-    }
+#include <flow/Export.h>
+#include <string>
 
 
-    void Policy::update(std::string _tag, boost::any _data){
-        for(auto flow:flows_){
-            flow->update(_tag, _data);
-        }
-    }
+namespace flow {
 
-    size_t Policy::nInputs(){
-        return inputs_.size();
-    }
 
-    std::vector<std::string> Policy::inputTags(){
-        return tags_;
-    }
+    /// Base class of flow that represents a single input stream.
+    /// @ingroup  flow
+    class PolicyInput {
+    public:
+        /// Build an input stream with a given name and type
+        FLOW_DECL PolicyInput(std::string _tag, std::string _type, bool _isConsumable = false) : tag_(_tag), typeName_(_type), isConsumable_(_isConsumable) {};
 
-    std::string Policy::type(std::string _tag){
-        auto iter = std::find_if(inputs_.begin(), inputs_.end(), [_tag](const PolicyInput& _input) {
-            return _input.tag() == _tag;
-            });
+        /// Get stream name
+        FLOW_DECL std::string tag() const { return tag_; } ;
 
-        if (iter == inputs_.end()) {
-            return "";
-        }
-        else {
-            return iter->typeName();
-        }
-    }
+        /// Get stream type
+        FLOW_DECL std::string typeName() const { return typeName_; };
 
-    void Policy::associatePipe(std::string _tag, Outpipe* _pipe){
-        connetedPipes_[_tag] = _pipe;
-    }
+        /// If input is consumable, the DataFlow will wait until new data to call the callback, if not, the data will be reused
+        FLOW_DECL bool isConsumable() const { return isConsumable_; };
 
-    bool Policy::disconnect(std::string _tag){
-        if(auto pipe = connetedPipes_[_tag]; pipe != nullptr){
-            pipe->unregisterPolicy(this);
-            return true;
-        }else{
-            return false;
-        }
+
+    protected:
+        std::string tag_ = "";
+        std::string typeName_ = "";
+        bool isConsumable_ = false;
+    };
+
+    template<typename T_>
+    PolicyInput makeInput(std::string const& _tag, bool _isConsumable = false) {
+        return PolicyInput(_tag, typeid(T_).name(), _isConsumable);
     }
 }
+
+#endif

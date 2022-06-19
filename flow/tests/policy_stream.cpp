@@ -32,9 +32,9 @@ using namespace flow;
 TEST(policy_creation, policy_creation)  {
     Policy pol1({makeInput<float>("time")});
     Policy pol2({makeInput<float>("time"), makeInput<int>("counter")});
-    EXPECT_THROW(Policy pol3({new PolicyInput("", "")}), std::invalid_argument);
-    EXPECT_THROW(Policy pol4({new PolicyInput("", "int")}), std::invalid_argument);
-    EXPECT_THROW(Policy pol5({new PolicyInput("time", "")}), std::invalid_argument);
+    EXPECT_THROW(Policy pol3({PolicyInput("", "")}), std::invalid_argument);
+    EXPECT_THROW(Policy pol4({PolicyInput("", "int")}), std::invalid_argument);
+    EXPECT_THROW(Policy pol5({PolicyInput("time", "")}), std::invalid_argument);
 }
 
 TEST(pipe_creation, pipe_creation)  {
@@ -138,9 +138,7 @@ TEST(transmission_int_2, transmission_int)  {
     int counterCall1 = 0;
     std::mutex guardCall1;
     pol1.registerCallback<int>({"counter"}, [&](int _in){
-        guardCall1.lock();
-        counterCall1++;
-        guardCall1.unlock();    
+        counterCall1++; 
     });
     
     int counterCall2 = 0;
@@ -148,21 +146,24 @@ TEST(transmission_int_2, transmission_int)  {
     pol2.registerCallback<int>({"counter"}, [&](int _in){
         guardCall2.lock();
         counterCall2++;
-        guardCall2.unlock();
     });
 
     op.registerPolicy(&pol1, "counter");
     op.registerPolicy(&pol2, "counter");
 
-    // Good type flush
-    op.flush(1);
-    op.flush(1);
-    op.flush(1);
+    // 
     op.flush(1);
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    op.flush(1);
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    op.flush(1);
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    op.flush(1);
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    guardCall2.unlock();
 
     ASSERT_EQ(4, counterCall1);
-    ASSERT_EQ(4, counterCall2);
+    ASSERT_EQ(1, counterCall2); // As the task did not end  until mutex is released, the rest of flushes did not generate new tasks
 }
 
 
@@ -191,8 +192,8 @@ TEST(sync_policy, sync_policy)  {
 
     // Good type flush
     op1.flush(1);
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
     op2.flush(1.123f);
-
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
     ASSERT_EQ(1, counterCallInt);

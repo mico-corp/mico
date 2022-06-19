@@ -45,7 +45,15 @@ namespace flow{
             if(flag->second) flagCounter++;
         }
         if(flagCounter == updated_.size()){
-            ThreadPool::get()->emplace(std::bind(callback_, data_));            ;
+            // Emplace task
+            ThreadPool::get()->emplace(std::bind(callback_, data_));
+
+            //Consume consumable data
+            for (const auto& [tag, isConsumable] : isConsumable_) {
+                updated_[tag] = !isConsumable;
+            }
+        } else {
+            isRunning_ = false;
         }
     }
 
@@ -67,11 +75,12 @@ namespace flow{
         return false;
     }
 
-    DataFlow::DataFlow(const std::map<std::string, std::string>& _mapTags) {
-        for (auto& f : _mapTags) {
-            types_[f.first] = f.second;
-            data_[f.first] = boost::any();
-            updated_[f.first] = false;
+    DataFlow::DataFlow(const std::vector<PolicyInput>& _inputs) {
+        for (auto& input : _inputs) {
+            types_          [input.tag()]   = input.typeName();
+            data_           [input.tag()]   = boost::any();
+            updated_        [input.tag()]   = false;
+            isConsumable_   [input.tag()]   = input.isConsumable();
         }
     }
 

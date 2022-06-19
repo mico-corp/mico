@@ -145,7 +145,7 @@ namespace flow{
         bool removePipe(std::string _pipeTag);
         bool removePipes();
 
-        bool createPolicy(std::vector<PolicyInput*> _inputs);
+        bool createPolicy(std::vector<PolicyInput> _inputs);
         void removePolicy();
 
         template<typename ...Argumens>

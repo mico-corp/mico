@@ -36,39 +36,16 @@
 #include <functional>
 
 #include <flow/DataFlow.h>
+#include <flow/PolicyInput.h>
 
 namespace flow{
     class Outpipe;
-
-
-    /// Base class of flow that represents a single input stream.
-    /// @ingroup  flow
-    class PolicyInput{
-    public:
-        /// Build an input stream with a given name and type
-        FLOW_DECL PolicyInput(std::string _tag, std::string _type) :tag_(_tag), typeName_(_type) {};
-
-        /// Get stream name
-        FLOW_DECL std::string tag(){return tag_;};
-        
-        /// Get stream type
-        FLOW_DECL std::string typeName(){return typeName_;};
-    protected:
-        std::string tag_;
-        std::string typeName_;
-    };
-
-    template<typename T_>
-    PolicyInput* makeInput(std::string const &_tag){
-        return new PolicyInput(_tag, typeid(T_).name());
-    }
-
 
     class Policy{
         public:
             typedef std::vector<std::string> PolicyMask;
 
-            FLOW_DECL Policy(std::vector<PolicyInput*> _inputs);
+            FLOW_DECL Policy(std::vector<PolicyInput> _inputs);
 
             template<typename ...Arguments>
             bool registerCallback(PolicyMask _mask, std::function<void(Arguments..._args)> _callback);
@@ -88,9 +65,9 @@ namespace flow{
             FLOW_DECL bool disconnect(std::string _tag);
 
         private:
-            std::map<std::string, std::string> inputs_;
-            std::vector<DataFlow*> flows_;
-            std::vector<std::string>                    tags_;
+            std::vector<PolicyInput>    inputs_;
+            std::vector<DataFlow*>      flows_;
+            std::vector<std::string>    tags_;
             
             std::unordered_map<std::string, Outpipe*>   connetedPipes_; 
     };
@@ -100,16 +77,19 @@ namespace flow {
 
     template<typename ...Arguments>
     bool Policy::registerCallback(PolicyMask _mask, std::function<void(Arguments..._args)> _callback){
-        std::map<std::string, std::string> flows;
-        for (auto& m : _mask) {
+        std::vector<PolicyInput> dfInputs;
+        for (auto& element : _mask) {
             // auto iter = std::find_if(inputs_.begin(), inputs_.end(), [&](const std::pair<std::string, std::string>& _in){return _in.first == m;});
-            auto iter = inputs_.find(m);
+            auto iter = std::find_if(inputs_.begin(), inputs_.end(), [&element](const PolicyInput& _input) {
+                return _input.tag() == element;
+            });
+
             if (iter != inputs_.end()) {
-                flows[iter->first] = iter->second;
+                dfInputs.push_back(*iter);
             }
         }
-        if (flows.size()) {
-            flows_.push_back(DataFlow::create(flows, _callback));
+        if (dfInputs.size()) {
+            flows_.push_back(DataFlow::create(dfInputs, _callback));
             return true;
         }
         else {

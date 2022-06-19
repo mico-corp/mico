@@ -56,7 +56,7 @@ namespace mico{
                 try {
                     fs.open(paramFile, cv::FileStorage::READ);
                 }
-                catch (cv::Exception& e) {
+                catch (cv::Exception&) {
                     return false;
                 }
                 
@@ -99,7 +99,7 @@ namespace mico{
 
                 if (isCalibrated_) {
                     std::vector<cv::Vec3d> rvecs, tvecs;
-                    cv::aruco::estimatePoseSingleMarkers(corners, 0.05, cameraMatrix_, distCoeffs_, rvecs, tvecs);
+                    cv::aruco::estimatePoseSingleMarkers(corners, 0.05f, cameraMatrix_, distCoeffs_, rvecs, tvecs);
 
 
                     if (id_ == 0 && getPipe("all_coordinates")->registrations()) {

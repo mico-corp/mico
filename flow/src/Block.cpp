@@ -135,7 +135,7 @@ namespace flow{
         return runLoop_;
     }
 
-    bool Block::createPolicy(std::vector<PolicyInput*> _inputs){
+    bool Block::createPolicy(std::vector<PolicyInput> _inputs){
         if(iPolicy_){
             return false;
         }else{
