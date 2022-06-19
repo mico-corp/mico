@@ -20,7 +20,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 
-#include <mico/math/flow/BlockFirstOrderSystem.h>
+#include <mico/simulation/flow/BlockFirstOrderSystem.h>
 #include <flow/Outpipe.h>
 #include <flow/Policy.h>
 
@@ -37,20 +37,17 @@ namespace mico{
             createPolicy({  flow::makeInput<float>("time"),
                             flow::makeInput<float>("input") });
 
-            registerCallback({"time"}, 
-                [&](flow::DataFlow _data){
-                    auto time = _data.get<float>("time");
-                            
-                    simulate(time);
-
-                    getPipe("output")->flush(state_);
+            registerCallback<float>({"time"}, 
+                [&](float _t){        
+                    simulate(_t);
+                    getPipe("output")->flush(y_);
                 }
             );
 
             
-            registerCallback({"input"}, 
-                [&](flow::DataFlow _data){
-                    auto u_ = _data.get<float>("input");
+            registerCallback<float>({"input"}, 
+                [&](float _u){
+                    u_ = _u;
                 }
             );
         }
@@ -62,23 +59,40 @@ namespace mico{
             if(auto param = getParamByName(_params, "K"); param){
                 k_ = param.value().asDecimal();
             }
-            
-            if(auto param = getParamByName(_params, "Tau"); param){
+
+            if (auto param = getParamByName(_params, "Tau"); param) {
                 tau_ = param.value().asDecimal();
             }
 
+            if (auto param = getParamByName(_params, "x0"); param) {
+                y0_ = param.value().asDecimal();
+            }
+            isFirstTime_ = true;
+
+            return true;
         }
         
         std::vector<flow::ConfigParameterDef> BlockFirstOrderSystem::parameters(){
             return {
                 {"K", flow::ConfigParameterDef::eParameterType::DECIMAL, 1.0f},
-                {"Tau", flow::ConfigParameterDef::eParameterType::DECIMAL, 1.0f}
+                {"Tau", flow::ConfigParameterDef::eParameterType::DECIMAL, 1.0f},
+                {"x0", flow::ConfigParameterDef::eParameterType::DECIMAL, 0.0f}
             };
         }
 
         void BlockFirstOrderSystem::simulate(float _t){
-            state_ = (_t - tau_ + tau_*exp(-_t/tau_));
-            prevTime_ = _t;
+            if (isFirstTime_) {
+                prevTime_ = _t;
+                isFirstTime_ = false;
+                y_ = y0_;
+                yp_ = k_ / tau_ * u_ + y_ / tau_;
+            } else {
+                float incT = _t - prevTime_;
+                prevTime_ = _t;
+                y_ += incT * yp_;
+                yp_ = k_ / tau_ * u_ - y_ / tau_;
+            }
+            
         }
     }
 }
