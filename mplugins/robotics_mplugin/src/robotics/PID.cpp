@@ -65,16 +65,9 @@ namespace mico{
             }
         }
 
-        void PID::reference(float _ref, float _time, bool _reset) { 
+        void PID::reference(float _ref, bool _reset) { 
             reference_ = _ref; 
             targetReference_ = _ref;
-            // if(_time == 0){
-            //     reference_ = _ref; 
-            //     targetReference_ = _ref;
-            // }else{
-            //     targetReference_ = _ref;
-            //     slope_ = (targetReference_ - reference_)/_time;
-            // }
 
             if(_reset){
                 clear();
@@ -104,6 +97,8 @@ namespace mico{
             float saturated = std::min(std::max(unsaturated, minSat_), maxSat_);
             lastResult_ = saturated;
             
+            std::cout << dt << ", " << err << ", " << up << ", " << ui << ", " << ud << std::endl;
+
             return lastResult_;
 
         }

@@ -41,7 +41,7 @@ namespace mico{
 
             enum class AntiWindupMethod { None, Saturation, BackCalculation, Clamping};
 
-            PID(float _kp, float _ki, float _kd, float fc_ = 30, 
+            PID(float _kp = 1, float _ki = 1, float _kd = 1, float fc_ = 30, 
                 float _minSat = -std::numeric_limits<float>::max(),
                 float _maxSat = std::numeric_limits<float>::max() );
             
@@ -58,7 +58,7 @@ namespace mico{
             void overrideAccumulative(float _accumulative, bool _isOutputScale);
 
             float reference() { return reference_; }
-            void reference(float _ref, float time = 0, bool _reset = true);
+            void reference(float _ref,  bool _reset = false);
 
             float kp() const { return kp_; }
             float ki() const { return ki_; }

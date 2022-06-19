@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="300"
+   height="300"
+   viewBox="0 0 79.374998 79.375"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2 (dc2aedaf03, 2022-05-15)"
+   sodipodi:docname="pid.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="1.0444209"
+     inkscape:cx="74.203799"
+     inkscape:cy="265.21874"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:none;stroke:#ff0404;stroke-width:2.178;stroke-dasharray:2.178, 2.178;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 8.6357322,63.798322 H 39.15706 V 39.790693 h 33.499016"
+       id="path1532"
+       sodipodi:nodetypes="cccc" />
+    <path
+       style="fill:none;stroke:#10d900;stroke-width:1.366;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+       d="M 8.8648797,63.764357 H 39.162019 c 1.709978,-10.21765 3.656164,-30.652951 5.129935,-30.652951 1.179757,0 2.065489,11.665367 3.125726,11.665367 0.882789,0 0.98938,-8.176712 1.84307,-8.176712 0.610226,0 1.08143,5.369689 1.762677,5.369689 0.857062,0.04478 1.291527,-3.695369 2.133523,-3.695369 0.80328,0.01834 1.095733,2.597704 1.506286,2.608966 0.363407,-0.0925 0.734762,-1.157253 1.1703,-1.170297 h 17.021395"
+       id="path1788"
+       sodipodi:nodetypes="cccccccccc" />
+    <text
+       xml:space="preserve"
+       style="font-size:21.4985px;font-family:'Felix Titling';-inkscape-font-specification:'Felix Titling';letter-spacing:0.0151161px;word-spacing:0px;fill:none;stroke:#10d900;stroke-width:2.6014;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       x="15.761138"
+       y="28.885681"
+       id="text1844"><tspan
+         sodipodi:role="line"
+         id="tspan1842"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:21.4985px;font-family:'Lucida Sans';-inkscape-font-specification:'Lucida Sans';stroke:#000000;stroke-width:2.6014;stroke-opacity:1"
+         x="15.761138"
+         y="28.885681"
+         dx="0">P I D</tspan></text>
+  </g>
+</svg>
