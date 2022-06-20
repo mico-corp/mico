@@ -24,11 +24,6 @@
 #include <flow/Outpipe.h>
 #include <flow/Policy.h>
 
-#include <opencv2/opencv.hpp>
-#include <Eigen/Eigen>
-
-#include <opencv2/aruco.hpp>
-
 namespace mico{
     namespace ar {
         BlockInverseTransform::BlockInverseTransform(){
@@ -36,15 +31,18 @@ namespace mico{
 
             createPolicy({  flow::makeInput<Eigen::Matrix4f>("T") });
 
-            registerCallback<Eigen::Matrix4f>({"T"},
-                [&](Eigen::Matrix4f _t){
-                    if (getPipe("Inverse")->registrations()) {
-                        Eigen::Matrix4f inv = _t.inverse().eval();
-                        getPipe("Inverse")->flush(inv);
-                    }
-                }
+            registerCallback({"T"},
+                &BlockInverseTransform::policyCallback,
+                this
             );
 
+        }
+
+        void BlockInverseTransform::policyCallback(Eigen::Matrix4f _t) {
+            if (getPipe("Inverse")->registrations()) {
+                Eigen::Matrix4f inv = _t.inverse().eval();
+                getPipe("Inverse")->flush(inv);
+            }
         }
     }
 }

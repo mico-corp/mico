@@ -87,15 +87,18 @@ namespace mico{
                                                                 "   - Outputs: x, y, debug image\n";};
 
         private:
-            void createTracker(const std::string& _trackerName);
-
-        private:
 #if defined(WIN32)
             typedef cv::Rect cvRect;
 #elif defined(__linux__)
             typedef cv::Rect2d cvRect;
 #endif
-            
+
+            void createTracker(const std::string& _trackerName);
+            void callbackInitBB(cvRect _bb);
+            void callbackInputImage(cv::Mat  _img);
+
+        private:
+
             std::mutex dataLock_;
             cv::Ptr<cv::Tracker> tracker_ = nullptr;
             std::string lastTrackerName_ = "";// App crashes when reinitializing an already runned tracker, so keep track of name to recreate it every initialization.

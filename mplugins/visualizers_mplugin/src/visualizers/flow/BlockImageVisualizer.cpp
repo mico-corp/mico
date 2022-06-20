@@ -35,17 +35,15 @@ namespace mico{
             
             createPolicy({  flow::makeInput<cv::Mat>("Image") });
 
-            registerCallback<cv::Mat>({"Image"}, 
-                                    [&](cv::Mat _image){
-                                        
-                                        if(_image.rows != 0){
-                                            imgLock_.lock();
-                                            lastImage_ = _image;
-                                            imgLock_.unlock();
-                                        }
 
-                                    }
-                                );
+            std::function<void(cv::Mat)> cb = [&](cv::Mat _image) {
+                if (_image.rows != 0) {
+                    imgLock_.lock();
+                    lastImage_ = _image;
+                    imgLock_.unlock();
+                }
+            } ;
+            registerCallback({"Image"},  cb);
         }
         
         BlockImageVisualizer::~BlockImageVisualizer() {

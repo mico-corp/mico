@@ -74,6 +74,7 @@ namespace mico{
             QWidget* customWidget() override;
         
         private:
+            void policyCallback(cv::Mat _img);
             void setItemValidator();
             void normalizeKernel();
         

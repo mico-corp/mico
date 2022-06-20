@@ -59,6 +59,7 @@ namespace mico{
                                                                 "   - Outputs: \n";};
         
         private:
+            void policyCallback(cv::Mat _image);
             std::vector<ml::Detection> parseDetections(cv::Mat &_frame, const std::vector<cv::Mat> &_detections);
 
             bool hasCuda();

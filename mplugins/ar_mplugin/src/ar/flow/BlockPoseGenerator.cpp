@@ -23,11 +23,7 @@
 #include <mico/ar/flow/BlockPoseGenerator.h>
 #include <flow/Outpipe.h>
 #include <flow/Policy.h>
-
-#include <opencv2/opencv.hpp>
 #include <Eigen/Eigen>
-
-#include <opencv2/aruco.hpp>
 
 namespace mico{
     namespace ar {
@@ -42,23 +38,10 @@ namespace mico{
                             flow::makeInput<float>("pitch"),
                             flow::makeInput<float>("yaw") });
 
-            registerCallback<float, float, float, float, float, float> (
+            registerCallback (
                 {"x", "y", "z", "roll", "pitch", "yaw"}, 
-                [&](float _x, float _y, float _z, float _roll, float _pitch, float _yaw){
-                    Eigen::Matrix4f coordinates = Eigen::Matrix4f::Identity();
-                    coordinates.block<3,3>(0,0) =    Eigen::AngleAxisf(_roll, Eigen::Vector3f::UnitX()).matrix()*
-                                                     Eigen::AngleAxisf(_pitch, Eigen::Vector3f::UnitY()).matrix() *
-                                                     Eigen::AngleAxisf(_yaw, Eigen::Vector3f::UnitZ()).matrix();
-
-                    coordinates(0,3) = _x;
-                    coordinates(1,3) = _y;
-                    coordinates(2,3) = _z;
-
-
-                    if (getPipe("pose")->registrations()) {
-                        getPipe("pose")->flush(coordinates);
-                    }
-                }
+                &BlockPoseGenerator::policyCallback,
+                this
             );
 
         }
@@ -74,6 +57,22 @@ namespace mico{
             return {
                 {"absolute", flow::ConfigParameterDef::eParameterType::BOOLEAN, 1}
             };
+        }
+
+        void BlockPoseGenerator::policyCallback(float _x, float _y, float _z, float _roll, float _pitch, float _yaw) {
+            Eigen::Matrix4f coordinates = Eigen::Matrix4f::Identity();
+            coordinates.block<3, 3>(0, 0) = Eigen::AngleAxisf(_roll, Eigen::Vector3f::UnitX()).matrix() *
+                Eigen::AngleAxisf(_pitch, Eigen::Vector3f::UnitY()).matrix() *
+                Eigen::AngleAxisf(_yaw, Eigen::Vector3f::UnitZ()).matrix();
+
+            coordinates(0, 3) = _x;
+            coordinates(1, 3) = _y;
+            coordinates(2, 3) = _z;
+
+
+            if (getPipe("pose")->registrations()) {
+                getPipe("pose")->flush(coordinates);
+            }
         }
 
     }

@@ -24,8 +24,6 @@
 #include <flow/Outpipe.h>
 #include <flow/Policy.h>
 
-#include <opencv2/opencv.hpp>
-#include <Eigen/Eigen>
 
 namespace mico{
     namespace ar {
@@ -34,11 +32,10 @@ namespace mico{
 
             createPolicy({  flow::makeInput<Eigen::Matrix4f>("coordinates")});
 
-            registerCallback<Eigen::Matrix4f>(
+            registerCallback(
                 { "coordinates" },
-                [&](Eigen::Matrix4f _coordinates) {
-                    if(mesh_) mesh_->transform(_coordinates);
-                }
+                &BlockMesh::policyCallback,
+                this
             );
 
         }
@@ -59,6 +56,10 @@ namespace mico{
             return {
                 {"mesh_path", flow::ConfigParameterDef::eParameterType::STRING, std::string("")}
             };
+        }
+
+        void BlockMesh::policyCallback(Eigen::Matrix4f _coordinates) {
+            if (mesh_) mesh_->transform(_coordinates);
         }
     }
 }

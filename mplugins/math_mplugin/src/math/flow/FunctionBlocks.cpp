@@ -76,10 +76,14 @@ namespace mico{
 
             createPolicy({flow::makeInput<float>("time")});
 
-            registerCallback<float>({"time"}, [&](float _time){                                                
-                                        float result = amplitude_*sin(freq_*_time + phase_);
-                                        getPipe("result")->flush(result);
-                                    });
+
+            std::function<void(float)> fn = [&](float _time) {
+                float result = amplitude_ * sin(freq_ * _time + phase_);
+                getPipe("result")->flush(result);
+            };
+
+
+            registerCallback({"time"}, fn);
         }
 
         bool BlockSine::configure(std::vector<flow::ConfigParameterDef> _params) {
@@ -111,10 +115,14 @@ namespace mico{
 
             createPolicy({ flow::makeInput<float>("time") });
 
-            registerCallback<float>({ "time" }, [&](float _time) {
+
+            std::function<void(float)> fn = [&](float _time) {
                 float result = amplitude_ * cos(freq_ * _time + phase_);
                 getPipe("result")->flush(result);
-                });
+            };
+
+
+            registerCallback({ "time" }, fn);
         }
 
         bool BlockCosine::configure(std::vector<flow::ConfigParameterDef> _params) {
@@ -147,10 +155,11 @@ namespace mico{
 
             createPolicy({ flow::makeInput<float>("input") });
 
-            registerCallback<float>({ "input" }, [&](float _input) {
+            std::function<void(float)> fn = [&](float _input) {
                 float result = (_input - minInput_) / (maxInput_ - minInput_) * (maxOutput_ - minOutput_) + minOutput_;
                 getPipe("output")->flush(result);
-                });
+            };
+            registerCallback<float>({ "input" }, fn);
         }
 
         bool BlockLinearMap::configure(std::vector<flow::ConfigParameterDef> _params) {

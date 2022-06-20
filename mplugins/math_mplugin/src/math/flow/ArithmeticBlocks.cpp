@@ -37,11 +37,8 @@ namespace mico{
             createPolicy({  flow::makeInput<float>("in_1"),
                             flow::makeInput<float>("in_2") });
 
-            registerCallback<float, float>({"in_1", "in_2"}, 
-                                    [&](float _i1, float _i2){
-                                        getPipe("result")->flush(_i1 + _i2);
-                                    }
-            );
+            std::function<void(float, float)> fn = [&](float _i1, float _i2) { getPipe("result")->flush(_i1 + _i2); };
+            registerCallback({"in_1", "in_2"},  fn );
         }
 
 
@@ -52,11 +49,9 @@ namespace mico{
                             flow::makeInput<float>("in_2")});
 
 
-            registerCallback<float, float>({"in_1", "in_2"}, 
-                                    [&](float _i1, float _i2){                                             
-                                        getPipe("result")->flush(_i1-_i2);
-                                    }
-            );
+
+            std::function<void(float, float)> fn = [&](float _i1, float _i2) { getPipe("result")->flush(_i1 - _i2); };
+            registerCallback({"in_1", "in_2"}, fn);
         }
 
 
@@ -67,11 +62,8 @@ namespace mico{
                             flow::makeInput<float>("in_2")});
 
 
-            registerCallback<float, float>({"in_1", "in_2"}, 
-                                    [&](float _i1, float _i2){
-                                        getPipe("result")->flush(_i1*_i2);
-                                    }
-            );
+            std::function<void(float, float)> fn = [&](float _i1, float _i2) { getPipe("result")->flush(_i1 * _i2); };
+            registerCallback({ "in_1", "in_2" }, fn);
         }
 
 
@@ -82,11 +74,8 @@ namespace mico{
                             flow::makeInput<float>("in_2")});
 
 
-            registerCallback<float, float>({"in_1", "in_2"}, 
-                                    [&](float _i1, float _i2){
-                                        getPipe("result")->flush(_i1/_i2);
-                                    }
-            );
+            std::function<void(float, float)> fn = [&](float _i1, float _i2) { getPipe("result")->flush(_i1 / _i2); };
+            registerCallback({ "in_1", "in_2" }, fn);
         }
         
 
@@ -96,11 +85,8 @@ namespace mico{
             createPolicy({  flow::makeInput<float>("in")});
 
 
-            registerCallback<float>({"in"}, 
-                                    [&](float _in){
-                                        getPipe("result")->flush(sqrt(_in));
-                                    }
-            );
+            std::function<void(float)> fn = [&](float _in) { getPipe("result")->flush(sqrt(_in)); };
+            registerCallback({ "in_" }, fn);
         }
         
         BlockPow::BlockPow(){
@@ -110,11 +96,10 @@ namespace mico{
                             flow::makeInput<float>("exp")});
 
 
-            registerCallback<float, float>({"base", "exp"}, 
-                                    [&](float _i1, float _i2){                                             
-                                        getPipe("result")->flush(float(pow(_i1, _i2)));
-                                    }
-            );
+
+            std::function<void(float, float)> fn = [&](float _i1, float _i2) { getPipe("result")->flush(float(pow(_i1, _i2))); };
+            registerCallback({ "base", "exp" }, fn);
+
         }
 
         BlockIntegrator::BlockIntegrator() {
@@ -128,13 +113,12 @@ namespace mico{
 
             createPolicy({ flow::makeInput<float>("input") });
 
-            registerCallback<float>({ "input" },
-                [&](float _in) {
-                    acc_ += _in;
+            std::function<void(float)> fn = [&](float _in) {
+                acc_ += _in;
+                getPipe("output")->flush(acc_);
+            };
 
-                    getPipe("output")->flush(acc_);
-            }
-            );
+            registerCallback({ "input" },fn);
         }
 
 
@@ -149,26 +133,25 @@ namespace mico{
             createPipe<float>("output");
             createPolicy({ flow::makeInput<float>("input") });
 
-            registerCallback<float>({ "input" },
-                [&](float _in) {
-                    if (isFirst_) {
-                        t0_ = std::chrono::high_resolution_clock::now();
-                        lastVal_ = _in;
-                        isFirst_ = false;
-                    }
-                    else {
-                        auto t1 = std::chrono::high_resolution_clock::now();
-                        float incT = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0_).count();
-                        t0_ = t1;
-                        incT /= 1e6;
-                        float deriv = (_in - lastVal_) / incT;
-                        getPipe("output")->flush(deriv);
 
-                        lastVal_ = _in;
 
-                    }
+            std::function<void(float)> fn = [&](float _in) {
+                if (isFirst_) {
+                    t0_ = std::chrono::high_resolution_clock::now();
+                    lastVal_ = _in;
+                    isFirst_ = false;
+                } else {
+                    auto t1 = std::chrono::high_resolution_clock::now();
+                    float incT = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0_).count();
+                    t0_ = t1;
+                    incT /= 1e6;
+                    float deriv = (_in - lastVal_) / incT;
+                    getPipe("output")->flush(deriv);
+
+                    lastVal_ = _in;
                 }
-            );
+            };
+            registerCallback({ "input" },fn);
         }
     }
 }

@@ -197,10 +197,9 @@ namespace mico{
                 
                 createPolicy({  flow::makeInput<bool>("A")});
 
-                registerCallback<bool>({"A"}, 
-                    [&](bool _a){
-                        getPipe("NoA")->flush(!_a);
-                    }
+                registerCallback({"A"}, 
+                    &NotOperator::policyCallback,
+                    this
                 );
             }
 
@@ -218,6 +217,10 @@ namespace mico{
             
             /// Returns a brief description of the block
             std::string description() const override {return    "NOT\n";};
+        private:
+            void policyCallback(bool _a) {
+                getPipe("NoA")->flush(!_a);
+            }
         };
 
         
@@ -230,11 +233,10 @@ namespace mico{
                 createPipe<bool>("out");
                 createPolicy({  flow::makeInput<bool>("A"),
                                 flow::makeInput<bool>("B") });
-                registerCallback<bool, bool>(
+                registerCallback(
                     {"A", "B"},
-                    [&](bool _a, bool _b){
-                        getPipe("out")->flush(_a && _b);
-                    }
+                    &AndOperator::policyCallback,
+                    this
                 );
             }
 
@@ -251,6 +253,10 @@ namespace mico{
 
             /// Returns a brief description of the block
             std::string description() const override {return    "AND\n";};
+        private:
+            void policyCallback(bool _a, bool _b) {
+                getPipe("out")->flush(_a && _b);
+            }
         };
 
         /// Mico block that performs a OR operation on the given input.
@@ -262,11 +268,10 @@ namespace mico{
                 createPipe<bool>("out");
                 createPolicy({  flow::makeInput<bool>("A"),
                                 flow::makeInput<bool>("B") });
-                registerCallback<bool, bool>(
+                registerCallback(
                     {"A", "B"},
-                    [&](bool _a, bool _b){
-                        getPipe("out")->flush(_a || _b);
-                    }
+                    &OrOperator::policyCallback,
+                    this
                 );
             }
 
@@ -283,6 +288,10 @@ namespace mico{
 
             /// Returns a brief description of the block
             std::string description() const override {return    "OR\n";};
+        private:
+            void policyCallback(bool _a, bool _b) {
+                getPipe("out")->flush(_a || _b);
+            }
         };
 
     }

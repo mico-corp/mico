@@ -70,7 +70,7 @@ namespace mico{
         
         private:
             std::vector<Detection> parseDetections(cv::Mat &_frame, const std::vector<cv::Mat> &_detections);
-
+            void policyCallback(cv::Mat _image);
             bool hasCuda();
 
         private:

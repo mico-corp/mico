@@ -35,38 +35,9 @@ namespace mico{
 
             createPolicy({  flow::makeInput<cv::Mat>("input") });
 
-            registerCallback<cv::Mat>(   {"input"},
-                                [&](cv::Mat _img){
-                                    if(getPipe("features")->registrations() || getPipe("descriptors")->registrations() || getPipe("debug")->registrations()){
-                                        if (!detector_)
-                                            return;
-
-                                        cv::Mat frame = _img.clone(); 
-                                        cv::Mat result;
-                                        if (frame.channels() == 1) {
-                                            cv::cvtColor(frame,frame,cv::COLOR_BGR2GRAY);
-                                        } 
-
-                                        std::vector<cv::KeyPoint> kp;
-                                        cv::Mat desc;
-                                        
-                                        dataLock_.lock();
-                                        if (getPipe("descriptors")->registrations()) {
-                                            detector_->detectAndCompute(frame, cv::Mat(), kp, desc);
-                                        } else {
-                                            detector_->detect(frame, kp);
-                                        }
-                                        dataLock_.unlock();
-
-                                        if (getPipe("features")->registrations()) getPipe("features")->flush(kp);
-                                        if (getPipe("descriptors")->registrations())getPipe("descriptors")->flush(desc);
-                                        if (getPipe("debug")->registrations()) {
-                                            cv::Mat debug;
-                                            cv::drawKeypoints(frame, kp, debug);
-                                            getPipe("debug")->flush(debug);
-                                        }
-                                    }
-                                }
+            registerCallback(   {"input"},
+                                &BlockFeatureExtract::policyCallback,
+                                this        
             );
         }
 
@@ -96,6 +67,38 @@ namespace mico{
             };
         }
 
+        void BlockFeatureExtract::policyCallback(cv::Mat _img) {
+            if (getPipe("features")->registrations() || getPipe("descriptors")->registrations() || getPipe("debug")->registrations()) {
+                if (!detector_)
+                    return;
+
+                cv::Mat frame = _img.clone();
+                cv::Mat result;
+                if (frame.channels() == 1) {
+                    cv::cvtColor(frame, frame, cv::COLOR_BGR2GRAY);
+                }
+
+                std::vector<cv::KeyPoint> kp;
+                cv::Mat desc;
+
+                dataLock_.lock();
+                if (getPipe("descriptors")->registrations()) {
+                    detector_->detectAndCompute(frame, cv::Mat(), kp, desc);
+                }
+                else {
+                    detector_->detect(frame, kp);
+                }
+                dataLock_.unlock();
+
+                if (getPipe("features")->registrations()) getPipe("features")->flush(kp);
+                if (getPipe("descriptors")->registrations())getPipe("descriptors")->flush(desc);
+                if (getPipe("debug")->registrations()) {
+                    cv::Mat debug;
+                    cv::drawKeypoints(frame, kp, debug);
+                    getPipe("debug")->flush(debug);
+                }
+            }
+        }
 
     }
 }

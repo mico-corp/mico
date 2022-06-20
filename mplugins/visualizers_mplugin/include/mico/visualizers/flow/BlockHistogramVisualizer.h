@@ -64,6 +64,8 @@ namespace mico{
             /// Returns a brief description of the block
             std::string description() const override {return    "Histogram Visualizer.\n"
                                                                 "   - Inputs: \n";};
+        private:
+            void policyCallback(std::vector<float> _histogram);
 
         private:
             std::mutex dataLock_;

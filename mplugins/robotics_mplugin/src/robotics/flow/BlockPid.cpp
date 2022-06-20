@@ -33,30 +33,14 @@ namespace mico {
 
             createPolicy({ flow::makeInput<float>("reference") ,  flow::makeInput<float>("x") });
 
-            registerCallback<float>(   {"x"}, 
-                                [&](float _x){
-                                    if (getPipe("u")->registrations()) {
-                                        if(firstTime_){
-                                            t0_ = std::chrono::steady_clock::now();
-                                            firstTime_ = false;
-                                        }else{
-                                            auto t1 = std::chrono::steady_clock::now();
-                                            float incT = std::chrono::duration_cast<std::chrono::microseconds>(t1-t0_).count();
-                                            incT /= 1e6;
-                                            t0_ = t1;
-
-                                            float u = pid_->update(_x, incT);
-                                            getPipe("u")->flush(u);
-
-                                        }
-                                    }
-                                }
+            registerCallback(   {"x"}, 
+                            &BlockPid::signalInputCallback,
+                            this        
             );
 
-            registerCallback<float>({ "reference" },
-                [&](float _ref) {
-                    pid_->reference(_ref);
-                });
+            registerCallback({ "reference" },
+                &BlockPid::referenceInputCallback,
+                this);
         }
 
 
@@ -88,5 +72,28 @@ namespace mico {
                     {"fc", flow::ConfigParameterDef::eParameterType::DECIMAL, 15.0f}
             };
         }
+    
+        void BlockPid::signalInputCallback(float _x) {
+            if (getPipe("u")->registrations()) {
+                if (firstTime_) {
+                    t0_ = std::chrono::steady_clock::now();
+                    firstTime_ = false;
+                }
+                else {
+                    auto t1 = std::chrono::steady_clock::now();
+                    float incT = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0_).count();
+                    incT /= 1e6;
+                    t0_ = t1;
+
+                    float u = pid_->update(_x, incT);
+                    getPipe("u")->flush(u);
+
+                }
+            }
+        }
+
+        void BlockPid::referenceInputCallback(float _ref) {
+            pid_->reference(_ref);
+        };
     }
 }

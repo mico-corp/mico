@@ -25,8 +25,6 @@
 #include <flow/Policy.h>
 
 #include <opencv2/opencv.hpp>
-#include <Eigen/Eigen>
-
 #include <opencv2/aruco.hpp>
 
 namespace mico{
@@ -37,18 +35,10 @@ namespace mico{
 
             createPolicy({  flow::makeInput<std::map<int, Eigen::Matrix4f>>("all_coordinates") });
 
-            registerCallback<std::map<int, Eigen::Matrix4f>>(
-                {"all_coordinates"},
-                [&](std::map<int, Eigen::Matrix4f> _coordinates){
-                    auto options = _coordinates;
-
-                    if(options.find(id_) != options.end()){
-                        if (getPipe("coordinates")->registrations()) {
-                            getPipe("coordinates")->flush(options[id_]);
-                        }
-                    }
-                }
-            );
+            registerCallback(
+                { "all_coordinates" },
+                &BlockFilterAruco::policyCallback,
+                this);
 
         }
 
@@ -63,6 +53,16 @@ namespace mico{
             return {
                 {"id", flow::ConfigParameterDef::eParameterType::INTEGER, 1}
             };
+        }
+
+        void BlockFilterAruco::policyCallback(std::map<int, Eigen::Matrix4f> _coordinates) {
+            auto options = _coordinates;
+
+            if (options.find(id_) != options.end()) {
+                if (getPipe("coordinates")->registrations()) {
+                    getPipe("coordinates")->flush(options[id_]);
+                }
+            }
         }
 
     }

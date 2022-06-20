@@ -36,66 +36,14 @@ namespace mico{
 
             createPolicy({ flow::makeInput<cv::Mat>("input"), flow::makeInput<cvRect>("initBB") });
 
-            registerCallback<cvRect>({ "initBB" },
-                [&](cvRect _bb) {
-                    std::lock_guard<std::mutex> lock(dataLock_);
-                    if (isInit_) return;
-                    
-                    isInit_ = false;
-                    if (lastImage_.rows != 0) {
-                        createTracker(lastTrackerName_);
-                        bbox_ = _bb;
-                        if (bbox_.width > 10 && bbox_.height > 10) {
-                            tracker_->init(lastImage_, bbox_);
-                            isInit_ = true;
-                        }
-                    }
-
-                }
+            registerCallback({ "initBB" },
+                &BlockTracker::callbackInitBB,
+                this
             );
 
-            registerCallback<cv::Mat>(   {"input"}, 
-                                [&](cv::Mat  _img){
-                                    if(isInit_)
-                                        return;
-
-                                    if(getPipe("x")->registrations() || getPipe("y")->registrations() || getPipe("debug")->registrations()){
-                                        if (!tracker_) {
-                                            return;
-                                        }
-
-                                        bool ok = false;
-                                        cv::Mat frame = _img.clone();
-                                        {
-                                            std::lock_guard<std::mutex> lock(dataLock_);
-                                            lastImage_ = frame.clone();
-                                        }
-                                        if (isInit_) {
-                                            // Update the tracking result
-                                            {
-                                                bbox_ = bbox_ & cvRect(0, 0, frame.cols - 1, frame.rows - 1);
-                                                std::lock_guard<std::mutex> lock(dataLock_);
-                                                ok = tracker_->update(frame, bbox_);
-                                            }
-                                            
-                                            if (!ok) isInit_ = false;
-
-                                            if (getPipe("x")->registrations()) getPipe("x")->flush(bbox_.x + bbox_.width / 2.0f);
-                                            if (getPipe("y")->registrations()) getPipe("y")->flush(bbox_.y + bbox_.height / 2.0f);
-                                        }
-                                        if (getPipe("isTracking")->registrations()) getPipe("isTracking")->flush(ok);
-
-
-                                        if (getPipe("debug")->registrations()) {
-                                            if (ok) // Tracking success : Draw the tracked object
-                                                rectangle(frame, bbox_, cv::Scalar(255, 0, 0), 2, 1);
-                                            else // Tracking failure detected.
-                                                putText(frame, "Tracking failure detected", cv::Point(100, 80), cv::FONT_HERSHEY_SIMPLEX, 0.75, cv::Scalar(0, 0, 255), 2);
-
-                                            getPipe("debug")->flush(frame);
-                                        }
-                                    }
-                                }
+            registerCallback(   {"input"}, 
+                                &BlockTracker::callbackInputImage,
+                                this        
             );
         }
 
@@ -164,5 +112,61 @@ namespace mico{
             }
         }
 
+        void BlockTracker::callbackInitBB(cvRect _bb) {
+            std::lock_guard<std::mutex> lock(dataLock_);
+            if (isInit_) return;
+
+            isInit_ = false;
+            if (lastImage_.rows != 0) {
+                createTracker(lastTrackerName_);
+                bbox_ = _bb;
+                if (bbox_.width > 10 && bbox_.height > 10) {
+                    tracker_->init(lastImage_, bbox_);
+                    isInit_ = true;
+                }
+            }
+        }
+
+        void BlockTracker::callbackInputImage(cv::Mat  _img) {
+            if (isInit_)
+                return;
+
+            if (getPipe("x")->registrations() || getPipe("y")->registrations() || getPipe("debug")->registrations()) {
+                if (!tracker_) {
+                    return;
+                }
+
+                bool ok = false;
+                cv::Mat frame = _img.clone();
+                {
+                    std::lock_guard<std::mutex> lock(dataLock_);
+                    lastImage_ = frame.clone();
+                }
+                if (isInit_) {
+                    // Update the tracking result
+                    {
+                        bbox_ = bbox_ & cvRect(0, 0, frame.cols - 1, frame.rows - 1);
+                        std::lock_guard<std::mutex> lock(dataLock_);
+                        ok = tracker_->update(frame, bbox_);
+                    }
+
+                    if (!ok) isInit_ = false;
+
+                    if (getPipe("x")->registrations()) getPipe("x")->flush(bbox_.x + bbox_.width / 2.0f);
+                    if (getPipe("y")->registrations()) getPipe("y")->flush(bbox_.y + bbox_.height / 2.0f);
+                }
+                if (getPipe("isTracking")->registrations()) getPipe("isTracking")->flush(ok);
+
+
+                if (getPipe("debug")->registrations()) {
+                    if (ok) // Tracking success : Draw the tracked object
+                        rectangle(frame, bbox_, cv::Scalar(255, 0, 0), 2, 1);
+                    else // Tracking failure detected.
+                        putText(frame, "Tracking failure detected", cv::Point(100, 80), cv::FONT_HERSHEY_SIMPLEX, 0.75, cv::Scalar(0, 0, 255), 2);
+
+                    getPipe("debug")->flush(frame);
+                }
+            }
+        }
     }
 }
