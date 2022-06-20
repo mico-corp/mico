@@ -39,29 +39,9 @@ namespace mico {
         BlockCalibrationMonocular::BlockCalibrationMonocular() {
             createPolicy({ flow::makeInput<cv::Mat>("Image") });
 
-            registerCallback<cv::Mat>({ "Image" },
-                [&](cv::Mat  _image) {
-
-                    cv::Mat image = _image;
-                    if (image.rows != 0) {
-
-                        std::vector<cv::Point2f> points;
-                        cv::Mat gray;
-                        cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
-                        bool found = cv::findChessboardCorners(gray, cv::Size(hSize_, vSize_), points, cv::CALIB_CB_ADAPTIVE_THRESH | cv::CALIB_CB_FAST_CHECK);
-
-                        if(found)
-                            drawChessboardCorners(image, cv::Size(hSize_, vSize_), points, found);
-
-                        imgLock_.lock();
-                        lastImage_ = image;
-                        imgLock_.unlock();
-
-                        if(found)
-                            checkRefineAndAdd(gray, points);
-                    }
-
-                }
+            registerCallback({ "Image" },
+                &BlockCalibrationMonocular::policyCallback,
+                this
             );
 
         }
@@ -257,6 +237,29 @@ namespace mico {
             fs << "ts" << transVectors;
 
             std::cout << "Saved files." << std::endl;
+        }
+
+	void BlockCalibrationMonocular::policyCallback(cv::Mat  _image) {
+
+            cv::Mat image = _image;
+            if (image.rows != 0) {
+
+                std::vector<cv::Point2f> points;
+                cv::Mat gray;
+                cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
+                bool found = cv::findChessboardCorners(gray, cv::Size(hSize_, vSize_), points, cv::CALIB_CB_ADAPTIVE_THRESH | cv::CALIB_CB_FAST_CHECK);
+
+                if(found)
+                    drawChessboardCorners(image, cv::Size(hSize_, vSize_), points, found);
+
+                imgLock_.lock();
+                lastImage_ = image;
+                imgLock_.unlock();
+
+                if(found)
+                    checkRefineAndAdd(gray, points);
+            }
+
         }
 
     }

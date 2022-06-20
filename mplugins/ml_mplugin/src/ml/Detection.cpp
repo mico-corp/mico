@@ -45,8 +45,8 @@ namespace mico{
             createPipe<bool>("trigger");
             createPolicy({  flow::makeInput<std::vector<Detection>>("detections") });
 
-            registerCallback<std::vector<Detection>>(   {"detections"}, 
-                                [&](std::vector<Detection> _detections){
+
+            std::function<void(std::vector<Detection>)> cbInput =[&](std::vector<Detection> _detections){
                                    
                                     if(getPipe("trigger")->registrations()){
                                         auto result = std::find_if(_detections.begin(), _detections.end(), [&](const Detection &_d){
@@ -59,8 +59,8 @@ namespace mico{
                                             getPipe("trigger")->flush(result == _detections.end());
                                         }
                                     }
-                                }
-            );
+                                };
+            registerCallback<std::vector<Detection>>(   {"detections"},  cbInput );
         }
 
 

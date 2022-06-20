@@ -82,7 +82,8 @@ namespace mico {
             void checkRefineAndAdd(cv::Mat& _image, std::vector<cv::Point2f>& _points);
 
             void calibrate();
-
+	    void policyCallback(cv::Mat  _image);
+	    
         private:
             std::mutex imgLock_;
 
