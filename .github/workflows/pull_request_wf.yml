@@ -28,6 +28,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - name: "Install dependencies"
         run: |
-          ls
+          sudo apt install -y git cmake qt5-default qtmultimedia5-dev libeigen3-dev libboost-all-dev libopencv-dev libpcl-dev freeglut3-dev libgraphviz-dev libgl1-mesa-dev mesa-common-dev libusb-1.0-0-dev libdlib-dev # Common dependencies
+          sudo apt install -y python3 python3-numpy                                                # For python and numpy
+      - name: "Prepare compilation with cmake"
+        run: |
+          cmake
+      - name: "Compile repository"
+        run: |
+          make -j4
+      - name: "Try Deploy"
+        run: |
+          make package
