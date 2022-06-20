@@ -101,7 +101,7 @@ add_custom_target(flow_resources ALL
 ######    Test.                           ########
 ##################################################
 if(${BUILD_TESTS})
-  find_package(GTest CONFIG REQUIRED)
+  find_package(GTest CONFIG)
   if(${GTest_FOUND})
     enable_testing()
     add_subdirectory(tests)
