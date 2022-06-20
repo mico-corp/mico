@@ -1,4 +1,4 @@
-# MICO 
+# MICO - Modules-based Interface for Computer prOgramming
 
 All MICO-plugins in one repository using git submodules.
 
