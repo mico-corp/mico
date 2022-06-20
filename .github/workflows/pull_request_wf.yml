@@ -35,7 +35,9 @@ jobs:
           sudo apt install -y python3 python3-numpy                                                # For python and numpy
       - name: "Prepare compilation with cmake"
         run: |
-          cmake
+          mkdir build
+          cd build
+          cmake ..
       - name: "Compile repository"
         run: |
           make -j4
