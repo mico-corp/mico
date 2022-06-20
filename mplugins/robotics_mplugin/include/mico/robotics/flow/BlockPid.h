@@ -60,6 +60,9 @@ namespace mico{
                                                                 "   - Inputs: \n"
                                                                 "   - Outputs: \n";};
 
+        private:
+            void signalInputCallback(float _x);
+            void referenceInputCallback(float _ref);
 
         private:
             bool firstTime_ = true;

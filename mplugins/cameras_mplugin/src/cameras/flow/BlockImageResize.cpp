@@ -40,17 +40,9 @@ namespace mico {
             createPipe<cv::Mat>("out");
             createPolicy({ flow::makeInput<cv::Mat>("in") });
 
-            registerCallback<cv::Mat>({ "in" },
-                [&](cv::Mat _image) {
-
-                    cv::Mat image = _image.clone();
-                    if (image.rows != 0) {
-                        if(getPipe("out")->registrations()){
-                            cv::resize(image, image, cv::Size(width_, height_));
-                            getPipe("out")->flush(image);
-                        }
-                    }
-                }
+            registerCallback({ "in" },
+                &BlockImageResize::policyCallback,
+                this
             );
 
         }
@@ -74,6 +66,16 @@ namespace mico {
             else return false;
 
             return true;
+        }
+
+        void BlockImageResize::policyCallback(cv::Mat _image) {
+            cv::Mat image = _image.clone();
+            if (image.rows != 0) {
+                if (getPipe("out")->registrations()) {
+                    cv::resize(image, image, cv::Size(width_, height_));
+                    getPipe("out")->flush(image);
+                }
+            }
         }
 
     }

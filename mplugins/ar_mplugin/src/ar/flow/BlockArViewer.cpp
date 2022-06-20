@@ -33,12 +33,9 @@ namespace mico{
             createPolicy({  flow::makeInput<Eigen::Matrix4f>("coordinates"),
                             flow::makeInput<cv::Mat>("image") });
 
-            registerCallback<Eigen::Matrix4f, cv::Mat> ({ "coordinates", "image" },
-                [&](Eigen::Matrix4f _coordinates, cv::Mat _image) {
-                    if (!widget_) return;
-                    widget_->updatePose(_coordinates);
-                    widget_->updateBackgroundImage(_image);
-                }
+            registerCallback({ "coordinates", "image" },
+                &BlockArViewer::policyCallback,
+                this
             );
 
         }
@@ -56,6 +53,12 @@ namespace mico{
             widget_->show();
 
             return true;
+        }
+
+        void BlockArViewer::policyCallback(Eigen::Matrix4f _coordinates, cv::Mat _image) {
+            if (!widget_) return;
+            widget_->updatePose(_coordinates);
+            widget_->updateBackgroundImage(_image);
         }
     }
 }

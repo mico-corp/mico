@@ -35,13 +35,13 @@ namespace mico{
             createPolicy({  flow::makeInput<float>("x"), 
                             flow::makeInput<float>("y")});
 
-            registerCallback<float, float>({ "x", "y" },
-                [&](float _x, float _y) {
-                    dataLock_.lock();
-                    pendingData_.push_back(std::make_pair(_x,_y));
-                    dataLock_.unlock();
-                }
-            );
+
+            std::function<void(float, float)> cb = [&](float _x, float _y) {
+                dataLock_.lock();
+                pendingData_.push_back(std::make_pair(_x, _y));
+                dataLock_.unlock();
+            };
+            registerCallback<float, float>({ "x", "y" }, cb );
 
         }
         

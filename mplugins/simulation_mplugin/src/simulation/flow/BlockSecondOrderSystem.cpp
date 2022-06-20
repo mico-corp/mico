@@ -36,19 +36,14 @@ namespace mico{
             createPolicy({  flow::makeInput<float>("time"),
                             flow::makeInput<float>("input") });
 
-            registerCallback<float>({"time"}, 
-                [&](float _t){        
-                    simulate(_t);
-                    getPipe("output")->flush(y_);
-                }
-            );
+            std::function<void(float)> cb1 = [&](float _t) {
+                simulate(_t);
+                getPipe("output")->flush(y_);
+            };
+            registerCallback({ "time" }, cb1);
 
-            
-            registerCallback<float>({"input"}, 
-                [&](float _u){
-                    u_ = _u;
-                }
-            );
+            std::function<void(float)> cb2 = [&](float _u) { u_ = _u; };
+            registerCallback({ "input" }, cb2);
         }
 
         bool BlockSecondOrderSystem::configure(std::vector<flow::ConfigParameterDef> _params) {

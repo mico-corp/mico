@@ -37,37 +37,9 @@ namespace mico{
 
             createPolicy({  flow::makeInput<cv::Mat>("input")  });
 
-            registerCallback<cv::Mat>(   {"input"}, 
-                                [&](cv::Mat _image){
-                                    if(!isConfigured_)
-                                        return;
-
-                                    std::lock_guard<std::mutex> lock(safeDestroy_);
-
-                                    if(getPipe("result")->registrations() != 0 || getPipe("detections")->registrations() != 0 || getPipe("n_detections")->registrations() != 0){
-                                        cv::Mat frame = _image.clone();
-                                        cv::Mat frame_gray;
-                                        cv::cvtColor( frame, frame_gray, cv::COLOR_BGR2GRAY );
-                                        cv::equalizeHist( frame_gray, frame_gray );
-                                        //-- Detect faces
-                                        std::vector<cv::Rect> faces;
-                                        if (!face_cascade.empty()) {
-                                            face_cascade.detectMultiScale( frame_gray, faces );   
-                                            std::vector< Detection> detections;
-                                            for ( size_t i = 0; i < faces.size(); i++ ) {
-                                                cv::Point center( faces[i].x + faces[i].width/2, faces[i].y + faces[i].height/2 );
-                                                cv::rectangle( frame, faces[i], cv::Scalar( 0, 255, 0 ), 4 );
-                                                
-                                                detections.push_back({ 0, faces[i], frame(faces[i])});
-                                            }
-                                            if (getPipe("result")->registrations() != 0 ) getPipe("result")->flush(frame);
-                                            if (getPipe("detections")->registrations() != 0) getPipe("detections")->flush(detections);
-                                            if (getPipe("n_detections")->registrations() != 0) getPipe("n_detections")->flush((int) detections.size());
-                                            
-                                        }
-
-                                    }
-                                }
+            registerCallback({ "input" },
+                &BlockHaarCascade::policyCallback,
+                this
             );
         }
 
@@ -94,6 +66,37 @@ namespace mico{
                     std::vector<std::string>{"Face detector",  "Body detector",  "Upperbody detector"} 
                 }  
             };
+        }
+
+        void BlockHaarCascade::policyCallback(cv::Mat _image) {
+            if (!isConfigured_)
+                return;
+
+            std::lock_guard<std::mutex> lock(safeDestroy_);
+
+            if (getPipe("result")->registrations() != 0 || getPipe("detections")->registrations() != 0 || getPipe("n_detections")->registrations() != 0) {
+                cv::Mat frame = _image.clone();
+                cv::Mat frame_gray;
+                cv::cvtColor(frame, frame_gray, cv::COLOR_BGR2GRAY);
+                cv::equalizeHist(frame_gray, frame_gray);
+                //-- Detect faces
+                std::vector<cv::Rect> faces;
+                if (!face_cascade.empty()) {
+                    face_cascade.detectMultiScale(frame_gray, faces);
+                    std::vector< Detection> detections;
+                    for (size_t i = 0; i < faces.size(); i++) {
+                        cv::Point center(faces[i].x + faces[i].width / 2, faces[i].y + faces[i].height / 2);
+                        cv::rectangle(frame, faces[i], cv::Scalar(0, 255, 0), 4);
+
+                        detections.push_back({ 0, faces[i], frame(faces[i]) });
+                    }
+                    if (getPipe("result")->registrations() != 0) getPipe("result")->flush(frame);
+                    if (getPipe("detections")->registrations() != 0) getPipe("detections")->flush(detections);
+                    if (getPipe("n_detections")->registrations() != 0) getPipe("n_detections")->flush((int)detections.size());
+
+                }
+
+            }
         }
     }
 }   

@@ -59,6 +59,9 @@ namespace mico{
             QBoxLayout * creationWidget() override;
 
         private:
+            void policyCallback(std::vector<float> _v);
+
+        private:
             void preparePolicy();
             unsigned nTrajs_ = 1;
 

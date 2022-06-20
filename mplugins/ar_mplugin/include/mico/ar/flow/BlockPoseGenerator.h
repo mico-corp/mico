@@ -25,13 +25,6 @@
 #define MICO_AR_FLOW_BLOCKPOSEGENERATOR_H_
 
 #include <flow/Block.h>
-#include <opencv2/opencv.hpp>
-
-namespace cv{
-    namespace aruco {
-        class Dictionary;
-    }
-}
 
 namespace mico{
     namespace ar {
@@ -80,6 +73,8 @@ namespace mico{
             /// Returns a brief description of the block
             std::string description() const override {return    "Generator"
                                                                 "   - \n";};
+        private:
+            void policyCallback(float _x, float _y, float _z, float _roll, float _pitch, float _yaw);
 
         private:
             bool isAbsolute_ = true;

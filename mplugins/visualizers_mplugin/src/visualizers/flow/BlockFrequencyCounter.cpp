@@ -41,21 +41,9 @@ namespace mico{
             createPipe<float>("Hz");
 
             t0_ = std::chrono::steady_clock::now();
-            registerCallback<boost::any>({"Stream"}, 
-                                    [&](boost::any){
-                                        auto t1 = std::chrono::steady_clock::now();
-                                        auto incT = std::chrono::duration_cast<std::chrono::milliseconds>(t1-t0_).count();
-                                        if(incT <= 0) return;
-
-                                        freqList_[queueIdx_] = 1000.0f/incT;
-                                        queueIdx_++;
-                                        queueIdx_ = queueIdx_%listSize_;
-                                        freq_ = std::accumulate(&freqList_[0], freqList_+listSize_, 0.0f) / listSize_;
-                                        t0_ = t1;
-                                        if(getPipe("Hz")->registrations() != 0){
-                                            getPipe("Hz")->flush(freq_);
-                                        }
-                                    }
+            registerCallback({"Stream"}, 
+                                    &BlockFrequencyCounter::policyCallback,
+                                    this
                                 );
 
             refreshTimer_ = new QTimer();
@@ -75,5 +63,21 @@ namespace mico{
             delete refreshTimer_;
             delete textDisplay_;
         }
+
+        void BlockFrequencyCounter::policyCallback(boost::any) {
+            auto t1 = std::chrono::steady_clock::now();
+            auto incT = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0_).count();
+            if (incT <= 0) return;
+
+            freqList_[queueIdx_] = 1000.0f / incT;
+            queueIdx_++;
+            queueIdx_ = queueIdx_ % listSize_;
+            freq_ = std::accumulate(&freqList_[0], freqList_ + listSize_, 0.0f) / listSize_;
+            t0_ = t1;
+            if (getPipe("Hz")->registrations() != 0) {
+                getPipe("Hz")->flush(freq_);
+            }
+        }
+
     }
 }

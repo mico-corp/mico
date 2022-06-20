@@ -35,45 +35,23 @@ namespace mico{
                             flow::makeInput<float>("signal2"), 
                             flow::makeInput<float>("signal3") });
 
-            registerCallback<float>({ "signal1" },
-                [&](float _signal) {
 
-                    auto t1 = std::chrono::steady_clock::now();
-                    double key = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0_).count() / 1000.0f;
+            std::function<void(float, std::vector<std::pair<float, float>>&)> cbProto = [&](float _signal, std::vector<std::pair<float, float>>& _dataBuffer) {
+                auto t1 = std::chrono::steady_clock::now();
+                double key = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0_).count() / 1000.0f;
+                dataLock_.lock();
+                _dataBuffer.push_back({ key, _signal });
+                dataLock_.unlock();
+            };
 
-                    dataLock_.lock();
-                    pendingData1_.push_back({key, _signal});
-                    dataLock_.unlock();
+            std::function<void(float)> cb1 = std::bind(cbProto, std::placeholders::_1, pendingData1_);
+            registerCallback({ "signal1" }, cb1 );
 
-                }
-            );
+            std::function<void(float)> cb2 = std::bind(cbProto, std::placeholders::_1, pendingData2_);
+            registerCallback({ "signal2" }, cb1);
 
-            registerCallback<float>({ "signal2" },
-                [&](float  _signal) {
-
-                    auto t1 = std::chrono::steady_clock::now();
-                    double key = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0_).count() / 1000.0f;
-
-                    dataLock_.lock();
-                    pendingData2_.push_back({ key, _signal });
-                    dataLock_.unlock();
-
-                }
-            );
-
-            registerCallback<float>({ "signal3" },
-                [&](float  _signal) {
-
-                    auto t1 = std::chrono::steady_clock::now();
-                    double key = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0_).count() / 1000.0f;
-
-                    dataLock_.lock();
-                    pendingData3_.push_back({ key, _signal });
-                    dataLock_.unlock();
-
-                }
-            );
-
+            std::function<void(float)> cb3 = std::bind(cbProto, std::placeholders::_1, pendingData3_);
+            registerCallback({ "signal3" }, cb1);
         }
         
         BlockQCustomPlot::~BlockQCustomPlot() {

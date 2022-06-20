@@ -39,17 +39,17 @@ namespace mico{
 
             createPolicy({ flow::makeInput<std::vector<float>>("vector") });
 
-            registerCallback<std::vector<float>>({"vector"},
-                                    [&](std::vector<float> _v) {
-                                        float res = 0;
-                                        for (const auto& e : _v) {
-                                            res += e * e;
-                                        }
-                                        res = sqrt(res);
 
-                                        getPipe("norm")->flush(res);
-                                    }
-            );
+            std::function<void(std::vector<float>)> fn = [&](std::vector<float> _v) {
+                float res = 0;
+                for (const auto& e : _v) {
+                    res += e * e;
+                }
+                res = sqrt(res);
+
+                getPipe("norm")->flush(res);
+            };
+            registerCallback({"vector"},fn);
         }
 
 
@@ -58,17 +58,16 @@ namespace mico{
 
             createPolicy({ flow::makeInput<std::vector<float>>("v1"), flow::makeInput<std::vector<float>>("v2") });
 
-            registerCallback<std::vector<float>, std::vector<float>>({"v1", "v2"},
-                                    [&](std::vector<float> _v1, std::vector<float> _v2) {
-                                        if (getPipe("result")->registrations() && _v1.size() == _v2.size()) {
-                                            for (unsigned i = 0; i < _v1.size(); i++) {
-                                                _v1[i] = fn_(_v1[i], _v2[i]);
-                                            }
-                                            getPipe("result")->flush(_v1);
-                                        }
+            std::function<void(std::vector<float>, std::vector<float>)> fn = [&](std::vector<float> _v1, std::vector<float> _v2) {
+                if (getPipe("result")->registrations() && _v1.size() == _v2.size()) {
+                    for (unsigned i = 0; i < _v1.size(); i++) {
+                        _v1[i] = fn_(_v1[i], _v2[i]);
+                    }
+                    getPipe("result")->flush(_v1);
+                }
 
-                                    }
-            );
+            };
+            registerCallback({"v1", "v2"},fn);
         }
 
 

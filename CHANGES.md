@@ -33,7 +33,7 @@
 
 # CHANGES LOG!
 
-## Version 2.0.0
+## Version 2.0.0-alpha
 
 Released in June 2022. For more information about the previous status, go to previous releases. From now on, everything will be written here too!
 

@@ -37,11 +37,11 @@ namespace mico {
             createPolicy({ flow::makeInput<float>("A"),
                             flow::makeInput<float>("B") });
 
-            registerCallback<float, float>({ "A", "B" },
-                [&](float _a, float _b) {
-                    getPipe("result")->flush(fn_(_a, _b));
-                }
-            );
+            std::function<void(float, float)> fn = [&](float _a, float _b) {
+                getPipe("result")->flush(fn_(_a, _b));
+            };
+
+            registerCallback({ "A", "B" }, fn );
         }
 
 
