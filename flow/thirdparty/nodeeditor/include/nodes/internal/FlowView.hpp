@@ -26,6 +26,8 @@ public:
 
   QAction* deleteSelectionAction() const;
 
+  QAction* copySelectionAction() const;
+
   void setScene(FlowScene *scene);
 
 public Q_SLOTS:
@@ -35,6 +37,8 @@ public Q_SLOTS:
   void scaleDown();
 
   void deleteSelectedNodes();
+
+  void copySelectedNodes();
 
 protected:
 
@@ -62,6 +66,7 @@ private:
 
   QAction* _clearSelectionAction;
   QAction* _deleteSelectionAction;
+  QAction* _copySelectionAction;
 
   QPointF _clickPos;
 
