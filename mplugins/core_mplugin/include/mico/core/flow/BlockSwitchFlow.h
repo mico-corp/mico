@@ -45,6 +45,9 @@ namespace mico{
             std::string description() const override {return    "BlockSwitchFlow"
                                                                 "   - Outputs: \n";};
 
+	private:
+	    void callback(boost::any _a, boost::any _b, bool _condition);
+
         };
     }
 }

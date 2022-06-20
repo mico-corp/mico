@@ -38,16 +38,18 @@ namespace mico{
                             flow::makeInput<boost::any>("B") ,
                             flow::makeInput<float>("condition") });
             
-            registerCallback<boost::any, boost::any, bool> ({"A", "B", "condition"},
-                                    [&](boost::any _a, boost::any _b, bool _condition){
-                                        auto condition = _condition;
-                                        if(condition){
-                                            getPipe("output")->flush(_a);
-                                        }else {
-                                            getPipe("output")->flush(_b);
-                                        }
-                                    }
-            );
+            registerCallback(	{"A", "B", "condition"},
+            			&BlockSwitchFlow::callback,
+            			this);
+        }
+        
+        void BlockSwitchFlow::callback(boost::any _a, boost::any _b, bool _condition) {
+	        auto condition = _condition;
+                if(condition){
+                    getPipe("output")->flush(_a);
+                }else {
+                    getPipe("output")->flush(_b);
+                }
         }
     }
 }
