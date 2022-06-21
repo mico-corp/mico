@@ -19,14 +19,8 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 #include <mico/robotics/PID.h>
-#include <algorithm>
-#include <thread>
-#include <chrono>
-#include <iostream>
 #include <cmath>
-#include <Eigen/Eigen>
-
-#include <cmath>
+#include <cassert>
 
 namespace mico{
 

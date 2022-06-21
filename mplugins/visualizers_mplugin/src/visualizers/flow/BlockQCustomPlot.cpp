@@ -36,22 +36,22 @@ namespace mico{
                             flow::makeInput<float>("signal3") });
 
 
-            std::function<void(float, std::vector<std::pair<float, float>>&)> cbProto = [&](float _signal, std::vector<std::pair<float, float>>& _dataBuffer) {
-                auto t1 = std::chrono::steady_clock::now();
-                double key = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0_).count() / 1000.0f;
-                dataLock_.lock();
-                _dataBuffer.push_back({ key, _signal });
-                dataLock_.unlock();
+            // Tried using a general fn and std bind but didn't work... let's keep it like that for now.... 666 TODO
+            std::function<void(float)> cb1 = [&](float _signal) {
+                std::lock_guard<std::mutex> lock(dataLock_);
+                pendingData1_.push_back({ toc(), _signal});
             };
-
-            std::function<void(float)> cb1 = std::bind(cbProto, std::placeholders::_1, pendingData1_);
-            registerCallback({ "signal1" }, cb1 );
-
-            std::function<void(float)> cb2 = std::bind(cbProto, std::placeholders::_1, pendingData2_);
-            registerCallback({ "signal2" }, cb1);
-
-            std::function<void(float)> cb3 = std::bind(cbProto, std::placeholders::_1, pendingData3_);
-            registerCallback({ "signal3" }, cb1);
+            std::function<void(float)> cb2 = [&](float _signal) {
+                std::lock_guard<std::mutex> lock(dataLock_);
+                pendingData2_.push_back({ toc(), _signal });
+            };
+            std::function<void(float)> cb3 = [&](float _signal) {
+                std::lock_guard<std::mutex> lock(dataLock_);
+                pendingData3_.push_back({ toc(), _signal });
+            };
+            registerCallback({ "signal1" }, cb1);
+            registerCallback({ "signal2" }, cb2);
+            registerCallback({ "signal3" }, cb3);
         }
         
         BlockQCustomPlot::~BlockQCustomPlot() {
@@ -138,6 +138,13 @@ namespace mico{
 
             // make key axis range scroll with the data (at a constant range size of 8):
             plot_->replot();
+        }
+
+
+        float BlockQCustomPlot::toc() {
+            auto t1 = std::chrono::steady_clock::now();
+            double key = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0_).count() / 1000.0f;
+            return key;
         }
     }
 }

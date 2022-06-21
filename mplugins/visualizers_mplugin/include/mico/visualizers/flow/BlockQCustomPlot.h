@@ -70,7 +70,7 @@ namespace mico{
 
         private:
             void realTimePlot();
-
+            float toc();
         private:
             std::mutex dataLock_;
             std::vector<std::pair<float, float>> pendingData1_, pendingData2_, pendingData3_; // 666 ugly but fastly implemented
