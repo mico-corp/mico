@@ -34,33 +34,8 @@ namespace mico{
             createPolicy({  flow::makeInput<std::vector<float>>("histogram") });
 
             registerCallback({ "histogram" },
-                [&](flow::DataFlow  _data) {
-                   
-                    auto data = _data.get<std::vector<float>>("histogram");
-
-                    if (yData_.size() != data.size()) {
-                        std::lock_guard<std::mutex> lock(dataLock_);
-                        yData_.resize(data.size());
-                    }
-    
-                    auto it1 = data.begin();
-                    auto it2 = yData_.begin();
-                    while(it1 != data.end()){
-                        *it2 = *it1;
-                        it1++;
-                        it2++;
-                    }
-
-                    if (xData_.size() != yData_.size()) {
-                        std::lock_guard<std::mutex> lock(dataLock_);
-                        xData_.resize(yData_.size());
-                        for (int i = 0; i < yData_.size(); i++) xData_[i] = i;
-                    }
-
-                    std::lock_guard<std::mutex> lock(dataLock_);
-                    if(barPlot_)
-                        barPlot_->setData(xData_, yData_, true);
-                }
+                &BlockHistogramVisualizer::policyCallback,
+                this
             );
         }
         
@@ -85,6 +60,31 @@ namespace mico{
             });
             refresher_->start(50);
             return true;
+        }
+
+        void BlockHistogramVisualizer::policyCallback(std::vector<float> _histogram) {
+            if (yData_.size() != _histogram.size()) {
+                std::lock_guard<std::mutex> lock(dataLock_);
+                yData_.resize(_histogram.size());
+            }
+
+            auto it1 = _histogram.begin();
+            auto it2 = yData_.begin();
+            while (it1 != _histogram.end()) {
+                *it2 = *it1;
+                it1++;
+                it2++;
+            }
+
+            if (xData_.size() != yData_.size()) {
+                std::lock_guard<std::mutex> lock(dataLock_);
+                xData_.resize(yData_.size());
+                for (int i = 0; i < yData_.size(); i++) xData_[i] = i;
+            }
+
+            std::lock_guard<std::mutex> lock(dataLock_);
+            if (barPlot_)
+                barPlot_->setData(xData_, yData_, true);
         }
 
     }

@@ -37,14 +37,8 @@ namespace mico{
             createPolicy({  flow::makeInput<float>("in_1"),
                             flow::makeInput<float>("in_2") });
 
-            registerCallback({"in_1", "in_2"}, 
-                                    [&](flow::DataFlow _data){
-                                        auto v1 = _data.get<float>("in_1");
-                                        auto v2 = _data.get<float>("in_2"); 
-                                             
-                                        getPipe("result")->flush(v1+v2);
-                                    }
-            );
+            std::function<void(float, float)> fn = [&](float _i1, float _i2) { getPipe("result")->flush(_i1 + _i2); };
+            registerCallback({"in_1", "in_2"},  fn );
         }
 
 
@@ -55,14 +49,9 @@ namespace mico{
                             flow::makeInput<float>("in_2")});
 
 
-            registerCallback({"in_1", "in_2"}, 
-                                    [&](flow::DataFlow _data){
-                                        auto v1 = _data.get<float>("in_1");
-                                        auto v2 = _data.get<float>("in_2"); 
-                                             
-                                        getPipe("result")->flush(v1-v2);
-                                    }
-            );
+
+            std::function<void(float, float)> fn = [&](float _i1, float _i2) { getPipe("result")->flush(_i1 - _i2); };
+            registerCallback({"in_1", "in_2"}, fn);
         }
 
 
@@ -73,14 +62,8 @@ namespace mico{
                             flow::makeInput<float>("in_2")});
 
 
-            registerCallback({"in_1", "in_2"}, 
-                                    [&](flow::DataFlow _data){
-                                        auto v1 = _data.get<float>("in_1");
-                                        auto v2 = _data.get<float>("in_2"); 
-                                             
-                                        getPipe("result")->flush(v1*v2);
-                                    }
-            );
+            std::function<void(float, float)> fn = [&](float _i1, float _i2) { getPipe("result")->flush(_i1 * _i2); };
+            registerCallback({ "in_1", "in_2" }, fn);
         }
 
 
@@ -91,14 +74,8 @@ namespace mico{
                             flow::makeInput<float>("in_2")});
 
 
-            registerCallback({"in_1", "in_2"}, 
-                                    [&](flow::DataFlow _data){
-                                        auto v1 = _data.get<float>("in_1");
-                                        auto v2 = _data.get<float>("in_2"); 
-                                             
-                                        getPipe("result")->flush(v1/v2);
-                                    }
-            );
+            std::function<void(float, float)> fn = [&](float _i1, float _i2) { getPipe("result")->flush(_i1 / _i2); };
+            registerCallback({ "in_1", "in_2" }, fn);
         }
         
 
@@ -108,12 +85,8 @@ namespace mico{
             createPolicy({  flow::makeInput<float>("in")});
 
 
-            registerCallback({"in"}, 
-                                    [&](flow::DataFlow _data){
-                                        auto v1 = _data.get<float>("in");
-                                        getPipe("result")->flush(sqrt(v1));
-                                    }
-            );
+            std::function<void(float)> fn = [&](float _in) { getPipe("result")->flush(sqrt(_in)); };
+            registerCallback({ "in_" }, fn);
         }
         
         BlockPow::BlockPow(){
@@ -123,14 +96,10 @@ namespace mico{
                             flow::makeInput<float>("exp")});
 
 
-            registerCallback({"base", "exp"}, 
-                                    [&](flow::DataFlow _data){
-                                        auto v1 = _data.get<float>("base");
-                                        auto v2 = _data.get<float>("exp");
-                                             
-                                        getPipe("result")->flush(float(pow(v1,v2)));
-                                    }
-            );
+
+            std::function<void(float, float)> fn = [&](float _i1, float _i2) { getPipe("result")->flush(float(pow(_i1, _i2))); };
+            registerCallback({ "base", "exp" }, fn);
+
         }
 
         BlockIntegrator::BlockIntegrator() {
@@ -144,13 +113,45 @@ namespace mico{
 
             createPolicy({ flow::makeInput<float>("input") });
 
-            registerCallback({ "input" },
-                [&](flow::DataFlow _data) {
-                    acc_ += _data.get<float>("input");
+            std::function<void(float)> fn = [&](float _in) {
+                acc_ += _in;
+                getPipe("output")->flush(acc_);
+            };
 
-                    getPipe("output")->flush(acc_);
-            }
-            );
+            registerCallback({ "input" },fn);
+        }
+
+
+        BlockDerivative::BlockDerivative() {
+            resetBt_ = new QPushButton("Reset");
+            QObject::connect(resetBt_, &QPushButton::clicked, [&]() {
+                lastVal_ = 0.0f;
+                isFirst_ = true;
+                t0_ = std::chrono::high_resolution_clock::now();
+                });
+
+            createPipe<float>("output");
+            createPolicy({ flow::makeInput<float>("input") });
+
+
+
+            std::function<void(float)> fn = [&](float _in) {
+                if (isFirst_) {
+                    t0_ = std::chrono::high_resolution_clock::now();
+                    lastVal_ = _in;
+                    isFirst_ = false;
+                } else {
+                    auto t1 = std::chrono::high_resolution_clock::now();
+                    float incT = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0_).count();
+                    t0_ = t1;
+                    incT /= 1e6;
+                    float deriv = (_in - lastVal_) / incT;
+                    getPipe("output")->flush(deriv);
+
+                    lastVal_ = _in;
+                }
+            };
+            registerCallback({ "input" },fn);
         }
     }
 }

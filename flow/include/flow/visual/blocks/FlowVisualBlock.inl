@@ -101,7 +101,7 @@ namespace flow{
         QJsonObject jsonParams;
         for(const auto &param: flowBlock_->parameters()){
             QJsonObject jParam;
-            jParam["type"] = configParams_[counter]->type();
+            jParam["type"] = int(configParams_[counter]->type());
             switch (configParams_[counter]->type()) {
                 case flow::ConfigParameterDef::eParameterType::BOOLEAN:
                     jParam["value"] = configParams_[counter]->getParam().asBool();
@@ -169,7 +169,8 @@ namespace flow{
             QJsonValue type = _json["params"].toObject()[param.name_.c_str()].toObject()["type"];
             QJsonValue value = _json["params"].toObject()[param.name_.c_str()].toObject()["value"];
             if (!type.isNull() && !value.isNull()) {
-                switch (type.toInt()) {
+                auto eType = static_cast<flow::ConfigParameterDef::eParameterType>(type.toInt());
+                switch (eType) {
                 case flow::ConfigParameterDef::eParameterType::BOOLEAN:
                     configParams_[counter]->setValueBool(value.toBool());
                     break;
@@ -239,7 +240,7 @@ namespace flow{
 
     template<typename Block_, bool HasAutoLoop_>
     inline unsigned int FlowVisualBlock<Block_,HasAutoLoop_>::nPorts(PortType portType) const {
-        unsigned int result = 0;
+        size_t result = 0;
 
         switch (portType) {
         case PortType::In:
@@ -251,7 +252,7 @@ namespace flow{
             break;
         }
 
-        return result;
+        return static_cast<unsigned int>(result);
     }
 
     template<typename Block_, bool HasAutoLoop_>

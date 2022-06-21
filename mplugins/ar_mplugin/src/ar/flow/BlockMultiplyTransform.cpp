@@ -24,11 +24,6 @@
 #include <flow/Outpipe.h>
 #include <flow/Policy.h>
 
-#include <opencv2/opencv.hpp>
-#include <Eigen/Eigen>
-
-#include <opencv2/aruco.hpp>
-
 namespace mico{
     namespace ar {
         BlockMultiplyTransform::BlockMultiplyTransform(){
@@ -37,24 +32,21 @@ namespace mico{
             createPolicy({  flow::makeInput<Eigen::Matrix4f>("T1"),
                             flow::makeInput<Eigen::Matrix4f>("T2") });
 
-            registerCallback({"T1", "T2"}, 
-                [&](flow::DataFlow _data){
-
-                    if (!idle_) return;
-
-                    idle_ = false;
-                    if (getPipe("T1*T2")->registrations()) {
-                        auto T1 = _data.get<Eigen::Matrix4f>("T1");
-                        auto T2 = _data.get<Eigen::Matrix4f>("T2");
-                        Eigen::Matrix4f mul = T1 * T2;
-                        getPipe("T1*T2")->flush(mul);
-                    }
-                    idle_ = true;
-
-
-                
-                }
+            registerCallback({"T1", "T2"},
+                &BlockMultiplyTransform::policyCallback,
+                this
             );
+        }
+
+        void BlockMultiplyTransform::policyCallback(Eigen::Matrix4f _t1, Eigen::Matrix4f _t2) {
+
+            if (getPipe("T1*T2")->registrations()) {
+                Eigen::Matrix4f mul = _t1 * _t2;
+                getPipe("T1*T2")->flush(mul);
+            }
+
+
+
         }
     }
 }

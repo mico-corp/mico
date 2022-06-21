@@ -66,6 +66,9 @@ namespace mico {
             QWidget * customWidget();
 
         private:
+            void policyCallback(boost::any);
+
+        private:
             float freq_ = 0;
             int queueIdx_ = 0;
             constexpr static size_t listSize_ = 30;

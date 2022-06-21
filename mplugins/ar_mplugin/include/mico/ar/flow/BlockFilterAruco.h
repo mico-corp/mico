@@ -26,7 +26,8 @@
 
 #include <flow/Block.h>
 #include <opencv2/opencv.hpp>
-
+#include <map>
+#include <Eigen/Eigen>
 
 namespace mico{
     namespace ar {
@@ -65,10 +66,11 @@ namespace mico{
             std::string description() const override {return    "Block Filter Aruco CS"
                                                                 "   - \n";};
 
+        private:
+            void policyCallback(std::map<int, Eigen::Matrix4f> _coordinates);
 
         private:
             int id_ = 0;
-            bool idle_ = true;
         };
     }
 

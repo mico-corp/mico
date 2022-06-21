@@ -72,7 +72,6 @@ namespace mico{
                                         queueDfGuard_.lock();
                                         queueDfs_.push_back(df);
                                         queueDfGuard_.unlock();
-                                        idle_ = true;
                                     }
                                 );
 
@@ -83,7 +82,6 @@ namespace mico{
                                         queueEntitiesGuard_.lock();
                                         queueEntities_.push_back(entities);
                                         queueEntitiesGuard_.unlock();
-                                        idle_ = true;
                                     }
                                 );
 
@@ -93,7 +91,6 @@ namespace mico{
                                         queueEntitiesGuard_.lock();
                                         queueEntities_.push_back(entities);
                                         queueEntitiesGuard_.unlock();
-                                        idle_ = true;
                                     }
                                 );
         #endif

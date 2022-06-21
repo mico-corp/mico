@@ -29,37 +29,20 @@
 
 namespace flow{
 
-    Policy::Policy(std::vector<PolicyInput*> _inputs){
+    Policy::Policy(std::vector<PolicyInput> _inputs){
         if(_inputs.size() == 0){
             throw std::invalid_argument( "A Policy cannot be constructed with an empty list of input pipe tags." );
         }
 
         for(auto &input:_inputs){
-            if(input->tag() == "" || input->typeName() == ""){
+            if(input.tag() == "" || input.typeName() == ""){
                 throw std::invalid_argument( "A Policy cannot be constructed with an empty list of input pipe tags." );
             }
-            inputs_[input->tag()] = input->typeName();
-            tags_.push_back(input->tag());
+            inputs_.push_back(input);
+            tags_.push_back(input.tag());
         }
     }
 
-    bool Policy::registerCallback(PolicyMask _mask, PolicyCallback _callback){
-        std::map<std::string, std::string> flows;
-        for(auto &m:_mask){
-            // auto iter = std::find_if(inputs_.begin(), inputs_.end(), [&](const std::pair<std::string, std::string>& _in){return _in.first == m;});
-            auto iter = inputs_.find(m);
-            if(iter != inputs_.end()){
-                flows[iter->first] = iter->second;
-            }
-        }
-        if (flows.size()) {
-            flows_.push_back(new DataFlow(flows, _callback));
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
 
     void Policy::update(std::string _tag, boost::any _data){
         for(auto flow:flows_){
@@ -67,8 +50,8 @@ namespace flow{
         }
     }
 
-    int Policy::nInputs(){
-        return tags_.size();
+    size_t Policy::nInputs(){
+        return inputs_.size();
     }
 
     std::vector<std::string> Policy::inputTags(){
@@ -76,7 +59,16 @@ namespace flow{
     }
 
     std::string Policy::type(std::string _tag){
-        return inputs_[_tag];
+        auto iter = std::find_if(inputs_.begin(), inputs_.end(), [_tag](const PolicyInput& _input) {
+            return _input.tag() == _tag;
+            });
+
+        if (iter == inputs_.end()) {
+            return "";
+        }
+        else {
+            return iter->typeName();
+        }
     }
 
     void Policy::associatePipe(std::string _tag, Outpipe* _pipe){
@@ -91,14 +83,4 @@ namespace flow{
             return false;
         }
     }
-
-
-    std::vector<float> Policy::masksFrequencies() const{
-        std::vector<float> freqs;
-        for(auto &flow: flows_){
-            freqs.push_back(flow->frequency());
-        }
-        return freqs;
-    }
-
 }

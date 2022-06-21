@@ -89,7 +89,6 @@ namespace mico{
         private:
             inline static bool isInitialized_ = false;
 
-            std::atomic<bool> idle_ = true;
             bool isReady_ = false;
 
             InterfaceSelectorWidget *interfaceSelector_;

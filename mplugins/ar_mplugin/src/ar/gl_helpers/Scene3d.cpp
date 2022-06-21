@@ -303,10 +303,10 @@ namespace mico{
             else if(value >= 1)  {  idx1 = idx2 = NUM_COLORS-1; }    // accounts for an input >=0
             else
             {
-                value = value * (NUM_COLORS-1);        // Will multiply value by 3.
-                idx1  = floor(value);                  // Our desired color will be after this index.
-                idx2  = idx1+1;                        // ... and before this index (inclusive).
-                fractBetween = value - float(idx1);    // Distance between the two indexes (0-1).
+                value = value * (NUM_COLORS-1);         // Will multiply value by 3.
+                idx1  = int(floor(value)); // Our desired color will be after this index.
+                idx2  = idx1+1;                         // ... and before this index (inclusive).
+                fractBetween = value - float(idx1);     // Distance between the two indexes (0-1).
             }
                 
             *red   = (color[idx2][0] - color[idx1][0])*fractBetween + color[idx1][0];

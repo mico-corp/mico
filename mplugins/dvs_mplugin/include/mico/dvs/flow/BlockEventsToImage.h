@@ -54,7 +54,6 @@ namespace dvs{
         bool obtainImageFromEvents(PolarityPacket _events , cv::Mat &_image);  
 
     private:
-        bool idle_ = true;
 
         int imageWidth_  = 128;
         int imageHeight_ = 128;

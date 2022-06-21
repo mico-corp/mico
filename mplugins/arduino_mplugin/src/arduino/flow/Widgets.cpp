@@ -80,30 +80,30 @@ namespace mico{
                             flow::makeInput<boost::any>("A"),
                             flow::makeInput<boost::any>("B")});
 
-            registerCallback({ "Signal" },
-                [&](flow::DataFlow _data) {
-                    flowA_ = _data.get<bool>("Signal");
-                    if (flowA_) {
-                        img_->setPixmap(QIcon(fileA.c_str()).pixmap(50, 50));
-                    } else {
-                        img_->setPixmap(QIcon(fileB.c_str()).pixmap(50, 50));
-                    }
-                }
-            );
 
-            registerCallback({ "A" },
-                [&](flow::DataFlow _data) {
-                    if (auto pipe = getPipe("Out"); pipe->registrations() && flowA_)
-                        pipe->flush(_data.get<boost::any>("A"));
+            std::function<void(bool)> cbSignal = [&](bool _signal) {
+                flowA_ = _signal;
+                if (flowA_) {
+                    img_->setPixmap(QIcon(fileA.c_str()).pixmap(50, 50));
+                } else {
+                    img_->setPixmap(QIcon(fileB.c_str()).pixmap(50, 50));
                 }
-            );
+            };
+            registerCallback<bool>({ "Signal" }, cbSignal );
 
-            registerCallback({ "B" },
-                [&](flow::DataFlow _data) {
-                    if (auto pipe = getPipe("Out"); pipe->registrations() && !flowA_)
-                        pipe->flush(_data.get<boost::any>("B"));
-                }
-            );
+
+            std::function<void(boost::any)> cbA = [&](boost::any _a) {
+            if (auto pipe = getPipe("Out"); pipe->registrations() && flowA_)
+                        pipe->flush(_a);
+            };
+            registerCallback<boost::any>({ "A" }, cbA);
+
+
+            std::function<void(boost::any)> cbB = [&](boost::any _b) {
+            if (auto pipe = getPipe("Out"); pipe->registrations() && !flowA_)
+                        pipe->flush(_b);
+            };
+            registerCallback<boost::any>({ "B" }, cbB );
         }
 
         QWidget* SignalSwitcher::customWidget() {
@@ -128,22 +128,21 @@ namespace mico{
             createPolicy({ flow::makeInput<bool>("signal"),
                             flow::makeInput<boost::any>("input") });
 
-            registerCallback({ "signal" },
-                [&](flow::DataFlow _data) {
-                    flow_ = _data.get<bool>("signal");
+
+	    std::function<void(bool)> cbSignal = [&](bool _signal) {
+                    flow_ = _signal;
                     if (flow_) 
                         img_->setPixmap(QIcon(fileOn.c_str()).pixmap(50, 50));
                     else
                         img_->setPixmap(QIcon(fileOff.c_str()).pixmap(50, 50));
-                }
-            );
+                };
+            registerCallback({ "signal" }, cbSignal );
 
-            registerCallback({ "input" },
-                [&](flow::DataFlow _data) {
-                    if (auto pipe = getPipe("out"); pipe->registrations() && flow_)
-                        pipe->flush(_data.get<boost::any>("input"));
-                }
-            );
+            std::function<void(boost::any)> fn = [&](boost::any _input) {
+                if (auto pipe = getPipe("out"); pipe->registrations() && flow_)
+                    pipe->flush(_input);
+            }; 
+            registerCallback({ "input" },fn );
         }
 
         QWidget* FlowSwitch::customWidget() {

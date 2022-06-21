@@ -31,6 +31,6 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 qt5_wrap_ui(SRC_UI_FILES ${UI_SOURCES})
 
 add_executable(block_creator ${SRC_FILES} ${SRC_UI_FILES} ${HDR_FILES} ${SRC_QRC_FILES})
-set_target_properties(block_creator PROPERTIES CXX_STANDARD 17)
+target_compile_features(block_creator PRIVATE cxx_std_20)
 target_include_directories(block_creator PUBLIC ../include include)
 target_link_libraries(block_creator LINK_PUBLIC flow)

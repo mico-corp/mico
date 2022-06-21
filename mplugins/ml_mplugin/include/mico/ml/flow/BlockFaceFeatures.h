@@ -102,9 +102,10 @@ namespace mico{
                                                                 "   - Inputs: Image of a face\n"
                                                                 "   - Outputs: 128D feature vector\n";};
         
+        private:
+            void policyCallback(cv::Mat _image);
 
         private:
-            bool idle_ = true;
             anet_type featureDetector_;
         };
     }

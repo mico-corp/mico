@@ -47,6 +47,7 @@ namespace mico{
                 loadedImage_ = cv::imread(param.value().asPath().string());
                 return loadedImage_.rows != 0;
             }
+            return false;
         }
 
         std::vector<flow::ConfigParameterDef> SingleImageFlusher::parameters() {

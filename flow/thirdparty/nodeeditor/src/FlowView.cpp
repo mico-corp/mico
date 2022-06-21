@@ -81,6 +81,13 @@ deleteSelectionAction() const
 }
 
 
+QAction*
+FlowView::
+copySelectionAction() const
+{
+    return _copySelectionAction;
+}
+
 void
 FlowView::setScene(FlowScene *scene)
 {
@@ -99,6 +106,13 @@ FlowView::setScene(FlowScene *scene)
   _deleteSelectionAction->setShortcut(Qt::Key_Delete);
   connect(_deleteSelectionAction, &QAction::triggered, this, &FlowView::deleteSelectedNodes);
   addAction(_deleteSelectionAction);
+
+  
+  delete _copySelectionAction;
+  _copySelectionAction = new QAction(QStringLiteral("Copy Selection"), this);
+  _copySelectionAction->setShortcut(Qt::CTRL | Qt::Key_D);
+  connect(_copySelectionAction, &QAction::triggered, this, &FlowView::copySelectedNodes);
+  addAction(_copySelectionAction);
 }
 
 
@@ -238,7 +252,7 @@ contextMenuEvent(QContextMenuEvent *event)
 
     // treeView->expandAll();
     if (lastCategory_ != "") {
-        for (unsigned i = 0; i < nodeTypeSelector->count(); i++) {
+        for (int i = 0; i < nodeTypeSelector->count(); i++) {
             if (nodeTypeSelector->itemText(i) == lastCategory_) {
                 nodeTypeSelector->setCurrentIndex(i);
                 break;
@@ -353,6 +367,38 @@ deleteSelectedNodes()
       _scene->removeNode(n->node());
   }
 }
+
+
+void
+FlowView::
+copySelectedNodes()
+{
+    // List of selected items in scene
+    auto listNodes = _scene->selectedItems();
+    
+    // Iterate until we find an item that is a node.
+    for (QGraphicsItem* item : _scene->selectedItems()) {
+        // If it is a node, let's try to get the type to reproduce it.
+        if (auto n = qgraphicsitem_cast<NodeGraphicsObject*>(item)) {
+            // Get node type and create
+            auto jsonInfo = n->node().save();
+            QString modelName = jsonInfo["model"].toObject()["name"].toString();
+
+            auto& node = _scene->createNode(_scene->registry().create(modelName));
+        
+            // Move close to the existing one
+            QJsonObject positionJson = jsonInfo["position"].toObject();
+            QPointF     point(  positionJson["x"].toDouble() + 100,
+                                positionJson["y"].toDouble() + 100);
+
+            node.nodeGraphicsObject().moveBy(point.x(), point.y());
+
+        }
+    }
+    
+   
+}
+
 
 
 void

@@ -29,6 +29,8 @@
 #include <mico/ar/gl_helpers/Scene3d.h>
 #include <mico/ar/gl_helpers/Mesh.h>
 
+#include <Eigen/Eigen>
+
 namespace mico{
     namespace ar {
         /// Mico block that loads an STL mesh into the AR viewer. Its pose in the space is fed
@@ -70,10 +72,11 @@ namespace mico{
                                                                 "   - \n";};
 
         private:
+            void policyCallback(Eigen::Matrix4f _coordinates);
+        private:
             Scene3d * scene_;
             std::shared_ptr<Mesh> mesh_;
 
-            bool idle_ = true;
         };
 
     }

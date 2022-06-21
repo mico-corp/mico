@@ -33,7 +33,7 @@ namespace mico{
             try{
                 dlib::deserialize((flow::Persistency::resourceDir() / "ml" / "dlib_face_recognition_resnet_model_v1.dat").string()) >> featureDetector_;
             }catch(std::exception &_e){
-                std::cerr << "[WARNING] Failed to read YOLO parameters, cant use YOLO ML block" << std::endl;
+                std::cerr << "[WARNING] Failed to read YOLO parameters, cant use YOLO ML block." << _e.what() << std::endl;
             }
 
             
@@ -42,39 +42,36 @@ namespace mico{
             createPolicy({  flow::makeInput<cv::Mat>("face") });
 
             registerCallback(   {"face"}, 
-                                [&](flow::DataFlow _data){
-                                    if(!idle_)
-                                        return;
-
-                                    idle_ = false;
-                                    if(getPipe("descriptor")->registrations()){
-                                        cv::Mat frame = _data.get<cv::Mat>("face").clone(); 
-                                        if (frame.rows != 0) {
-                                            // Resize ro 150x150. Should normalize too but I am tired now 666 TODO
-                                            cv::resize(frame, frame, cv::Size(150, 150));
-
-                                            dlib::matrix<dlib::rgb_pixel> faceImg;        
-                                            IplImage iplImg = cvIplImage(frame);
-                                            dlib::cv_image<dlib::bgr_pixel> cimg(&iplImg);                                    
-                                            dlib::assign_image(faceImg, cimg);
-
-                                            std::vector<dlib::matrix<dlib::rgb_pixel>> faces = { faceImg };
-                                            std::vector<dlib::matrix<float, 0, 1>> faceDescriptors = featureDetector_(faces);
-
-                                            std::vector<float> features(128);
-                                            memcpy(features.data(), faceDescriptors[0].begin(), sizeof(float) * 128);
-
-                                            if (getPipe("descriptor")->registrations()) getPipe("descriptor")->flush(features);
-                                        }
-                                    }
-                                    idle_ = true;
-                                }
+                                &BlockFaceFeatures::policyCallback,
+                                this
             );
         }
 
         BlockFaceFeatures::~BlockFaceFeatures() {
-            while(!idle_){ }
-            idle_ = false;
+            
+        }
+
+        void BlockFaceFeatures::policyCallback(cv::Mat _image) {
+            if (getPipe("descriptor")->registrations()) {
+                cv::Mat frame = _image.clone();
+                if (frame.rows != 0) {
+                    // Resize ro 150x150. Should normalize too but I am tired now 666 TODO
+                    cv::resize(frame, frame, cv::Size(150, 150));
+
+                    dlib::matrix<dlib::rgb_pixel> faceImg;
+                    IplImage iplImg = cvIplImage(frame);
+                    dlib::cv_image<dlib::bgr_pixel> cimg(&iplImg);
+                    dlib::assign_image(faceImg, cimg);
+
+                    std::vector<dlib::matrix<dlib::rgb_pixel>> faces = { faceImg };
+                    std::vector<dlib::matrix<float, 0, 1>> faceDescriptors = featureDetector_(faces);
+
+                    std::vector<float> features(128);
+                    memcpy(features.data(), faceDescriptors[0].begin(), sizeof(float) * 128);
+
+                    if (getPipe("descriptor")->registrations()) getPipe("descriptor")->flush(features);
+                }
+            }
         }
     }
 }

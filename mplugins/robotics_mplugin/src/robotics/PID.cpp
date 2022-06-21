@@ -19,14 +19,8 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 #include <mico/robotics/PID.h>
-#include <algorithm>
-#include <thread>
-#include <chrono>
-#include <iostream>
 #include <cmath>
-#include <Eigen/Eigen>
-
-#include <cmath>
+#include <cassert>
 
 namespace mico{
 
@@ -65,16 +59,9 @@ namespace mico{
             }
         }
 
-        void PID::reference(float _ref, float _time, bool _reset) { 
+        void PID::reference(float _ref, bool _reset) { 
             reference_ = _ref; 
             targetReference_ = _ref;
-            // if(_time == 0){
-            //     reference_ = _ref; 
-            //     targetReference_ = _ref;
-            // }else{
-            //     targetReference_ = _ref;
-            //     slope_ = (targetReference_ - reference_)/_time;
-            // }
 
             if(_reset){
                 clear();
@@ -103,7 +90,7 @@ namespace mico{
             // Saturate signal
             float saturated = std::min(std::max(unsaturated, minSat_), maxSat_);
             lastResult_ = saturated;
-            
+
             return lastResult_;
 
         }

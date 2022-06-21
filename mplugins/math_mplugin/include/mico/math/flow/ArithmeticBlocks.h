@@ -187,6 +187,11 @@ namespace mico{
             /// Base constructor
             BlockIntegrator();
 
+            /// Retreive icon of block    
+            QIcon icon() const override {
+                return QIcon((flow::Persistency::resourceDir() / "math" / "integral_block_icon.svg").string().c_str());
+            }
+
             /// Return if the block is configurable.
             bool isConfigurable() override { return false; };
 
@@ -196,14 +201,49 @@ namespace mico{
             /// Returns a brief description of the block
             std::string description() const override {
                 return      "Accumulate the input signal"
-                            "   - Input: signal\n";
-                            "   - Outputs: accumulation\n";
+                    "   - Input: signal\n";
+                "   - Outputs: accumulation\n";
             };
 
         private:
             float acc_ = 0.0f;
             QPushButton* resetBt_;
         };
+
+    /// Mico block that performs an integration (accumulation) of the input signal
+        /// @ingroup  mico_math 
+    class BlockDerivative :public flow::Block {
+    public:
+        /// Get name of block
+        std::string name() const override { return "Derivative"; }
+
+        /// Base constructor
+        BlockDerivative();
+
+        /// Retreive icon of block    
+        QIcon icon() const override {
+            return QIcon((flow::Persistency::resourceDir() / "math" / "derivative_block_icon.svg").string().c_str());
+        }
+
+        /// Return if the block is configurable.
+        bool isConfigurable() override { return false; };
+
+        /// Custom widget
+        QWidget* customWidget() { return resetBt_; };
+
+        /// Returns a brief description of the block
+        std::string description() const override {
+            return      "Computes derivative of signal"
+                "   - Input: signal\n";
+            "   - Outputs: derivative\n";
+        };
+
+    private:
+        bool isFirst_ = true;
+        float lastVal_;
+        std::chrono::time_point<std::chrono::high_resolution_clock> t0_;
+        QPushButton* resetBt_;
+    };
     }
 }
 

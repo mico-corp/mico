@@ -33,7 +33,7 @@ namespace mico{
             this->setMinimumHeight(200);
 
             scene_->addAxis(Eigen::Matrix4f::Identity());    /// origin
-            scene_->setCameraFov(52.89427375452187); // 666 hardcoded 
+            scene_->setCameraFov(52.89427375452187f); // 666 hardcoded 
         }
         
         VisualizerGlWidget::~VisualizerGlWidget(){

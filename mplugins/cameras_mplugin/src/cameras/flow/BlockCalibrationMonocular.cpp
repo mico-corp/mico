@@ -40,32 +40,8 @@ namespace mico {
             createPolicy({ flow::makeInput<cv::Mat>("Image") });
 
             registerCallback({ "Image" },
-                [&](flow::DataFlow  _data) {
-                    if (idle_) {
-                        idle_ = false;
-
-                        cv::Mat image = _data.get<cv::Mat>("Image");
-                        if (image.rows != 0) {
-
-                            std::vector<cv::Point2f> points;
-                            cv::Mat gray;
-                            cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
-                            bool found = cv::findChessboardCorners(gray, cv::Size(hSize_, vSize_), points, cv::CALIB_CB_ADAPTIVE_THRESH | cv::CALIB_CB_FAST_CHECK);
-
-                            if(found)
-                                drawChessboardCorners(image, cv::Size(hSize_, vSize_), points, found);
-
-                            imgLock_.lock();
-                            lastImage_ = image;
-                            imgLock_.unlock();
-
-                            if(found)
-                                checkRefineAndAdd(gray, points);
-                        }
-                        idle_ = true;
-                    }
-
-                }
+                &BlockCalibrationMonocular::policyCallback,
+                this
             );
 
         }
@@ -207,8 +183,8 @@ namespace mico {
                 avgX += p.x;
                 avgY += p.y;
             }
-            _x = avgX / _points.size();
-            _y = avgY / _points.size();
+            _x = avgX / int(_points.size());
+            _y = avgY / int(_points.size());
             _size = abs(maxX - minX);
         }
 
@@ -261,6 +237,29 @@ namespace mico {
             fs << "ts" << transVectors;
 
             std::cout << "Saved files." << std::endl;
+        }
+
+	void BlockCalibrationMonocular::policyCallback(cv::Mat  _image) {
+
+            cv::Mat image = _image;
+            if (image.rows != 0) {
+
+                std::vector<cv::Point2f> points;
+                cv::Mat gray;
+                cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
+                bool found = cv::findChessboardCorners(gray, cv::Size(hSize_, vSize_), points, cv::CALIB_CB_ADAPTIVE_THRESH | cv::CALIB_CB_FAST_CHECK);
+
+                if(found)
+                    drawChessboardCorners(image, cv::Size(hSize_, vSize_), points, found);
+
+                imgLock_.lock();
+                lastImage_ = image;
+                imgLock_.unlock();
+
+                if(found)
+                    checkRefineAndAdd(gray, points);
+            }
+
         }
 
     }

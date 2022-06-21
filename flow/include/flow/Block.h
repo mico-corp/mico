@@ -47,7 +47,7 @@
 namespace flow{
 
     struct ConfigParameterDef {
-        enum eParameterType { BOOLEAN, INTEGER, DECIMAL, STRING, PATH, OPTIONS };
+        enum class eParameterType { BOOLEAN, INTEGER, DECIMAL, STRING, PATH, OPTIONS };
         std::string name_;
         eParameterType type_;
         boost::any value_;
@@ -98,13 +98,13 @@ namespace flow{
         // void operator()(std::unordered_map<std::string,boost::any> _data, std::unordered_map<std::string,bool> _valid);
 
         /// Retreive number of inputs.
-        int nInputs();
+        size_t nInputs();
 
         /// Retreive list of input tags
         std::vector<std::string> inputTags();
 
         /// Retreive number of outputs
-        int nOutputs();
+        size_t nOutputs();
 
         /// Retreive list of output tags
         std::vector<std::string> outputTags();
@@ -145,10 +145,15 @@ namespace flow{
         bool removePipe(std::string _pipeTag);
         bool removePipes();
 
-        bool createPolicy(std::vector<PolicyInput*> _inputs);
+        bool createPolicy(std::vector<PolicyInput> _inputs);
         void removePolicy();
-        
-        bool registerCallback(Policy::PolicyMask _mask, Policy::PolicyCallback _callback);
+
+        template<typename ...Argumens>
+        bool registerCallback(Policy::PolicyMask _mask, std::function<void(Argumens ... _args)> _callback);
+
+        template<typename T_, typename ...Argumens>
+        bool registerCallback(Policy::PolicyMask _mask, void(T_::*_cb)(Argumens ... _args), T_* _obj);
+
 
     protected:
         virtual void loopCallback() {};
@@ -173,6 +178,15 @@ namespace flow{
     }
 
 
+    template<typename ...Argumens>
+    bool Block::registerCallback(Policy::PolicyMask _mask, std::function<void(Argumens ... _args)> _callback){
+        return iPolicy_ && iPolicy_->registerCallback(_mask, _callback);
+    }
+
+    template<typename T_, typename ...Argumens>
+    bool Block::registerCallback(Policy::PolicyMask _mask, void(T_::* _cb)(Argumens ... _args), T_* _obj) {
+        return iPolicy_ && iPolicy_->registerCallback(_mask, _cb, _obj);
+    }
 
 }
 

@@ -27,47 +27,35 @@ namespace flow{
 
     std::map<std::string, std::map<std::string, std::function<boost::any(boost::any&)>>> DataFlow::conversions_ = {};
 
-    DataFlow::DataFlow(std::map<std::string, std::string> _flows, std::function<void(DataFlow _f)> _callback){
-        callback_ = _callback;
-        for(auto &f:_flows){
-            types_[f.first] = f.second;
-            data_[f.first] = boost::any();
-            updated_[f.first] = false;
-        }
-        lastUsageT_ = std::chrono::system_clock::now();
-    }
-
     void DataFlow::update(std::string _tag, boost::any _data){
         if(data_.find(_tag)!= data_.end()){
             // Can we check here the type?
             data_[_tag] = _data;
             updated_[_tag] = true;
             checkData();
-        }else{
-            std::invalid_argument("Bad tag type while updating Dataflow");
         }
     }
 
     void DataFlow::checkData(){
+        if (isRunning_) return; // Don't even try to run it if it is busy.
+        isRunning_ = true;
+
         int flagCounter = 0;
         for(auto flag = updated_.begin(); flag != updated_.end(); flag++){
             if(flag->second) flagCounter++;
         }
         if(flagCounter == updated_.size()){
-            ThreadPool::get()->emplace(std::bind(callback_, *this));
-            // std::thread(callback_, *this).detach(); // 666 Smthg is not completelly thread safe and produces crash
-            auto currT = std::chrono::system_clock::now();
-            float incT = std::chrono::duration_cast<std::chrono::microseconds>(currT-lastUsageT_).count();
-            lastUsageT_ = currT;
-            usageFreq_ = 1/(incT*1e-6);
+            // Emplace task
+            ThreadPool::get()->emplace(std::bind(callback_, data_));
+
+            //Consume consumable data
+            for (const auto& [tag, isConsumable] : isConsumable_) {
+                updated_[tag] = !isConsumable;
+            }
+        } else {
+            isRunning_ = false;
         }
     }
-
-
-    float DataFlow::frequency() const{
-        return usageFreq_;
-    }
-
 
     bool DataFlow::checkIfConversionAvailable(std::string const &_from, std::string const &_to){
         if(_from == _to)
@@ -86,4 +74,14 @@ namespace flow{
 
         return false;
     }
+
+    DataFlow::DataFlow(const std::vector<PolicyInput>& _inputs) {
+        for (auto& input : _inputs) {
+            types_          [input.tag()]   = input.typeName();
+            data_           [input.tag()]   = boost::any();
+            updated_        [input.tag()]   = false;
+            isConsumable_   [input.tag()]   = input.isConsumable();
+        }
+    }
+
 }

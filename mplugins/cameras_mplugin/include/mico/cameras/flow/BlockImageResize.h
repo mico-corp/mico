@@ -76,7 +76,9 @@ namespace mico {
             };
 
         private:
-            bool idle_ = true;
+            void policyCallback(cv::Mat _image);
+
+        private:
             int width_ = 640;
             int height_ = 480;
 

@@ -62,7 +62,6 @@ namespace mico{
             virtual /// Get custom view widget to be display in the graph
             QWidget * customWidget() override;
         private:
-            bool idle_ = true;
 
             QComboBox * typeSelection_;
             QSpinBox * labelSelection_;

@@ -41,21 +41,8 @@ namespace mico {
             createPolicy({ flow::makeInput<cv::Mat>("in") });
 
             registerCallback({ "in" },
-                [&](flow::DataFlow  _data) {
-                    if (idle_) {
-                        idle_ = false;
-
-                        cv::Mat image = _data.get<cv::Mat>("in").clone();
-                        if (image.rows != 0) {
-                            if(getPipe("out")->registrations()){
-                                cv::resize(image, image, cv::Size(width_, height_));
-                                getPipe("out")->flush(image);
-                            }
-                        }
-                        idle_ = true;
-                    }
-
-                }
+                &BlockImageResize::policyCallback,
+                this
             );
 
         }
@@ -69,9 +56,7 @@ namespace mico {
         }
 
         bool BlockImageResize::configure(std::vector<flow::ConfigParameterDef> _params) {
-            while (!idle_) {}
-            idle_ = false;
-
+            
             if (auto param = getParamByName(_params, "width"); param)
                 width_ = param.value().asInteger();
             else return false;
@@ -80,9 +65,17 @@ namespace mico {
                 height_ = param.value().asInteger();
             else return false;
 
-
-            idle_ = true;
             return true;
+        }
+
+        void BlockImageResize::policyCallback(cv::Mat _image) {
+            cv::Mat image = _image.clone();
+            if (image.rows != 0) {
+                if (getPipe("out")->registrations()) {
+                    cv::resize(image, image, cv::Size(width_, height_));
+                    getPipe("out")->flush(image);
+                }
+            }
         }
 
     }

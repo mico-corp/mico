@@ -70,6 +70,10 @@ namespace mico{
 
             /// Returns a brief description of the block
             std::string description() const override {return    "\n";};
+
+        private:
+            void policyCallback(boost::any _data);
+
         private:
             int id_ = -1;
         };

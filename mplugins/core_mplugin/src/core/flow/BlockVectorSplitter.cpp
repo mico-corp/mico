@@ -36,14 +36,8 @@ namespace mico{
             createPolicy({  flow::makeInput<std::vector<float>>("vector") });
             
             registerCallback({"vector"},
-                                    [&](flow::DataFlow _data){
-                                        auto v = _data.get<std::vector<float>>("vector");
-                                        if (v.size() != nTrajs_) return;
-
-                                        for(unsigned i = 0; i < nTrajs_; i++){
-                                            getPipe("v" +std::to_string(i))->flush(v[i]);
-                                        }
-                                    }
+                              &BlockVectorSplitter::policyCallback,
+                                this
             );
         }
 
@@ -71,6 +65,14 @@ namespace mico{
                     this->preparePolicy();
                 });
             return layout;
+        }
+
+        void BlockVectorSplitter::policyCallback(std::vector<float> _v) {
+            if (_v.size() != nTrajs_) return;
+
+            for (unsigned i = 0; i < nTrajs_; i++) {
+                getPipe("v" + std::to_string(i))->flush(_v[i]);
+            }
         }
     }
 }

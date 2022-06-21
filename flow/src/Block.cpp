@@ -58,7 +58,7 @@ namespace flow{
     }
 
     
-    int Block::nInputs(){
+    size_t Block::nInputs(){
         if(iPolicy_)
             return iPolicy_->nInputs();
         else
@@ -72,7 +72,7 @@ namespace flow{
             return {};
     }
 
-    int Block::nOutputs(){
+    size_t Block::nOutputs(){
         return opipes_.size();
     }
 
@@ -135,7 +135,7 @@ namespace flow{
         return runLoop_;
     }
 
-    bool Block::createPolicy(std::vector<PolicyInput*> _inputs){
+    bool Block::createPolicy(std::vector<PolicyInput> _inputs){
         if(iPolicy_){
             return false;
         }else{
@@ -148,16 +148,6 @@ namespace flow{
         if(iPolicy_)
             delete iPolicy_;
         iPolicy_ = nullptr;
-    }
-        
-
-    bool Block::registerCallback(Policy::PolicyMask _mask, Policy::PolicyCallback _callback){
-        if(iPolicy_){
-            iPolicy_->registerCallback( _mask,  _callback );
-            return true;
-        }else{
-            return false;
-        }
     }
 
 }

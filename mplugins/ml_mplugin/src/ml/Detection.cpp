@@ -45,27 +45,22 @@ namespace mico{
             createPipe<bool>("trigger");
             createPolicy({  flow::makeInput<std::vector<Detection>>("detections") });
 
-            registerCallback(   {"detections"}, 
-                                [&](flow::DataFlow _data){
-                                    if(!idle_)
-                                        return;
 
-                                    idle_ = false;
+            std::function<void(std::vector<Detection>)> cbInput =[&](std::vector<Detection> _detections){
+                                   
                                     if(getPipe("trigger")->registrations()){
-                                        auto detections = _data.get<std::vector<Detection>>("detections"); 
-                                        auto result = std::find_if(detections.begin(), detections.end(), [&](const Detection &_d){
+                                        auto result = std::find_if(_detections.begin(), _detections.end(), [&](const Detection &_d){
                                             return _d.label_ == labelSelection_->value();
                                         });
 
                                         if(typeSelection_->currentText() == "Has label"){
-                                            getPipe("trigger")->flush(result != detections.end());
+                                            getPipe("trigger")->flush(result != _detections.end());
                                         }else if(typeSelection_->currentText() == "Has not label"){
-                                            getPipe("trigger")->flush(result == detections.end());
+                                            getPipe("trigger")->flush(result == _detections.end());
                                         }
                                     }
-                                    idle_ = true;
-                                }
-            );
+                                };
+            registerCallback<std::vector<Detection>>(   {"detections"},  cbInput );
         }
 
 

@@ -21,8 +21,8 @@
 
 
 
-#ifndef MICO_FLOW_BLOCKS_ARITHMETICBLOCKS_H_
-#define MICO_FLOW_BLOCKS_ARITHMETICBLOCKS_H_
+#ifndef MICO_SIMULATION_FLOW_BLOCKFIRSTORDERSYSTEM_H_
+#define MICO_SIMULATION_FLOW_BLOCKFIRSTORDERSYSTEM_H_
 
 #include <flow/Block.h>
 
@@ -38,6 +38,11 @@ namespace mico{
             
             /// Base constructor
             BlockFirstOrderSystem();
+
+            /// Retreive icon of block    
+            QIcon icon() const override {
+                return QIcon((flow::Persistency::resourceDir() / "simulation" / "block_first_order_system.svg").string().c_str());
+            }
 
             /// Configure block with given parameters.
             bool configure(std::vector<flow::ConfigParameterDef> _params) override;
@@ -59,8 +64,11 @@ namespace mico{
             float k_ = 1.0f;
             float tau_ = 1.0f;
             float prevTime_ = 0.0f;
-            float state_ = 0.0f;
+            float y_ = 0.0f;
+            float y0_ = 0.0f;
+            float yp_ = 0.0f;
             float u_ = 0.0f;
+            bool isFirstTime_ = true;
         };
 
     }

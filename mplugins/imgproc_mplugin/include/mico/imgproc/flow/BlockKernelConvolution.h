@@ -74,12 +74,12 @@ namespace mico{
             QWidget* customWidget() override;
         
         private:
+            void policyCallback(cv::Mat _img);
             void setItemValidator();
             void normalizeKernel();
         
         private:
             std::vector< cv::String > outputs_;
-            bool idle_ = true;
 
             QTableWidget *table_;
             std::mutex dataLock_;

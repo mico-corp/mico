@@ -46,23 +46,21 @@ namespace mico{
 
             registerCallback({"Point Cloud" }, 
                                     [&](flow::DataFlow  _data){
-                                        if(idle_){
-                                            idle_ = false;
-                                            auto cloud = _data.get<pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr>("Point Cloud"); 
-                                            updateRender(cloud);
-                                            runOnUiThread([&](){
-                                                if(actor && actor != prevActor){
-                                                    actorGuard_.lock();
-                                                    if(prevActor){
-                                                        renderer->RemoveActor(prevActor);
-                                                    }
-                                                    prevActor = actor;
-                                                    actorGuard_.unlock();
-                                                    renderer->AddActor(actor);
+                                        
+                                        auto cloud = _data.get<pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr>("Point Cloud"); 
+                                        updateRender(cloud);
+                                        runOnUiThread([&](){
+                                            if(actor && actor != prevActor){
+                                                actorGuard_.lock();
+                                                if(prevActor){
+                                                    renderer->RemoveActor(prevActor);
                                                 }
-                                            });
-                                            idle_ = true;
-                                        }
+                                                prevActor = actor;
+                                                actorGuard_.unlock();
+                                                renderer->AddActor(actor);
+                                            }
+                                        });
+
                                     }
                                 );
             /*

@@ -35,12 +35,10 @@ namespace mico{
 
             createPolicy({  flow::makeInput<float>("Number")});
 
-            registerCallback({"Number"}, 
-                                    [&](flow::DataFlow  _data){
-                                        number_ = _data.get<float>("Number");
-                                        // textDisplay_->setText(std::to_string(number_).c_str());
-                                    }
-                                );
+            std::function<void(float)> cb = [&](float _number) {
+                number_ = _number;
+            };
+            registerCallback({"Number"}, cb);
 
             refreshTimer_ = new QTimer();
             QObject::connect(refreshTimer_, &QTimer::timeout, [&](){

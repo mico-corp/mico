@@ -78,7 +78,7 @@ namespace flow{
         policiesGuard.unlock();
     }
 
-    int Outpipe::registrations(){
+    size_t Outpipe::registrations(){
         return registeredPolicies_.size();
     }
 

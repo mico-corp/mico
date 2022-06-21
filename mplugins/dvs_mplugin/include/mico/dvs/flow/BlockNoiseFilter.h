@@ -58,8 +58,6 @@ namespace dvs{
         dv::EventStore CAERToEventStore(caerPolarityEventPacket _pPolPack,u_int32_t _packetSize);*/
         
     private:
-        bool idle_ = true;
-
         caerFilterDVSNoise noiseFilter_ = nullptr;
         std::shared_ptr<struct caer_filter_dvs_noise> noiseFilterHandle_;
         

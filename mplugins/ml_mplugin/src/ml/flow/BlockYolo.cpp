@@ -41,7 +41,7 @@ namespace mico{
 
                 outputs_ = net_.getUnconnectedOutLayersNames();
             }catch(std::exception &_e){
-                std::cerr << "[WARNING] Failed to read YOLO parameters, cant use YOLO ML block" << std::endl;
+                std::cerr << "[WARNING] Failed to read YOLO parameters, cant use YOLO ML block" << _e.what() << std::endl;
             }
 
             
@@ -52,32 +52,8 @@ namespace mico{
             createPolicy({  flow::makeInput<cv::Mat>("input") });
 
             registerCallback(   {"input"}, 
-                                [&](flow::DataFlow _data){
-                                    if(!idle_)
-                                        return;
-
-                                    idle_ = false;
-                                    if(getPipe("image")->registrations() || getPipe("detections")->registrations() || getPipe("n_detections")->registrations() != 0){
-                                        cv::Mat frame = _data.get<cv::Mat>("input").clone(); 
-                                        cv::Mat blob;        
-                                        std::vector<cv::Mat> result;
-                                        try {
-                                            cv::dnn::blobFromImage(frame, blob, 0.00392, cv::Size(320, 320), cv::Scalar(), true, false, CV_32F);
-                                            net_.setInput(blob);
-                                            net_.forward(result, outputs_);
-
-                                        } catch (std::exception& _e) {
-                                            std::cout << _e.what() << std::endl;
-                                        }
-
-                                        auto detections = parseDetections(frame, result);
-                                        if (getPipe("image")->registrations()) getPipe("image")->flush(frame);
-                                        if (getPipe("detections")->registrations()) getPipe("detections")->flush(detections);
-                                        if (getPipe("n_detections")->registrations()) getPipe("n_detections")->flush((int) detections.size());
-
-                                    }
-                                    idle_ = true;
-                                }
+                                &BlockYolo::policyCallback,
+                this
             );
         }
 
@@ -143,6 +119,30 @@ namespace mico{
                 }
             }
             return outDetections;
+        }
+
+        void BlockYolo::policyCallback(cv::Mat _image) {
+
+            if (getPipe("image")->registrations() || getPipe("detections")->registrations() || getPipe("n_detections")->registrations() != 0) {
+                cv::Mat frame = _image.clone();
+                cv::Mat blob;
+                std::vector<cv::Mat> result;
+                try {
+                    cv::dnn::blobFromImage(frame, blob, 0.00392, cv::Size(320, 320), cv::Scalar(), true, false, CV_32F);
+                    net_.setInput(blob);
+                    net_.forward(result, outputs_);
+
+                }
+                catch (std::exception& _e) {
+                    std::cout << _e.what() << std::endl;
+                }
+
+                auto detections = parseDetections(frame, result);
+                if (getPipe("image")->registrations()) getPipe("image")->flush(frame);
+                if (getPipe("detections")->registrations()) getPipe("detections")->flush(detections);
+                if (getPipe("n_detections")->registrations()) getPipe("n_detections")->flush((int)detections.size());
+
+            }
         }
     }
 }

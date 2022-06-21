@@ -37,23 +37,23 @@ namespace flow{
     /// Base class of flow that handles the creation of multiple threads to optimize their usage
     /// over the flow architecture.
     /// @ingroup  flow
-    class FLOW_DECL ThreadPool{
+    class ThreadPool{
     public:
         using Task = std::function<void()>;
 
-        static void init();
-        static std::shared_ptr<ThreadPool> get();
+        FLOW_DECL static void init();
+        FLOW_DECL static ThreadPool* get();
     
-        void emplace(Task _task);
+        FLOW_DECL void emplace(Task _task);
 
-        ~ThreadPool();
+        FLOW_DECL ~ThreadPool();
       
         /// Get size of task queue
-        unsigned queueSize() {
+        FLOW_DECL size_t queueSize() {
             return tasks_.size();
         }
         
-        float loadRatio() {
+        FLOW_DECL float loadRatio() {
             return float(tasks_.size()) / nThreads_;
         }
 
@@ -61,11 +61,11 @@ namespace flow{
         ThreadPool(size_t _nThreads);
     
     private:
-        static std::shared_ptr<ThreadPool> instance_;
+        static ThreadPool* instance_;
         
         std::queue<Task> tasks_;
         bool isRunning_=true;
-        int nThreads_;
+        size_t nThreads_;
         std::vector<std::thread> threads_;
         std::condition_variable waitEvent_;
         std::mutex  threadLock_;

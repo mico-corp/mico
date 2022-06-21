@@ -88,7 +88,7 @@ macro(add_mplugin)
     
     # Create library
     add_library(${IN_PLUGIN_NAME} ${LIBRARY_MODE} ${IN_PLUGIN_SOURCES} ${IN_PLUGIN_HEADERS})
-    target_compile_features(${IN_PLUGIN_NAME} PUBLIC cxx_std_17)
+    target_compile_features(${IN_PLUGIN_NAME} PUBLIC cxx_std_20)
     target_include_directories(${IN_PLUGIN_NAME}
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

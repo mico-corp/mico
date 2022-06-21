@@ -24,7 +24,6 @@ PROJECT(flow VERSION 0.1.0)
 
 if(WIN32)
 	set(Boost_USE_STATIC_LIBS ON)
-	add_compile_options("/std:c++17")
 endif()
 
 add_subdirectory(thirdparty/nodeeditor)
@@ -47,7 +46,7 @@ file(GLOB_RECURSE FLOW_HEADERS "./include/*.h" "./include/*.inl")
 file(GLOB_RECURSE FLOW_SOURCES "./src/*.cpp")
 
 add_library(${PROJECT_NAME}  ${LIBRARY_MODE} ${FLOW_HEADERS} ${FLOW_SOURCES})
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE C)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
@@ -102,7 +101,7 @@ add_custom_target(flow_resources ALL
 ######    Test.                           ########
 ##################################################
 if(${BUILD_TESTS})
-  find_package(GTest CONFIG REQUIRED)
+  find_package(GTest CONFIG)
   if(${GTest_FOUND})
     enable_testing()
     add_subdirectory(tests)

@@ -82,7 +82,8 @@ namespace mico {
             void checkRefineAndAdd(cv::Mat& _image, std::vector<cv::Point2f>& _points);
 
             void calibrate();
-
+	    void policyCallback(cv::Mat  _image);
+	    
         private:
             std::mutex imgLock_;
 
@@ -93,7 +94,6 @@ namespace mico {
             QLabel* imageView_ = nullptr;
             QTimer* imageRefresher_ = nullptr;
             cv::Mat lastImage_;
-            bool idle_ = true;
 
             QProgressBar* progressX_ = nullptr;
             QProgressBar* progressY_ = nullptr;

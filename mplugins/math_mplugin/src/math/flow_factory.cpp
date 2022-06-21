@@ -49,6 +49,7 @@ extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(fs::path _librar
     creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockSquareRoot               >>(); }, "math");
     creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockPow                      >>(); }, "math");
     creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockIntegrator               >>(); }, "math");
+    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockDerivative               >>(); }, "math");
     creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<ComparisonBlock               >>(); }, "math");
 
     // Vector blocks

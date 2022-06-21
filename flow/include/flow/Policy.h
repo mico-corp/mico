@@ -36,61 +36,75 @@
 #include <functional>
 
 #include <flow/DataFlow.h>
+#include <flow/PolicyInput.h>
 
 namespace flow{
     class Outpipe;
 
-
-    /// Base class of flow that represents a single input stream.
-    /// @ingroup  flow
-    class FLOW_DECL PolicyInput{
-    public:
-        /// Build an input stream with a given name and type
-        PolicyInput(std::string _tag, std::string _type) :tag_(_tag), typeName_(_type) {};
-
-        /// Get stream name
-        std::string tag(){return tag_;};
-        
-        /// Get stream type
-        std::string typeName(){return typeName_;};
-    protected:
-        std::string tag_;
-        std::string typeName_;
-    };
-
-    template<typename T_>
-    PolicyInput* makeInput(std::string const &_tag){
-        return new PolicyInput(_tag, typeid(T_).name());
-    }
-
-
-    class FLOW_DECL Policy{
+    class Policy{
         public:
             typedef std::vector<std::string> PolicyMask;
-            typedef std::function<void(DataFlow _f)> PolicyCallback;
 
-            Policy(std::vector<PolicyInput*> _inputs);
-            bool registerCallback(PolicyMask _mask, PolicyCallback _callback);
-            void update(std::string _tag, boost::any _data);
+            FLOW_DECL Policy(std::vector<PolicyInput> _inputs);
+
+            template<typename ...Arguments>
+            bool registerCallback(PolicyMask _mask, std::function<void(Arguments..._args)> _callback);
+
+            template<typename T_, typename ...Arguments>
+            bool registerCallback(PolicyMask _mask, void (T_::*_callback)(Arguments..._args), T_ *obj);
+
+            FLOW_DECL void update(std::string _tag, boost::any _data);
     
-            int nInputs();
-            std::vector<std::string> inputTags();
+            FLOW_DECL size_t nInputs();
+            FLOW_DECL std::vector<std::string> inputTags();
 
-            std::string type(std::string _tag);
+            FLOW_DECL std::string type(std::string _tag);
 
-            void associatePipe(std::string _tag, Outpipe* _pipe);
+            FLOW_DECL void associatePipe(std::string _tag, Outpipe* _pipe);
 
-            bool disconnect(std::string _tag);
-
-            std::vector<float> masksFrequencies() const;
+            FLOW_DECL bool disconnect(std::string _tag);
 
         private:
-            std::map<std::string, std::string> inputs_;
-            std::vector<DataFlow*> flows_;
-            std::vector<std::string>                    tags_;
+            std::vector<PolicyInput>    inputs_;
+            std::vector<DataFlow*>      flows_;
+            std::vector<std::string>    tags_;
             
             std::unordered_map<std::string, Outpipe*>   connetedPipes_; 
     };
+}
+
+namespace flow {
+
+    template<typename ...Arguments>
+    bool Policy::registerCallback(PolicyMask _mask, std::function<void(Arguments..._args)> _callback){
+        std::vector<PolicyInput> dfInputs;
+        for (auto& element : _mask) {
+            // auto iter = std::find_if(inputs_.begin(), inputs_.end(), [&](const std::pair<std::string, std::string>& _in){return _in.first == m;});
+            auto iter = std::find_if(inputs_.begin(), inputs_.end(), [&element](const PolicyInput& _input) {
+                return _input.tag() == element;
+            });
+
+            if (iter != inputs_.end()) {
+                dfInputs.push_back(*iter);
+            }
+        }
+        if (dfInputs.size()) {
+            flows_.push_back(DataFlow::create(dfInputs, _callback));
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+
+    template<typename T_, typename ...Arguments>
+    bool Policy::registerCallback(PolicyMask _mask, void (T_::* _cb)(Arguments..._args), T_* _obj) {
+        std::function<void(Arguments..._args)> fn = [_cb, _obj](Arguments..._args) {
+            (_obj->*_cb)(_args...);
+        };
+        return registerCallback(_mask, fn);
+    }
 }
 
 

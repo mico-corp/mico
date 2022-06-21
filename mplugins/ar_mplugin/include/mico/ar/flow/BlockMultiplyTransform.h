@@ -25,13 +25,9 @@
 #define MICO_AR_FLOW_BLOCKMULTIPLYTRANSFORM_H_
 
 #include <flow/Block.h>
-#include <opencv2/opencv.hpp>
 
-namespace cv{
-    namespace aruco {
-        class Dictionary;
-    }
-}
+#include <Eigen/Eigen>
+
 
 namespace mico{
     namespace ar {
@@ -64,7 +60,7 @@ namespace mico{
             bool isConfigurable() override { return false; };
 
         private:
-            bool idle_ = true;
+            void policyCallback(Eigen::Matrix4f _t1, Eigen::Matrix4f _t2);
         };
 
     }

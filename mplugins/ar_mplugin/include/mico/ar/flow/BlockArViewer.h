@@ -65,8 +65,10 @@ namespace mico{
             bool isConfigurable() override { return true; };
 
         private:
+            void policyCallback(Eigen::Matrix4f _coordinates, cv::Mat _image);
+
+        private:
             VisualizerGlWidget* widget_ = nullptr;
-            bool idle_ = true;
         };
 
     }

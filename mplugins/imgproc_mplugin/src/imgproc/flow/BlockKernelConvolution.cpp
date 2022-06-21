@@ -43,35 +43,33 @@ namespace mico{
             createPolicy({  flow::makeInput<cv::Mat>("input") });
 
             registerCallback(   {"input"}, 
-                                [&](flow::DataFlow _data){
-                                    if(!idle_)
-                                        return;
-
-                                    idle_ = false;
-                                    if(getPipe("image")->registrations()){
-                                        cv::Mat frame = _data.get<cv::Mat>("input").clone(); 
-                                        cv::Mat result;
-                                        if (frame.channels() == 1) {
-                                            std::lock_guard<std::mutex> lock(dataLock_);
-                                            cv::filter2D(frame, result, -1, kernel_, cv::Point(-1, -1), 0.0, cv::BORDER_REPLICATE);
-                                        } else {
-                                            std::vector<cv::Mat> channels;
-                                            cv::split(frame, channels);
-                                            for (auto& c : channels) {
-                                                cv::filter2D(c, c, -1, kernel_, cv::Point(-1, -1), 0.0, cv::BORDER_REPLICATE);
-                                            }
-                                            cv::merge(channels, result);
-                                        }
-                                        
-                                        if(getPipe("image")->registrations()){
-                                            getPipe("image")->flush(result);
-                                        }
-                                    }
-                                    idle_ = true;
-                                }
+                                &BlockKernelConvolution::policyCallback,
+                                this        
             );
         }
 
+        void BlockKernelConvolution::policyCallback(cv::Mat _img) {
+            if (getPipe("image")->registrations()) {
+                cv::Mat frame = _img.clone();
+                cv::Mat result;
+                if (frame.channels() == 1) {
+                    std::lock_guard<std::mutex> lock(dataLock_);
+                    cv::filter2D(frame, result, -1, kernel_, cv::Point(-1, -1), 0.0, cv::BORDER_REPLICATE);
+                }
+                else {
+                    std::vector<cv::Mat> channels;
+                    cv::split(frame, channels);
+                    for (auto& c : channels) {
+                        cv::filter2D(c, c, -1, kernel_, cv::Point(-1, -1), 0.0, cv::BORDER_REPLICATE);
+                    }
+                    cv::merge(channels, result);
+                }
+
+                if (getPipe("image")->registrations()) {
+                    getPipe("image")->flush(result);
+                }
+            }
+        }
 
         QWidget* BlockKernelConvolution::customWidget() {
             QGroupBox* gb = new QGroupBox();

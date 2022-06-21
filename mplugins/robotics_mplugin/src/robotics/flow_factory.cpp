@@ -26,12 +26,12 @@
 using namespace mico::robotics;
 using namespace flow;
 
-extern "C" flow::PluginNodeCreator* factory(fs::path _libraryPath){
+extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(fs::path _libraryPath){
     Persistency::setResourceDir(_libraryPath.parent_path().string() + "/resources");
     flow::PluginNodeCreator *creator = new flow::PluginNodeCreator;
 
     // Functions
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockPid>>(); }, "Robotics");
+    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockPid>>(); }, "robotics");
 
     return creator;
 }

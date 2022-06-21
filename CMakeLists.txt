@@ -20,7 +20,7 @@
 ##---------------------------------------------------------------------------------------------------------------------
 
 cmake_minimum_required (VERSION 3.12 FATAL_ERROR)
-project(mico VERSION 1.1.4 LANGUAGES C CXX)
+project(mico VERSION 2.0.0 LANGUAGES C CXX)
 
 if( NOT CMAKE_BUILD_TYPE )
   set( CMAKE_BUILD_TYPE Release CACHE STRING
@@ -65,9 +65,9 @@ option(BUILD_ML                 "Set to build ML Module"            ON)
 option(BUILD_CUDA               "Set to build CUDA Module"          OFF)
 option(BUILD_IMGPROC            "Set to build imgproc Module"       ON)
 option(BUILD_FASTCOM            "Set to build fastcom Module"       OFF)
-option(BUILD_ROBOTICS           "Set to build robotics Module"      OFF)
+option(BUILD_ROBOTICS           "Set to build robotics Module"      ON)
 option(BUILD_ARDUINO            "Set to build arduino Module"       ON)
-option(BUILD_SIMULATION         "Set to build simulation Module"    OFF)
+option(BUILD_SIMULATION         "Set to build simulation Module"    ON)
 option(BUILD_AR                 "Set to build AR Module"            ON)
 option(BUILD_DVS                "Set to build DSV Module"           OFF)
 

@@ -34,18 +34,8 @@ namespace mico{
                             flow::makeInput<cv::Mat>("image") });
 
             registerCallback({ "coordinates", "image" },
-                [&](flow::DataFlow _data) {
-                    if (!idle_) return;
-                    if (!widget_) return;
-
-                    idle_ = false;
-                    Eigen::Matrix4f coordinates = _data.get<Eigen::Matrix4f>("coordinates");
-                    cv::Mat image = _data.get<cv::Mat>("image");
-                    //std::cout << coordinates << std::endl;
-                    widget_->updatePose(coordinates);
-                    widget_->updateBackgroundImage(image);
-                    idle_ = true;
-                }
+                &BlockArViewer::policyCallback,
+                this
             );
 
         }
@@ -63,6 +53,12 @@ namespace mico{
             widget_->show();
 
             return true;
+        }
+
+        void BlockArViewer::policyCallback(Eigen::Matrix4f _coordinates, cv::Mat _image) {
+            if (!widget_) return;
+            widget_->updatePose(_coordinates);
+            widget_->updateBackgroundImage(_image);
         }
     }
 }

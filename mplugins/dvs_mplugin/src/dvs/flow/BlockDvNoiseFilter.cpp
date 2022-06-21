@@ -49,17 +49,13 @@ namespace dvs{
         createPipe<PolarityPacket>("events");
 
         createPolicy({flow::makeInput<PolarityPacket>("events")});
-        registerCallback({"events"}, 
-                                [&](flow::DataFlow _data){
-                                    if(idle_){
-                                        idle_ = false;
-                                        auto events = _data.get<PolarityPacket>("events");
-                                        
-                                        if(filterEvents(events)){
-                                            getPipe("events")->flush(events);
-                                        }
-                                        idle_ = true;
+        registerCallback<PolarityPacket>({"events"}, 
+                                [&](PolarityPacket _events){
+                                    
+                                    if(filterEvents(_events)){
+                                        getPipe("events")->flush(_events);
                                     }
+                                    
                                 }
         );
     }

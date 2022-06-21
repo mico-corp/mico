@@ -25,13 +25,8 @@
 #define MICO_AR_FLOW_BLOCKINVERSETRANSFORM_H_
 
 #include <flow/Block.h>
-#include <opencv2/opencv.hpp>
+#include <Eigen/Eigen>
 
-namespace cv{
-    namespace aruco {
-        class Dictionary;
-    }
-}
 
 namespace mico{
     namespace ar {
@@ -66,8 +61,10 @@ namespace mico{
 
             /// Return if the block is configurable.
             bool isConfigurable() override { return false; };
+
         private:
-            bool idle_ = true;
+            void policyCallback(Eigen::Matrix4f _t);
+
         };
 
     }

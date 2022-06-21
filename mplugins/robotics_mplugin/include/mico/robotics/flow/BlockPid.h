@@ -41,6 +41,11 @@ namespace mico{
             /// Base constructor
             BlockPid();
 
+            /// Retreive icon of block    
+            QIcon icon() const override {
+                return QIcon((flow::Persistency::resourceDir() / "robotics" / "pid.svg").string().c_str());
+            }
+
             /// Configure block with given parameters.
             bool configure(std::vector<flow::ConfigParameterDef> _params) override;
             
@@ -55,10 +60,13 @@ namespace mico{
                                                                 "   - Inputs: \n"
                                                                 "   - Outputs: \n";};
 
+        private:
+            void signalInputCallback(float _x);
+            void referenceInputCallback(float _ref);
 
         private:
             bool firstTime_ = true;
-            float ref_, p_, i_, d_;
+            float ref_, p_, i_, d_, fc_;
             PID *pid_ = nullptr;
 
             std::chrono::steady_clock::time_point t0_;

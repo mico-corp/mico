@@ -56,6 +56,8 @@ namespace mico{
             /// Base destructor
             ~BlockQCustomPlot();
 
+            std::vector<flow::ConfigParameterDef> parameters() override;
+
             /// Configure block with given parameters.
             bool configure(std::vector<flow::ConfigParameterDef> _params) override;
 
@@ -68,14 +70,16 @@ namespace mico{
 
         private:
             void realTimePlot();
-
+            float toc();
         private:
             std::mutex dataLock_;
-            std::vector<float> pendingData1_, pendingData2_, pendingData3_; // 666 ugly but fastly implemented
+            std::vector<std::pair<float, float>> pendingData1_, pendingData2_, pendingData3_; // 666 ugly but fastly implemented
             QCustomPlot *plot_ = nullptr;
             QTimer *dataTimer_ = nullptr;
             std::mutex imgLock_;
-            bool idle_ = true;
+            bool trackPlot_ = true;
+            float rangePlot_ = 10.0f;
+            float lastKey_ = 0.0f;
 
             std::chrono::steady_clock::time_point t0_;
         };

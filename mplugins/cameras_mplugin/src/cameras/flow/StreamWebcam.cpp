@@ -70,7 +70,7 @@ namespace mico{
 
                 return camera_->isOpened();
             }
-
+            return false;
         }
 
         std::vector<flow::ConfigParameterDef> StreamWebcam::parameters() {

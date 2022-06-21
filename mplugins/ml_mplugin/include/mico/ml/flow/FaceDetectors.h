@@ -74,10 +74,12 @@ namespace mico{
             std::string description() const override {return    "Detect objects Haars cascade algorithm"
                                                                 "   - Inputs: \n"
                                                                 "   - Outputs: \n";};
+        private:
+            void policyCallback(cv::Mat _image);
 
         private:
             cv::CascadeClassifier face_cascade;
-            bool idle_ = true;
+
             bool isConfigured_ = false;
             std::mutex safeDestroy_;
 

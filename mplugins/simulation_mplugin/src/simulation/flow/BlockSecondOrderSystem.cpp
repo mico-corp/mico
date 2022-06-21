@@ -20,65 +20,80 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 
-#include <mico/math/flow/BlockFirstOrderSystem.h>
+#include <mico/simulation/flow/BlockSecondOrderSystem.h>
 #include <flow/Outpipe.h>
 #include <flow/Policy.h>
 
 #include <cmath>
-
 #include <sstream>
 
 
 namespace mico{
     namespace simulation {
-        BlockFirstOrderSystem::BlockFirstOrderSystem(){
+        BlockSecondOrderSystem::BlockSecondOrderSystem(){
             createPipe<float>("output");
 
             createPolicy({  flow::makeInput<float>("time"),
                             flow::makeInput<float>("input") });
 
-            registerCallback({"time"}, 
-                [&](flow::DataFlow _data){
-                    auto time = _data.get<float>("time");
-                            
-                    simulate(time);
+            std::function<void(float)> cb1 = [&](float _t) {
+                simulate(_t);
+                getPipe("output")->flush(y_);
+            };
+            registerCallback({ "time" }, cb1);
 
-                    getPipe("output")->flush(state_);
-                }
-            );
-
-            
-            registerCallback({"input"}, 
-                [&](flow::DataFlow _data){
-                    auto u_ = _data.get<float>("input");
-                }
-            );
+            std::function<void(float)> cb2 = [&](float _u) { u_ = _u; };
+            registerCallback({ "input" }, cb2);
         }
 
-        bool BlockFirstOrderSystem::configure(std::vector<flow::ConfigParameterDef> _params) {
+        bool BlockSecondOrderSystem::configure(std::vector<flow::ConfigParameterDef> _params) {
             if(isRunningLoop()) // Cant configure if already running.
                 return false;            
 
-            if(auto param = getParamByName(_params, "K"); param){
+            if(auto param = getParamByName(_params, "Gain"); param){
                 k_ = param.value().asDecimal();
             }
-            
-            if(auto param = getParamByName(_params, "Tau"); param){
-                tau_ = param.value().asDecimal();
+
+            if (auto param = getParamByName(_params, "DampingFactor"); param) {
+                damp_ = param.value().asDecimal();
             }
 
+            if (auto param = getParamByName(_params, "NaturalFrequency"); param) {
+                wn_ = param.value().asDecimal();
+            }
+
+            if (auto param = getParamByName(_params, "x0"); param) {
+                y0_ = param.value().asDecimal();
+            }
+
+            isFirstTime_ = true;
+
+            return true;
         }
         
-        std::vector<flow::ConfigParameterDef> BlockFirstOrderSystem::parameters(){
+        std::vector<flow::ConfigParameterDef> BlockSecondOrderSystem::parameters(){
             return {
-                {"K", flow::ConfigParameterDef::eParameterType::DECIMAL, 1.0f},
-                {"Tau", flow::ConfigParameterDef::eParameterType::DECIMAL, 1.0f}
+                {"Gain", flow::ConfigParameterDef::eParameterType::DECIMAL, 1.0f},
+                {"DampingFactor", flow::ConfigParameterDef::eParameterType::DECIMAL, 1.0f},
+                {"NaturalFrequency", flow::ConfigParameterDef::eParameterType::DECIMAL, 1.0f}
             };
         }
 
-        void BlockFirstOrderSystem::simulate(float _t){
-            state_ = (_t - tau_ + tau_*exp(-_t/tau_));
-            prevTime_ = _t;
+        void BlockSecondOrderSystem::simulate(float _t){
+            if (isFirstTime_) {
+                prevTime_ = _t;
+                isFirstTime_ = false;
+                y_ = y0_;
+                yd_ = 0.0f;
+                ydd_ = k_ * wn_ * wn_ * u_ - 2*damp_*wn_ * yd_ - wn_*wn_*y_;
+            } else {
+                float incT = _t - prevTime_;
+                prevTime_ = _t;
+                yd_ += incT * ydd_;
+                y_ += incT * yd_;
+                ydd_ = k_ * wn_ * wn_ * u_ - 2 * damp_ * wn_ * yd_ - wn_ * wn_ * y_;
+            }
+            
         }
     }
 }
