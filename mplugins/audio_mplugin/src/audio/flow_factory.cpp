@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------------------------------------------------
-//  MICO - core plugin
+//  Cameras wrapper MICO plugin
 //---------------------------------------------------------------------------------------------------------------------
-//  Copyright 2019 Pablo Ramon Soria (a.k.a. Bardo91) pabramsor@gmail.com
+//  Copyright 2020 Pablo Ramon Soria (a.k.a. Bardo91) pabramsor@gmail.com
 //---------------------------------------------------------------------------------------------------------------------
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of this software
 //  and associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -19,37 +19,20 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------------------------------------
 
-#ifndef MICO_CORE_TEMPLATESCONVERSION_H_
-#define MICO_CORE_TEMPLATESCONVERSION_H_
 
-#include <vector>
-#include <flow/DataFlow.h>
+#include <flow/flow.h>
+#include <mico/audio/flow/StreamerMicrophone.h>
+#include <mico/audio/flow/SpeakersBlock.h>
 
-template<typename InT_, typename OutT_>
-boost::any directConversionType(boost::any &_input){
-    return (OutT_) boost::any_cast<InT_>(_input);
+using namespace mico::audio;
+using namespace flow;
+
+extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(fs::path _libraryPath){
+    Persistency::setResourceDir(_libraryPath.parent_path().string() + "/resources");
+
+    flow::PluginNodeCreator *creator = new flow::PluginNodeCreator;
+
+    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<StreamerMicrophone           >>(); }, "audio");
+    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<SpeakersBlock           >>(); }, "audio");
+    return creator;
 }
-
-// Add concepts for compile time safety
-template<typename InT_, typename OutT_>
-boost::any simpleFlatVectorTakeFirst(boost::any &_input){
-    return (OutT_) boost::any_cast<InT_>(_input)[0];
-}
-
-// Add concepts for compile time safety
-template<typename InT_, typename OutT_>
-boost::any numberToVector(boost::any& _input) {
-    OutT_ v(1);
-    v[0] = boost::any_cast<InT_>(_input);
-    return v;
-}
-
-
-// Add concepts for compile time safety
-template<typename InT_, typename OutT_>
-boost::any vectorToVector(boost::any& _input) {
-    auto vin = boost::any_cast<InT_>(_input);
-    return OutT_(vin.begin(), vin.end());
-}
-
-#endif

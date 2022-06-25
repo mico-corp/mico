@@ -78,7 +78,7 @@ namespace flow{
         std::map<std::string, bool>                                 updated_;
         std::map<std::string, bool>                                 isConsumable_;
         std::function<void(const std::map<std::string, boost::any> &)>   callback_;
-
+        std::mutex safeCopyLock_;
         bool isRunning_ = false;
 
     public:

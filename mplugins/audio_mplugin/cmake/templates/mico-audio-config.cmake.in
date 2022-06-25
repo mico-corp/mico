@@ -1,0 +1,14 @@
+get_filename_component(mico_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+include(CMakeFindDependencyMacro)
+
+find_dependency(PCL QUIET REQUIRED)
+find_dependency(OpenGL REQUIRED)
+find_package(OpenCV REQUIRED)
+
+if(@realsense2_FOUND@)
+    find_dependency(realsense2 HINTS "/usr/local/lib/cmake/realsense2")
+endif(@realsense2_FOUND@)
+
+if(NOT TARGET mico::mico-cameras)
+    include("${mico_CMAKE_DIR}/mico-cameras-targets.cmake")
+endif()

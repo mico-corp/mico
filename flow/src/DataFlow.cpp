@@ -30,7 +30,9 @@ namespace flow{
     void DataFlow::update(std::string _tag, boost::any _data){
         if(data_.find(_tag)!= data_.end()){
             // Can we check here the type?
+            safeCopyLock_.lock();
             data_[_tag] = _data;
+            safeCopyLock_.unlock();
             updated_[_tag] = true;
             checkData();
         }
@@ -46,7 +48,9 @@ namespace flow{
         }
         if(flagCounter == updated_.size()){
             // Emplace task
+            safeCopyLock_.lock();
             ThreadPool::get()->emplace(std::bind(callback_, data_));
+            safeCopyLock_.unlock();
 
             //Consume consumable data
             for (const auto& [tag, isConsumable] : isConsumable_) {

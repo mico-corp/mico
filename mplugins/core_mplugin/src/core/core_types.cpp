@@ -42,8 +42,11 @@ const auto directConversionBoolFloat    = directConversionType<bool, float>;
 typedef vector<int> vectorInteger;
 typedef vector<float> vectorFloat;
 const auto vectorIntToVectorFloat		= vectorToVector<vectorInteger, vectorFloat>;
-const auto vectorFloatToVectorIntt		= vectorToVector<vectorFloat, vectorInteger>;
+const auto vectorFloatToVectorIntt	= vectorToVector<vectorFloat, vectorInteger>;
 
+
+const auto floatToVectorFloat			= numberToVector<float, vectorFloat>;
+const auto intToVectorInt				= numberToVector<int, vectorInteger>;
 
 
 FLOW_CONVERSION_REGISTER(float, int, directConversionFloatInt);
@@ -54,4 +57,6 @@ FLOW_CONVERSION_REGISTER(bool, int, directConversionBoolInt);
 FLOW_CONVERSION_REGISTER(bool, float, directConversionBoolFloat);
 FLOW_CONVERSION_REGISTER(vectorInteger, vectorFloat, vectorIntToVectorFloat);
 FLOW_CONVERSION_REGISTER(vectorFloat, vectorInteger, vectorFloatToVectorIntt);
+FLOW_CONVERSION_REGISTER(float, vectorFloat, floatToVectorFloat);
+FLOW_CONVERSION_REGISTER(int, vectorInteger, intToVectorInt);
 

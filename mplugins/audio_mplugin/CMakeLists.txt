@@ -1,5 +1,5 @@
 ##---------------------------------------------------------------------------------------------------------------------
-##  Visualizers MICO plugin
+##  MICO Audio plugin
 ##---------------------------------------------------------------------------------------------------------------------
 ##  Copyright 2020 Pablo Ramon Soria (a.k.a. Bardo91) pabramsor@gmail.com
 ##---------------------------------------------------------------------------------------------------------------------
@@ -18,59 +18,31 @@
 ##  OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 ##  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ##---------------------------------------------------------------------------------------------------------------------
+cmake_minimum_required (VERSION 3.12 FATAL_ERROR)
+project(mico VERSION 1.0 LANGUAGES C CXX)
+set(PLUGIN_NAME ${PROJECT_NAME}-audio)
+
+##################################################
+###### Create project and configure ALIAS ########
+##################################################
+
+file(GLOB_RECURSE MICO_AUDIO_SOURCE_FILES "src/*.cpp" "src/*.c")
+file(GLOB_RECURSE MICO_AUDIO_HEADER_FILES "include/*.h" "include/*.inl")
+set(LIBSTD_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/libstdaudio/include)
+ 
+include_directories(${LIBSTD_INCLUDE_DIR})
+
+SET(MICO_MODULES ${MICO_MODULES} audio PARENT_SCOPE)
+add_mplugin(    PLUGIN_NAME ${PLUGIN_NAME} 
+                PLUGIN_SOURCES ${MICO_AUDIO_SOURCE_FILES}
+				PLUGIN_HEADERS  ${MICO_AUDIO_HEADER_FILES} 
+				MICO_DEPS core
+				HAS_RESOURCES)
 
 
-add_subdirectory(core_mplugin)
-add_subdirectory(math_mplugin)
+##################################################
+######    Loading 3rd party libraries.    ########
+##################################################
 
-if(${BUILD_AR})
-	add_subdirectory(ar_mplugin)
-endif()
 
-if(${BUILD_ARDUINO})
-	add_subdirectory(arduino_mplugin)
-endif()
 
-if(${BUILD_AUDIO})
-	add_subdirectory(audio_mplugin)
-endif()
-
-if(${BUILD_CAMERAS})
-	add_subdirectory(cameras_mplugin)
-endif()
-
-if(${BUILD_CUDA})
-	add_subdirectory(cuda_mplugin)
-endif()
-
-if(${BUILD_DVS})
-	add_subdirectory(dvs_mplugin)
-endif()
-
-if(${BUILD_FASTCOM})
-	add_subdirectory(fastcom_mplugin)
-endif()
-
-if(${BUILD_IMGPROC})
-	add_subdirectory(imgproc_mplugin)
-endif()
-
-if(${BUILD_ML})
-	add_subdirectory(ml_mplugin)
-endif()
-
-if(${BUILD_PYTHON})
-	add_subdirectory(python_mplugin)
-endif()
-
-if(${BUILD_ROBOTICS})
-	add_subdirectory(robotics_mplugin)
-endif()
-
-if(${BUILD_SIMULATION})
-	add_subdirectory(simulation_mplugin)
-endif()
-
-if(${BUILD_VISUALIZERS})
-	add_subdirectory(visualizers_mplugin)
-endif()

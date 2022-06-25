@@ -201,11 +201,11 @@ if(WIN32)
     # ucrtbase.dll y VCRUNTIME140D make it automatic please.... 
     install(    FILES 
                 "C:/Program Files (x86)/Windows Kits/10/bin/10.0.20348.0/x64/ucrt/ucrtbased.dll"
-                "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Redist/MSVC/14.31.31103/debug_nonredist/x64/Microsoft.VC143.DebugCRT/vcruntime140d.dll"
-                "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Redist/MSVC/14.31.31103/debug_nonredist/x64/Microsoft.VC143.DebugCRT/vcruntime140_1d.dll"
-                "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Redist/MSVC/14.31.31103/debug_nonredist/x64/Microsoft.VC143.DebugCRT/msvcp140d.dll"
-                "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Redist/MSVC/14.31.31103/debug_nonredist/x64/Microsoft.VC143.DebugCRT/msvcp140_1d.dll"
-                "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Redist/MSVC/14.31.31103/debug_nonredist/x64/Microsoft.VC143.DebugCRT/concrt140d.dll"
+                "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Redist/MSVC/14.32.31326/debug_nonredist/x64/Microsoft.VC143.DebugCRT/vcruntime140d.dll"
+                "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Redist/MSVC/14.32.31326/debug_nonredist/x64/Microsoft.VC143.DebugCRT/vcruntime140_1d.dll"
+                "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Redist/MSVC/14.32.31326/debug_nonredist/x64/Microsoft.VC143.DebugCRT/msvcp140d.dll"
+                "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Redist/MSVC/14.32.31326/debug_nonredist/x64/Microsoft.VC143.DebugCRT/msvcp140_1d.dll"
+                "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Redist/MSVC/14.32.31326/debug_nonredist/x64/Microsoft.VC143.DebugCRT/concrt140d.dll"
                 DESTINATION bin )
     
 
