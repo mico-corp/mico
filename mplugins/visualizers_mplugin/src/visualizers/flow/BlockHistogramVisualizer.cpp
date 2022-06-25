@@ -45,21 +45,40 @@ namespace mico{
         };
 
         bool BlockHistogramVisualizer::configure(std::vector<flow::ConfigParameterDef> _params) {
-            plot_ = new QCustomPlot();
-            plot_->setGeometry(0, 0, 400, 400);
-            plot_->setWindowFlags(Qt::WindowStaysOnTopHint);
-            plot_->show();
-            barPlot_ = new QCPBars(plot_->xAxis, plot_->yAxis);
-            barPlot_->setData(xData_, yData_, true);
-            refresher_ = new QTimer();
-            QObject::connect(refresher_, &QTimer::timeout, [&]() { 
-                std::lock_guard<std::mutex> lock(dataLock_);
-                barPlot_->rescaleAxes();
-                plot_->replot();
-                plot_->update(); 
-            });
-            refresher_->start(50);
+            if (!plot_) {
+                plot_ = new QCustomPlot();
+                plot_->setGeometry(0, 0, 400, 400);
+                plot_->setWindowFlags(Qt::WindowStaysOnTopHint);
+                plot_->show();
+                plot_->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom );
+
+                barPlot_ = new QCPBars(plot_->xAxis, plot_->yAxis);
+                barPlot_->setData(xData_, yData_, true);
+                refresher_ = new QTimer();
+                QObject::connect(refresher_, &QTimer::timeout, [&]() { 
+                    std::lock_guard<std::mutex> lock(dataLock_);
+                    if (autoScale_)
+                        barPlot_->rescaleAxes();
+                    else
+                        barPlot_->rescaleKeyAxis();
+
+                    plot_->replot();
+                    plot_->update(); 
+                });
+                refresher_->start(50);
+            }
+
+            if (auto param = getParamByName(_params, "AutoScale"); param) {
+                autoScale_ = param.value().asBool();
+            }
             return true;
+        }
+
+
+        std::vector<flow::ConfigParameterDef> BlockHistogramVisualizer::parameters() {
+            return {
+                {"AutoScale", flow::ConfigParameterDef::eParameterType::BOOLEAN, true}
+            };
         }
 
         void BlockHistogramVisualizer::policyCallback(std::vector<float> _histogram) {

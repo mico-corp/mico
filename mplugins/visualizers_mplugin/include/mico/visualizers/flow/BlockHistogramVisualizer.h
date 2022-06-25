@@ -58,6 +58,9 @@ namespace mico{
             /// Configure block with given parameters.
             bool configure(std::vector<flow::ConfigParameterDef> _params) override;
 
+
+            std::vector<flow::ConfigParameterDef> parameters();
+
             /// Return if the block is configurable.
             bool isConfigurable() override { return true; };
 
@@ -74,6 +77,7 @@ namespace mico{
             QVector<qreal> xData_;
             QVector<qreal> yData_;
             QTimer* refresher_ = nullptr;
+            bool autoScale_ = true;
         };
     }
 }
