@@ -39,7 +39,10 @@ namespace flow{
     }
 
     void DataFlow::checkData(){
-        if (isRunning_) return; // Don't even try to run it if it is busy.
+        if (isRunning_) {
+            std::cout << "Data rejected!" << std::endl;
+            return; // Don't even try to run it if it is busy.
+        }
         isRunning_ = true;
 
         int flagCounter = 0;

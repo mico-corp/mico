@@ -23,6 +23,7 @@
 #include <flow/flow.h>
 #include <mico/audio/flow/StreamerMicrophone.h>
 #include <mico/audio/flow/SpeakersBlock.h>
+#include <mico/audio/flow/BlockDetectSentence.h>
 
 using namespace mico::audio;
 using namespace flow;
@@ -32,7 +33,8 @@ extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(fs::path _librar
 
     flow::PluginNodeCreator *creator = new flow::PluginNodeCreator;
 
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<StreamerMicrophone           >>(); }, "audio");
+    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<StreamerMicrophone      >>(); }, "audio");
     creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<SpeakersBlock           >>(); }, "audio");
+    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockDetectSentence     >>(); }, "audio");
     return creator;
 }
