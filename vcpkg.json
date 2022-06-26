@@ -17,6 +17,7 @@
     "zstd",
     "gtest",
     "dlib",
+    "fftw3",
     {
       "name": "qt5",
       "default-features": false,

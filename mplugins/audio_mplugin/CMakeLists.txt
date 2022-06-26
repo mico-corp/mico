@@ -39,6 +39,17 @@ add_mplugin(    PLUGIN_NAME ${PLUGIN_NAME}
 				MICO_DEPS core
 				HAS_RESOURCES)
 
+if(WIN32)
+	find_package(FFTW3 CONFIG REQUIRED)
+	find_package(FFTW3f CONFIG REQUIRED)
+	find_package(FFTW3l CONFIG REQUIRED)
+	mplugin_link_library( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES FFTW3::fftw3 FFTW3::fftw3f FFTW3::fftw3l)
+else()
+	find_package(FFTW REQUIRED)
+	mplugin_link_library( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES ${FFTW_LIBRARIES})
+	mplugin_include_directory( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_INCLUDES ${FFTW_INCLUDE_DIRS})
+endif()
+
 
 ##################################################
 ######    Loading 3rd party libraries.    ########

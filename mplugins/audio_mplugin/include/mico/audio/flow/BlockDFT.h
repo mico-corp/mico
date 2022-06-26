@@ -20,24 +20,55 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 
-#include <flow/flow.h>
-#include <mico/audio/flow/StreamerMicrophone.h>
-#include <mico/audio/flow/SpeakersBlock.h>
-#include <mico/audio/flow/BlockDetectSentence.h>
-#include <mico/audio/flow/BlockDFT.h>
 
-using namespace mico::audio;
-using namespace flow;
+#ifndef MICO_FLOW_BLOCKS_STREAMERS_BLOCKDFT_H_
+#define MICO_FLOW_BLOCKS_STREAMERS_BLOCKDFT_H_
 
-extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(fs::path _libraryPath){
-    Persistency::setResourceDir(_libraryPath.parent_path().string() + "/resources");
+#include <flow/Block.h>
+#include <vector>
 
-    flow::PluginNodeCreator *creator = new flow::PluginNodeCreator;
 
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<StreamerMicrophone      >>(); }, "audio");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<SpeakersBlock           >>(); }, "audio");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockDetectSentence     >>(); }, "audio");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockDFT                >>(); }, "audio");
+namespace mico{
+    namespace audio{
+        /// The block takes a vector as input and computes its DFT
+        ///
+        /// __Outputs__:
+        ///
+        /// __parameters__:
+        ///
+        ///
+        class BlockDFT:public flow::Block{
+        public:
+            /// Get name of block
+            std::string name() const override {return "DFT";}     
+            
+            /// Retreive icon of block    
+            QIcon icon() const override { 
+                return QIcon((flow::Persistency::resourceDir() / "audio" / "icon_fft.svg").string().c_str());
+            }
+            
+            /// Base constructor
+            BlockDFT();
 
-    return creator;
+            /// Return if the block is configurable.
+            bool isConfigurable() override { return false; };
+
+            /// Returns a brief description of the block
+            std::string description() const override {return    "The block takes a vector as input and computes its DFT.\n"
+                                                                "   - Inputs: \n";};
+        private:
+            void computeDFT(std::vector<float> _signal);
+
+        private:
+            std::vector<float> bufferData_;
+            float silenceThreshold_ = 0.02;
+            int silenceSamples_ = 100;
+            int samplesCounter_ = 0;
+            bool isRecording_ = false;
+        };
+    }
 }
+
+
+
+#endif

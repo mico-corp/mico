@@ -14,6 +14,7 @@ To make it work, you need to install all the dependencies manually. In Ubuntu it
 ```
 sudo apt install -y git cmake qt5-default qtmultimedia5-dev libeigen3-dev libboost-all-dev libopencv-dev libpcl-dev freeglut3-dev libgraphviz-dev libgl1-mesa-dev mesa-common-dev libusb-1.0-0-dev libdlib-dev # Common dependencies
 sudo apt install -y python3 python3-numpy                                                # For python and numpy
+sudo apt-get install -y fftw3 fftw3-dev													# For audio module
 sudo add-repository -y ppa:inivation-ppa/inivation
 sudo apt update
 sudo apt install -y dv-runtime-dev
