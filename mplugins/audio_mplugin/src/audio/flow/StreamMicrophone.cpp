@@ -46,6 +46,10 @@ namespace mico{
         bool StreamerMicrophone::configure(std::vector<flow::ConfigParameterDef> _params) {
             if (device_) device_->stop();
 
+            if (auto gain = getParamByName(_params, "gain"); gain.has_value()) {
+                gain_ = gain.value().asDecimal();
+            }
+
             //createPipe<cv::Mat>("Color");
             if (get_default_audio_input_device().has_value()) {
                 device_ = get_default_audio_input_device();
@@ -61,7 +65,7 @@ namespace mico{
 
         std::vector<flow::ConfigParameterDef> StreamerMicrophone::parameters() {
             return {
-                
+                {"gain", flow::ConfigParameterDef::eParameterType::DECIMAL, 1.0f}
             };
         }
 
@@ -76,6 +80,11 @@ namespace mico{
             for (int channel = 0; channel < in.size_channels(); ++channel) {
                 frames_[channel].resize(in.size_frames());
                 memcpy(&frames_[channel][0], in.data(), sizeof(float) * in.size_frames());
+                if (gain_ != 1.0f) {
+                    std::transform(frames_[channel].begin(), frames_[channel].end(), frames_[channel].begin(),
+                        [&](double element) { return element *= gain_; });
+                }
+
                 auto pipe = getPipe("Channel " + std::to_string(channel));
                 if (pipe && pipe->registrations()) pipe->flush(frames_[channel]);
             }

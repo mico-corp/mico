@@ -72,6 +72,7 @@ namespace mico{
         private:
             std::optional<std::experimental::audio_device> device_;
             std::vector<std::vector<float>> frames_;
+            float gain_ = 1.0f;
         };
     }
 }
