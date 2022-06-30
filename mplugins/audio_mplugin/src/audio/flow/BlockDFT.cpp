@@ -56,30 +56,6 @@ namespace mico{
                 getPipe("dft")->flush(output);
                 
                 fftw_destroy_plan(plan);
-
-
-                //// Prepare input data
-                //fftw_complex* result = new fftw_complex[(numPoints / 2 + 1)];
-                //std::vector<double> signal(_signal.begin(), _signal.end());
-
-                //// Create plan
-                //fftw_plan plan = fftw_plan_dft_r2c_1d(numPoints,
-                //    signal.data(),
-                //    result,
-                //    NULL);
-
-                //// Do FFT
-                //fftw_execute(plan);
-
-
-                //std::vector<float> output(numPoints / 2);
-                //for (int i = 0; i < numPoints / 2; i++) {
-                //    output[i] = 2.0 / (double)(numPoints)*fabs(result[i][0]);
-                //}
-                //delete[] result;
-                //getPipe("dft")->flush(output);
-                //// Release data
-                //fftw_destroy_plan(plan);
             }
         }
 

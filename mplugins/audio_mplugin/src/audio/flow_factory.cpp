@@ -25,6 +25,7 @@
 #include <mico/audio/flow/SpeakersBlock.h>
 #include <mico/audio/flow/BlockDetectSentence.h>
 #include <mico/audio/flow/BlockDFT.h>
+#include <mico/audio/flow/BlockSpectrogram.h>
 
 using namespace mico::audio;
 using namespace flow;
@@ -38,6 +39,7 @@ extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(fs::path _librar
     creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<SpeakersBlock           >>(); }, "audio");
     creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockDetectSentence     >>(); }, "audio");
     creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockDFT                >>(); }, "audio");
+    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockSpectrogram        >>(); }, "audio");
 
     return creator;
 }

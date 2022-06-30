@@ -50,6 +50,18 @@ else()
 	mplugin_include_directory( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_INCLUDES ${FFTW_INCLUDE_DIRS})
 endif()
 
+find_package(OpenCV 4.2 REQUIRED)
+set_target_properties(${OpenCV_LIBS} PROPERTIES MAP_IMPORTED_CONFIG_RELWITHDEBINFO RELEASE)
+mplugin_include_directory( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_INCLUDES ${OpenCV_INCLUDE_DIRS})
+mplugin_link_library( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES ${OpenCV_LIBS})
+
+if(${OpenCV_VERSION_MAJOR} VERSION_EQUAL "4")
+	mplugin_compile_definition( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_DEFINITIONS HAS_OPENCV_4)
+elseif(${OpenCV_VERSION_MAJOR} VERSION_EQUAL "3")
+	mplugin_compile_definition( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_DEFINITIONS HAS_OPENCV_3)
+else()
+	MESSAGE(FATAL_ERROR "Not possible to compile with OpenCV 2")
+endif()
 
 ##################################################
 ######    Loading 3rd party libraries.    ########

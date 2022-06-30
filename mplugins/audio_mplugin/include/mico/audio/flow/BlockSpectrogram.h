@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------------------------------------------------------
-//  Visualizers MICO plugin
+//  Cameras wrapper MICO plugin
 //---------------------------------------------------------------------------------------------------------------------
 //  Copyright 2020 Pablo Ramon Soria (a.k.a. Bardo91) pabramsor@gmail.com
 //---------------------------------------------------------------------------------------------------------------------
@@ -20,67 +20,71 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 
-#ifndef MICO_FLOW_STREAMERS_BLOCKS_BLOCKIMAGEVISUALIZER_H_
-#define MICO_FLOW_STREAMERS_BLOCKS_BLOCKIMAGEVISUALIZER_H_
+
+#ifndef MICO_FLOW_BLOCKS_STREAMERS_BlockSpectrogram_H_
+#define MICO_FLOW_BLOCKS_STREAMERS_BlockSpectrogram_H_
 
 #include <flow/Block.h>
+#include <vector>
 #include <opencv2/opencv.hpp>
-#include <mutex>
-
-class QLabel;
-class QTimer;
-class QPushButton;
+#include <fftw3.h>
 
 namespace mico{
-    namespace visualizer{
-        
-        /// Mico block for visualizing streams of images.
-        /// @ingroup  mico_visualizer
+    namespace audio{
+        /// Computes the espectrogram of an stream of audio
         ///
-        /// @image html blocks/visualizers/visualizers_block_image.png width=480px
+        /// __Outputs__:
         ///
-        /// __Inputs__:
-        ///     * Image: image to be display
+        /// __parameters__:
         ///
-        class BlockImageVisualizer: public flow::Block{
+        ///
+        class BlockSpectrogram:public flow::Block{
         public:
             /// Get name of block
-            std::string name() const override {return "Image Visualizer";}
-
+            std::string name() const override {return "Spectrogram";}     
+            
+            /// Retreive icon of block    
+            QIcon icon() const override { 
+                return QIcon((flow::Persistency::resourceDir() / "audio" / "spectrogram.svg").string().c_str());
+            }
+            
             /// Base constructor
-            BlockImageVisualizer();
+            BlockSpectrogram();
 
             /// Base destructor
-            ~BlockImageVisualizer();
-
-            /// Retreive icon of block    
-            QIcon icon() const override {
-                return QIcon((flow::Persistency::resourceDir() / "visualizers" / "block_image_viewer.svg").string().c_str());
-            }
-
-            /// Get custom view widget to be display in the graph
-            QWidget* customWidget() override;
-
+            ~BlockSpectrogram();
 
             /// Configure block with given parameters.
             bool configure(std::vector<flow::ConfigParameterDef> _params) override;
 
+            std::vector<flow::ConfigParameterDef> parameters() override;
+            
             /// Return if the block is configurable.
             bool isConfigurable() override { return true; };
 
             /// Returns a brief description of the block
-            std::string description() const override {return    "Simple image visualizer block. Compatible with RGB and Depth images.\n"
+            std::string description() const override {return    "Computes the espectrogram of an stream of audio.\n"
                                                                 "   - Inputs: \n";};
+        private:
+            void inputCallback(std::vector<float> _input);
+            void computeDFT(const std::vector<float>& _input);
 
         private:
-            QLabel *imageView_ = nullptr;
-            QPushButton *reopenButton_ = nullptr;
-            QTimer* imageRefresher_ = nullptr;
-            cv::Mat lastImage_;
-            std::mutex imgLock_;
-            float maxValue_ = 0;
+            std::vector<float> bufferData_;
+            std::mutex bufferLock_;
+            fftw_complex* rawDft_ = nullptr;
+
+            cv::Mat spectrogram_;
+            int sampleSize_ = 2048;
+            int stepSize_ = 512;
+            int sizeSpectrogram_ = 100;
+            int maxFrequency_ = 100;
+            int currentSample_ = 0;
+        
         };
     }
 }
+
+
 
 #endif

@@ -87,7 +87,25 @@ namespace mico{
                 if (image.rows != 0) {
                     QImage qimg;
                     if (image.channels() == 1) {
-                        qimg = QImage(image.data, image.cols, image.rows, QImage::Format_Grayscale8);
+                        int inttype = image.type();
+
+                        int depth = inttype & CV_MAT_DEPTH_MASK;
+                        switch (depth) {
+                            case CV_8U:
+                                qimg = QImage(image.data, image.cols, image.rows, QImage::Format_Grayscale8);
+                                break;
+                            case CV_8S:  break;
+                            case CV_16U: break;
+                            case CV_16S: break;
+                            case CV_32S: break;
+                            case CV_32F: 
+                                image.convertTo(image, CV_8UC1, 255.0f);
+                                cv::applyColorMap(image, image, cv::COLORMAP_JET);
+                                qimg = QImage(image.data, image.cols, image.rows, QImage::Format_RGB888);
+                                break;
+                            case CV_64F: break;
+                        }
+
                     } else if (image.channels() == 3) {
                         qimg = QImage(image.data, image.cols, image.rows, image.step, QImage::Format_RGB888).rgbSwapped();
                     } else if (image.channels() == 4) {
