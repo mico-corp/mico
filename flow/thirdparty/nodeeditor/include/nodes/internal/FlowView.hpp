@@ -64,9 +64,9 @@ protected:
 
 private:
 
-  QAction* _clearSelectionAction;
-  QAction* _deleteSelectionAction;
-  QAction* _copySelectionAction;
+  QAction* _clearSelectionAction = nullptr;
+  QAction* _deleteSelectionAction = nullptr;
+  QAction* _copySelectionAction = nullptr;
 
   QPointF _clickPos;
 

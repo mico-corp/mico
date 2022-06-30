@@ -95,20 +95,20 @@ FlowView::setScene(FlowScene *scene)
   QGraphicsView::setScene(_scene);
 
   // setup actions
-  delete _clearSelectionAction;
+  if (!_clearSelectionAction) delete _clearSelectionAction;
   _clearSelectionAction = new QAction(QStringLiteral("Clear Selection"), this);
   _clearSelectionAction->setShortcut(Qt::Key_Escape);
   connect(_clearSelectionAction, &QAction::triggered, _scene, &QGraphicsScene::clearSelection);
   addAction(_clearSelectionAction);
 
-  delete _deleteSelectionAction;
+  if (!_deleteSelectionAction) delete _deleteSelectionAction;
   _deleteSelectionAction = new QAction(QStringLiteral("Delete Selection"), this);
   _deleteSelectionAction->setShortcut(Qt::Key_Delete);
   connect(_deleteSelectionAction, &QAction::triggered, this, &FlowView::deleteSelectedNodes);
   addAction(_deleteSelectionAction);
 
   
-  delete _copySelectionAction;
+  if(!_copySelectionAction) delete _copySelectionAction;
   _copySelectionAction = new QAction(QStringLiteral("Copy Selection"), this);
   _copySelectionAction->setShortcut(Qt::CTRL | Qt::Key_D);
   connect(_copySelectionAction, &QAction::triggered, this, &FlowView::copySelectedNodes);
