@@ -20,58 +20,37 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------------------------------------
 
-#ifndef FLOW_VISUAL_BLOCKS_PARAMETERWIDGET_H_
-#define FLOW_VISUAL_BLOCKS_PARAMETERWIDGET_H_
+
+#ifndef FLOW_QNODES_CODEGENERATION_CODEGENERATOR_H_
+#define FLOW_QNODES_CODEGENERATION_CODEGENERATOR_H_
 
 #include <flow/Export.h>
 
-#include <QWidget>
-#include <QHBoxLayout>
+#include <QJsonObject>
 
+#include <fstream>
+#include <vector>
+
+#include <unordered_map>
 #include <flow/Block.h>
-#include <sstream>
-
-class QLineEdit;
-class QCheckBox;
-class QLabel;
-class QPushButton;
 
 namespace flow{
-
-    class FLOW_DECL ParameterWidget: public QHBoxLayout{
+    class FLOW_DECL CodeGenerator{
     public:
-        ParameterWidget(const ConfigParameterDef &_param, 
-                        QWidget *_parent = nullptr, 
-                        const char *_name = nullptr);
-        ~ParameterWidget();
-        
-        std::string label() const;
-
-        ConfigParameterDef getParam();
-
-        void setValueString(std::string _val);
-        void setValueInt(int _val);
-        void setValueDec(float _val);
-        void setValueBool(bool _val);
-        void setValuePath(fs::path _val);
-        void setValueOption(std::string _val);
-
-        ConfigParameterDef::eParameterType type() { return type_; };
-
+        static void parseScene(std::string _cppFile, QJsonObject const &_scene, const std::vector<std::string> &_customIncludes = {});
+        static void generateCmake(  std::string _cmakeFile, 
+                                    std::string _cppName, 
+                                    const std::vector<std::string> &_customFinds = {}, 
+                                    const std::vector<std::string> &_customLinks = {});
+        static void compile(std::string _cppFolder);
     private:
-        void browseCallback();
+        static void writeInit(std::ofstream &_file, const std::vector<std::string> &_customIncludes = {});
+        static void writeEnd(std::ofstream &_file);
 
-    private:
-        std::string lName_;
-        QLabel   * label_;
-        QWidget   * value_;
-        QLineEdit *filePath_;
-        QPushButton *browseButton_;
-        flow::ConfigParameterDef::eParameterType type_;
-        const ConfigParameterDef param_;
+        static std::string demangleClassType(const char* mangled);
+    
+        static std::vector<flow::ConfigParameterDef> dictClassInit;
     };
-
-
 }
 
 #endif

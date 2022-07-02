@@ -20,6 +20,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 #include <flow/flow.h>
+#include <flow/plugins/BlockPlugin.h>
 #include <flow/Persistency.h>
 #include <mico/python/flow/BlockPython.h>
 
@@ -29,7 +30,7 @@ namespace mico{
         flow::Persistency::setResourceDir(_libraryPath.parent_path().string() + "/resources");
         flow::PluginNodeCreator *creator = new flow::PluginNodeCreator;
 
-        creator->registerNodeCreator([](){ return std::make_unique<flow::FlowVisualBlock<python::BlockPython>>(); }, "contrib");
+        creator->registerNodeCreator([](){ return std::make_shared<python::BlockPython>(); }, "contrib");
 
         return creator;
     }

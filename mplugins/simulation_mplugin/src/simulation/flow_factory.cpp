@@ -21,6 +21,7 @@
 
 
 #include <flow/flow.h>
+#include <flow/plugins/BlockPlugin.h>
 #include <mico/simulation/flow/BlockFirstOrderSystem.h>
 #include <mico/simulation/flow/BlockSecondOrderSystem.h>
 
@@ -32,8 +33,8 @@ extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(fs::path _librar
     flow::PluginNodeCreator *creator = new flow::PluginNodeCreator;
 
     // Functions
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockFirstOrderSystem>>(); }, "simulation");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockSecondOrderSystem>>(); }, "simulation");
+    creator->registerNodeCreator([]() { return std::make_shared<BlockFirstOrderSystem>(); }, "simulation");
+    creator->registerNodeCreator([]() { return std::make_shared<BlockSecondOrderSystem>(); }, "simulation");
 
     return creator;
 }

@@ -21,6 +21,7 @@
 
 
 #include <flow/flow.h>
+#include <flow/plugins/BlockPlugin.h>
 #include <mico/imgproc/flow/BlockKernelConvolution.h>
 #include <mico/imgproc/flow/BlockFeatureExtract.h>
 #include <mico/imgproc/flow/BlockTracker.h>
@@ -33,9 +34,9 @@ extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(fs::path _librar
     flow::PluginNodeCreator *creator = new flow::PluginNodeCreator;
 
     // Functions
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockKernelConvolution>>(); },  "imgproc");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockFeatureExtract>>(); },     "imgproc");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockTracker>>(); },            "imgproc");
+    creator->registerNodeCreator([]() { return std::make_shared<BlockKernelConvolution  >(); },  "imgproc");
+    creator->registerNodeCreator([]() { return std::make_shared<BlockFeatureExtract     >(); },     "imgproc");
+    creator->registerNodeCreator([]() { return std::make_shared<BlockTracker            >(); },            "imgproc");
 
     return creator;
 }

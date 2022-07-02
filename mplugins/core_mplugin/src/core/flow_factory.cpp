@@ -21,6 +21,7 @@
 
 
 #include <flow/flow.h>
+#include <flow/plugins/BlockPlugin.h>
 #include <mico/core/flow/BlockSwitchFlow.h>
 #include <mico/core/flow/BlockVectorSplitter.h>
 #include <mico/core/flow/BlockFlowPerformance.h>
@@ -32,9 +33,9 @@ extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(fs::path _librar
     Persistency::setResourceDir(_libraryPath.parent_path().string() + "/resources");
     flow::PluginNodeCreator *creator = new flow::PluginNodeCreator;
 
-//    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockSwitchFlow                    >>(); }, "core");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockVectorSplitter                    >>(); }, "core");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockFlowPerformance                    >>(); }, "core");
+//    creator->registerNodeCreator([](){ return std::make_shared<BlockSwitchFlow                    >(); }, "core");
+    creator->registerNodeCreator([]() { return std::make_shared<BlockVectorSplitter                 >(); }, "core");
+    creator->registerNodeCreator([]() { return std::make_shared<BlockFlowPerformance                >(); }, "core");
    
     return creator;
 }

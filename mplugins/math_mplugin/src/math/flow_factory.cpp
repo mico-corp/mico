@@ -21,6 +21,7 @@
 
 
 #include <flow/flow.h>
+#include <flow/plugins/BlockPlugin.h>
 #include <mico/math/flow/FunctionBlocks.h>
 #include <mico/math/flow/ConstStreamer.h>
 #include <mico/math/flow/ArithmeticBlocks.h>
@@ -35,26 +36,26 @@ extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(fs::path _librar
     flow::PluginNodeCreator *creator = new flow::PluginNodeCreator;
 
     // Functions
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<ConstStreamer, true          >>(); }, "math");
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockTimer, true             >>(); }, "math");
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockSine                    >>(); }, "math");
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockCosine                  >>(); }, "math");
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockLinearMap               >>(); }, "math");
+    creator->registerNodeCreator([](){ return std::make_shared<ConstStreamer                >(); }, "math");
+    creator->registerNodeCreator([](){ return std::make_shared<BlockTimer                   >(); }, "math");
+    creator->registerNodeCreator([](){ return std::make_shared<BlockSine                    >(); }, "math");
+    creator->registerNodeCreator([](){ return std::make_shared<BlockCosine                  >(); }, "math");
+    creator->registerNodeCreator([](){ return std::make_shared<BlockLinearMap               >(); }, "math");
 
     // Operators
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockSum                      >>(); }, "math");
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockSubstract                >>(); }, "math");
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockMultiply                 >>(); }, "math");
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockDivide                   >>(); }, "math");
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockSquareRoot               >>(); }, "math");
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockPow                      >>(); }, "math");
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockIntegrator               >>(); }, "math");
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockDerivative               >>(); }, "math");
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<ComparisonBlock               >>(); }, "math");
+    creator->registerNodeCreator([](){ return std::make_shared<BlockSum                      >(); }, "math");
+    creator->registerNodeCreator([](){ return std::make_shared<BlockSubstract                >(); }, "math");
+    creator->registerNodeCreator([](){ return std::make_shared<BlockMultiply                 >(); }, "math");
+    creator->registerNodeCreator([](){ return std::make_shared<BlockDivide                   >(); }, "math");
+    creator->registerNodeCreator([](){ return std::make_shared<BlockSquareRoot               >(); }, "math");
+    creator->registerNodeCreator([](){ return std::make_shared<BlockPow                      >(); }, "math");
+    creator->registerNodeCreator([](){ return std::make_shared<BlockIntegrator               >(); }, "math");
+    creator->registerNodeCreator([](){ return std::make_shared<BlockDerivative               >(); }, "math");
+    creator->registerNodeCreator([](){ return std::make_shared<ComparisonBlock               >(); }, "math");
 
     // Vector blocks
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockVectorNorm               >>(); }, "math");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockVectorElementWiseOperator>>(); }, "math");
+    creator->registerNodeCreator([]() { return std::make_shared<BlockVectorNorm               >(); }, "math");
+    creator->registerNodeCreator([]() { return std::make_shared<BlockVectorElementWiseOperator>(); }, "math");
 
     return creator;
 }

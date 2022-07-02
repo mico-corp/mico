@@ -53,8 +53,8 @@ namespace mico{
             ~BlockScatterPlot();
 
             /// Retreive icon of block    
-            QIcon icon() const override {
-                return QIcon((flow::Persistency::resourceDir() / "visualizers" / "block_scatter_plot.svg").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir() / "visualizers" / "block_scatter_plot.svg").string();
             }
 
 

@@ -60,8 +60,8 @@ namespace mico{
             BlockFeatureExtract();
 
             /// Retreive icon of block    
-            QIcon icon() const override {
-                return QIcon((flow::Persistency::resourceDir() / "img_proc" / "block_feature_extractor.svg").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir() / "img_proc" / "block_feature_extractor.svg").string();
             }
             
             /// Return if the block is configurable.

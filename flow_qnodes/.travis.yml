@@ -1,0 +1,42 @@
+language: cpp
+git:
+  quiet: true
+  submodules: true
+  depth: 3
+matrix:
+  include:
+    - os: linux
+      dist: bionic
+      sudo: true
+      compiler: gcc
+      env:
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+      addons:
+        apt:
+          packages:
+            - libyaml-dev
+            - libboost-all-dev
+            - libomp-dev
+            - libpcl-dev 
+            - libeigen3-dev
+            - libopencv-dev
+            - libopencv-contrib-dev
+
+before_install:
+  - eval "${MATRIX_EVAL}"
+  - sudo apt-get -y install qt5-qmake qt5-default libqt5opengl5-dev qtbase5-dev libqwt-qt5-dev libsndfile1-dev librtlsdr-dev librtlsdr0 libfftw3-dev portaudio19-dev libfaad-dev zlib1g-dev rtl-sdr libusb-1.0-0-dev mesa-common-dev libgl1-mesa-dev libsamplerate-dev
+
+install: 
+  - bash ./scripts/install_dependencies_ci.sh
+
+script:
+    ############################################################################
+    # Build main and tests
+    ############################################################################
+     - mkdir -p build
+     - cd build
+     - cmake ${CMAKE_OPTIONS} -DCMAKE_CXX_FLAGS=${CXX_FLAGS} -DCMAKE_BUILD_TYPE=Coverage .. 
+     - make -j$(nproc)
+
+notifications:
+  email: false

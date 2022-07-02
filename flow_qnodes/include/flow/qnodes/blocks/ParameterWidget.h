@@ -1,5 +1,6 @@
+
 //---------------------------------------------------------------------------------------------------------------------
-//  FLOW
+//  flow
 //---------------------------------------------------------------------------------------------------------------------
 //  Copyright 2020 Pablo Ramon Soria (a.k.a. Bardo91) pabramsor@gmail.com
 //---------------------------------------------------------------------------------------------------------------------
@@ -19,30 +20,58 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------------------------------------
 
-#if defined(INITIALIZE_PYTHON)
-#   include <boost/python.hpp>
-#   include <boost/python/numpy.hpp>
-#endif
-#include <flow/visual/FlowVisualInterface.h>
-#include <flow/visual/blocks/FlowVisualBlock.h>
-#include <flow/DataFlow.h>
+#ifndef FLOW_QNODES_BLOCKS_PARAMETERWIDGET_H_
+#define FLOW_QNODES_BLOCKS_PARAMETERWIDGET_H_
 
-#include <flow/flow.h>
-#include <string>
+#include <flow/Export.h>
 
+#include <QWidget>
+#include <QHBoxLayout>
+
+#include <flow/Block.h>
 #include <sstream>
 
-using namespace flow;
+class QLineEdit;
+class QCheckBox;
+class QLabel;
+class QPushButton;
+
+namespace flow{
+
+    class FLOW_DECL ParameterWidget: public QHBoxLayout{
+    public:
+        ParameterWidget(const ConfigParameterDef &_param, 
+                        QWidget *_parent = nullptr, 
+                        const char *_name = nullptr);
+        ~ParameterWidget();
+        
+        std::string label() const;
+
+        ConfigParameterDef getParam();
+
+        void setValueString(std::string _val);
+        void setValueInt(int _val);
+        void setValueDec(float _val);
+        void setValueBool(bool _val);
+        void setValuePath(fs::path _val);
+        void setValueOption(std::string _val);
+
+        ConfigParameterDef::eParameterType type() { return type_; };
+
+    private:
+        void browseCallback();
+
+    private:
+        std::string lName_;
+        QLabel   * label_;
+        QWidget   * value_;
+        QLineEdit *filePath_;
+        QPushButton *browseButton_;
+        flow::ConfigParameterDef::eParameterType type_;
+        const ConfigParameterDef param_;
+    };
 
 
-
-int main(int _argc, char **_argv){
-
-    #if defined(INITIALIZE_PYTHON)
-    #   include <boost/python.hpp>
-    #   include <boost/python/numpy.hpp>
-    #endif
-
-    FlowVisualInterface fvi;
-    fvi.init(_argc, _argv);
 }
+
+#endif

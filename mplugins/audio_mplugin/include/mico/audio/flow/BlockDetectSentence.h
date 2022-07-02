@@ -43,8 +43,8 @@ namespace mico{
             std::string name() const override {return "Detect Sentence";}     
             
             /// Retreive icon of block    
-            QIcon icon() const override { 
-                return QIcon((flow::Persistency::resourceDir() / "audio" / "icon_detect_sentence.png").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir() / "audio" / "icon_detect_sentence.png").string();
             }
             
             /// Base constructor
@@ -71,7 +71,7 @@ namespace mico{
 
         private:
             std::vector<float> bufferData_;
-            float silenceThreshold_ = 0.02;
+            float silenceThreshold_ = 0.02f;
             int silenceSamples_ = 100;
             int samplesCounter_ = 0;
             bool isRecording_ = false;

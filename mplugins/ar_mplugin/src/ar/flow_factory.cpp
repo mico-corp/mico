@@ -22,6 +22,8 @@
 
 
 #include <flow/flow.h>
+#include <flow/plugins/BlockPlugin.h>
+
 #include <mico/ar/flow/BlockArucoCoordinates.h>
 #include <mico/ar/flow/BlockArViewer.h>
 #include <mico/ar/flow/BlockMesh.h>
@@ -38,13 +40,13 @@ extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(fs::path _librar
     flow::PluginNodeCreator *creator = new flow::PluginNodeCreator;
 
     // Functions
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockArucoCoordinates>>(); },    "AR");
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockArViewer>>(); },            "AR");
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockMesh>>(); },                "AR");
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockPoseGenerator>>(); },       "AR");
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockMultiplyTransform>>(); },   "AR");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockInverseTransform>>(); }, "AR");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockFilterAruco>>(); }, "AR");
+    creator->registerNodeCreator([](){ return std::make_shared<BlockArucoCoordinates        >(); }, "AR");
+    creator->registerNodeCreator([](){ return std::make_shared<BlockArViewer                >(); }, "AR");
+    creator->registerNodeCreator([](){ return std::make_shared<BlockMesh                    >(); }, "AR");
+    creator->registerNodeCreator([](){ return std::make_shared<BlockPoseGenerator           >(); }, "AR");
+    creator->registerNodeCreator([](){ return std::make_shared<BlockMultiplyTransform       >(); }, "AR");
+    creator->registerNodeCreator([]() { return std::make_shared<BlockInverseTransform       >(); }, "AR");
+    creator->registerNodeCreator([]() { return std::make_shared<BlockFilterAruco            >(); }, "AR");
 
     return creator;
 }

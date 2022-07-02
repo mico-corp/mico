@@ -23,8 +23,3 @@
 add_executable(simple_example simple_example.cpp)
 target_include_directories(simple_example PUBLIC ../include)
 target_link_libraries(simple_example LINK_PUBLIC flow)
-
-
-#add_executable(visual_example visual_example.cpp)
-#target_include_directories(visual_example PUBLIC ../include)
-#target_link_libraries(visual_example LINK_PUBLIC flow)

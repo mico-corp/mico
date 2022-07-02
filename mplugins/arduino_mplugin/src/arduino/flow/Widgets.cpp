@@ -21,7 +21,7 @@
 
 
 #include <mico/arduino/flow/Widgets.h>
-#include <flow/visual/blocks/Switch.h>
+#include <flow/qnodes/blocks/Switch.h>
 
 #include <QVBoxLayout>
 #include <QPushButton>

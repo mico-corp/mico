@@ -21,6 +21,7 @@
 
 
 #include <flow/flow.h>
+#include <flow/plugins/BlockPlugin.h>
 #include <mico/audio/flow/StreamerMicrophone.h>
 #include <mico/audio/flow/SpeakersBlock.h>
 #include <mico/audio/flow/BlockDetectSentence.h>
@@ -35,11 +36,11 @@ extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(fs::path _librar
 
     flow::PluginNodeCreator *creator = new flow::PluginNodeCreator;
 
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<StreamerMicrophone      >>(); }, "audio");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<SpeakersBlock           >>(); }, "audio");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockDetectSentence     >>(); }, "audio");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockDFT                >>(); }, "audio");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockSpectrogram        >>(); }, "audio");
+    creator->registerNodeCreator([]() { return std::make_shared<StreamerMicrophone      >(); }, "audio");
+    creator->registerNodeCreator([]() { return std::make_shared<SpeakersBlock           >(); }, "audio");
+    creator->registerNodeCreator([]() { return std::make_shared<BlockDetectSentence     >(); }, "audio");
+    creator->registerNodeCreator([]() { return std::make_shared<BlockDFT                >(); }, "audio");
+    creator->registerNodeCreator([]() { return std::make_shared<BlockSpectrogram        >(); }, "audio");
 
     return creator;
 }

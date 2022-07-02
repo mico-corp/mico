@@ -21,6 +21,7 @@
 
 #include <flow/flow.h>
 
+#include <flow/plugins/BlockPlugin.h>
 #include <mico/fastcom_wrapper/flow/streamers/FastcomSubscribers.h>
 #include <mico/fastcom_wrapper/flow/publishers/FastcomPublishers.h>
 
@@ -30,18 +31,18 @@ namespace fastcom_wrapper{
         Persistency::setResourceDir(_libraryPath.parent_path().string() + "/resources");
         flow::PluginNodeCreator *creator = new flow::PluginNodeCreator;
 
-        creator->registerNodeCreator([](){ return std::make_unique<flow::FlowVisualBlock<BlockFastcomImagePublisher > >(); }, "Fastcom");
-        creator->registerNodeCreator([](){ return std::make_unique<flow::FlowVisualBlock<BlockFastcomImageSubscriber > >(); }, "Fastcom");
+        creator->registerNodeCreator([](){ return std::make_shared<BlockFastcomImagePublisher >(); }, "Fastcom");
+        creator->registerNodeCreator([](){ return std::make_shared<BlockFastcomImageSubscriber >(); }, "Fastcom");
         
-        creator->registerNodeCreator([](){ return std::make_unique<flow::FlowVisualBlock<BlockFastcomFloatPublisher > >(); }, "Fastcom");
-        creator->registerNodeCreator([](){ return std::make_unique<flow::FlowVisualBlock<BlockFastcomFloatSubscriber > >(); }, "Fastcom");
+        creator->registerNodeCreator([](){ return std::make_shared<BlockFastcomFloatPublisher >(); }, "Fastcom");
+        creator->registerNodeCreator([](){ return std::make_shared<BlockFastcomFloatSubscriber >(); }, "Fastcom");
         
-        creator->registerNodeCreator([](){ return std::make_unique<flow::FlowVisualBlock<BlockFastcomIntPublisher   > >(); }, "Fastcom");
-        creator->registerNodeCreator([](){ return std::make_unique<flow::FlowVisualBlock<BlockFastcomIntSubscriber   > >(); }, "Fastcom");
+        creator->registerNodeCreator([](){ return std::make_shared<BlockFastcomIntPublisher   >(); }, "Fastcom");
+        creator->registerNodeCreator([](){ return std::make_shared<BlockFastcomIntSubscriber   >(); }, "Fastcom");
         
         
-        // creator->registerNodeCreator([](){ return std::make_unique<flow::FlowVisualBlock<BlockFastcomVectorfSubscriber > >(); }, "Fastcom");
-        // creator->registerNodeCreator([](){ return std::make_unique<flow::FlowVisualBlock<BlockFastcomVectorfPublisher  > >(); }, "Fastcom");
+        // creator->registerNodeCreator([](){ return std::make_shared<BlockFastcomVectorfSubscriber >(); }, "Fastcom");
+        // creator->registerNodeCreator([](){ return std::make_shared<BlockFastcomVectorfPublisher  >(); }, "Fastcom");
         
         return creator;
     }  

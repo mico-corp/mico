@@ -21,6 +21,7 @@
 
 
 #include <flow/flow.h>
+#include <flow/plugins/BlockPlugin.h>
 #include <mico/robotics/flow/BlockPid.h>
 
 using namespace mico::robotics;
@@ -31,7 +32,7 @@ extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(fs::path _librar
     flow::PluginNodeCreator *creator = new flow::PluginNodeCreator;
 
     // Functions
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockPid>>(); }, "robotics");
+    creator->registerNodeCreator([](){ return std::make_shared<BlockPid>(); }, "robotics");
 
     return creator;
 }

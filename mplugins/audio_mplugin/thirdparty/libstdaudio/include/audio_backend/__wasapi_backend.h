@@ -169,6 +169,7 @@ public:
 		other._audio_capture_client = nullptr;
 		other._audio_render_client = nullptr;
 		other._event_handle = nullptr;
+		return *this;
 	}
 
 	~audio_device()

@@ -1,0 +1,16 @@
+get_filename_component(flow_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+include(CMakeFindDependencyMacro)
+
+
+
+find_package(Qt5 REQUIRED COMPONENTS Core Widgets Gui PrintSupport)
+find_package(NodeEditor REQUIRED)
+find_package(Boost REQUIRED COMPONENTS system filesystem program_options exception)
+
+if(WIN32)
+    find_package(dlfcn-win32 REQUIRED)
+endif()
+
+if(NOT TARGET flow::flow)
+    include("${flow_CMAKE_DIR}/flow-targets.cmake")
+endif()

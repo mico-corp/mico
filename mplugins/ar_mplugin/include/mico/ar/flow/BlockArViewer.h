@@ -50,8 +50,8 @@ namespace mico{
             ~BlockArViewer();
 
             /// Retreive icon of block    
-            QIcon icon() const override {
-                return QIcon((flow::Persistency::resourceDir() / "ar" / "block_ar_viewer.svg").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir() / "ar" / "block_ar_viewer.svg").string();
             }
 
             /// Returns a brief description of the block

@@ -1,6 +1,5 @@
-
 //---------------------------------------------------------------------------------------------------------------------
-//  flow
+//  FLOW
 //---------------------------------------------------------------------------------------------------------------------
 //  Copyright 2020 Pablo Ramon Soria (a.k.a. Bardo91) pabramsor@gmail.com
 //---------------------------------------------------------------------------------------------------------------------
@@ -20,37 +19,30 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------------------------------------
 
-
-#ifndef FLOW_VISUAL_CODEGENERATION_CODEGENERATOR_H_
-#define FLOW_VISUAL_CODEGENERATION_CODEGENERATOR_H_
-
-#include <flow/Export.h>
-
-#include <QJsonObject>
-
-#include <fstream>
-#include <vector>
-
-#include <unordered_map>
-#include <flow/Block.h>
-
-namespace flow{
-    class FLOW_DECL CodeGenerator{
-    public:
-        static void parseScene(std::string _cppFile, QJsonObject const &_scene, const std::vector<std::string> &_customIncludes = {});
-        static void generateCmake(  std::string _cmakeFile, 
-                                    std::string _cppName, 
-                                    const std::vector<std::string> &_customFinds = {}, 
-                                    const std::vector<std::string> &_customLinks = {});
-        static void compile(std::string _cppFolder);
-    private:
-        static void writeInit(std::ofstream &_file, const std::vector<std::string> &_customIncludes = {});
-        static void writeEnd(std::ofstream &_file);
-
-        static std::string demangleClassType(const char* mangled);
-    
-        static std::vector<flow::ConfigParameterDef> dictClassInit;
-    };
-}
-
+#if defined(INITIALIZE_PYTHON)
+#   include <boost/python.hpp>
+#   include <boost/python/numpy.hpp>
 #endif
+#include <flow/qnodes/FlowVisualInterface.h>
+#include <flow/qnodes/blocks/FlowVisualBlock.h>
+#include <flow/DataFlow.h>
+
+#include <flow/flow.h>
+#include <string>
+
+#include <sstream>
+
+using namespace flow;
+
+
+
+int main(int _argc, char **_argv){
+
+    #if defined(INITIALIZE_PYTHON)
+    #   include <boost/python.hpp>
+    #   include <boost/python/numpy.hpp>
+    #endif
+
+    FlowVisualInterface fvi;
+    fvi.init(_argc, _argv);
+}

@@ -21,6 +21,7 @@
 
 
 #include <flow/flow.h>
+#include <flow/plugins/BlockPlugin.h>
 #include <mico/cuda/flow/BlockYoloCuda.h>
 
 
@@ -32,7 +33,7 @@ extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(fs::path _librar
     flow::PluginNodeCreator *creator = new flow::PluginNodeCreator;
 
     // Functions
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockYoloCuda>>(); }, "ml");
+    creator->registerNodeCreator([]() { return std::make_shared<BlockYoloCuda>(); }, "ml");
 
 
     return creator;

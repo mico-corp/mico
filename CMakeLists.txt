@@ -87,6 +87,7 @@ SET(MICO_MODULES "")
 defineRootDir()
 
 add_subdirectory(flow)
+add_subdirectory(flow_qnodes)
 add_subdirectory(mplugins)
     
 if(${MICO_PREPARE_INSTALLER})

@@ -1,6 +1,5 @@
-
 //---------------------------------------------------------------------------------------------------------------------
-//  flow
+//  FLOW
 //---------------------------------------------------------------------------------------------------------------------
 //  Copyright 2020 Pablo Ramon Soria (a.k.a. Bardo91) pabramsor@gmail.com
 //---------------------------------------------------------------------------------------------------------------------
@@ -21,53 +20,27 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 
-#ifndef FLOW_VISUAL_DATATYPES_STREAMERPIPEINFO_H_
-#define FLOW_VISUAL_DATATYPES_STREAMERPIPEINFO_H_
+#ifndef FLOW_PLUGINS_BLOCKPLUGIN_H_
+#define FLOW_PLUGINS_BLOCKPLUGIN_H_
 
-#include <flow/Export.h>
-
-#include <nodes/NodeDataModel>
-
-#include <cassert>
-
-using QtNodes::NodeData;
-using QtNodes::NodeDataType;
+#include <flow/Block.h>
 
 namespace flow{
-    // Forward declaration
-    class Block;
-}
 
-namespace flow {
-
-    struct PipeInfo{
-        std::string pipeName_ = "";
-        std::shared_ptr<flow::Block> otherBlock_ = nullptr;
-    };
-
-    class FLOW_DECL StreamerPipeInfo : public NodeData {
+    class PluginNodeCreator{
     public:
-        StreamerPipeInfo() {} 
+        using RegistryItemPtr     = std::shared_ptr<flow::Block>;
+        using RegistryItemCreator = std::function<RegistryItemPtr()>;
 
-        StreamerPipeInfo(std::shared_ptr<flow::Block> const &_blockRef, const std::string _pipeName) {
-            pipeInfo_.otherBlock_ = _blockRef;
-            pipeInfo_.pipeName_ = _pipeName;
+        void registerNodeCreator(RegistryItemCreator _fn, std::string _category = "Plugin"){
+            creatorFun_.push_back({_category, _fn});
         }
 
-        NodeDataType type() const override {
-            return NodeDataType{"pipe_info", pipeInfo_.pipeName_.c_str()};
-        }
-
-        PipeInfo info() const { 
-            return pipeInfo_; 
-        }
+        std::vector<std::pair<std::string, RegistryItemCreator>> get() { return creatorFun_; };
 
     private:
-        PipeInfo pipeInfo_;
-        
+        std::vector<std::pair<std::string, RegistryItemCreator>> creatorFun_;
     };
-
-} // namespace flow
-
+}
 
 #endif

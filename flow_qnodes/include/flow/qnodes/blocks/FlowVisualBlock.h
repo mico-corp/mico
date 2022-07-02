@@ -20,14 +20,14 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------------------------------------
 
-#ifndef FLOW_VISUAL_BLOCKS_FLOWBLOCK_H_
-#define FLOW_VISUAL_BLOCKS_FLOWBLOCK_H_
+#ifndef FLOW_QNODES_BLOCKS_FLOWBLOCK_H_
+#define FLOW_QNODES_BLOCKS_FLOWBLOCK_H_
 
 #include <flow/flow.h>
 #include <flow/Export.h>
 
-#include <flow/visual/blocks/ParameterWidget.h>
-#include <flow/visual/blocks/Switch.h>
+#include <flow/qnodes/blocks/ParameterWidget.h>
+#include <flow/qnodes/blocks/Switch.h>
 
 #include <nodes/NodeDataModel>
 #include <nodes/Connection>
@@ -38,6 +38,7 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QToolButton>
+#include <QStyle>
 
 #include <iostream>
 
@@ -68,11 +69,9 @@ namespace flow{
         bool isRunable_;
     };
 
-    /// 
-    template<typename Block_, bool HasAutoLoop_ = false>
     class FlowVisualBlock : public NodeDataModel, public ConfigurableBlock, public RunnableBlock {
     public:
-        FlowVisualBlock();
+        FlowVisualBlock(std::shared_ptr<Block> _backend);
 
         virtual ~FlowVisualBlock();
         
@@ -83,13 +82,20 @@ namespace flow{
 
         void configure() override;
 
-        flow::Block * internalBlock() const; 
+        //flow::Block * internalBlock() const; 
 
         bool resizable() const override { return flowBlock_->resizable(); }
 
         QString description() const override {return flowBlock_->description().c_str();};
     
-        QIcon icon() const override { return flowBlock_->icon();};
+        QIcon icon() const override { 
+            if (flowBlock_->icon() == "") {
+                return QApplication::style()->standardIcon(QStyle::SP_MessageBoxQuestion);
+            } else {
+                return QIcon(flowBlock_->icon().c_str());
+
+            }
+        };
 
         QBoxLayout * creationWidget() const override { return flowBlock_->creationWidget();};
 
@@ -118,7 +124,7 @@ namespace flow{
         QWidget * embeddedWidget() override { return configBox_; }
 
     private:
-        std::shared_ptr<Block_> flowBlock_;
+        std::shared_ptr<Block> flowBlock_;
         //std::unordered_map<std::string, Outpipe*> connectedPipes_;
         std::vector<ParameterWidget*> configParams_;
         QVBoxLayout *configsLayout_  = nullptr;
@@ -130,7 +136,5 @@ namespace flow{
     };
 }
 
-
-#include <flow/visual/blocks/FlowVisualBlock.inl>
 
 #endif

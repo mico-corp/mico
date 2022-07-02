@@ -23,8 +23,3 @@
 #include <flow/Block.h>
 #include <flow/Outpipe.h>
 #include <flow/Policy.h>
-
-#include <flow/visual/FlowVisualInterface.h>
-#include <flow/visual/blocks/FlowVisualBlock.h>
-
-#include <flow/visual/blocks/plugins/BlockPlugin.h>

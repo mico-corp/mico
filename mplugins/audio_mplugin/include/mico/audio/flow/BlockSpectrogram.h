@@ -44,8 +44,8 @@ namespace mico{
             std::string name() const override {return "Spectrogram";}     
             
             /// Retreive icon of block    
-            QIcon icon() const override { 
-                return QIcon((flow::Persistency::resourceDir() / "audio" / "spectrogram.svg").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir() / "audio" / "spectrogram.svg").string();
             }
             
             /// Base constructor

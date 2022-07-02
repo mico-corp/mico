@@ -53,8 +53,8 @@ namespace mico{
             std::string name() const override {return "Streamer Video";}     
             
             /// Retreive icon of block    
-            QIcon icon() const override { 
-                return QIcon((flow::Persistency::resourceDir() / "cameras"/"webcam_icon.svg").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir() / "cameras"/"webcam_icon.svg").string();
             }
             
             /// Base constructor
@@ -71,6 +71,9 @@ namespace mico{
             
             /// Return if the block is configurable.
             bool isConfigurable() override { return true; };
+
+            /// Method to check if the block has auto running callback
+            bool hasRunLoop() const override { return true; };
 
             /// Returns a brief description of the block
             std::string description() const override {return    "Streamer block that reads from usb ready cameras "

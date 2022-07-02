@@ -34,6 +34,7 @@ add_mplugin(    PLUGIN_NAME ${PLUGIN_NAME}
                 PLUGIN_SOURCES ${MICO_ROBOTICS_SOURCE_FILES}
                 PLUGIN_HEADERS  ${MICO_ROBOTICS_HEADER_FILES} 
                 MICO_DEPS core
+                HAS_RESOURCES
                 )
 
 

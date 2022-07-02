@@ -48,8 +48,8 @@ namespace mico{
             std::string name() const override {return "Single Image Flusher";}     
             
             /// Retreive icon of block    
-            QIcon icon() const override {
-                return QIcon((flow::Persistency::resourceDir() / "cameras" / "single_image.png").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir() / "cameras" / "single_image.png").string();
             };
             
             /// Base constructor

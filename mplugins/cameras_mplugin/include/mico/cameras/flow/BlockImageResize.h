@@ -55,8 +55,8 @@ namespace mico {
             std::string name() const override { return "Image Resize"; }
 
             /// Retreive icon of block    
-            QIcon icon() const override {
-                return QIcon((flow::Persistency::resourceDir() / "cameras" / "icon_resize.png").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir() / "cameras" / "icon_resize.png").string();
             }
 
             /// Base constructor
