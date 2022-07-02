@@ -21,6 +21,7 @@
 
 
 #include <flow/flow.h>
+#include <flow/plugins/BlockPlugin.h>
 #include <mico/cameras/flow/StreamWebcam.h>
 #include <mico/cameras/flow/StreamVideo.h>
 #include <mico/cameras/flow/SingleImageFlusher.h>
@@ -36,13 +37,13 @@ extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(fs::path _librar
 
     flow::PluginNodeCreator *creator = new flow::PluginNodeCreator;
 
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<StreamWebcam, true           >>(); }, "cameras");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<StreamVideo, true           >>(); }, "cameras");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<SingleImageFlusher          >>(); }, "cameras");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockCalibrationMonocular   >>(); }, "cameras");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockImageResize            >>(); }, "cameras");
+    creator->registerNodeCreator([]() { return std::make_shared<StreamWebcam                >(); }, "cameras");
+    creator->registerNodeCreator([]() { return std::make_shared<StreamVideo                 >(); }, "cameras");
+    creator->registerNodeCreator([]() { return std::make_shared<SingleImageFlusher          >(); }, "cameras");
+    creator->registerNodeCreator([]() { return std::make_shared<BlockCalibrationMonocular   >(); }, "cameras");
+    creator->registerNodeCreator([]() { return std::make_shared<BlockImageResize            >(); }, "cameras");
     #ifdef MICO_IS_RASPBIAN
-        creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<RaspiCam, true           >>(); }, "cameras");
+        creator->registerNodeCreator([](){ return std::make_shared<RaspiCam,                >(); }, "cameras");
     #endif
     return creator;
 }

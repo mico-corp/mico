@@ -47,6 +47,7 @@ add_mplugin(    PLUGIN_NAME ${PLUGIN_NAME}
 
 find_package(Eigen3 REQUIRED)
 mplugin_link_library( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES Eigen3::Eigen)
+mplugin_link_library( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES flow_qnodes)
 
 if(${TARGET_OS} STREQUAL "Raspbian")
     mplugin_compile_definition(PLUGIN_NAME ${PLUGIN_NAME} IS_PUBLIC PLUGIN_DEFINITIONS MICO_IS_RASPBIAN)

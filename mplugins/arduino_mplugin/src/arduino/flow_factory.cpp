@@ -21,6 +21,7 @@
 
 
 #include <flow/flow.h>
+#include <flow/plugins/BlockPlugin.h>
 #include <mico/arduino/flow/ArduinoConnectionBlock.h>
 #include <mico/arduino/flow/ArduinoInputBlock.h>
 #include <mico/arduino/flow/ArduinoOutputBlock.h>
@@ -36,21 +37,21 @@ extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(fs::path _librar
     flow::PluginNodeCreator *creator = new flow::PluginNodeCreator;
 
     // Functions
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<ArduinoConnectionBlock>>(); }, "arduino");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<ArduinoInputBlock>>(); }, "arduino");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<ArduinoOutputBlock>>(); }, "arduino");
+    creator->registerNodeCreator([]() { return std::make_shared<ArduinoConnectionBlock>(); }, "arduino");
+    creator->registerNodeCreator([]() { return std::make_shared<ArduinoInputBlock>(); }, "arduino");
+    creator->registerNodeCreator([]() { return std::make_shared<ArduinoOutputBlock>(); }, "arduino");
     #ifdef MICO_IS_RASPBIAN
-        creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<RaspberryGpioBlock>>(); }, "Raspberry Gpio");
+        creator->registerNodeCreator([](){ return std::make_shared<RaspberryGpioBlock>(); }, "Raspberry Gpio");
     #endif
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<ToggleButtonBlock>>(); }, "interactive");
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<SliderPwm>>(); }, "interactive");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<SignalSwitcher>>(); }, "interactive");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<FlowSwitch>>(); }, "interactive");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockJoyPad>>(); }, "interactive");
+    creator->registerNodeCreator([](){ return std::make_shared<ToggleButtonBlock>(); }, "interactive");
+    creator->registerNodeCreator([](){ return std::make_shared<SliderPwm>(); }, "interactive");
+    creator->registerNodeCreator([]() { return std::make_shared<SignalSwitcher>(); }, "interactive");
+    creator->registerNodeCreator([]() { return std::make_shared<FlowSwitch>(); }, "interactive");
+    creator->registerNodeCreator([]() { return std::make_shared<BlockJoyPad>(); }, "interactive");
 
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<NotOperator>>(); }, "logic");
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<AndOperator>>(); }, "logic");
-    creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<OrOperator>>(); }, "logic");
+    creator->registerNodeCreator([](){ return std::make_shared<NotOperator>(); }, "logic");
+    creator->registerNodeCreator([](){ return std::make_shared<AndOperator>(); }, "logic");
+    creator->registerNodeCreator([](){ return std::make_shared<OrOperator>(); }, "logic");
 
     return creator;
 }

@@ -56,6 +56,9 @@ namespace mico{
             /// Return if the block is configurable.
             bool isConfigurable() override { return true; };
 
+            /// Method to check if the block has auto running callback
+            bool hasRunLoop() const override  { return true; };
+
             /// Returns a brief description of the block
             std::string description() const override {return    "Stream a timer. Resolution is in seconds"
                                                                 "   - Outputs: Time counter\n";};

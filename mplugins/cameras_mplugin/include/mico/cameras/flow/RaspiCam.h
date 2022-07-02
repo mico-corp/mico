@@ -53,6 +53,9 @@ namespace mico{
             /// Return if the block is configurable.
             bool isConfigurable() override { return true; };
 
+            /// Method to check if the block has auto running callback
+            bool hasRunLoop() const { return true; } override;
+
             /// Returns a brief description of the block
             std::string description() const override {return    "Streamer block that reads from usb ready cameras "
                                                                 "connected to the computer and streams its images.\n"

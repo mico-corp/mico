@@ -20,6 +20,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 #include <flow/flow.h>
+#include <flow/plugins/BlockPlugin.h>
 
 #include <mico/visualizers/flow/BlockImageVisualizer.h>
 #include <mico/visualizers/flow/BlockNumberVisualizer.h>
@@ -38,16 +39,16 @@ extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(fs::path _librar
     Persistency::setResourceDir(_libraryPath.parent_path().string() + "/resources");
     flow::PluginNodeCreator *creator = new flow::PluginNodeCreator;
 
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockNumberVisualizer > >(); },  "Visualizers");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockImageVisualizer > >(); },   "Visualizers");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockQCustomPlot > >(); },       "Visualizers");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockScatterPlot > >(); },       "Visualizers");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockFrequencyCounter > >(); }, "Visualizers");
-    creator->registerNodeCreator([]() { return std::make_unique<FlowVisualBlock<BlockHistogramVisualizer > >(); }, "Visualizers");
+    creator->registerNodeCreator([]() { return std::make_shared<BlockNumberVisualizer       >(); }, "Visualizers");
+    creator->registerNodeCreator([]() { return std::make_shared<BlockImageVisualizer        >(); }, "Visualizers");
+    creator->registerNodeCreator([]() { return std::make_shared<BlockQCustomPlot            >(); }, "Visualizers");
+    creator->registerNodeCreator([]() { return std::make_shared<BlockScatterPlot            >(); }, "Visualizers");
+    creator->registerNodeCreator([]() { return std::make_shared<BlockFrequencyCounter       >(); }, "Visualizers");
+    creator->registerNodeCreator([]() { return std::make_shared<BlockHistogramVisualizer    >(); }, "Visualizers");
 
     #ifdef HAS_MICO_SLAM
-        creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockPointCloudVisualizer> >(); }, "Visualizers");
-        creator->registerNodeCreator([](){ return std::make_unique<FlowVisualBlock<BlockSceneVisualizer> >(); }, "Visualizers");
+        creator->registerNodeCreator([](){ return std::make_shared<BlockPointCloudVisualizer    >(); }, "Visualizers");
+        creator->registerNodeCreator([](){ return std::make_shared<BlockSceneVisualizer         >(); }, "Visualizers");
     #endif
     
     return creator;
