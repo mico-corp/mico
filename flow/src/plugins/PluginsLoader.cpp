@@ -52,6 +52,9 @@ namespace flow {
     }
 
     PluginNodeCreator::ListCreators PluginsLoader::parseLibrary(const std::string& _path){
+        if (_path.find("dll") == std::string::npos) return {};
+        if (_path.find("mico-") == std::string::npos) return {};
+
         void *handle = getHandle(_path);
         if (handle) {
             auto creator = retrieveFactoryBlocks(_path, handle);
@@ -76,8 +79,6 @@ namespace flow {
     }
 
     void* PluginsLoader::getHandle(const std::string &_mpluginPath){
-        if (_mpluginPath.find("mico") == std::string::npos) return nullptr;
-
         void* hndl = dlopen(_mpluginPath.c_str(), RTLD_NOW);
         if (hndl) {
             dlerror();

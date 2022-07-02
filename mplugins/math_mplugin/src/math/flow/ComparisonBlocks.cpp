@@ -46,6 +46,9 @@ namespace mico {
 
 
         bool ComparisonBlock::configure(std::vector<flow::ConfigParameterDef> _params) {
+            if (_params.size() != 1) return false;
+            if (_params[0].type_ != flow::ConfigParameterDef::eParameterType::OPTIONS) return false;
+
             std::string param = _params[0].selectedOption();
             if (param == "A==B") {
                 fn_ = [](float a, float b) {return a == b; };

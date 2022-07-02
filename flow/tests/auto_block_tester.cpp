@@ -21,11 +21,68 @@
 
 #include <flow/plugins/PluginsLoader.h>
 
-int main() {
+#include <QApplication> // 666 TODO Remove this in the future
 
-	flow::PluginsLoader pl;
+#include <gtest/gtest.h>
 
-	auto creators = pl.parseFolder("");
+#if defined(_MSC_VER)
+	#include <Windows.h>
+#endif
+
+using namespace flow;
+
+std::filesystem::path getExePath() {
+	#if defined(_MSC_VER)
+		wchar_t path[FILENAME_MAX] = { 0 };
+		GetModuleFileNameW(nullptr, path, FILENAME_MAX);
+		return std::filesystem::path(path);
+	#else
+		char path[FILENAME_MAX];
+		ssize_t count = readlink("/proc/self/exe", path, FILENAME_MAX);
+		return std::filesystem::path(std::string(path, (count > 0) ? count : 0));
+	#endif
+}
+
+class CreatorsHolder {
+public:
+	CreatorsHolder() {
+		PluginsLoader pl;
+
+		fs::path exeDir = getExePath();
+		fs::path binDir = exeDir.parent_path();
+
+		// load all creators.
+		creators_ = pl.parseFolder(binDir.string());
+	}
+
+	PluginNodeCreator::ListCreators creators_;
+};
+
+static CreatorsHolder creatorsHolder = CreatorsHolder();
+
+// Try to create all the blocks. None of the constructors should crash, neither their configuration with empty values.
+TEST(create_blocks, create_blocks) {
+	
+	for (auto& [tag, creator] : creatorsHolder.creators_) {
+		std::cout << "---------------------------------------------------------------------" << std::endl;
+
+		// Create block
+		auto block = creator();
+		std::cout << "Testing construction and configuration of block: " << block->name() << std::endl;
+
+		// Configure with bad values
+		EXPECT_NO_THROW(block->configure({}));
+
+		// Get default parameters
+		auto defaultParameters = block->parameters();
+		EXPECT_NO_THROW(block->configure(defaultParameters));
+	}
+}
 
 
+int main(int _argc, char** _argv) {
+	QApplication app(_argc, _argv);
+
+	testing::InitGoogleTest(&_argc, _argv);
+	return RUN_ALL_TESTS();
 }
