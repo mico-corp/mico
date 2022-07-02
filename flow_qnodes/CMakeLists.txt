@@ -72,11 +72,6 @@ target_link_libraries(${PROJECT_NAME} LINK_PUBLIC Boost::boost
                                                   Boost::program_options 
                                                   Boost::exception)
 
-if(WIN32)
-    find_package(dlfcn-win32 REQUIRED)
-    target_link_libraries(${PROJECT_NAME} LINK_PUBLIC dlfcn-win32::dl)
-endif()
-
 
 target_compile_definitions(${PROJECT_NAME}
   PUBLIC

@@ -25,3 +25,10 @@ target_link_libraries(policy_stream LINK_PRIVATE flow)
 target_link_libraries(policy_stream PRIVATE GTest::gmock GTest::gtest GTest::gmock_main GTest::gtest_main)
 add_test(test_policy_stream policy_stream)
 
+
+
+add_executable(auto_block_tester auto_block_tester.cpp)
+target_link_libraries(auto_block_tester LINK_PRIVATE flow)
+target_link_libraries(auto_block_tester PRIVATE GTest::gmock GTest::gtest GTest::gmock_main GTest::gtest_main)
+add_test(test_auto_block_tester auto_block_tester)
+

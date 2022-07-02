@@ -25,6 +25,8 @@
 
 #include <flow/flow.h>
 #include <flow/plugins/BlockPlugin.h>
+#include <flow/plugins/PluginsLoader.h>
+
 #include <flow/qnodes/FlowVisualInterface.h>
 #include <flow/qnodes/blocks/FlowVisualBlock.h>
 #include <flow/qnodes/code_generation/CodeGenerator.h>
@@ -57,17 +59,9 @@
 
 #ifdef linux
     #include <X11/Xlib.h>   
-    #include <dlfcn.h>
 #endif
 
-#ifdef _WIN32
-    #include <windows.h>
-    #include <dlfcn.h>
-#endif
-
-#include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
-
 namespace po = boost::program_options;
 
 using QtNodes::FlowView;
@@ -238,20 +232,6 @@ namespace flow{
         return registry;
     }
 
-    struct PathLeafString {
-        std::string operator()(const boost::filesystem::directory_entry& entry) const {
-            return entry.path().string();
-        }
-    };
-
-    void readDirectory(const std::string& name, std::vector<std::string>& v) {
-        boost::filesystem::path p(name);
-        if(boost::filesystem::exists(p)){
-            boost::filesystem::directory_iterator start(p);
-            boost::filesystem::directory_iterator end;
-            std::transform(start, end, std::back_inserter(v), PathLeafString());
-        }
-    }
 
     void FlowVisualInterface::loadCustomPlugins(std::shared_ptr<QtNodes::DataModelRegistry> &_registry){
         // List plugins in default folder
@@ -265,61 +245,32 @@ namespace flow{
             hintsDirectories.push_back("C:\\Program Files\\mico-corp\\mico\\bin\\mplugins");
             hintsDirectories.push_back("C:\\Program Files (x86)\\mico-corp\\mico\\bin\\mplugins");
         #endif
-        for(const auto &hint: hintsDirectories){
-            std::vector<std::string> filesDir;
-            readDirectory(hint, filesDir);
-            if(filesDir.size() > 0){
-                files.insert(files.end(), filesDir.begin(), filesDir.end());
-            }
 
+        PluginsLoader pl;
+        PluginNodeCreator::ListCreators listCreators;
+        for(const auto &hint: hintsDirectories){
+            auto tmpList = pl.parseFolder(hint);
+            listCreators.insert(listCreators.end(), tmpList.end(), tmpList.end());
         }
 
         if (files.size() == 0) {
-            files = queryOtherPlugingDir();
+             auto dirPlugins = queryOtherPlugingDir();
+             auto tmpList = pl.parseFolder(dirPlugins);
+             listCreators.insert(listCreators.end(), tmpList.begin(), tmpList.end());
         }
 
-        // Iterate over file
-        for(auto file:files){
-            if(file.find("mico") == std::string::npos)
-                continue;
 
-            // Load blocks registered
-            void *hndl = dlopen(file.c_str(), RTLD_NOW);
-            if(hndl == nullptr){
-                std::cerr << "[Warning]: " <<  dlerror() << std::endl;
-            }else{
-                dlerror();
+        for(auto &[tag, blockCreator] : listCreators) {
+            auto visualBlockCreator = std::bind([](PluginNodeCreator::RegistryItemCreator _creator) {
+                return std::make_unique<FlowVisualBlock>(_creator());
+                }, blockCreator);
 
-                typedef PluginNodeCreator* (*Factory)(fs::path);
-                void *mkr = dlsym(hndl, "factory");
-                if(mkr == nullptr){
-                    std::cerr << "[Warning] Pluging " << file << " does not have factory" << std::endl;
-                    std::cerr << "[Warning]: " << dlerror() << std::endl;
-                    continue;
-                }
-
-                Factory factory = (Factory) mkr;
-
-                const char *dlsym_error = dlerror();    
-                if (dlsym_error) {
-                    std::cerr << "[Warning] Cannot load symbol 'factory': " << dlsym_error <<            '\n';
-                }
-
-                PluginNodeCreator* nodeCreators = factory(file);
-                auto listOfNodeCreators = nodeCreators->get();
-                for(auto &[tag, blockCreator] : listOfNodeCreators) {
-                    auto visualBlockCreator = std::bind([](PluginNodeCreator::RegistryItemCreator _creator) {
-                        return std::make_unique<FlowVisualBlock>(_creator());
-                        }, blockCreator);
-
-                    _registry->registerModel<NodeDataModel>(visualBlockCreator, tag.c_str());
-                }
-            }
+            _registry->registerModel<NodeDataModel>(visualBlockCreator, tag.c_str());
         }
         
     }
 
-    std::vector<std::string> FlowVisualInterface::queryOtherPlugingDir(){
+    std::string FlowVisualInterface::queryOtherPlugingDir(){
         QDialog dialog;
         auto layout = new QVBoxLayout(&dialog);
         dialog.setLayout(layout);
@@ -355,10 +306,9 @@ namespace flow{
         dialog.exec();
         std::vector<std::string> files;
         if (dir.text().toStdString() != "") {
-            readDirectory(dir.text().toStdString(), files);
             Persistency::setResourceDir(dir.text().toStdString() + "/resources");
         }
-        return files;
+        return dir.text().toStdString();
     }
 
     void FlowVisualInterface::configureAll() {

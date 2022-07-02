@@ -19,29 +19,39 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------------------------------------
 
+#ifndef FLOW_PLUGINS_PLUGINSLOADER_H_
+#define FLOW_PLUGINS_PLUGINSLOADER_H_
 
-#ifndef FLOW_PLUGINS_BLOCKPLUGIN_H_
-#define FLOW_PLUGINS_BLOCKPLUGIN_H_
+#include <flow/Export.h>
+#include <flow/plugins/BlockPlugin.h>
 
-#include <flow/Block.h>
 
-namespace flow{
+namespace flow {
 
-    class PluginNodeCreator{
-    public:
-        using RegistryItemPtr       = std::shared_ptr<flow::Block>;
-        using RegistryItemCreator   = std::function<RegistryItemPtr()>;
-        using ListCreators          = std::vector<std::pair<std::string, RegistryItemCreator>>;
+	class FLOW_DECL PluginsLoader {
+	public:
+		/// <summary>
+		/// List all files in a folder and identify the ones that are dynamic libraries and try to load block plugins from them.
+		/// </summary>
+		/// <param name="_path"></param>
+		/// <returns></returns>
+		PluginNodeCreator::ListCreators parseFolder(const std::string& _path);
 
-        void registerNodeCreator(RegistryItemCreator _fn, std::string _category = "Plugin"){
-            creatorFun_.push_back({_category, _fn});
-        }
+		/// <summary>
+		/// Tries to open the library from given path and load all the block creators.
+		/// </summary>
+		/// <param name="_path"></param>
+		/// <returns></returns>
+		PluginNodeCreator::ListCreators parseLibrary(const std::string& _path);
 
-        ListCreators get() { return creatorFun_; };
+	private:
+		void readDirectory(const std::string& _path, std::vector<std::string>& _files);
+		void* getHandle(const std::string& _mpluginPath);
+		PluginNodeCreator* retrieveFactoryBlocks(const std::string& _path, void* _handle);
 
-    private:
-        ListCreators creatorFun_;
-    };
+	};
+
 }
+
 
 #endif

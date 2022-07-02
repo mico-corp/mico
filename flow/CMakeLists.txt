@@ -39,9 +39,10 @@ option(BUILD_TESTS      "Prepare tests"                 ON)
 ##################################################
 file(GLOB_RECURSE FLOW_HEADERS "./include/*.h" "./include/*.inl")
 file(GLOB_RECURSE FLOW_SOURCES "./src/*.cpp")
+
 find_package(Qt5 REQUIRED COMPONENTS Core Widgets Gui)
 
-add_library(${PROJECT_NAME}  ${LIBRARY_MODE} ${FLOW_HEADERS} ${FLOW_SOURCES})
+add_library(${PROJECT_NAME} ${LIBRARY_MODE} ${FLOW_HEADERS} ${FLOW_SOURCES})
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
@@ -72,6 +73,11 @@ target_compile_definitions(${PROJECT_NAME}
   PRIVATE
     FLOW_EXPORTS
 )
+
+if(WIN32)
+    find_package(dlfcn-win32 REQUIRED)
+    target_link_libraries(${PROJECT_NAME} LINK_PUBLIC dlfcn-win32::dl)
+endif()
 
 
 ##################################################
