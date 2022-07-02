@@ -51,8 +51,8 @@ namespace mico {
             ~BlockFrequencyCounter();
 
             /// Retreive icon of block    
-            QIcon icon() const override {
-                return QIcon((flow::Persistency::resourceDir() / "visualizers" / "block_frequency_counter.svg").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir() / "visualizers" / "block_frequency_counter.svg").string();
             }
 
             /// Returns a brief description of the block

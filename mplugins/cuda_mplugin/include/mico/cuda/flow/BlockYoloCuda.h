@@ -46,8 +46,8 @@ namespace mico{
             BlockYoloCuda();
 
             /// Retreive icon of block    
-            QIcon icon() const override {
-                return QIcon((flow::Persistency::resourceDir() / "cuda" / "block_yolo_cuda.svg").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir() / "cuda" / "block_yolo_cuda.svg").string();
             }
             
             /// Return if the block is configurable.

@@ -57,8 +57,8 @@ namespace mico{
             BlockPoseGenerator();
 
             /// Retreive icon of block    
-            QIcon icon() const override {
-                return QIcon((flow::Persistency::resourceDir() / "ar" / "block_transform_generator.svg").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir() / "ar" / "block_transform_generator.svg").string();
             }
 
             /// Configure block with given parameters.

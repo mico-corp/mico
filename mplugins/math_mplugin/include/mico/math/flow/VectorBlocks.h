@@ -38,8 +38,8 @@ namespace mico{
             std::string name() const override {return "Vector Norm";}        
             
             /// Retreive icon of block    
-            QIcon icon() const override { 
-                return QIcon((flow::Persistency::resourceDir()/"math"/"vector_norm.svg").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir()/"math"/"vector_norm.svg").string();
             }
 
             /// Base constructor
@@ -63,8 +63,8 @@ namespace mico{
             std::string name() const override { return "Element-wise Op"; }
 
             /// Retreive icon of block    
-            QIcon icon() const override { 
-                return QIcon((flow::Persistency::resourceDir()/"math"/"vector_element_wise_operation.svg").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir()/"math"/"vector_element_wise_operation.svg").string();
             }
 
             /// Base constructor

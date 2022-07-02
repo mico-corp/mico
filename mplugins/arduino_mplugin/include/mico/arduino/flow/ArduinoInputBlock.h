@@ -49,8 +49,8 @@ namespace mico{
             std::string name() const override {return "Arduino Input";} 
 
             /// Retreive icon of block    
-            QIcon icon() const override { 
-                return QIcon((flow::Persistency::resourceDir()/"arduino"/"arduino_input.png").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir()/"arduino"/"arduino_input.png").string();
             }
 
             /// Base constructor

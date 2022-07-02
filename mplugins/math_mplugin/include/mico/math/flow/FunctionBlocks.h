@@ -40,8 +40,8 @@ namespace mico{
             /// Get name of block
             std::string name() const override {return "Timer";}     
             /// Retreive icon of block    
-            QIcon icon() const override { 
-                return QIcon((flow::Persistency::resourceDir()/"math"/"timer-symbol.svg").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir()/"math"/"timer-symbol.svg").string();
             }
 
             
@@ -81,8 +81,8 @@ namespace mico{
             std::string name() const override {return "Sine";}   
 
             /// Retreive icon of block    
-            QIcon icon() const override { 
-                return QIcon((flow::Persistency::resourceDir()/"math"/"sine-symbol.svg").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir()/"math"/"sine-symbol.svg").string();
             }
             
             /// Base constructor
@@ -116,8 +116,8 @@ namespace mico{
             /// Get name of block
             std::string name() const override {return "Cosine";}   
             /// Retreive icon of block    
-            QIcon icon() const override { 
-                return QIcon((flow::Persistency::resourceDir()/"math"/"cosine-symbol.svg").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir()/"math"/"cosine-symbol.svg").string();
             }
             
             BlockCosine();

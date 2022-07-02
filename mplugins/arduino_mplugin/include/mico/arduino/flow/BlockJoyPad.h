@@ -49,8 +49,8 @@ namespace mico{
             QWidget * customWidget() override;
 
             /// Retreive icon of block    
-            QIcon icon() const override {
-                return QIcon((flow::Persistency::resourceDir() / "arduino" / "block_joypad.svg").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir() / "arduino" / "block_joypad.svg").string();
             }
 
             /// Base constructor

@@ -36,7 +36,7 @@ namespace mico{
 
 
         void BlockDFT::computeDFT(std::vector<float> _signal) {
-            const int numPoints = _signal.size();
+            const size_t numPoints = _signal.size();
             if (!numPoints) return;
 
             if (getPipe("dft")->registrations()) {

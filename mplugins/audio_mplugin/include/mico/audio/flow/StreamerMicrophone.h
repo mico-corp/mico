@@ -43,8 +43,8 @@ namespace mico{
             std::string name() const override {return "Streamer Microphone";}     
             
             /// Retreive icon of block    
-            QIcon icon() const override { 
-                return QIcon((flow::Persistency::resourceDir() / "audio" / "icon_microphone.png").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir() / "audio" / "icon_microphone.png").string();
             }
             
             /// Base constructor

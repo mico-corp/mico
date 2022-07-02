@@ -44,8 +44,8 @@ namespace mico{
             std::string name() const override {return "Speakers";}     
             
             /// Retreive icon of block    
-            QIcon icon() const override { 
-                return QIcon((flow::Persistency::resourceDir() / "audio" / "icon_speaker.png").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir() / "audio" / "icon_speaker.png").string();
             }
             
             /// Base constructor

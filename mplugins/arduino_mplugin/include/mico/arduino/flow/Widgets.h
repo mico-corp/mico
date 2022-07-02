@@ -52,8 +52,8 @@ namespace mico{
             QWidget * customWidget() override;
 
             /// Retreive icon of block    
-            QIcon icon() const override {
-                return QIcon((flow::Persistency::resourceDir() / "arduino" / "block_toggle.svg").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir() / "arduino" / "block_toggle.svg").string();
             }
 
             
@@ -90,8 +90,8 @@ namespace mico{
             QWidget* customWidget() override;
 
             /// Retreive icon of block    
-            QIcon icon() const override {
-                return QIcon((flow::Persistency::resourceDir() / "arduino" / "block_slider.svg").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir() / "arduino" / "block_slider.svg").string();
             }
 
             /// Return if the block is configurable.
@@ -127,8 +127,8 @@ namespace mico{
             QWidget* customWidget() override;
 
             /// Retreive icon of block    
-            QIcon icon() const override {
-                return QIcon((flow::Persistency::resourceDir() / "arduino" / "switch_A.png").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir() / "arduino" / "switch_A.png").string();
             }
 
             /// Return if the block is configurable.
@@ -168,8 +168,8 @@ namespace mico{
             QWidget* customWidget() override;
 
             /// Retreive icon of block    
-            QIcon icon() const override {
-                return QIcon((flow::Persistency::resourceDir() / "arduino" / "switch_off.png").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir() / "arduino" / "switch_off.png").string();
             }
 
             /// Return if the block is configurable.
@@ -205,8 +205,8 @@ namespace mico{
 
 
             /// Retreive icon of block    
-            QIcon icon() const override {
-                return QIcon((flow::Persistency::resourceDir() / "arduino" / "block_not.svg").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir() / "arduino" / "block_not.svg").string();
             }
 
             /// Get name of block
@@ -241,8 +241,8 @@ namespace mico{
             }
 
             /// Retreive icon of block    
-            QIcon icon() const override {
-                return QIcon((flow::Persistency::resourceDir() / "arduino" / "block_and.svg").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir() / "arduino" / "block_and.svg").string();
             }
 
             /// Get name of block
@@ -276,8 +276,8 @@ namespace mico{
             }
 
             /// Retreive icon of block    
-            QIcon icon() const override {
-                return QIcon((flow::Persistency::resourceDir() / "arduino" / "block_or.svg").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir() / "arduino" / "block_or.svg").string();
             }
 
             /// Get name of block

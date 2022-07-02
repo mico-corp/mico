@@ -43,8 +43,8 @@ namespace mico{
             std::string name() const override {return "DFT";}     
             
             /// Retreive icon of block    
-            QIcon icon() const override { 
-                return QIcon((flow::Persistency::resourceDir() / "audio" / "icon_fft.svg").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir() / "audio" / "icon_fft.svg").string();
             }
             
             /// Base constructor
@@ -61,7 +61,7 @@ namespace mico{
 
         private:
             std::vector<float> bufferData_;
-            float silenceThreshold_ = 0.02;
+            float silenceThreshold_ = 0.02f;
             int silenceSamples_ = 100;
             int samplesCounter_ = 0;
             bool isRecording_ = false;

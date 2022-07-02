@@ -90,8 +90,8 @@ namespace mico{
             ~BlockFaceFeatures();
 
             /// Retreive icon of block    
-            QIcon icon() const override {
-                return QIcon((flow::Persistency::resourceDir() / "ml" / "block_face_features.png").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir() / "ml" / "block_face_features.png").string();
             }
             
             /// Return if the block is configurable.

@@ -57,8 +57,8 @@ namespace mico{
             ~BlockHaarCascade();
 
             /// Retreive icon of block    
-            QIcon icon() const override {
-                return QIcon((flow::Persistency::resourceDir() / "ml" / "block_haar_cascade.svg").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir() / "ml" / "block_haar_cascade.svg").string();
             }
 
             /// Configure block with given parameters.

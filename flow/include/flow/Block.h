@@ -134,8 +134,8 @@ namespace flow{
         /// Returns a brief description of the block
         virtual std::string description() const {return "Flow block without description";};
 
-        /// Virtual method. Retrieve icon of block. By default, the icon is a question mark.
-        virtual QIcon icon() const { return QIcon((Persistency::resourceDir()/"question.svg").string().c_str()); };
+        /// Virtual method. Retrieve path to the icon of the block. By default empty.
+        virtual std::string icon() const { return ""; };
 
         /// Get specific parameter from list of parameter by name.
         std::optional<ConfigParameterDef> getParamByName(const std::vector<flow::ConfigParameterDef> &_params, const std::string &_pname);

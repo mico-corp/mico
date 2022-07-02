@@ -53,8 +53,8 @@ namespace mico{
             std::string name() const override {return "Streamer Webcam";}     
             
             /// Retreive icon of block    
-            QIcon icon() const override { 
-                return QIcon((flow::Persistency::resourceDir() / "cameras"/"webcam_icon.svg").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir() / "cameras"/"webcam_icon.svg").string();
             }
             
             /// Base constructor

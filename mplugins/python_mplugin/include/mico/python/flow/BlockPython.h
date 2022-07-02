@@ -54,8 +54,8 @@ namespace mico{
             std::string name() const override {return "Python";}
             
             /// Retreive icon of block    
-            QIcon icon() const override { 
-                return QIcon((flow::Persistency::resourceDir()/"python"/"Python.png").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir()/"python"/"Python.png").string();
             }
 
             /// Base constructor

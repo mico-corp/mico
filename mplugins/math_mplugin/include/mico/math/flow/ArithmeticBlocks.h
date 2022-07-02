@@ -38,8 +38,8 @@ namespace mico{
             std::string name() const override {return "Sum";}        
             
             /// Retreive icon of block    
-            QIcon icon() const override { 
-                return QIcon((flow::Persistency::resourceDir()/"math"/"plus-positive-add-mathematical-symbol.svg").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir()/"math"/"plus-positive-add-mathematical-symbol.svg").string();
             }
 
             /// Base constructor
@@ -62,8 +62,8 @@ namespace mico{
             std::string name() const override {return "Substract";}  
             
             /// Retreive icon of block    
-            QIcon icon() const override { 
-                return QIcon((flow::Persistency::resourceDir()/"math"/"minus-sign.svg").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir()/"math"/"minus-sign.svg").string();
             }      
 
             // Base constructor
@@ -87,8 +87,8 @@ namespace mico{
             std::string name() const override {return "Multiply";}  
             
             /// Retreive icon of block    
-            QIcon icon() const override { 
-                return QIcon((flow::Persistency::resourceDir()/"math"/"multiply-mathematical-sign.svg").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir()/"math"/"multiply-mathematical-sign.svg").string();
             }     
 
             /// Base constructor 
@@ -112,8 +112,8 @@ namespace mico{
             std::string name() const override {return "Divide";}      
             
             /// Retreive icon of block    
-            QIcon icon() const override { 
-                return QIcon((flow::Persistency::resourceDir()/"math"/"divide-mathematical-sign.svg").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir()/"math"/"divide-mathematical-sign.svg").string();
             }         
 
             /// Base constructor
@@ -137,8 +137,8 @@ namespace mico{
             std::string name() const override {return "sqrt";}    
 
             /// Retreive icon of block    
-            QIcon icon() const override { 
-                return QIcon((flow::Persistency::resourceDir()/"math"/"square-root-mathematical-symbol.svg").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir()/"math"/"square-root-mathematical-symbol.svg").string();
             }
 
             /// Base constructor
@@ -162,8 +162,8 @@ namespace mico{
             std::string name() const override {return "Pow";}    
 
             /// Retreive icon of block    
-            QIcon icon() const override { 
-                return QIcon((flow::Persistency::resourceDir()/"math"/"pow-symbol.svg").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir()/"math"/"pow-symbol.svg").string();
             }
             /// Base constructor
             BlockPow();
@@ -188,8 +188,8 @@ namespace mico{
             BlockIntegrator();
 
             /// Retreive icon of block    
-            QIcon icon() const override {
-                return QIcon((flow::Persistency::resourceDir() / "math" / "integral_block_icon.svg").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir() / "math" / "integral_block_icon.svg").string();
             }
 
             /// Return if the block is configurable.
@@ -221,8 +221,8 @@ namespace mico{
         BlockDerivative();
 
         /// Retreive icon of block    
-        QIcon icon() const override {
-            return QIcon((flow::Persistency::resourceDir() / "math" / "derivative_block_icon.svg").string().c_str());
+        std::string icon() const override {
+            return (flow::Persistency::resourceDir() / "math" / "derivative_block_icon.svg").string();
         }
 
         /// Return if the block is configurable.

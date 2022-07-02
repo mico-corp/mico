@@ -36,9 +36,10 @@ namespace mico{
         public:
             /// Get name of block
             std::string name() const override {return "RaspiCam";}     
+            
             /// Retreive icon of block    
-                virtual QIcon icon() const override { 
-                return QIcon((flow::Persistency::resourceDir() / "cameras"/"webcam_icon.svg").string().c_str());
+            virtual std::string icon() const override {
+                return (flow::Persistency::resourceDir() / "cameras"/"webcam_icon.svg").string();
             }
             
             /// Base constructor

@@ -34,8 +34,8 @@ namespace fastcom_wrapper{
         };
         
 		/// Retreive icon of block    
-        QIcon icon() const override { 
-            return QIcon((flow::Persistency::resourceDir() + "fastcom/fastcom_logo.png").c_str());
+        std::string icon() const override {
+            return (flow::Persistency::resourceDir() + "fastcom/fastcom_logo.png");
         }
 
         std::string name() const override {  return Trait_::blockName(); }

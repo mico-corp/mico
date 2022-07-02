@@ -47,6 +47,7 @@ add_mplugin(    PLUGIN_NAME ${PLUGIN_NAME}
                 PLUGIN_SOURCES ${MICO_SIMULATION_SOURCE_FILES}
 				PLUGIN_HEADERS  ${MICO_SIMULATION_HEADER_FILES} 
 				MICO_DEPS core
+				HAS_RESOURCES
 				)
 
 ##################################################

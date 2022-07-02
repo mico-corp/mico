@@ -40,8 +40,8 @@ namespace mico{
             BlockFirstOrderSystem();
 
             /// Retreive icon of block    
-            QIcon icon() const override {
-                return QIcon((flow::Persistency::resourceDir() / "simulation" / "block_first_order_system.svg").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir() / "simulation" / "block_first_order_system.svg").string();
             }
 
             /// Configure block with given parameters.

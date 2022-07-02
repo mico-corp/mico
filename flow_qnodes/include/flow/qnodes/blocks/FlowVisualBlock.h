@@ -38,6 +38,7 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QToolButton>
+#include <QStyle>
 
 #include <iostream>
 
@@ -87,7 +88,14 @@ namespace flow{
 
         QString description() const override {return flowBlock_->description().c_str();};
     
-        QIcon icon() const override { return flowBlock_->icon();};
+        QIcon icon() const override { 
+            if (flowBlock_->icon() == "") {
+                return QApplication::style()->standardIcon(QStyle::SP_MessageBoxQuestion);
+            } else {
+                return QIcon(flowBlock_->icon().c_str());
+
+            }
+        };
 
         QBoxLayout * creationWidget() const override { return flowBlock_->creationWidget();};
 

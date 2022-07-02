@@ -42,8 +42,8 @@ namespace mico{
             BlockPid();
 
             /// Retreive icon of block    
-            QIcon icon() const override {
-                return QIcon((flow::Persistency::resourceDir() / "robotics" / "pid.svg").string().c_str());
+            std::string icon() const override {
+                return (flow::Persistency::resourceDir() / "robotics" / "pid.svg").string();
             }
 
             /// Configure block with given parameters.
