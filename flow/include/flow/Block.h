@@ -46,7 +46,7 @@
 
 namespace flow{
 
-    struct ConfigParameterDef {
+    struct FLOW_DECL ConfigParameterDef {
         enum class eParameterType { BOOLEAN, INTEGER, DECIMAL, STRING, PATH, OPTIONS };
         std::string name_;
         eParameterType type_;
@@ -59,6 +59,8 @@ namespace flow{
         fs::path                 asPath()           const { assert(type_ == eParameterType::PATH);    return boost::any_cast<fs::path>(value_); };
         std::vector<std::string> asOptions()        const { assert(type_ == eParameterType::OPTIONS); return boost::any_cast<std::vector<std::string>>(value_); };
         std::string              selectedOption()   const { assert(type_ == eParameterType::OPTIONS); return selectedOption_; };
+
+        std::string serialize();
     };
 
     

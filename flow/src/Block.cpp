@@ -25,6 +25,61 @@
 #include <cassert>
 
 namespace flow{
+
+
+    std::string ConfigParameterDef::serialize() {
+        std::string serialization = "{" + name_ + "," ;
+
+        switch (type_)
+        {
+        case flow::ConfigParameterDef::eParameterType::BOOLEAN:
+        {
+            bool value = boost::any_cast<bool>(value_);
+            serialization += "boolean," + std::string(value? "true":"false");
+            break;
+        }
+        case flow::ConfigParameterDef::eParameterType::INTEGER:
+        {
+            int value = boost::any_cast<int>(value_);
+            serialization += "integer,"+std::to_string(value);
+            break;
+        }
+        case flow::ConfigParameterDef::eParameterType::DECIMAL:
+        {
+            float value = boost::any_cast<float>(value_);
+            serialization += "decimal,"+std::to_string(value);
+            break;
+        }
+        case flow::ConfigParameterDef::eParameterType::STRING:
+        {
+            std::string value = boost::any_cast<std::string>(value_);
+            serialization += "string,"+value;
+            break;
+        }
+        case flow::ConfigParameterDef::eParameterType::PATH:
+        {
+            fs::path value = boost::any_cast<fs::path>(value_);
+            serialization += "path,"+value.string();
+            break;
+        }
+        case flow::ConfigParameterDef::eParameterType::OPTIONS:
+        {
+            serialization += "options,[";
+            auto options = boost::any_cast<std::vector<std::string>>(value_);;
+            for (auto& str : options) {
+                serialization += str + ",";
+            }
+            serialization.pop_back();
+            serialization += "]";
+            break;
+        }
+        default:
+            break;
+        }
+        serialization += "}";
+        return serialization;
+    }
+
     // BASE METHODS
     Block::~Block(){
         this->stop();

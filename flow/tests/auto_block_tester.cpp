@@ -23,6 +23,8 @@
 
 #include <QApplication> // 666 TODO Remove this in the future
 
+#include <random>
+
 #include <gtest/gtest.h>
 
 #if defined(_MSC_VER)
@@ -60,6 +62,55 @@ public:
 
 static CreatorsHolder creatorsHolder = CreatorsHolder();
 
+std::random_device rd; // obtain a random number from hardware
+std::mt19937 gen(rd()); // seed the generator
+std::uniform_int_distribution<int> distr(0, 6); // define the range
+
+void randomizeParameter(flow::ConfigParameterDef &_param) {
+	switch (distr(gen)) {
+	case 0: // set as bool
+		_param.type_ = flow::ConfigParameterDef::eParameterType::BOOLEAN;
+		_param.value_ = rand() & 2;
+		break;
+	case 1: // set as decimal
+		_param.type_ = flow::ConfigParameterDef::eParameterType::DECIMAL;
+		_param.value_ = float(rand())/rand();
+		break;
+	case 2: // set as integer
+		_param.type_ = flow::ConfigParameterDef::eParameterType::INTEGER;
+		_param.value_ = rand();
+		break;
+	case 3: // set as options
+		_param.type_ = flow::ConfigParameterDef::eParameterType::OPTIONS;
+		_param.selectedOption_ = "";
+		for (int i = 0; i < rand() % 16; i++) {
+			_param.selectedOption_ += char(rand() % 60 + 50);
+		}
+		_param.value_ = _param.selectedOption_;
+		break;
+	case 4: // set as path
+	{
+		_param.type_ = flow::ConfigParameterDef::eParameterType::PATH;
+		std::string randomPath = "";
+		for (int i = 0; i < rand() % 50; i++) {
+			randomPath += char(rand() % 60 + 50);
+		}
+		_param.value_ = fs::path(randomPath);
+		break;
+	}
+	case 5: // set as string
+	{
+		_param.type_ = flow::ConfigParameterDef::eParameterType::STRING;
+		std::string randomStr = "";
+		for (int i = 0; i < rand() % 50; i++) {
+			randomStr += char(rand() % 60 + 50);
+		}
+		_param.value_ = randomStr;
+	}
+		break;
+	}
+}
+
 // Try to create all the blocks. None of the constructors should crash, neither their configuration with empty values.
 TEST(create_blocks, create_blocks) {
 	
@@ -76,10 +127,27 @@ TEST(create_blocks, create_blocks) {
 		std::cout << "---->  OK " << std::endl;
 
 		// Get default parameters
-		std::cout << "Configuration with default list of parameters ";
 		auto defaultParameters = block->parameters();
+		for (auto& param : defaultParameters) {
+			std::cout << "\t" + param.serialize() << std::endl;
+		}
+		std::cout << "Configuration with default list of parameters ";
+		std::cout.flush();
 		EXPECT_NO_THROW(block->configure(defaultParameters));
 		std::cout << "---->  OK " << std::endl;
+
+		// Initialize with random parameters. 10 times
+		for (unsigned i = 0; i < 5;i++) {
+			for (auto& param : defaultParameters) {
+				randomizeParameter(param);
+			}
+
+			for (auto& param : defaultParameters) {
+				std::cout << "\t" + param.serialize() << std::endl;
+			}
+			std::cout.flush();
+			EXPECT_NO_THROW(block->configure(defaultParameters));
+		}
 	}
 }
 
