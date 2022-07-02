@@ -21,18 +21,18 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 
-#include <flow/visual/data_types/StreamerPipeInfo.h>
+
+#include <flow/qnodes/blocks/FlowVisualBlock.h>
+#include <flow/qnodes/data_types/StreamerPipeInfo.h>
 #include <QJsonArray>
 #include <QIcon>
 #include <memory>
 
 namespace flow{
 
-    template<typename Block_, bool HasAutoLoop_>
-    inline FlowVisualBlock<Block_,HasAutoLoop_>::FlowVisualBlock() {
-        flowBlock_ = std::make_shared<Block_>();
+    FlowVisualBlock::FlowVisualBlock(std::shared_ptr<Block> _backend): flowBlock_(_backend) {
 
-        if(flowBlock_->customWidget() == nullptr && flowBlock_->isConfigurable() == 0 && !HasAutoLoop_){
+        if(flowBlock_->customWidget() == nullptr && flowBlock_->isConfigurable() == 0 && !flowBlock_->hasRunLoop()){
             configBox_ = nullptr;
             return;
         }
@@ -67,7 +67,7 @@ namespace flow{
         }
 
         // Autoloop button
-        if(HasAutoLoop_){
+        if(flowBlock_->hasRunLoop()){
             auto layout = new QHBoxLayout();
             configsLayout_->addLayout(layout);
             layout->addWidget(new QLabel("Run"),Qt::AlignLeft);
@@ -87,14 +87,14 @@ namespace flow{
 
     }
 
-    template<typename Block_, bool HasAutoLoop_>
-    inline FlowVisualBlock<Block_,HasAutoLoop_>::~FlowVisualBlock(){
+    
+    FlowVisualBlock::~FlowVisualBlock(){
 
     }
 
 
-    template<typename Block_, bool HasAutoLoop_>
-    inline QJsonObject FlowVisualBlock<Block_,HasAutoLoop_>::save() const{
+    
+    QJsonObject FlowVisualBlock::save() const{
         QJsonObject modelJson = NodeDataModel::save();
 
         unsigned counter = 0;
@@ -146,13 +146,13 @@ namespace flow{
         }
         modelJson["out_tags"] = jsonOutTags;
 
-        modelJson["autoloop"] = HasAutoLoop_;    
+        modelJson["autoloop"] = flowBlock_->hasRunLoop();
 
         return modelJson;
     }
  
-    template<typename Block_, bool HasAutoLoop_>
-    inline std::vector<flow::ConfigParameterDef> FlowVisualBlock<Block_,HasAutoLoop_>::extractParamsGui(){
+    
+    std::vector<flow::ConfigParameterDef> FlowVisualBlock::extractParamsGui(){
         std::vector<flow::ConfigParameterDef> params;
         int counter = 0; 
         for(auto &param: configParams_){
@@ -161,8 +161,8 @@ namespace flow{
         return params;
     }
 
-    template<typename Block_, bool HasAutoLoop_>
-    inline void FlowVisualBlock<Block_,HasAutoLoop_>::restore(QJsonObject const &_json) {
+    
+    void FlowVisualBlock::restore(QJsonObject const &_json) {
         
         unsigned counter = 0;
         for(auto &param: flowBlock_->parameters()){
@@ -197,8 +197,8 @@ namespace flow{
     }
 
 
-    template<typename Block_, bool HasAutoLoop_>
-    inline void FlowVisualBlock<Block_,HasAutoLoop_>::configure(){
+    
+    void FlowVisualBlock::configure(){
         if(flowBlock_->configure(this->extractParamsGui())){
             if(configButton_) 
                 configButton_->setIcon(QIcon((Persistency::resourceDir()/"check.svg").string().c_str()));
@@ -208,38 +208,38 @@ namespace flow{
         }
     }
 
-    template<typename Block_, bool HasAutoLoop_>
-    inline flow::Block * FlowVisualBlock<Block_,HasAutoLoop_>::internalBlock() const{
+    /*
+    flow::Block * FlowVisualBlock::internalBlock() const{
         return flowBlock_;
-    }
+    }*/
 
     
-    template<typename Block_, bool HasAutoLoop_>
-    inline void FlowVisualBlock<Block_,HasAutoLoop_>::run() {
-        if constexpr (HasAutoLoop_) {
+    
+    void FlowVisualBlock::run() {
+        if (flowBlock_->hasRunLoop()) {
             flowBlock_->start();
             streamActionButton_->setChecked(true);
         }
     }
 
-    template<typename Block_, bool HasAutoLoop_>
-    inline void FlowVisualBlock<Block_,HasAutoLoop_>::stop() {
-        if constexpr (HasAutoLoop_) {
+    
+    void FlowVisualBlock::stop() {
+        if (flowBlock_->hasRunLoop()) {
             flowBlock_->stop();
             streamActionButton_->setChecked(false);
         }
     }
 
-    template<typename Block_, bool HasAutoLoop_>
-    inline void FlowVisualBlock<Block_,HasAutoLoop_>::inputConnectionDeleted(Connection const&_conn) {
+    
+    void FlowVisualBlock::inputConnectionDeleted(Connection const&_conn) {
         // Unregister element in policy
         auto tag = flowBlock_->getPolicy()->inputTags()[_conn.getPortIndex(PortType::In)];
         flowBlock_->disconnect(tag);
         
     }
 
-    template<typename Block_, bool HasAutoLoop_>
-    inline unsigned int FlowVisualBlock<Block_,HasAutoLoop_>::nPorts(PortType portType) const {
+    
+    unsigned int FlowVisualBlock::nPorts(PortType portType) const {
         size_t result = 0;
 
         switch (portType) {
@@ -255,8 +255,8 @@ namespace flow{
         return static_cast<unsigned int>(result);
     }
 
-    template<typename Block_, bool HasAutoLoop_>
-    inline NodeDataType FlowVisualBlock<Block_,HasAutoLoop_>::dataType(PortType portType, PortIndex index) const {
+    
+    NodeDataType FlowVisualBlock::dataType(PortType portType, PortIndex index) const {
         std::vector<std::string> tags;
         if(portType == PortType::In){
             tags = flowBlock_->inputTags();
@@ -285,16 +285,16 @@ namespace flow{
         return NodeDataType{nullptr,tag.c_str()}; // Allowing connecting any with any.
     }
 
-    template<typename Block_, bool HasAutoLoop_>
-    inline std::shared_ptr<NodeData> FlowVisualBlock<Block_,HasAutoLoop_>::outData(PortIndex index) {
+    
+    std::shared_ptr<NodeData> FlowVisualBlock::outData(PortIndex index) {
         auto tag = flowBlock_->outputTags()[index];
         std::shared_ptr<StreamerPipeInfo> ptr(new StreamerPipeInfo(flowBlock_, tag));  // 666 TODO
         return ptr;
     }
 
 
-    template<typename Block_, bool HasAutoLoop_>
-    inline void FlowVisualBlock<Block_,HasAutoLoop_>::setInData(std::shared_ptr<NodeData> data, PortIndex port) {
+    
+    void FlowVisualBlock::setInData(std::shared_ptr<NodeData> data, PortIndex port) {
         // 666 Connections do not transfer data but streamers information to connect to internal block.
         if(data){
             auto pipeInfo = std::dynamic_pointer_cast<StreamerPipeInfo>(data)->info();

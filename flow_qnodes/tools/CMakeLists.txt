@@ -22,7 +22,7 @@
 
 add_executable(MICO flow_kids.cpp)
 target_include_directories(MICO PUBLIC ../include)
-target_link_libraries(MICO LINK_PUBLIC flow)
+target_link_libraries(MICO LINK_PUBLIC flow_qnodes)
 
 if(${BUILD_PYTHON})
     # 666 Ugly workaround to load dynamically numpy libraries. For some reason, it fails finding python when loading numpy. The error is common, but

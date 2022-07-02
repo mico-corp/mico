@@ -20,7 +20,7 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------------------------------------
 
-#include <flow/visual/blocks/ParameterWidget.h>
+#include <flow/qnodes/blocks/ParameterWidget.h>
 
 #include <QIntValidator>
 #include <QDoubleValidator>

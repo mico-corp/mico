@@ -1,7 +1,8 @@
 // FROM https://stackoverflow.com/questions/14780517/toggle-switch-in-qt/51023362
 
-#ifndef FLOW_BLOCKS_SWITCH_H_
-#define FLOW_BLOCKS_SWITCH_H_
+#ifndef FLOW_QNODES_BLOCKS_SWITCH_H_
+#define FLOW_QNODES_BLOCKS_SWITCH_H_
+
 #include <QtWidgets>
 
 #include <flow/Export.h>

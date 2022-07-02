@@ -23,7 +23,11 @@
 
 #ifdef HAS_QTNODEEDITOR
 
-#include <flow/visual/FlowVisualInterface.h>
+#include <flow/flow.h>
+#include <flow/plugins/BlockPlugin.h>
+#include <flow/qnodes/FlowVisualInterface.h>
+#include <flow/qnodes/blocks/FlowVisualBlock.h>
+#include <flow/qnodes/code_generation/CodeGenerator.h>
 
 #include <nodes/NodeData>
 #include <nodes/Node>
@@ -50,9 +54,6 @@
   #undef foreach
 #endif
 
-#include <flow/flow.h>
-#include <flow/visual/blocks/FlowVisualBlock.h>
-#include <flow/visual/code_generation/CodeGenerator.h>
 
 #ifdef linux
     #include <X11/Xlib.h>   
@@ -304,10 +305,14 @@ namespace flow{
                     std::cerr << "[Warning] Cannot load symbol 'factory': " << dlsym_error <<            '\n';
                 }
 
-                PluginNodeCreator* nodeCreator = factory(file);
-                auto listOfNodeCreators = nodeCreator->get();
-                for(auto &nodeCreator: listOfNodeCreators){
-                    _registry->registerModel<NodeDataModel>(nodeCreator.second,nodeCreator.first.c_str());
+                PluginNodeCreator* nodeCreators = factory(file);
+                auto listOfNodeCreators = nodeCreators->get();
+                for(auto &[tag, blockCreator] : listOfNodeCreators) {
+                    auto visualBlockCreator = std::bind([](PluginNodeCreator::RegistryItemCreator _creator) {
+                        return std::make_unique<FlowVisualBlock>(_creator());
+                        }, blockCreator);
+
+                    _registry->registerModel<NodeDataModel>(visualBlockCreator, tag.c_str());
                 }
             }
         }

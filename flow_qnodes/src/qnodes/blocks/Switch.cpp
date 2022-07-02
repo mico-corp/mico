@@ -1,4 +1,4 @@
-#include <flow/visual/blocks/Switch.h>
+#include <flow/qnodes/blocks/Switch.h>
 
 Switch::Switch(QWidget *parent) : QAbstractButton(parent),
 _height(16),

@@ -20,29 +20,32 @@
 ##---------------------------------------------------------------------------------------------------------------------
 
 cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
-PROJECT(flow VERSION 0.1.0)
+PROJECT(flow_qnodes VERSION 0.1.0)
 
 if(WIN32)
 	set(Boost_USE_STATIC_LIBS ON)
 endif()
+
+add_subdirectory(thirdparty/nodeeditor)
+
+option(BUILD_EXAMPLES   "Compile examples"              ON)
 
 #########################################
 ######			General config	   ######
 #########################################
 find_package(Qt5 REQUIRED COMPONENTS Core Widgets Gui)
 
-option(BUILD_EXAMPLES   "Compile examples"              ON)
-option(BUILD_TESTS      "Prepare tests"                 ON)
+set(CMAKE_AUTOMOC ON)
 
 ##################################################
 ######    Library.                        ########
 ##################################################
 file(GLOB_RECURSE FLOW_HEADERS "./include/*.h" "./include/*.inl")
 file(GLOB_RECURSE FLOW_SOURCES "./src/*.cpp")
-find_package(Qt5 REQUIRED COMPONENTS Core Widgets Gui)
 
 add_library(${PROJECT_NAME}  ${LIBRARY_MODE} ${FLOW_HEADERS} ${FLOW_SOURCES})
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
+set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE C)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -54,8 +57,13 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 ##################################################
 
 if(UNIX)
-    target_link_libraries(${PROJECT_NAME} LINK_PUBLIC pthread stdc++fs)
+    target_link_libraries(${PROJECT_NAME} LINK_PUBLIC pthread X11 stdc++fs)
 endif()
+
+target_link_libraries(${PROJECT_NAME} LINK_PUBLIC flow)
+
+target_link_libraries(${PROJECT_NAME} LINK_PUBLIC NodeEditor::nodes)
+target_compile_definitions(${PROJECT_NAME} PUBLIC HAS_QTNODEEDITOR)
 
 find_package(Boost REQUIRED COMPONENTS system filesystem program_options exception)
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC Boost::boost 
@@ -63,8 +71,12 @@ target_link_libraries(${PROJECT_NAME} LINK_PUBLIC Boost::boost
                                                   Boost::filesystem 
                                                   Boost::program_options 
                                                   Boost::exception)
-                                                  
-target_link_libraries(${PROJECT_NAME} PUBLIC Qt5::Core Qt5::Widgets)
+
+if(WIN32)
+    find_package(dlfcn-win32 REQUIRED)
+    target_link_libraries(${PROJECT_NAME} LINK_PUBLIC dlfcn-win32::dl)
+endif()
+
 
 target_compile_definitions(${PROJECT_NAME}
   PUBLIC
@@ -73,17 +85,14 @@ target_compile_definitions(${PROJECT_NAME}
     FLOW_EXPORTS
 )
 
+target_link_libraries(${PROJECT_NAME} PUBLIC Qt5::Core Qt5::Widgets)
 
-##################################################
-######    Test.                           ########
-##################################################
-if(${BUILD_TESTS})
-  find_package(GTest CONFIG)
-  if(${GTest_FOUND})
-    enable_testing()
-    add_subdirectory(tests)
-  endif()
-endif()
+add_custom_target(flow_resources ALL
+                COMMAND ${CMAKE_COMMAND} -E copy_directory 	${CMAKE_CURRENT_SOURCE_DIR}/resources 
+                ${CMAKE_BINARY_DIR}/plugins/resources
+)
+
+
 
 ##################################################
 ######    Examples.                       ########
@@ -93,11 +102,16 @@ if(${BUILD_EXAMPLES})
 endif()
 
 ##################################################
+######    Tools.                          ########
+##################################################
+add_subdirectory(tools)
+
+##################################################
 ######    Installation.                   ########
 ##################################################
 include(CMakePackageConfigHelpers)
 
-install(TARGETS ${PROJECT_NAME} 
+install(TARGETS nodes ${PROJECT_NAME} 
         EXPORT ${PROJECT_NAME}-targets
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib
@@ -119,8 +133,11 @@ install(  DIRECTORY include/
           DESTINATION include 
           FILES_MATCHING PATTERN "*.inl")
 
+install(  DIRECTORY resources/ 
+          DESTINATION bin/mplugins/resources )
+          
 
-export(TARGETS flow NAMESPACE flow:: FILE flow.cmake)
+export(TARGETS nodes flow NAMESPACE flow:: FILE flow.cmake)
 
 # This generates flow-targets.cmake
 install(EXPORT ${PROJECT_NAME}-targets
@@ -140,6 +157,14 @@ install(FILES
           "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake"
         DESTINATION lib/cmake/${PROJECT_NAME}
         )
+
+if(${BUILD_TOOLS})
+  install(TARGETS MICO
+    LIBRARY DESTINATION bin
+    ARCHIVE DESTINATION bin
+    RUNTIME DESTINATION bin
+  )
+endif()
 
 
 if(WIN32)

@@ -128,6 +128,9 @@ namespace flow{
         /// Virtual method to tell the interface if the visual block is resizable or not.
         virtual bool resizable() const { return false; }
 
+        /// Method to check if the block has auto running callback
+        virtual bool hasRunLoop() const = 0;
+
         /// Returns a brief description of the block
         virtual std::string description() const {return "Flow block without description";};
 

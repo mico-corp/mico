@@ -23,7 +23,7 @@
 
 #ifdef HAS_QTNODEEDITOR
 
-#include <flow/visual/code_generation/CodeGenerator.h>
+#include <flow/qnodes/code_generation/CodeGenerator.h>
 #include <iostream>
 #include <memory>
 

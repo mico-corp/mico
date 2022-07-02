@@ -21,8 +21,8 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 
-#ifndef FLOW_VISUAL_FLOWVISUALINTERFACE_H_
-#define FLOW_VISUAL_FLOWVISUALINTERFACE_H_
+#ifndef FLOW_QNODES_FLOWVISUALINTERFACE_H_
+#define FLOW_QNODES_FLOWVISUALINTERFACE_H_
 
 #ifdef HAS_QTNODEEDITOR
 
