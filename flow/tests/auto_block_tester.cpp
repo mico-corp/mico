@@ -68,14 +68,18 @@ TEST(create_blocks, create_blocks) {
 
 		// Create block
 		auto block = creator();
-		std::cout << "Testing construction and configuration of block: " << block->name() << std::endl;
+		std::cout << "Testing construction of block: " << block->name() << std::endl;
 
 		// Configure with bad values
+		std::cout << "Configuration with empty list of parameters ";
 		EXPECT_NO_THROW(block->configure({}));
+		std::cout << "---->  OK " << std::endl;
 
 		// Get default parameters
+		std::cout << "Configuration with default list of parameters ";
 		auto defaultParameters = block->parameters();
 		EXPECT_NO_THROW(block->configure(defaultParameters));
+		std::cout << "---->  OK " << std::endl;
 	}
 }
 

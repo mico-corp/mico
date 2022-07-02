@@ -55,7 +55,7 @@ namespace mico{
         
         std::vector<flow::ConfigParameterDef> BlockPoseGenerator::parameters(){
             return {
-                {"absolute", flow::ConfigParameterDef::eParameterType::BOOLEAN, 1}
+                {"absolute", flow::ConfigParameterDef::eParameterType::BOOLEAN, true}
             };
         }
 

@@ -54,19 +54,19 @@ namespace mico{
             if (auto param = getParamByName(_params, "video_file"); param) {
                 videoFile_ = new cv::VideoCapture();
 
-                if (videoFile_->open(param.value().asPath().string())) {
-                }else{
-			        return false;
-		        }
-
-                return videoFile_->isOpened();
+                try {
+                    return videoFile_->open(param.value().asPath().string());
+                } catch (std::exception) {
+                    
+                }
+                return false;
             }
             return false;
         }
 
         std::vector<flow::ConfigParameterDef> StreamVideo::parameters() {
             return {
-                {"video_file", flow::ConfigParameterDef::eParameterType::PATH, 0}
+                {"video_file", flow::ConfigParameterDef::eParameterType::PATH, fs::path("Browse_path")}
             };
         }
 

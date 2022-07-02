@@ -38,7 +38,12 @@
 namespace mico {
     namespace ar {
         bool Mesh::loadMesh(std::string _path){
-            meshReader_ = new stl_reader::StlMesh<float, unsigned int>(_path);
+            if (_path == "") return false;
+            try {
+                meshReader_ = new stl_reader::StlMesh<float, unsigned int>(_path);
+            } catch (std::exception) {
+
+            }
             return meshReader_->num_vrts()>0;
         }
 
