@@ -42,12 +42,17 @@ namespace mico{
         
         
         bool BlockMesh::configure(std::vector<flow::ConfigParameterDef> _params) {
-            if (auto param = getParamByName(_params, "mesh_path"); param) {
-                mesh_ = std::make_shared<Mesh>();
-                if (mesh_->loadMesh(param.value().asString())) {
-                    scene_->addMesh(mesh_);
-                    return true;
+            try {
+                if (auto param = getParamByName(_params, "mesh_path"); param) {
+                    mesh_ = std::make_shared<Mesh>();
+                    if (mesh_->loadMesh(param.value().asString())) {
+                        scene_->addMesh(mesh_);
+                        return true;
+                    }
                 }
+            }
+            catch (boost::bad_any_cast) {
+
             }
             return false;
         }

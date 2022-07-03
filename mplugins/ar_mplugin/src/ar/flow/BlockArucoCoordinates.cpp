@@ -45,29 +45,33 @@ namespace mico{
         }
 
         bool BlockArucoCoordinates::configure(std::vector<flow::ConfigParameterDef> _params) {
+
             if (auto param = getParamByName(_params, "id"); param) {
-                id_ = param.value().asInteger();
+                if(param.value().type_ == flow::ConfigParameterDef::eParameterType::INTEGER)
+                    id_ = param.value().asInteger();
             }
 
             if (auto param = getParamByName(_params, "calibration_file"); param) {
-                std::string paramFile = param.value().asPath().string();
-                
-                cv::FileStorage fs;
-                try {
-                    fs.open(paramFile, cv::FileStorage::READ);
-                }
-                catch (cv::Exception&) {
-                    return false;
-                }
-                
-                if (fs.isOpened()) {
-                    fs["Matrix"] >> cameraMatrix_;
-                    fs["DistCoeffs"] >> distCoeffs_;
-                
-                    isCalibrated_ = true;
-                }
-                else {
-                    isCalibrated_ = false;
+                if (param.value().type_ == flow::ConfigParameterDef::eParameterType::PATH) {
+                    std::string paramFile = param.value().asPath().string();
+
+                    cv::FileStorage fs;
+                    try {
+                        fs.open(paramFile, cv::FileStorage::READ);
+                    }
+                    catch (cv::Exception&) {
+                        return false;
+                    }
+
+                    if (fs.isOpened()) {
+                        fs["Matrix"] >> cameraMatrix_;
+                        fs["DistCoeffs"] >> distCoeffs_;
+
+                        isCalibrated_ = true;
+                    }
+                    else {
+                        isCalibrated_ = false;
+                    }
                 }
             }
 

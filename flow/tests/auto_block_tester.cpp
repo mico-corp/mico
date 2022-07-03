@@ -64,56 +64,66 @@ static CreatorsHolder creatorsHolder = CreatorsHolder();
 
 std::random_device rd; // obtain a random number from hardware
 std::mt19937 gen(rd()); // seed the generator
-std::uniform_int_distribution<int> distr(0, 6); // define the range
+std::uniform_int_distribution<int> distr(0, 5); // define the range
 
-void randomizeParameter(flow::ConfigParameterDef &_param) {
-	switch (distr(gen)) {
+void randomizeParameter(flow::ConfigParameterDef &_param, bool _verbose = false) {
+	int rndNumber = distr(gen);
+	switch (rndNumber) {
 	case 0: // set as bool
 		_param.type_ = flow::ConfigParameterDef::eParameterType::BOOLEAN;
-		_param.value_ = rand() & 2;
+		_param.value_ = bool(rand() & 2);
+		if (_verbose) std::cout << "boolean\n";
 		break;
 	case 1: // set as decimal
 		_param.type_ = flow::ConfigParameterDef::eParameterType::DECIMAL;
 		_param.value_ = float(rand())/rand();
+		if (_verbose) std::cout << "integer\n";
 		break;
 	case 2: // set as integer
 		_param.type_ = flow::ConfigParameterDef::eParameterType::INTEGER;
-		_param.value_ = rand();
+		_param.value_ = int(rand());
+		if (_verbose) std::cout << "decimal\n";
 		break;
 	case 3: // set as options
 		_param.type_ = flow::ConfigParameterDef::eParameterType::OPTIONS;
-		_param.selectedOption_ = "";
-		for (int i = 0; i < rand() % 16; i++) {
-			_param.selectedOption_ += char(rand() % 60 + 50);
-		}
-		_param.value_ = _param.selectedOption_;
+		_param.selectedOption_ = std::string("A");
+		_param.value_ = std::vector{ std::string("A") , std::string("B") , std::string("C") };
+		if (_verbose) std::cout << "options\n";
 		break;
 	case 4: // set as path
 	{
 		_param.type_ = flow::ConfigParameterDef::eParameterType::PATH;
-		std::string randomPath = "";
-		for (int i = 0; i < rand() % 50; i++) {
-			randomPath += char(rand() % 60 + 50);
-		}
-		_param.value_ = fs::path(randomPath);
+		_param.value_ = fs::path("./no/I/am/not/our/path");
+		if (_verbose) std::cout << "path\n";
 		break;
 	}
 	case 5: // set as string
 	{
 		_param.type_ = flow::ConfigParameterDef::eParameterType::STRING;
-		std::string randomStr = "";
-		for (int i = 0; i < rand() % 50; i++) {
-			randomStr += char(rand() % 60 + 50);
-		}
-		_param.value_ = randomStr;
-	}
+		_param.value_ = std::string("HEY I AM NOT WHAT U WANTED");
+		if (_verbose) std::cout << "string\n";
 		break;
 	}
+	}
+
+	if(_verbose)
+		std::cout.flush();
+
+}
+
+
+TEST(create_blocks, randomization_parameters) {
+	for (unsigned i = 0; i < 100; i++) {
+		flow::ConfigParameterDef param;
+		randomizeParameter(param, false);
+		EXPECT_NO_THROW(param.serialize());
+	}
+
 }
 
 // Try to create all the blocks. None of the constructors should crash, neither their configuration with empty values.
 TEST(create_blocks, create_blocks) {
-	
+
 	for (auto& [tag, creator] : creatorsHolder.creators_) {
 		std::cout << "---------------------------------------------------------------------" << std::endl;
 
@@ -143,10 +153,14 @@ TEST(create_blocks, create_blocks) {
 			}
 
 			for (auto& param : defaultParameters) {
-				std::cout << "\t" + param.serialize() << std::endl;
+				std::string serializedParam = "";
+				EXPECT_NO_THROW(serializedParam = param.serialize());
+				std::cout << "\t" + serializedParam << std::endl;
 			}
+			std::cout << "Test " << i;
 			std::cout.flush();
 			EXPECT_NO_THROW(block->configure(defaultParameters));
+			std::cout << "---->  OK " << std::endl;
 		}
 	}
 }
@@ -157,4 +171,5 @@ int main(int _argc, char** _argv) {
 
 	testing::InitGoogleTest(&_argc, _argv);
 	return RUN_ALL_TESTS();
+
 }
