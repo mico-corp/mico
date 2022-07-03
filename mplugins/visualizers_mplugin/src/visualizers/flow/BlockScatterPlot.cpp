@@ -47,31 +47,37 @@ namespace mico{
         
         BlockScatterPlot::~BlockScatterPlot() {
             if(dataTimer_) dataTimer_->stop();
-            if(plot_) plot_->hide();
+            if (plot_) {
+                plot_->hide();
+                delete plot_;
+            }
         };
 
         
         bool BlockScatterPlot::configure(std::vector<flow::ConfigParameterDef> _params) {
-            plot_ = new QCustomPlot();
+            if (!plot_) {
+                plot_ = new QCustomPlot();
 
-            plot_->xAxis->setLabel("x");
-            plot_->yAxis->setLabel("y");
+                plot_->xAxis->setLabel("x");
+                plot_->yAxis->setLabel("y");
 
-            plot_->setInteractions(   QCP::iRangeDrag | QCP::iRangeZoom  | QCP::iSelectPlottables );
+                plot_->setInteractions(   QCP::iRangeDrag | QCP::iRangeZoom  | QCP::iSelectPlottables );
 
-            plot_->addGraph()->setPen(QPen(QColor(255,0,0)));;
-            plot_->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, 2));
-            //      QCPScatterStyle( QCPScatterStyle::ssDot, 1 ) );
-            plot_->graph(0)->setLineStyle(QCPGraph::lsNone);
-            // plot_->graph(0)->setAdaptiveSampling(false);
+                plot_->addGraph()->setPen(QPen(QColor(255,0,0)));;
+                plot_->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, 2));
+                //      QCPScatterStyle( QCPScatterStyle::ssDot, 1 ) );
+                plot_->graph(0)->setLineStyle(QCPGraph::lsNone);
+                // plot_->graph(0)->setAdaptiveSampling(false);
 
-            dataTimer_ = new QTimer();
-            QObject::connect(dataTimer_, &QTimer::timeout , [this](){this->realTimePlot();});
-            dataTimer_->start(30);
+                dataTimer_ = new QTimer();
+                QObject::connect(dataTimer_, &QTimer::timeout , [this](){this->realTimePlot();});
+                dataTimer_->start(30);
 
-            plot_->setGeometry(0, 0, 400, 400);
-            plot_->setWindowFlags(Qt::WindowStaysOnTopHint);
-            plot_->show();
+                plot_->setGeometry(0, 0, 400, 400);
+                plot_->setWindowFlags(Qt::WindowStaysOnTopHint);
+                plot_->show();
+
+            }
             return true;
         }
 

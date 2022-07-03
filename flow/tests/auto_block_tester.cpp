@@ -20,6 +20,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 #include <flow/plugins/PluginsLoader.h>
+#include <flow/Outpipe.h>
 
 #include <QApplication> // 666 TODO Remove this in the future
 
@@ -121,6 +122,18 @@ TEST(create_blocks, randomization_parameters) {
 
 }
 
+
+// Try to create all the blocks. None of the constructors should crash, neither their configuration with empty values.
+TEST(create_blocks, create_blocks_destroy) {
+	for (auto& [tag, creator] : creatorsHolder.creators_) {
+		std::cout << "---------------------------------------------------------------------" << std::endl;
+
+		// Create block
+		auto block = creator();
+		std::cout << "Testing construction and destruction of block: " << block->name() << std::endl;
+	}
+}
+
 // Try to create all the blocks. None of the constructors should crash, neither their configuration with empty values.
 TEST(create_blocks, create_blocks) {
 
@@ -161,6 +174,62 @@ TEST(create_blocks, create_blocks) {
 			std::cout.flush();
 			EXPECT_NO_THROW(block->configure(defaultParameters));
 			std::cout << "---->  OK " << std::endl;
+		}
+	}
+}
+
+
+std::pair<flow::Outpipe*, std::function<void()>> randomPipe() {
+	int rndNumber = distr(gen);
+
+	Outpipe* ptr;
+	std::function<void()> fn;
+	switch (rndNumber)
+	{
+	case 0:
+		ptr = flow::makeOutput<bool>("output");
+		fn = std::bind([](Outpipe* _ptr) { _ptr->flush(true); }, ptr);
+	case 1:
+		ptr = flow::makeOutput<int>("output");
+		fn = std::bind([](Outpipe* _ptr) { _ptr->flush(123); }, ptr);
+	case 2:
+		ptr = flow::makeOutput<float>("output");
+		fn = std::bind([](Outpipe* _ptr) { _ptr->flush(1.023f); }, ptr);
+	case 3:
+		ptr = flow::makeOutput<std::string>("output");
+		fn = std::bind([](Outpipe* _ptr) { _ptr->flush(std::string("hola")); }, ptr);
+	case 4:
+		ptr = flow::makeOutput<std::vector<float>>("output");
+		fn = std::bind([](Outpipe* _ptr) { _ptr->flush(std::vector<float>{1.30f, 1.30f, 1.30f}); }, ptr);
+	case 5:
+		ptr = flow::makeOutput<std::vector<int>>("output");
+		fn = std::bind([](Outpipe* _ptr) { _ptr->flush(std::vector<int>{2, 3, 1, 2}); }, ptr);
+	}
+	
+	return { ptr, fn };
+}
+
+TEST(input_tests, random_inputs) {
+
+	for (auto& [tag, creator] : creatorsHolder.creators_) {
+		std::cout << "---------------------------------------------------------------------" << std::endl;
+		auto block = creator();
+		std::cout << "Testing random inputs in block: " << block->name() << std::endl;
+
+		// Some blocks do no have any input policy. 
+		if (block->getPolicy()) {
+			auto inputs = block->getPolicy()->inputTags();
+			std::vector<std::pair<flow::Outpipe*, std::function<void()>>> pipes;
+			for (auto &input:inputs) {
+				pipes.push_back(randomPipe());
+				pipes.back().first->registerPolicy(block->getPolicy(), input);
+			}
+
+			for (unsigned i = 0; i < 100; i++) {
+				for (auto& [pipe, cb] : pipes) {
+					cb();
+				}
+			}
 		}
 	}
 }

@@ -42,7 +42,7 @@ namespace mico {
             try {
                 meshReader_ = new stl_reader::StlMesh<float, unsigned int>(_path);
             } catch (std::exception) {
-
+                return false;
             }
             return meshReader_->num_vrts()>0;
         }

@@ -68,29 +68,30 @@ namespace mico{
         }
 
         bool BlockImageVisualizer::configure(std::vector<flow::ConfigParameterDef> _params) {
-            imageView_ = new QLabel();
-            imageView_->setScaledContents(true);
-            imageView_->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
-            imageView_->setMinimumHeight(150);
-            imageView_->setMinimumWidth(150);
-            imageView_->setGeometry(0, 0, 640, 480);
-            imageView_->setWindowFlags(Qt::WindowStaysOnTopHint);
-            imageView_->show(); 
+            if (!imageView_) {
+                imageView_ = new QLabel();
+                imageView_->setScaledContents(true);
+                imageView_->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+                imageView_->setMinimumHeight(150);
+                imageView_->setMinimumWidth(150);
+                imageView_->setGeometry(0, 0, 640, 480);
+                imageView_->setWindowFlags(Qt::WindowStaysOnTopHint);
+                imageView_->show();
 
-            imageRefresher_ = new QTimer();
+                imageRefresher_ = new QTimer();
 
-            QObject::connect(imageRefresher_, &QTimer::timeout, [&]() {
-                cv::Mat image;
-                imgLock_.lock();
-                image = lastImage_;
-                imgLock_.unlock();
-                if (image.rows != 0) {
-                    QImage qimg;
-                    if (image.channels() == 1) {
-                        int inttype = image.type();
+                QObject::connect(imageRefresher_, &QTimer::timeout, [&]() {
+                    cv::Mat image;
+                    imgLock_.lock();
+                    image = lastImage_;
+                    imgLock_.unlock();
+                    if (image.rows != 0) {
+                        QImage qimg;
+                        if (image.channels() == 1) {
+                            int inttype = image.type();
 
-                        int depth = inttype & CV_MAT_DEPTH_MASK;
-                        switch (depth) {
+                            int depth = inttype & CV_MAT_DEPTH_MASK;
+                            switch (depth) {
                             case CV_8U:
                                 qimg = QImage(image.data, image.cols, image.rows, QImage::Format_Grayscale8);
                                 break;
@@ -98,23 +99,29 @@ namespace mico{
                             case CV_16U: break;
                             case CV_16S: break;
                             case CV_32S: break;
-                            case CV_32F: 
+                            case CV_32F:
                                 image.convertTo(image, CV_8UC1, 255.0f);
                                 cv::applyColorMap(image, image, cv::COLORMAP_JET);
                                 qimg = QImage(image.data, image.cols, image.rows, QImage::Format_RGB888);
                                 break;
                             case CV_64F: break;
-                        }
+                            }
 
-                    } else if (image.channels() == 3) {
-                        qimg = QImage(image.data, image.cols, image.rows, image.step, QImage::Format_RGB888).rgbSwapped();
-                    } else if (image.channels() == 4) {
-                        qimg = QImage(image.data, image.cols, image.rows, image.step, QImage::Format_RGBA8888).rgbSwapped();
+                        }
+                        else if (image.channels() == 3) {
+                            qimg = QImage(image.data, image.cols, image.rows, image.step, QImage::Format_RGB888).rgbSwapped();
+                        }
+                        else if (image.channels() == 4) {
+                            qimg = QImage(image.data, image.cols, image.rows, image.step, QImage::Format_RGBA8888).rgbSwapped();
+                        }
+                        imageView_->setPixmap(QPixmap::fromImage(qimg));
                     }
-                    imageView_->setPixmap(QPixmap::fromImage(qimg));
-                }
-            });
-            imageRefresher_->start(30);
+                    });
+                imageRefresher_->start(30);
+            } else {
+                imageView_->show();
+            }
+            
 
             return true;
 
