@@ -231,6 +231,11 @@ TEST(input_tests, random_inputs) {
 				}
 			}
 		}
+		// Wait until all threads are idle....
+		while (flow::ThreadPool::get()->loadRatio() != 0.0f) {
+			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(500)); // 666 TODO extra time in case a thread is finishing the task
 	}
 }
 
