@@ -268,6 +268,15 @@ TEST(input_tests, adequate_inputs) {
 			if (hasError) continue;	// Error configuring the test, skip this block
 
 
+			std::cout << "\t Testing without being configured" << std::endl;
+			for (auto& [pipe, gen] : pipes) {
+				pipe->flush(gen->defaultContructible());
+			}
+			
+			auto defaultParameters = block->parameters();
+			block->configure(defaultParameters);
+
+			std::cout << "--- Configured! ---" << std::endl;
 			std::cout << "\t Default constructible input" << std::endl;
 			// Test default constructible
 			for (unsigned i = 0; i < 100; i++) {
