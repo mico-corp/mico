@@ -57,6 +57,7 @@ namespace flow{
     
             FLOW_DECL size_t nInputs();
             FLOW_DECL std::vector<std::string> inputTags();
+            FLOW_DECL const std::vector<PolicyInput> & inputs() const;
 
             FLOW_DECL std::string type(std::string _tag);
 

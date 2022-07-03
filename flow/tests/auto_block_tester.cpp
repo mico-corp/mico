@@ -239,6 +239,59 @@ TEST(input_tests, random_inputs) {
 	}
 }
 
+#include "InputGenerators.h"
+
+TEST(input_tests, adequate_inputs) {
+
+	for (auto& [tag, creator] : creatorsHolder.creators_) {
+		std::cout << "---------------------------------------------------------------------" << std::endl;
+		auto block = creator();
+		std::cout << "Testing adequate inputs in block: " << block->name() << std::endl;
+
+		// Some blocks do no have any input policy. 
+		if (block->getPolicy()) {
+			auto inputs = block->getPolicy()->inputs();
+			
+			std::vector<std::pair<flow::Outpipe*, InputGenerator*>> pipes;
+			bool hasError = false;
+			for (auto& input : inputs) {
+				auto *pipe = new Outpipe("out", input.typeName());
+				auto *iGen = InputGenerator::create(input.typeName());
+				if (!iGen) { // No generator available, can't test it
+					hasError = true;
+					break;
+				}
+				pipes.push_back({pipe, iGen});
+				pipes.back().first->registerPolicy(block->getPolicy(), input.tag());
+			}
+
+			if (hasError) continue;	// Error configuring the test, skip this block
+
+
+			std::cout << "\t Default constructible input" << std::endl;
+			// Test default constructible
+			for (unsigned i = 0; i < 100; i++) {
+				for (auto& [pipe, gen] : pipes) {
+					pipe->flush(gen->defaultContructible());
+				}
+			}
+
+			// Test random inputs
+			std::cout << "\t Random input generation" << std::endl;
+			for (unsigned i = 0; i < 100; i++) {
+				for (auto& [pipe, gen] : pipes) {
+					pipe->flush(gen->randomInput());
+				}
+			}
+		}
+		// Wait until all threads are idle....
+		while (flow::ThreadPool::get()->loadRatio() != 0.0f) {
+			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(500)); // 666 TODO extra time in case a thread is finishing the task
+	}
+}
+
 
 int main(int _argc, char** _argv) {
 	QApplication app(_argc, _argv);

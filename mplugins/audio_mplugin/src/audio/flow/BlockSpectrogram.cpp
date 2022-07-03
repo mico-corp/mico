@@ -74,6 +74,7 @@ namespace mico{
         }
 
         void BlockSpectrogram::inputCallback(std::vector<float> _input) {
+            if (!rawDft_) return;    // Not configured yet
             if (!_input.size()) return;
 
             bufferData_.insert(bufferData_.end(), _input.begin(), _input.end());
