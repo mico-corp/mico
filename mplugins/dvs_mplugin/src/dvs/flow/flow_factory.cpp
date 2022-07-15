@@ -20,6 +20,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 #include <flow/flow.h>
+#include <flow/plugins/BlockPlugin.h>
 
 #include <mico/dvs/flow/BlockCornerDetector.h>
 #include <mico/dvs/flow/BlockCameraDVSStreamer.h>
@@ -32,15 +33,15 @@
 using namespace mico::dvs;
 using namespace flow;
 
-extern "C" flow::PluginNodeCreator* factory(fs::path _libraryPath){
+extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(fs::path _libraryPath){
     Persistency::setResourceDir(_libraryPath.parent_path().string() + "/resources");
         flow::PluginNodeCreator *creator = new flow::PluginNodeCreator;
 
-        creator->registerNodeCreator([](){ return std::make_unique<flow::FlowVisualBlock<BlockCameraDVSStreamer,true>>(); }, "DVS");
-        creator->registerNodeCreator([](){ return std::make_unique<flow::FlowVisualBlock<BlockCornerDetector>>();       }, "DVS");
-        creator->registerNodeCreator([](){ return std::make_unique<flow::FlowVisualBlock<BlockEventsToCloud>>();        }, "DVS");
-        creator->registerNodeCreator([](){ return std::make_unique<flow::FlowVisualBlock<BlockEventsToImage>>();        }, "DVS");
-        creator->registerNodeCreator([](){ return std::make_unique<flow::FlowVisualBlock<BlockNoiseFilter>>();        }, "DVS");
+        creator->registerNodeCreator([](){ return std::make_shared<BlockCameraDVSStreamer>(); }, "DVS");
+        creator->registerNodeCreator([](){ return std::make_shared<BlockCornerDetector>();       }, "DVS");
+        creator->registerNodeCreator([](){ return std::make_shared<BlockEventsToCloud>();        }, "DVS");
+        creator->registerNodeCreator([](){ return std::make_shared<BlockEventsToImage>();        }, "DVS");
+        creator->registerNodeCreator([](){ return std::make_shared<BlockNoiseFilter>();        }, "DVS");
 
         return creator;
     }

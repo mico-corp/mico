@@ -33,20 +33,22 @@ namespace dvs{
         createPipe<pcl::PointXYZRGBNormal>("cloud");
         
         createPolicy({flow::makeInput<dv::EventStore>("events")});
-        registerCallback< dv::EventStore>({"events"},
-                                [&](dv::EventStore _events){
-                                    auto events = _events;
-                                        
-                                    pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr eventsCloud(new pcl::PointCloud<pcl::PointXYZRGBNormal>());
-                                    if( obtainPointCloudFromEvents(events,eventsCloud) ){
-
-                                        if(getPipe("cloud")->registrations() !=0 )
-                                            getPipe("cloud")->flush(eventsCloud); 
-                                    }
-
-                                }
+        registerCallback({"events"},
+		&BlockEventsToCloud::transformEvents, this
         );
     }
+
+    void BlockEventsToCloud::transformEvents(dv::EventStore _events){
+            auto events = _events;
+                
+            pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr eventsCloud(new pcl::PointCloud<pcl::PointXYZRGBNormal>());
+            if( obtainPointCloudFromEvents(events,eventsCloud) ){
+
+                if(getPipe("cloud")->registrations() !=0 )
+                    getPipe("cloud")->flush(eventsCloud); 
+            }
+
+        }
 
     bool BlockEventsToCloud::obtainPointCloudFromEvents(dv::EventStore _events , pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr &_cloud){
         if (_events.size() == 0){

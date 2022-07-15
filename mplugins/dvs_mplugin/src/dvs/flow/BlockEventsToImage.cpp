@@ -32,16 +32,18 @@ namespace dvs{
         createPipe<cv::Mat>("image");
         
         createPolicy({flow::makeInput<PolarityPacket>("events")});
-        registerCallback< PolarityPacket>({"events"},
-                                [&](PolarityPacket _events){
-                                    cv::Mat image = cv::Mat::zeros(cv::Size(imageWidth_,imageHeight_), CV_8UC3);
-                                    if(obtainImageFromEvents(_events,image))
-                                        if(getPipe("image")->registrations() !=0 )
-                                            getPipe("image")->flush(image); 
-                                }
+        registerCallback({"events"},
+         &BlockEventsToImage::integrateEvents, this
         );
     }
 
+    void BlockEventsToImage::integrateEvents(PolarityPacket _events){
+	    cv::Mat image = cv::Mat::zeros(cv::Size(imageWidth_,imageHeight_), CV_8UC3);
+	    if(obtainImageFromEvents(_events,image))
+		if(getPipe("image")->registrations() !=0 )
+		    getPipe("image")->flush(image); 
+	}
+        
     bool BlockEventsToImage::configure(std::vector<flow::ConfigParameterDef> _params) {
         if (auto param = getParamByName(_params, "image_width"); param)
             imageWidth_ = param.value().asInteger();

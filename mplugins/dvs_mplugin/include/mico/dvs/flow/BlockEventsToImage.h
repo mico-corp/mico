@@ -51,6 +51,7 @@ namespace dvs{
         bool isConfigurable() override { return true; };
 
     private:
+        void integrateEvents(PolarityPacket _events);
         bool obtainImageFromEvents(PolarityPacket _events , cv::Mat &_image);  
 
     private:

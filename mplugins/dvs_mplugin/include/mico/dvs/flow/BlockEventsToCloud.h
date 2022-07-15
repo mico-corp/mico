@@ -51,6 +51,8 @@ namespace dvs{
         bool isConfigurable() override { return false; };
 
     private:
+        void transformEvents(dv::EventStore _events);
+ 
         bool obtainPointCloudFromEvents(dv::EventStore _events , SharedPc &_cloud);  
 
 

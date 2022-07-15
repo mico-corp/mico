@@ -28,36 +28,34 @@ namespace dvs{
 
     BlockNoiseFilter::BlockNoiseFilter(){
 
-		noiseFilter_= caerFilterDVSNoiseInitialize(346, 260);
-        
-		// Handle constructor failure.
-		if (noiseFilter_ == nullptr) {
-			std::string exc = "Failed to initialize DVS Noise filter, sizeX=" + std::to_string(346)
-							  + ", sizeY=" + std::to_string(260) + ".";
-			throw std::runtime_error(exc);
-		}
+	noiseFilter_= caerFilterDVSNoiseInitialize(346, 260);
 
-		// Use stateless lambda for shared_ptr custom deleter.
-		auto deleteDeviceHandle = [](caerFilterDVSNoise fh) {
-			// Run destructor, free all memory.
-			// Never fails in current implementation.
-			caerFilterDVSNoiseDestroy(fh);
-		};
+	// Handle constructor failure.
+	if (noiseFilter_ == nullptr) {
+		std::string exc = "Failed to initialize DVS Noise filter, sizeX=" + std::to_string(346)
+						  + ", sizeY=" + std::to_string(260) + ".";
+		throw std::runtime_error(exc);
+	}
 
-		noiseFilterHandle_ = std::shared_ptr<struct caer_filter_dvs_noise>(noiseFilter_, deleteDeviceHandle);
+	// Use stateless lambda for shared_ptr custom deleter.
+	auto deleteDeviceHandle = [](caerFilterDVSNoise fh) {
+		// Run destructor, free all memory.
+		// Never fails in current implementation.
+		caerFilterDVSNoiseDestroy(fh);
+	};
+
+	noiseFilterHandle_ = std::shared_ptr<struct caer_filter_dvs_noise>(noiseFilter_, deleteDeviceHandle);
 
         createPipe<PolarityPacket>("events");
 
         createPolicy({flow::makeInput<PolarityPacket>("events")});
-        registerCallback<PolarityPacket>({"events"}, 
-                                [&](PolarityPacket _events){
-                                    
-                                    if(filterEvents(_events)){
-                                        getPipe("events")->flush(_events);
-                                    }
-                                    
-                                }
+        registerCallback({"events"}, &BlockNoiseFilter::filterEvents, this
         );
+    }
+    
+    void BlockNoiseFilter::filterEvents(PolarityPacket _events){                                   
+	caerFilterDVSNoiseApply(noiseFilterHandle_.get(), (caerPolarityEventPacket) _events->getHeaderPointer());    
+	getPipe("events")->flush(_events);
     }
 
     std::vector<flow::ConfigParameterDef> BlockNoiseFilter::parameters(){
@@ -102,11 +100,6 @@ namespace dvs{
         return true;
     }
 
-    
-
-    bool BlockNoiseFilter::filterEvents(PolarityPacket &_filteredEvents){
-        caerFilterDVSNoiseApply(noiseFilterHandle_.get(), (caerPolarityEventPacket) _filteredEvents->getHeaderPointer());
-        return true;
-    }
+   
 }
 }

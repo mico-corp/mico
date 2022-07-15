@@ -21,8 +21,6 @@
 
 #include <mico/dvs/flow/BlockCornerDetector.h>
 
-#include <mico/dvs/Common.h>
-
 namespace mico{
     namespace dvs{
 
@@ -35,40 +33,42 @@ namespace mico{
             createPipe<PolarityPacket>("corners");
             
             createPolicy({flow::makeInput<PolarityPacket>("events")});
-            registerCallback< PolarityPacket>({"events"},
-                                    [&](PolarityPacket _events){
-                                        
-                                        auto events = _events;
-                                        FastDetector detector;
-                                        detectorGuard_.lock();
-                                        auto cornerEvents = std::make_shared<libcaer::events::PolarityEventPacket>(
-                                            events->size(), events->getEventSource(), events->getEventSize()
-                                        );
-
-                                        int idxCorner = 0;
-                                        for(unsigned i =0; i< events->size(); i++){
-                                            // Get full timestamp and addresses of first event.
-                                            const libcaer::events::PolarityEvent &polEvent = (*events)[i];
-
-                                            int32_t ts = polEvent.getTimestamp();
-                                            uint16_t x = polEvent.getX();
-                                            uint16_t y = polEvent.getY();
-                                            bool pol   = polEvent.getPolarity();
-                                            dv::Event event(static_cast<int64_t>(ts) , static_cast<int16_t>(x) , static_cast<int16_t>(y) , static_cast<uint8_t>(pol));
-                                            if(polEvent.isValid() && detector.isFeature(event)){
-                                                cornerEvents->getEvent(idxCorner)  = polEvent;
-                                                idxCorner++;
-                                                cornerEvents->getHeaderPointer()->eventNumber++;
-                                                //std::cout << i << "/" << idxCorner << "/" << cornerEvents->getEventNumber() << std::endl;
-                                            }
-                                        }
-                                        detectorGuard_.unlock();
-                                        if(cornerEvents->getEventNumber() > 0){
-                                            getPipe("corners")->flush(std::const_pointer_cast<const libcaer::events::PolarityEventPacket>(cornerEvents));
-                                        }
-                                    }
-            );
+            
+            registerCallback({"events"}, &BlockCornerDetector::processEvents, this);
         }
+
+	
+        void BlockCornerDetector::processEvents(PolarityPacket _events){
+                                        
+		auto events = _events;
+		FastDetector detector;
+		detectorGuard_.lock();
+		auto cornerEvents = std::make_shared<libcaer::events::PolarityEventPacket>(
+		    events->size(), events->getEventSource(), events->getEventSize()
+		);
+
+		int idxCorner = 0;
+		for(unsigned i =0; i< events->size(); i++){
+		    // Get full timestamp and addresses of first event.
+		    const libcaer::events::PolarityEvent &polEvent = (*events)[i];
+
+		    int32_t ts = polEvent.getTimestamp();
+		    uint16_t x = polEvent.getX();
+		    uint16_t y = polEvent.getY();
+		    bool pol   = polEvent.getPolarity();
+		    dv::Event event(static_cast<int64_t>(ts) , static_cast<int16_t>(x) , static_cast<int16_t>(y) , static_cast<uint8_t>(pol));
+		    if(polEvent.isValid() && detector.isFeature(event)){
+		        cornerEvents->getEvent(idxCorner)  = polEvent;
+		        idxCorner++;
+		        cornerEvents->getHeaderPointer()->eventNumber++;
+		        //std::cout << i << "/" << idxCorner << "/" << cornerEvents->getEventNumber() << std::endl;
+		    }
+		}
+		detectorGuard_.unlock();
+		if(cornerEvents->getEventNumber() > 0){
+		    getPipe("corners")->flush(std::const_pointer_cast<const libcaer::events::PolarityEventPacket>(cornerEvents));
+		}
+	    }
 
         void BlockCornerDetector::initVisualization(){
             visualContainer_ = new QGroupBox();

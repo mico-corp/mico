@@ -52,10 +52,7 @@ namespace dvs{
         bool isConfigurable() override { return true; };
 
     private:
-        bool filterEvents(PolarityPacket &_filteredEvents);
-                /* 
-        caerPolarityEventPacket eventStoreToCAER(const dv::EventStore &_sortEvStore);
-        dv::EventStore CAERToEventStore(caerPolarityEventPacket _pPolPack,u_int32_t _packetSize);*/
+	void filterEvents(PolarityPacket _events);
         
     private:
         caerFilterDVSNoise noiseFilter_ = nullptr;

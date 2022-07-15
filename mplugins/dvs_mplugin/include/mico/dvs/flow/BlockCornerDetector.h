@@ -24,6 +24,7 @@
 
 #include <flow/flow.h>
 
+#include <mico/dvs/Common.h>
 #include <mico/dvs/corner_detectors/Detector.h>
 #include <mico/dvs/corner_detectors/HarrisDetector.h>
 #include <mico/dvs/corner_detectors/FastDetector.h>
@@ -56,6 +57,8 @@ namespace mico{
             bool isConfigurable() override { return true; };
 
         private:
+            void processEvents(PolarityPacket _events);
+        
             void initVisualization();
 
             std::vector<Detector*> detectorList();

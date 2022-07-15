@@ -22,6 +22,7 @@
 
 #include <flow/flow.h>
 #include <flow/plugins/BlockPlugin.h>
+
 #include <mico/cameras/flow/StreamWebcam.h>
 #include <mico/cameras/flow/StreamVideo.h>
 #include <mico/cameras/flow/SingleImageFlusher.h>
