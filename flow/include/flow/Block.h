@@ -46,19 +46,21 @@
 
 namespace flow{
 
-    struct ConfigParameterDef {
+    struct FLOW_DECL ConfigParameterDef {
         enum class eParameterType { BOOLEAN, INTEGER, DECIMAL, STRING, PATH, OPTIONS };
         std::string name_;
         eParameterType type_;
         boost::any value_;
         std::string selectedOption_ = "";
-        bool                     asBool()           const { assert(type_ == eParameterType::BOOLEAN); return boost::any_cast<bool>(value_); };
-        int                      asInteger()        const { assert(type_ == eParameterType::INTEGER); return boost::any_cast<int>(value_); };
-        float                    asDecimal()        const { assert(type_ == eParameterType::DECIMAL); return boost::any_cast<float>(value_); };
-        std::string              asString()         const { assert(type_ == eParameterType::STRING);  return boost::any_cast<std::string>(value_); };
-        fs::path                 asPath()           const { assert(type_ == eParameterType::PATH);    return boost::any_cast<fs::path>(value_); };
-        std::vector<std::string> asOptions()        const { assert(type_ == eParameterType::OPTIONS); return boost::any_cast<std::vector<std::string>>(value_); };
-        std::string              selectedOption()   const { assert(type_ == eParameterType::OPTIONS); return selectedOption_; };
+        bool                     asBool()           const;
+        int                      asInteger()        const;
+        float                    asDecimal()        const;
+        std::string              asString()         const;
+        fs::path                 asPath()           const;
+        std::vector<std::string> asOptions()        const;
+        std::string              selectedOption()   const;
+
+        std::string serialize();
     };
 
     

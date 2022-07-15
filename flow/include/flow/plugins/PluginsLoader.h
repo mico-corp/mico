@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------------------------------------------------------
-//  AR MICO plugin
+//  FLOW
 //---------------------------------------------------------------------------------------------------------------------
 //  Copyright 2020 Pablo Ramon Soria (a.k.a. Bardo91) pabramsor@gmail.com
 //---------------------------------------------------------------------------------------------------------------------
@@ -19,50 +19,39 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------------------------------------
 
+#ifndef FLOW_PLUGINS_PLUGINSLOADER_H_
+#define FLOW_PLUGINS_PLUGINSLOADER_H_
 
-#include <mico/ar/flow/BlockArViewer.h>
-#include <flow/Outpipe.h>
-#include <flow/Policy.h>
+#include <flow/Export.h>
+#include <flow/plugins/BlockPlugin.h>
 
-#include <opencv2/opencv.hpp>
-#include <Eigen/Eigen>
 
-namespace mico{
-    namespace ar {
-        BlockArViewer::BlockArViewer(){
-            createPolicy({  flow::makeInput<Eigen::Matrix4f>("coordinates"),
-                            flow::makeInput<cv::Mat>("image") });
+namespace flow {
 
-            registerCallback({ "coordinates", "image" },
-                &BlockArViewer::policyCallback,
-                this
-            );
+	class FLOW_DECL PluginsLoader {
+	public:
+		/// <summary>
+		/// List all files in a folder and identify the ones that are dynamic libraries and try to load block plugins from them.
+		/// </summary>
+		/// <param name="_path"></param>
+		/// <returns></returns>
+		PluginNodeCreator::ListCreators parseFolder(const std::string& _path);
 
-        }
-        
-        BlockArViewer::~BlockArViewer() {
-            if (widget_) {
-                widget_->hide();
-                delete widget_;
-            }
-        }
+		/// <summary>
+		/// Tries to open the library from given path and load all the block creators.
+		/// </summary>
+		/// <param name="_path"></param>
+		/// <returns></returns>
+		PluginNodeCreator::ListCreators parseLibrary(const std::string& _path);
 
-        
-        bool BlockArViewer::configure(std::vector<flow::ConfigParameterDef> _params){
-            if (widget_) {
-                widget_->hide();
-                delete widget_;
-            }
-            widget_ = new VisualizerGlWidget();
-            widget_->show();
+	private:
+		void readDirectory(const std::string& _path, std::vector<std::string>& _files);
+		void* getHandle(const std::string& _mpluginPath);
+		PluginNodeCreator* retrieveFactoryBlocks(const std::string& _path, void* _handle);
 
-            return true;
-        }
+	};
 
-        void BlockArViewer::policyCallback(Eigen::Matrix4f _coordinates, cv::Mat _image) {
-            if (!widget_) return;
-            widget_->updatePose(_coordinates);
-            widget_->updateBackgroundImage(_image);
-        }
-    }
 }
+
+
+#endif

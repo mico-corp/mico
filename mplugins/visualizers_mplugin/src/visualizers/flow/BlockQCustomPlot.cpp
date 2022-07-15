@@ -56,7 +56,10 @@ namespace mico{
         
         BlockQCustomPlot::~BlockQCustomPlot() {
             if(dataTimer_) dataTimer_->stop();
-            if(plot_) plot_->hide();
+            if (plot_) {
+                plot_->hide();
+                delete plot_;
+            }
         };
 
         std::vector<flow::ConfigParameterDef> BlockQCustomPlot::parameters() {

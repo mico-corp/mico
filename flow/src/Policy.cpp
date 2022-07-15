@@ -58,6 +58,10 @@ namespace flow{
         return tags_;
     }
 
+    const std::vector<PolicyInput>& Policy::inputs() const {
+        return inputs_;
+    }
+
     std::string Policy::type(std::string _tag){
         auto iter = std::find_if(inputs_.begin(), inputs_.end(), [_tag](const PolicyInput& _input) {
             return _input.tag() == _tag;

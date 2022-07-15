@@ -51,7 +51,11 @@ namespace mico{
             
             isConfigured_ = false;
             if(auto detector = getParamByName(_params, "Detector"); detector){
-                if( !face_cascade.load( detectors[detector.value().selectedOption()])) {
+                try {
+                    if( !face_cascade.load( detectors[detector.value().selectedOption()])) {
+                        return false;
+                    }
+                } catch (std::exception) {
                     return false;
                 }
             }

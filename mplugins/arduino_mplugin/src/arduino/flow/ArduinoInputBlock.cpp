@@ -46,7 +46,7 @@ namespace mico {
                 try {
                     id_ = param.value().asInteger();
                     if (!ArduinoConnectionBlock::get()) {
-                        QMessageBox::warning(nullptr, "Arduino not connected", "Please, connect the arduino block first.");
+                        //QMessageBox::warning(nullptr, "Arduino not connected", "Please, connect the arduino block first.");
                         return false;
                     }
                 }

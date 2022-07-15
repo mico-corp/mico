@@ -35,7 +35,10 @@ namespace mico{
 
         bool BlockSpectrogram::configure(std::vector<flow::ConfigParameterDef> _params) {
             if (auto threshold = getParamByName(_params, "SampleSize"); threshold) {
-                if (rawDft_ != nullptr) delete[] rawDft_;
+                if (rawDft_ != nullptr) {
+                    delete[] rawDft_;
+                    rawDft_ = nullptr;
+                }
 
                 sampleSize_ = threshold.value().asInteger();
                 rawDft_ = new fftw_complex[size_t(sampleSize_ / 2) + 1];
@@ -56,6 +59,7 @@ namespace mico{
         }
 
         BlockSpectrogram::~BlockSpectrogram() {
+            if (rawDft_ != nullptr) delete[] rawDft_;
             
         };
 
@@ -70,6 +74,7 @@ namespace mico{
         }
 
         void BlockSpectrogram::inputCallback(std::vector<float> _input) {
+            if (!rawDft_) return;    // Not configured yet
             if (!_input.size()) return;
 
             bufferData_.insert(bufferData_.end(), _input.begin(), _input.end());

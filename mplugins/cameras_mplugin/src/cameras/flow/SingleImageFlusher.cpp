@@ -44,7 +44,11 @@ namespace mico{
 
         bool SingleImageFlusher::configure(std::vector<flow::ConfigParameterDef> _params) {
             if (auto param = getParamByName(_params, "image_path"); param) {
-                loadedImage_ = cv::imread(param.value().asPath().string());
+                try {
+                    loadedImage_ = cv::imread(param.value().asPath().string());
+                }catch(std::exception){
+                
+                }
                 return loadedImage_.rows != 0;
             }
             return false;
@@ -52,7 +56,7 @@ namespace mico{
 
         std::vector<flow::ConfigParameterDef> SingleImageFlusher::parameters() {
             return {
-                {"image_path", flow::ConfigParameterDef::eParameterType::PATH, "Browse Path"}
+                {"image_path", flow::ConfigParameterDef::eParameterType::PATH, fs::path("Browse Path")}
             };
         }
         QWidget* SingleImageFlusher::customWidget() {

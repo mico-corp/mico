@@ -25,6 +25,90 @@
 #include <cassert>
 
 namespace flow{
+
+    bool ConfigParameterDef::asBool() const {
+        assert(type_ == eParameterType::BOOLEAN);
+        return boost::any_cast<bool>(value_);
+    };
+
+    int ConfigParameterDef::asInteger() const {
+        assert(type_ == eParameterType::INTEGER);
+        return boost::any_cast<int>(value_);
+    };
+
+    float ConfigParameterDef::asDecimal() const {
+        assert(type_ == eParameterType::DECIMAL);
+        return boost::any_cast<float>(value_);
+    };
+
+    std::string ConfigParameterDef::asString() const {
+        assert(type_ == eParameterType::STRING);
+        return boost::any_cast<std::string>(value_);
+    };
+
+    fs::path ConfigParameterDef::asPath() const {
+        assert(type_ == eParameterType::PATH);
+        return boost::any_cast<fs::path>(value_);
+    };
+
+    std::vector<std::string> ConfigParameterDef::asOptions() const {
+        assert(type_ == eParameterType::OPTIONS);
+        return boost::any_cast<std::vector<std::string>>(value_);
+    };
+
+    std::string ConfigParameterDef::selectedOption() const {
+        assert(type_ == eParameterType::OPTIONS);
+        return selectedOption_;
+    };
+
+    std::string ConfigParameterDef::serialize() {
+        std::string serialization = "{" + name_ + "," ;
+
+        switch (type_)
+        {
+        case flow::ConfigParameterDef::eParameterType::BOOLEAN:
+        {
+            serialization += "boolean," + std::string(asBool() ? "true" : "false");
+            break;
+        }
+        case flow::ConfigParameterDef::eParameterType::INTEGER:
+        {
+            serialization += "integer,"+std::to_string(asInteger());
+            break;
+        }
+        case flow::ConfigParameterDef::eParameterType::DECIMAL:
+        {
+            serialization += "decimal,"+std::to_string(asDecimal());
+            break;
+        }
+        case flow::ConfigParameterDef::eParameterType::STRING:
+        {
+            serialization += "string,"+asString();
+            break;
+        }
+        case flow::ConfigParameterDef::eParameterType::PATH:
+        {
+            serialization += "path,"+asPath().string();
+            break;
+        }
+        case flow::ConfigParameterDef::eParameterType::OPTIONS:
+        {
+            serialization += "options,[";
+            auto options = asOptions();
+            for (auto& str : options) {
+                serialization += str + ",";
+            }
+            serialization.pop_back();
+            serialization += "]";
+            break;
+        }
+        default:
+            break;
+        }
+        serialization += "}";
+        return serialization;
+    }
+
     // BASE METHODS
     Block::~Block(){
         this->stop();

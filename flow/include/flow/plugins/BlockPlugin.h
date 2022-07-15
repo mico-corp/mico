@@ -29,17 +29,18 @@ namespace flow{
 
     class PluginNodeCreator{
     public:
-        using RegistryItemPtr     = std::shared_ptr<flow::Block>;
-        using RegistryItemCreator = std::function<RegistryItemPtr()>;
+        using RegistryItemPtr       = std::shared_ptr<flow::Block>;
+        using RegistryItemCreator   = std::function<RegistryItemPtr()>;
+        using ListCreators          = std::vector<std::pair<std::string, RegistryItemCreator>>;
 
         void registerNodeCreator(RegistryItemCreator _fn, std::string _category = "Plugin"){
             creatorFun_.push_back({_category, _fn});
         }
 
-        std::vector<std::pair<std::string, RegistryItemCreator>> get() { return creatorFun_; };
+        ListCreators get() { return creatorFun_; };
 
     private:
-        std::vector<std::pair<std::string, RegistryItemCreator>> creatorFun_;
+        ListCreators creatorFun_;
     };
 }
 

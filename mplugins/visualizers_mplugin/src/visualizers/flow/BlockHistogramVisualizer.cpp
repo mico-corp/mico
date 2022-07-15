@@ -41,7 +41,10 @@ namespace mico{
         
         BlockHistogramVisualizer::~BlockHistogramVisualizer() {
             if (refresher_) refresher_->stop();
-            if(plot_) plot_->hide();
+            if (plot_) {
+                plot_->hide();
+                delete plot_;
+            }
         };
 
         bool BlockHistogramVisualizer::configure(std::vector<flow::ConfigParameterDef> _params) {
