@@ -31,7 +31,7 @@ endif()
 #########################################
 find_package(Qt5 REQUIRED COMPONENTS Core Widgets Gui)
 
-option(BUILD_EXAMPLES   "Compile examples"              ON)
+option(BUILD_EXAMPLES   "Compile examples"              OFF)
 option(BUILD_TESTS      "Prepare tests"                 ON)
 
 ##################################################
@@ -88,9 +88,9 @@ endif()
 ##################################################
 ######    Examples.                       ########
 ##################################################
-if(${BUILD_EXAMPLES})
-  add_subdirectory(examples)
-endif()
+#if(${BUILD_EXAMPLES})
+#  add_subdirectory(examples)
+#endif()
 
 ##################################################
 ######    Installation.                   ########

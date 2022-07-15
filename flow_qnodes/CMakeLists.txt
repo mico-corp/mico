@@ -28,8 +28,6 @@ endif()
 
 add_subdirectory(thirdparty/nodeeditor)
 
-option(BUILD_EXAMPLES   "Compile examples"              ON)
-
 #########################################
 ######			General config	   ######
 #########################################
@@ -97,9 +95,9 @@ add_custom_target(flow_resources ALL
 ##################################################
 ######    Examples.                       ########
 ##################################################
-if(${BUILD_EXAMPLES})
-  add_subdirectory(examples)
-endif()
+#if(${BUILD_EXAMPLES})
+#  add_subdirectory(examples)
+#endif()
 
 ##################################################
 ######    Tools.                          ########
@@ -158,13 +156,11 @@ install(FILES
         DESTINATION lib/cmake/${PROJECT_NAME}
         )
 
-if(${BUILD_TOOLS})
-  install(TARGETS MICO
-    LIBRARY DESTINATION bin
-    ARCHIVE DESTINATION bin
-    RUNTIME DESTINATION bin
-  )
-endif()
+install(TARGETS mico
+	LIBRARY DESTINATION bin
+	ARCHIVE DESTINATION bin
+	RUNTIME DESTINATION bin
+)
 
 
 if(WIN32)
