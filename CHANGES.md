@@ -1,6 +1,3 @@
-                                                                                
-                                                                                
-                                                                                
                                    %%%%%                                        
                                     %%%%%%%%                                    
                                    %%%%   %%%%                                  
@@ -27,15 +24,12 @@
                         %%%%%%    %%%%%%%%%%%%%    %%%%%%                       
                             %%%%%               %%%%%                           
                                %%%%%%%%%%%%%%%%%%                               
-                                                                                
-                                                                                
 
-
-# CHANGES LOG!
+# CHANGES LOG
 
 ## Version 2.0.0-alpha
 
-Released in June 2022. For more information about the previous status, go to previous releases. From now on, everything will be written here too!
+Released in July 2022. For more information about the previous status, go to previous releases. From now on, everything will be written here too!
 
 ### New Features
 
@@ -45,6 +39,6 @@ Released in June 2022. For more information about the previous status, go to pre
 * Inputs can be configured as consumable or not.
 * The Plotter has been improved a lot! Now the data displayed is smoother and fits better to real data.
 * Added module for audio (microphone, speaker, DFT, etc.).
-
+* Fixed DVS module in Ubuntu
 
 ### Known Bugs
