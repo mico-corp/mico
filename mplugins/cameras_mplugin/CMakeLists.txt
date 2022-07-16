@@ -36,9 +36,9 @@ file(GLOB_RECURSE MICO_CAMERAS_HEADER_FILES "include/*.h" "include/*.inl")
 SET(MICO_MODULES ${MICO_MODULES} cameras PARENT_SCOPE)
 add_mplugin(    PLUGIN_NAME ${PLUGIN_NAME} 
                 PLUGIN_SOURCES ${MICO_CAMERAS_SOURCE_FILES}
-				PLUGIN_HEADERS  ${MICO_CAMERAS_HEADER_FILES} 
-				MICO_DEPS core
-				HAS_RESOURCES)
+		 PLUGIN_HEADERS  ${MICO_CAMERAS_HEADER_FILES} 
+		 MICO_DEPS core
+		 HAS_RESOURCES)
 
 
 ##################################################

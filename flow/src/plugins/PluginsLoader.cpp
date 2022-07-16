@@ -47,12 +47,12 @@ namespace flow {
                 list.insert(list.end(), tempList.begin(), tempList.end());
             }
         }
-
         return list;
     }
 
     PluginNodeCreator::ListCreators PluginsLoader::parseLibrary(const std::string& _path){
-        if (_path.find("dll") == std::string::npos) return {};
+        if (_path.find("dll") == std::string::npos && 
+            _path.find("so") == std::string::npos) return {};
         if (_path.find("mico-") == std::string::npos) return {};
 
         void *handle = getHandle(_path);

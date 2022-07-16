@@ -22,6 +22,7 @@
 
 #include <flow/flow.h>
 #include <flow/plugins/BlockPlugin.h>
+
 #include <mico/math/flow/FunctionBlocks.h>
 #include <mico/math/flow/ConstStreamer.h>
 #include <mico/math/flow/ArithmeticBlocks.h>
@@ -30,6 +31,7 @@
 
 using namespace mico::math;
 using namespace flow;
+
 
 extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(fs::path _libraryPath){
     Persistency::setResourceDir(_libraryPath.parent_path().string() + "/resources");

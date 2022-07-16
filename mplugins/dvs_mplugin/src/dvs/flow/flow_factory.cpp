@@ -33,6 +33,8 @@
 using namespace mico::dvs;
 using namespace flow;
 
+// DVS SDK sets visibility flag to hidden. We need this method to be explicitly accesible when loading the shared library. 
+#pragma GCC visibility push(default)
 extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(fs::path _libraryPath){
     Persistency::setResourceDir(_libraryPath.parent_path().string() + "/resources");
 
@@ -45,4 +47,5 @@ extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator* factory(fs::path _librar
         creator->registerNodeCreator([](){ return std::make_shared<BlockNoiseFilter>();        }, "DVS");
 
         return creator;
-    }
+}
+#pragma GCC visibility pop

@@ -235,10 +235,8 @@ namespace flow{
 
     void FlowVisualInterface::loadCustomPlugins(std::shared_ptr<QtNodes::DataModelRegistry> &_registry){
         // List plugins in default folder
-        std::vector<std::string> files;
         std::vector<std::string> hintsDirectories;
         #ifdef linux
-            std::string userName(getenv("USER"));
             hintsDirectories.push_back("/usr/bin/mplugins");
         #endif
         #ifdef _WIN32
@@ -250,10 +248,10 @@ namespace flow{
         PluginNodeCreator::ListCreators listCreators;
         for(const auto &hint: hintsDirectories){
             auto tmpList = pl.parseFolder(hint);
-            listCreators.insert(listCreators.end(), tmpList.end(), tmpList.end());
+            listCreators.insert(listCreators.end(), tmpList.begin(), tmpList.end());
         }
 
-        if (files.size() == 0) {
+        if (listCreators.size() == 0) {
              auto dirPlugins = queryOtherPlugingDir();
              auto tmpList = pl.parseFolder(dirPlugins);
              listCreators.insert(listCreators.end(), tmpList.begin(), tmpList.end());

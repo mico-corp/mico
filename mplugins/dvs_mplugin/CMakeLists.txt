@@ -33,10 +33,6 @@ if(${dv_FOUND} AND ${libcaer_FOUND})
   ###### Create project and configure ALIAS ########
   ##################################################
 
-  set(EXTRA_INCLUDES "")
-  set(EXTRA_LIBRARIES "")
-  set(EXTRA_COMPILE_DEFS "")
-
   file(GLOB_RECURSE MICO_DVS_SOURCE_FILES "src/*.cpp" "src/*.c")
   file(GLOB_RECURSE MICO_DVS_HEADER_FILES "include/*.h" "include/*.inl")
   
