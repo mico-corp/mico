@@ -64,11 +64,11 @@ public:
 static CreatorsHolder creatorsHolder = CreatorsHolder();
 
 std::random_device rd; // obtain a random number from hardware
-std::mt19937 gen(rd()); // seed the generator
+std::mt19937 randomGeneratorSeed(rd()); // seed the generator
 std::uniform_int_distribution<int> distr(0, 5); // define the range
 
 void randomizeParameter(flow::ConfigParameterDef &_param, bool _verbose = false) {
-	int rndNumber = distr(gen);
+	int rndNumber = distr(randomGeneratorSeed);
 	switch (rndNumber) {
 	case 0: // set as bool
 		_param.type_ = flow::ConfigParameterDef::eParameterType::BOOLEAN;
@@ -180,7 +180,7 @@ TEST(create_blocks, create_blocks) {
 
 
 std::pair<flow::Outpipe*, std::function<void()>> randomPipe() {
-	int rndNumber = distr(gen);
+	int rndNumber = distr(randomGeneratorSeed);
 
 	Outpipe* ptr;
 	std::function<void()> fn;
@@ -269,8 +269,8 @@ TEST(input_tests, adequate_inputs) {
 
 
 			std::cout << "\t Testing without being configured" << std::endl;
-			for (auto& [pipe, gen] : pipes) {
-				pipe->flush(gen->defaultContructible());
+			for (auto& [pipe, generator] : pipes) {
+				pipe->flush(generator->defaultContructible());
 			}
 			
 			auto defaultParameters = block->parameters();
@@ -280,16 +280,16 @@ TEST(input_tests, adequate_inputs) {
 			std::cout << "\t Default constructible input" << std::endl;
 			// Test default constructible
 			for (unsigned i = 0; i < 100; i++) {
-				for (auto& [pipe, gen] : pipes) {
-					pipe->flush(gen->defaultContructible());
+				for (auto& [pipe, generator] : pipes) {
+					pipe->flush(generator->defaultContructible());
 				}
 			}
 
 			// Test random inputs
 			std::cout << "\t Random input generation" << std::endl;
 			for (unsigned i = 0; i < 100; i++) {
-				for (auto& [pipe, gen] : pipes) {
-					pipe->flush(gen->randomInput());
+				for (auto& [pipe, generator] : pipes) {
+					pipe->flush(generator->randomInput());
 				}
 			}
 		}

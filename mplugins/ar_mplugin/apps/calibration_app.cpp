@@ -39,7 +39,7 @@ int main(int _argc, char** _argv) {
     std::cout << "Image width: " << width << ", and height " << height << std::endl;
     //// Calibration!
     // Calibrate single cameras.
-    float squareSize = atof(_argv[4]);
+    float squareSize = float(std::atof(_argv[4]));
     std::cout << "Computing parameter" << std::endl;
     Mat matrixLeft = Mat::eye(3, 3, CV_64F), matrixRight = Mat::eye(3, 3, CV_64F);
     Mat distCoefLeft = Mat::zeros(8, 1, CV_64F), distCoefRight = Mat::zeros(8, 1, CV_64F);
@@ -71,6 +71,7 @@ int main(int _argc, char** _argv) {
 }
 //---------------------------------------------------------------------------------------------------------------------
 void mouseCallback(int event, int x, int y, int flags, void* userdata) {
+    x; y; flags; userdata;
     if (event == EVENT_LBUTTONDOWN) {
         gSaveNext = true;
     }
@@ -82,6 +83,9 @@ void mouseCallback(int event, int x, int y, int flags, void* userdata) {
 
 
 bool imagesFromCamera(int _argc, char** _argv, std::vector<std::vector<cv::Point2f>>& _leftPoints, std::vector<std::vector<cv::Point2f>>& _rightPoints) {
+    _rightPoints;
+    _argc;
+
     VideoCapture camera(atoi(_argv[1]));
     if (!camera.isOpened()) {
         std::cout << "Couldn't open camera\n";

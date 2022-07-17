@@ -18,7 +18,7 @@
 ##  OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 ##  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ##---------------------------------------------------------------------------------------------------------------------
-cmake_minimum_required (VERSION 3.12 FATAL_ERROR)
+cmake_minimum_required (VERSION 3.21 FATAL_ERROR)
 project(mico VERSION 1.0 LANGUAGES C CXX)
 set(PLUGIN_NAME ${PROJECT_NAME}-ar)
 

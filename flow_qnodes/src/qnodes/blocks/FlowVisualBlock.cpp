@@ -154,7 +154,6 @@ namespace flow{
     
     std::vector<flow::ConfigParameterDef> FlowVisualBlock::extractParamsGui(){
         std::vector<flow::ConfigParameterDef> params;
-        int counter = 0; 
         for(auto &param: configParams_){
             params.push_back(param->getParam());
         }

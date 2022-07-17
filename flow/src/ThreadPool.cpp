@@ -24,13 +24,21 @@
 #include <cstdlib>
 #include <string>
 #include <iostream>
+#include <windows.h>
 
 namespace flow{
     ThreadPool *ThreadPool::instance_ = nullptr;
 
     void ThreadPool::init(){
         size_t nThreads = std::thread::hardware_concurrency();
-        if (const char* nThreadsVar = std::getenv("FLOW_N_THREADS_POOL"); nThreadsVar != nullptr) {
+        #if defined(_WIN32)
+            char* nThreadsVar = nullptr;
+            size_t sz = 0;
+            _dupenv_s(&nThreadsVar, &sz, "FLOW_N_THREADS_POOL");
+        #elif defined (__linux__)
+            const char* nThreadsVar = std::getenv("FLOW_N_THREADS_POOL");
+        #endif
+        if (nThreadsVar != nullptr) {
             try {
                 nThreads = std::stoi(nThreadsVar);
             }
@@ -43,6 +51,8 @@ namespace flow{
         }
         if(!instance_)
             instance_ = new ThreadPool(nThreads);
+
+        free(nThreadsVar);
     }
 
     ThreadPool *ThreadPool::get(){

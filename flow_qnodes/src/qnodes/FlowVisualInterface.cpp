@@ -292,7 +292,7 @@ namespace flow{
         layout->addWidget(buttonBox);
         auto okButton = buttonBox->button(QDialogButtonBox::Ok);
         okButton->setDefault(true);
-        okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+        okButton->setShortcut(Qt::Key_Control | Qt::Key_Return);
         QObject::connect(buttonBox, &QDialogButtonBox::accepted, [&]() {
             dialog.accept();
         });

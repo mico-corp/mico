@@ -53,7 +53,7 @@ namespace mico{
                                                                 "   - Outputs: \n";};
 
         private:
-            std::function<bool(float, float)> fn_ = [](float _a, float _b){return false;};
+            std::function<bool(float, float)> fn_;
 
         };
     }

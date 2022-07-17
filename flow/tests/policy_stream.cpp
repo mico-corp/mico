@@ -112,7 +112,7 @@ TEST(disconnect, disconnect)  {
     });
     ASSERT_TRUE(goodCallback);
 
-    bool badCallback = pol.registerCallback<float>({"float"}, [&](float _i1){ });
+    bool badCallback = pol.registerCallback<float>({ "float" }, [&](float _i1) { _i1; });
     ASSERT_FALSE(badCallback);
     
     op.registerPolicy(&pol, "counter");
@@ -138,6 +138,7 @@ TEST(transmission_int_2, transmission_int)  {
     int counterCall1 = 0;
     pol1.registerCallback<int>({"counter"}, [&](int _in){
         counterCall1++; 
+        _in;
     });
     
     int counterCall2 = 0;
@@ -145,6 +146,7 @@ TEST(transmission_int_2, transmission_int)  {
     pol2.registerCallback<int>({"counter"}, [&](int _in){
         guardCall2.lock();
         counterCall2++;
+        _in;
     });
 
     op.registerPolicy(&pol1, "counter");
@@ -176,14 +178,18 @@ TEST(sync_policy, sync_policy)  {
     int counterCallFloat = 0;
     int counterCallSync = 0;
     std::mutex guardCall1;
-    pol.registerCallback<int>({"counter"}, [&](float _in){
-        counterCallInt++;    
+    pol.registerCallback<int>({"counter"}, [&](int _in){
+        counterCallInt++;
+        _in;
     });
     pol.registerCallback<float>({"clock"}, [&](float _in){
-        counterCallFloat++;    
+        counterCallFloat++;
+        _in;
     });
     pol.registerCallback<int,float>({"counter", "clock"}, [&](int _i1, float _i2){
         counterCallSync++;    
+        _i1;
+        _i2;
     });
     
     op1.registerPolicy(&pol,"counter");
@@ -342,6 +348,7 @@ TEST(loop_chain_split, loop_chain_split)  {
     bool calledOnce0a = true;
     std::mutex guard0a;
     p0.registerCallback<int>({"counter"}, [&](int _in){
+        _in;
         guard0a.lock();
         o1.flush(1);
         ASSERT_TRUE(calledOnce0a);
@@ -352,24 +359,30 @@ TEST(loop_chain_split, loop_chain_split)  {
     bool calledOnce0b = true;
     std::mutex guard0b;
     p0.registerCallback<std::string>({"msg"}, [&](std::string _in){
+        _in;
         guard0b.lock();
         ASSERT_TRUE(calledOnce0b);
         calledOnce0b = false;
         guard0b.unlock();
+        _in;
     });
 
     p1.registerCallback<int>({"tocks"}, [&](int _in){
+        _in;
         o3.flush("pepe");
         o4.flush(1);
+        _in;
     });
 
     bool calledOnce4 = true;
     std::mutex guard4;
     p4.registerCallback<int>({"counter"}, [&](int _in){
+        _in;
         guard4.lock();
         ASSERT_TRUE(calledOnce4);
         calledOnce4 = false;
         guard4.unlock();
+        _in;
     });
 
     o0.flush(1);
@@ -389,6 +402,7 @@ TEST(concurrency_attack_test, concurrency_attack_test)  {
     int counterCall1 = 0;
     bool idle = true;
     pol.registerCallback<int>({"cnt"}, [&](int _in){
+        _in;
         if(idle){
             idle=false;
             counterCall1++;
@@ -410,6 +424,7 @@ TEST(concurrency_attack_test, concurrency_attack_test)  {
         std::unique_lock<std::mutex> lck(mtx);
         while (!ready) cv.wait(lck);
         op.flush(1);
+        id;
     };
 
     const int nThreads = 10;

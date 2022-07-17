@@ -19,7 +19,7 @@
 ##  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ##---------------------------------------------------------------------------------------------------------------------
 
-cmake_minimum_required (VERSION 3.12 FATAL_ERROR)
+cmake_minimum_required (VERSION 3.21 FATAL_ERROR)
 project(mico VERSION 2.0.0 LANGUAGES C CXX)
 
 if( NOT CMAKE_BUILD_TYPE )
@@ -38,18 +38,14 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/package)
 
+
 set(LIBRARY_MODE SHARED)
-if(WIN32)
-    # if(MSVC)
-    #     add_compile_options(
-    #         $<$<CONFIG:>:/MT> #---------|
-    #         $<$<CONFIG:Debug>:/MTd> #---|-- Statically link the runtime libraries
-    #         $<$<CONFIG:Release>:/MT> #--|
-    #     )
-    # endif()
+if(MSVC)
+    add_compile_options(/W4 /WX) # Time to be tough
 elseif(UNIX)
     set(VCPKG_CXX_FLAGS " ${VCPKG_CXX_FLAGS} -fPIC ")
     set(VCPKG_C_FLAGS " ${VCPKG_C_FLAGS} -fPIC " )
+    add_compile_options(-Wall -Wextra -pedantic -Werror) # Time to be tough
 endif()
 
 if(WIN32)

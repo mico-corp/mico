@@ -41,8 +41,7 @@ namespace flow{
     class FLOW_DECL ParameterWidget: public QHBoxLayout{
     public:
         ParameterWidget(const ConfigParameterDef &_param, 
-                        QWidget *_parent = nullptr, 
-                        const char *_name = nullptr);
+                        QWidget *_parent = nullptr);
         ~ParameterWidget();
         
         std::string label() const;

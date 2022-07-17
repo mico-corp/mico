@@ -38,7 +38,9 @@ namespace mico {
                             flow::makeInput<float>("B") });
 
             std::function<void(float, float)> fn = [&](float _a, float _b) {
-                getPipe("result")->flush(fn_(_a, _b));
+                if (fn_) {
+                    getPipe("result")->flush(fn_(_a, _b));
+                }
             };
 
             registerCallback({ "A", "B" }, fn );
@@ -66,7 +68,7 @@ namespace mico {
                 fn_ = [](float a, float b) {return a <= b; };
             }
             else {
-                fn_ = [](float a, float b) {return false; };
+                fn_ = [](float a, float b) {a; b; return false; };
             }
 
             return true;
