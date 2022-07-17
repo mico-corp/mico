@@ -87,7 +87,7 @@ namespace mico{
         void BlockHistogramVisualizer::policyCallback(std::vector<float> _histogram) {
             if (yData_.size() != _histogram.size()) {
                 std::lock_guard<std::mutex> lock(dataLock_);
-                yData_.resize(_histogram.size());
+                yData_.resize(int(_histogram.size()));
             }
 
             auto it1 = _histogram.begin();

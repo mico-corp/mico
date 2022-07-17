@@ -88,9 +88,9 @@ namespace mico{
                     if (image.rows != 0) {
                         QImage qimg;
                         if (image.channels() == 1) {
-                            int inttype = image.type();
+                            const int inttype = image.type();
 
-                            int depth = inttype & CV_MAT_DEPTH_MASK;
+                            const int depth = inttype & CV_MAT_DEPTH_MASK;
                             switch (depth) {
                             case CV_8U:
                                 qimg = QImage(image.data, image.cols, image.rows, QImage::Format_Grayscale8);
@@ -109,10 +109,10 @@ namespace mico{
 
                         }
                         else if (image.channels() == 3) {
-                            qimg = QImage(image.data, image.cols, image.rows, image.step, QImage::Format_RGB888).rgbSwapped();
+                            qimg = QImage(image.data, image.cols, image.rows, int(image.step), QImage::Format_RGB888).rgbSwapped();
                         }
                         else if (image.channels() == 4) {
-                            qimg = QImage(image.data, image.cols, image.rows, image.step, QImage::Format_RGBA8888).rgbSwapped();
+                            qimg = QImage(image.data, image.cols, image.rows, int(image.step), QImage::Format_RGBA8888).rgbSwapped();
                         }
                         imageView_->setPixmap(QPixmap::fromImage(qimg));
                     }

@@ -155,17 +155,14 @@ namespace mico {
                             qimg = QImage(image.data, image.cols, image.rows, QImage::Format_Grayscale8);
                         }
                         else if (image.channels() == 3) {
-                            qimg = QImage(image.data, image.cols, image.rows, image.step, QImage::Format_RGB888).rgbSwapped();
+                            qimg = QImage(image.data, image.cols, image.rows, int(image.step), QImage::Format_RGB888).rgbSwapped();
                         }
                         else if (image.channels() == 4) {
-                            qimg = QImage(image.data, image.cols, image.rows, image.step, QImage::Format_RGBA8888).rgbSwapped();
+                            qimg = QImage(image.data, image.cols, image.rows, int(image.step), QImage::Format_RGBA8888).rgbSwapped();
                         }
                         imageView_->setPixmap(QPixmap::fromImage(qimg));
                     }
 
-                    progressX_->setValue(std::accumulate(qualityX_.begin(), qualityX_.end(), 0));
-                    progressY_->setValue(std::accumulate(qualityY_.begin(), qualityY_.end(), 0));
-                    progressSize_->setValue(std::accumulate(qualityScale_.begin(), qualityScale_.end(), 0));
 
                 });
                 imageRefresher_->start(30);

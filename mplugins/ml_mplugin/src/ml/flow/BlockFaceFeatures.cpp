@@ -20,6 +20,11 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 
+#if defined(_MSC_VER)
+#  pragma warning(push)
+#  pragma warning(disable: 4702) // warning C4702: unreachable code
+#endif
+
 #include <mico/ml/flow/BlockFaceFeatures.h>
 #include <flow/Outpipe.h>
 
@@ -75,3 +80,8 @@ namespace mico{
         }
     }
 }
+
+
+#if defined(_MSC_VER)
+#  pragma warning(pop)
+#endif
