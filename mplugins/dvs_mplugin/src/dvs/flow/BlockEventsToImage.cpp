@@ -62,7 +62,7 @@ namespace dvs{
     }
 
     bool BlockEventsToImage::obtainImageFromEvents(PolarityPacket _events , cv::Mat &_image){
-        for (unsigned i = 0; i < _events->size(); i++) {
+        for (libcaer::events::EventPacket::size_type i = 0; i < _events->size(); i++) {
             const libcaer::events::PolarityEvent &event = (*_events)[i];
             if(!event.isValid())
                 continue;

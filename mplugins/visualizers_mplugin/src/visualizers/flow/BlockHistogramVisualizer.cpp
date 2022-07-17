@@ -45,7 +45,7 @@ namespace mico{
                 plot_->hide();
                 delete plot_;
             }
-        };
+        }
 
         bool BlockHistogramVisualizer::configure(std::vector<flow::ConfigParameterDef> _params) {
             if (!plot_) {
@@ -85,7 +85,7 @@ namespace mico{
         }
 
         void BlockHistogramVisualizer::policyCallback(std::vector<float> _histogram) {
-            if (yData_.size() != _histogram.size()) {
+            if (yData_.size() != int(_histogram.size())) {
                 std::lock_guard<std::mutex> lock(dataLock_);
                 yData_.resize(int(_histogram.size()));
             }

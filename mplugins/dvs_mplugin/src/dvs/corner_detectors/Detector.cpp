@@ -37,7 +37,7 @@ namespace mico{
       for (const auto e : _msg){
     
         if (isFeature(e)) // call to FAST or Harris
-          feature_msg.add(e);
+          feature_msg.push_back(e);
         
       }
       // publish feature events

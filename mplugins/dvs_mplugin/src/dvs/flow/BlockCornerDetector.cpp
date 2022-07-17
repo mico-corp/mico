@@ -48,7 +48,7 @@ namespace mico{
 		);
 
 		int idxCorner = 0;
-		for(unsigned i =0; i< events->size(); i++){
+		for(libcaer::events::EventPacket::size_type i =0; i< events->size(); i++){
 		    // Get full timestamp and addresses of first event.
 		    const libcaer::events::PolarityEvent &polEvent = (*events)[i];
 
@@ -110,7 +110,7 @@ namespace mico{
 
 
         bool BlockCornerDetector::configure(std::vector<flow::ConfigParameterDef> _params) {
-            int imageWidth, imageHeight;
+            int imageWidth = 640, imageHeight = 480;
             if (auto param = getParamByName(_params, "image_width"); param)
                 imageWidth = param.value().asInteger();
 

@@ -51,10 +51,10 @@ namespace mico{
                 plot_->hide();
                 delete plot_;
             }
-        };
+        }
 
         
-        bool BlockScatterPlot::configure(std::vector<flow::ConfigParameterDef> _params) {
+        bool BlockScatterPlot::configure(std::vector<flow::ConfigParameterDef> ) {
             if (!plot_) {
                 plot_ = new QCustomPlot();
 

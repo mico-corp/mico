@@ -56,7 +56,7 @@ namespace mico {
                 imageView_->hide();
                 delete imageView_;
             }
-        };
+        }
 
 
 
@@ -115,7 +115,7 @@ namespace mico {
 
             
             return w;
-        };
+        }
 
 
         void BlockCalibrationMonocular::startReset() {

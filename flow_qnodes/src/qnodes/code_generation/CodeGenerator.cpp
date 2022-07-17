@@ -39,10 +39,7 @@
 
 namespace flow{
     // Initialize dictionary
-    void CodeGenerator::parseScene(std::string _cppFile, QJsonObject const &_scene, const std::vector<std::string> &_customIncludes){
-        _cppFile;
-        _scene;
-        _customIncludes;
+    void CodeGenerator::parseScene(std::string, QJsonObject const &, const std::vector<std::string> &){
         //std::ofstream genMain(_cppFile);
     
         //// Write preamble
@@ -124,7 +121,7 @@ namespace flow{
         //writeEnd(genMain);
     }
 
-    void CodeGenerator::generateCmake(  std::string _cmakeFilePath, 
+    bool CodeGenerator::generateCmake(  std::string _cmakeFilePath, 
                                         std::string _cppName, 
                                         const std::vector<std::string> &_customFinds, 
                                         const std::vector<std::string> &_customLinks){
@@ -147,13 +144,13 @@ namespace flow{
         for(auto &cLinks: _customLinks){
             cmakeFile <<  "target_link_libraries(" << exePath << " LINK_PRIVATE "<< cLinks <<")" << std::endl;
         }
-
+	return true;
     }
 
-    void CodeGenerator::compile(std::string _cppFolder){
+    bool CodeGenerator::compile(std::string _cppFolder){
         std::string cmd = "cd "+ _cppFolder +"&& mkdir -p build && cd build && cmake .. && make";
-        system(cmd.c_str());
-
+        const int res = system(cmd.c_str());
+	return res != 0;
     }
 
 

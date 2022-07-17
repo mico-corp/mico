@@ -60,7 +60,7 @@ namespace mico{
                 plot_->hide();
                 delete plot_;
             }
-        };
+        }
 
         std::vector<flow::ConfigParameterDef> BlockQCustomPlot::parameters() {
             return {

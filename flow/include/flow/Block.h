@@ -77,7 +77,7 @@ namespace flow{
 
         // BASE METHODS
         /// Configure block with given parameters.
-        virtual bool configure(std::vector<flow::ConfigParameterDef> _params) { return false; };
+        virtual bool configure(std::vector<flow::ConfigParameterDef>) { return false; };
         
         /// Get list of parameters of the block
         virtual std::vector<flow::ConfigParameterDef> parameters(){ return {}; };

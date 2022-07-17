@@ -46,8 +46,8 @@ namespace mico{
             if (auto param = getParamByName(_params, "image_path"); param) {
                 try {
                     loadedImage_ = cv::imread(param.value().asPath().string());
-                }catch(std::exception){
-                
+                }catch(std::exception &e){
+                	std::cout << e.what() << std::endl;
                 }
                 return loadedImage_.rows != 0;
             }

@@ -229,7 +229,7 @@ namespace mico{
             drawSquare({_v[0], _v[1], _v[5], _v[4]}, {-1,0,0});
         }
 
-        void Scene3d::drawCube(std::vector<std::vector<Point>> _faces){
+        void Scene3d::drawCube(std::vector<std::vector<Point>>){
             glMatrixMode(GL_MODELVIEW);                         // To operate on model-view matrix
             glLoadIdentity();                       // Reset the model-view matrix
             

@@ -77,5 +77,3 @@ endif()
 find_package(Eigen3 REQUIRED)
 mplugin_link_library( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES Eigen3::Eigen)
 
-
-add_subdirectory(apps)

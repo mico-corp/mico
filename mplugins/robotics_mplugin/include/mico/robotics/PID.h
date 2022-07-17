@@ -84,7 +84,7 @@ namespace mico{
             float targetReference_ = 0;
             float slope_ = 0;
 
-            float kp_ = 0, ki_ = 0, kd_ = 0, fc_ = 0;;
+            float kp_ = 0, ki_ = 0, kd_ = 0, fc_ = 0;
             float minSat_ = 0, maxSat_ = 0;
             float lastResult_ = 0; 
             float lastError_ = 0;
