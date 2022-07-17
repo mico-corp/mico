@@ -41,7 +41,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake ..
+          cmake .. -DBUILD_AUDIO=OFF
       - name: "Compile repository"
         run: |
           cd build
