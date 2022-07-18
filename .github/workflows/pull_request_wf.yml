@@ -45,8 +45,8 @@ jobs:
       - name: "Compile repository"
         run: |
           cd build
-          make -j
-      - name: "Try Deploy"
-        run: |
-          cd build
-          make package
+          make -j mico
+      # - name: "Try Deploy"
+      #   run: |
+      #     cd build
+      #     make package
