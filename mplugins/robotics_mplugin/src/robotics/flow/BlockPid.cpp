@@ -94,6 +94,6 @@ namespace mico {
 
         void BlockPid::referenceInputCallback(float _ref) {
             pid_->reference(_ref);
-        };
+        }
     }
 }

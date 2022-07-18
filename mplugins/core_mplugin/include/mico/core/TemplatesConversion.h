@@ -51,7 +51,7 @@ boost::any vectorToVector(boost::any& _input) {
     auto vIn = boost::any_cast<InT_>(_input);
     OutT_ vOut(vIn.size());
     for (size_t i = 0; i < vIn.size(); i++) {
-        vOut[i] = OutT_::value_type(vIn[i]);
+        vOut[i] = typename OutT_::value_type(vIn[i]);
     }
     return vOut;
 }

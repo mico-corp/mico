@@ -55,7 +55,7 @@ namespace mico{
                 imageView_->hide();
                 delete imageView_;
             } 
-        };
+        }
         
         QWidget* BlockImageVisualizer::customWidget() {
             reopenButton_ = new QPushButton("Open Viewer");
@@ -67,7 +67,7 @@ namespace mico{
             return reopenButton_;
         }
 
-        bool BlockImageVisualizer::configure(std::vector<flow::ConfigParameterDef> _params) {
+        bool BlockImageVisualizer::configure(std::vector<flow::ConfigParameterDef>) {
             if (!imageView_) {
                 imageView_ = new QLabel();
                 imageView_->setScaledContents(true);

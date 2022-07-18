@@ -167,7 +167,7 @@ namespace mico{
             /// Returns a brief description of the block
             std::string description() const override {
                 return    "Function block."
-                    "   - Input: float number\n";
+                    "   - Input: float number\n"
                     "   - Outputs: float number\n";
             };
 

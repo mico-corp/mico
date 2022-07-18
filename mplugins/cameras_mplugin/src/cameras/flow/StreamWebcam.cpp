@@ -49,7 +49,7 @@ namespace mico{
             }
             std::unique_lock lck(safeDeletion_);
             cv_.wait_for(lck, std::chrono::milliseconds(100));
-        };
+        }
 
         bool StreamWebcam::configure(std::vector<flow::ConfigParameterDef> _params) {
             if (isRunningLoop()) // Cant configure if already running.
@@ -87,7 +87,7 @@ namespace mico{
             l->addWidget(new QLabel("Frequency: "));
             l->addWidget(freqSpinner_);
             return w;
-        };
+        }
 
         void StreamWebcam::loopCallback() {
             while(!camera_) {

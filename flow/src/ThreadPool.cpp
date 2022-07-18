@@ -51,7 +51,7 @@ namespace flow{
         if(!instance_)
             instance_ = new ThreadPool(nThreads);
 
-        free(nThreadsVar);
+        delete[] nThreadsVar;
     }
 
     ThreadPool *ThreadPool::get(){

@@ -42,7 +42,7 @@ namespace flow{
         if (isRunning_) return; // Don't even try to run it if it is busy.
         isRunning_ = true;
 
-        int flagCounter = 0;
+        size_t flagCounter = 0;
         for(auto flag = updated_.begin(); flag != updated_.end(); flag++){
             if(flag->second) flagCounter++;
         }

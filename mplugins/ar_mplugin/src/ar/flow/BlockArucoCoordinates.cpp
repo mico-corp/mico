@@ -109,7 +109,7 @@ namespace mico{
                     if (id_ == 0 && getPipe("all_coordinates")->registrations()) {
                         std::map<int, Eigen::Matrix4f> all;
                         // draw axis for each marker
-                        for (int id = 0; id < ids.size(); id++) {
+                        for (size_t id = 0; id < ids.size(); id++) {
                             cv::Mat R;
                             cv::Rodrigues(rvecs[id], R);
 
@@ -126,7 +126,7 @@ namespace mico{
                     }
                     else {
                         // draw axis for each marker
-                        for (int id = 0; id < ids.size(); id++) {
+                        for (size_t id = 0; id < ids.size(); id++) {
                             //cv::aruco::drawAxis(image, cameraMatrix_, distCoeffs_, rvecs[id], tvecs[id], 0.1);
                             if (ids[id] == id_) { // use as coordinate system
                                 cv::Mat R;

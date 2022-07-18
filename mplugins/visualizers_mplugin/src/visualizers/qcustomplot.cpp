@@ -6141,7 +6141,11 @@ double QCPAxisTickerDateTime::dateTimeToKey(const QDate date)
 # if QT_VERSION < QT_VERSION_CHECK(4, 7, 0)
   return QDateTime(date).toTime_t();
 # else
+#if defined(WIN32)
   return date.startOfDay().toMSecsSinceEpoch() / 1000.0;
+#else
+  return QDateTime(date).toMSecsSinceEpoch()/1000.0;
+#endif
 # endif
 }
 /* end of 'src/axis/axistickerdatetime.cpp' */
@@ -8934,7 +8938,13 @@ void QCPAxis::wheelEvent(QWheelEvent * _event)
   
   const double wheelSteps = _event->angleDelta().x() / 120.0 + _event->angleDelta().y() / 120.0; // a single step delta is +/-120 usually
   const double factor = qPow(mAxisRect->rangeZoomFactor(orientation()), wheelSteps);
+  #if defined(WIN32)
   scaleRange(factor, pixelToCoord(orientation() == Qt::Horizontal ? _event->position().x() : _event->position().y()));
+  #else
+  scaleRange(factor, pixelToCoord(orientation() == Qt::Horizontal ? _event->pos().x() : _event->pos().y()));
+  #endif
+  
+  
   mParentPlot->replot();
 }
 
@@ -14968,7 +14978,11 @@ void QCustomPlot::wheelEvent(QWheelEvent *event)
 {
   emit mouseWheel(event);
   // forward event to layerable under cursor:
+  #if defined(WIN32)
   QList<QCPLayerable*> candidates = layerableListAt(event->position(), false);
+  #else
+  QList<QCPLayerable*> candidates = layerableListAt(event->pos(), false);
+  #endif
   for (int i=0; i<candidates.size(); ++i)
   {
     event->accept(); // default impl of QCPLayerable's mouse events ignore the event, in that case propagate to next candidate in list
@@ -17939,7 +17953,11 @@ void QCPAxisRect::wheelEvent(QWheelEvent *event)
         for (int i=0; i<mRangeZoomHorzAxis.size(); ++i)
         {
           if (!mRangeZoomHorzAxis.at(i).isNull())
+            #if defined(WIN32)           
             mRangeZoomHorzAxis.at(i)->scaleRange(factor, mRangeZoomHorzAxis.at(i)->pixelToCoord(event->position().x()));
+            #else
+            mRangeZoomHorzAxis.at(i)->scaleRange(factor, mRangeZoomHorzAxis.at(i)->pixelToCoord(event->pos().x()));
+            #endif
         }
       }
       if (mRangeZoom.testFlag(Qt::Vertical))
@@ -17948,7 +17966,11 @@ void QCPAxisRect::wheelEvent(QWheelEvent *event)
         for (int i=0; i<mRangeZoomVertAxis.size(); ++i)
         {
           if (!mRangeZoomVertAxis.at(i).isNull())
-            mRangeZoomVertAxis.at(i)->scaleRange(factor, mRangeZoomVertAxis.at(i)->pixelToCoord(event->position().y()));
+            #if defined(WIN32)           
+            mRangeZoomHorzAxis.at(i)->scaleRange(factor, mRangeZoomHorzAxis.at(i)->pixelToCoord(event->position().y()));
+            #else
+            mRangeZoomHorzAxis.at(i)->scaleRange(factor, mRangeZoomHorzAxis.at(i)->pixelToCoord(event->pos().y()));
+            #endif
         }
       }
       mParentPlot->replot();

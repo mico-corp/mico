@@ -38,11 +38,11 @@ namespace flow{
     class FLOW_DECL CodeGenerator{
     public:
         static void parseScene(std::string _cppFile, QJsonObject const &_scene, const std::vector<std::string> &_customIncludes = {});
-        static void generateCmake(  std::string _cmakeFile, 
+        static bool generateCmake(  std::string _cmakeFile, 
                                     std::string _cppName, 
                                     const std::vector<std::string> &_customFinds = {}, 
                                     const std::vector<std::string> &_customLinks = {});
-        static void compile(std::string _cppFolder);
+        static bool compile(std::string _cppFolder);
     private:
         static void writeInit(std::ofstream &_file, const std::vector<std::string> &_customIncludes = {});
         static void writeEnd(std::ofstream &_file);

@@ -201,7 +201,7 @@ namespace mico{
             /// Returns a brief description of the block
             std::string description() const override {
                 return      "Accumulate the input signal"
-                    "   - Input: signal\n";
+                    "   - Input: signal\n"
                 "   - Outputs: accumulation\n";
             };
 
@@ -234,7 +234,7 @@ namespace mico{
         /// Returns a brief description of the block
         std::string description() const override {
             return      "Computes derivative of signal"
-                "   - Input: signal\n";
+                "   - Input: signal\n"
             "   - Outputs: derivative\n";
         };
 

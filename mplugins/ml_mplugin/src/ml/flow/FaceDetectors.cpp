@@ -55,7 +55,8 @@ namespace mico{
                     if( !face_cascade.load( detectors[detector.value().selectedOption()])) {
                         return false;
                     }
-                } catch (std::exception) {
+                } catch (std::exception &e) {
+                	std::cout << e.what() << std::endl;
                     return false;
                 }
             }

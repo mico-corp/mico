@@ -68,7 +68,7 @@ namespace mico {
                 fn_ = [](float a, float b) {return a <= b; };
             }
             else {
-                fn_ = [](float a, float b) {a; b; return false; };
+                fn_ = [](float, float) {return false; };
             }
 
             return true;

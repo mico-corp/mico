@@ -92,7 +92,7 @@ namespace dvsal{
 
                     dv::Event event(static_cast<int64_t>(ts) , static_cast<int16_t>(x) , static_cast<int16_t>(y) , static_cast<uint8_t>(pol));
         
-                    lastEvents_.add(event);
+                    lastEvents_.push_back(event);
 			    }
 		    }
         }
@@ -108,11 +108,12 @@ namespace dvsal{
 		return;
     }    
 
-    bool CameraDVS128Streamer::image(cv::Mat &_image){
+    bool CameraDVS128Streamer::image(cv::Mat &){
 
 
         return false;
     }   
+    
     void CameraDVS128Streamer::usbShutdownHandler(void *_ptr){
         (void) (_ptr); // UNUSED.
 

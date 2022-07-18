@@ -45,7 +45,7 @@ namespace mico{
             }
             std::unique_lock lck(safeDeletion_);
             cv_.wait_for(lck, std::chrono::milliseconds(100));
-        };
+        }
 
         bool StreamVideo::configure(std::vector<flow::ConfigParameterDef> _params) {
             if (isRunningLoop()) // Cant configure if already running.
@@ -56,8 +56,8 @@ namespace mico{
 
                 try {
                     return videoFile_->open(param.value().asPath().string());
-                } catch (std::exception) {
-                    
+                } catch (std::exception &e) {
+                    std::cout << e.what() << std::endl;
                 }
                 return false;
             }
