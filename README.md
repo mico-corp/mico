@@ -1,7 +1,5 @@
 # MICO - Modules-based Interface for Computer prOgramming
 
-All MICO-plugins in one repository using git submodules.
-
 ![](https://github.com/mico-corp/mico/blob/master/doc/example_play_ground.png)
 
 ## Get it from last release!
