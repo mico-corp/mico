@@ -183,7 +183,6 @@ void JoyPad::paintEvent(QPaintEvent *event)
 
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
-    painter.setRenderHint(QPainter::HighQualityAntialiasing);
 
     // draw background
     QRadialGradient gradient(m_bounds.center(), m_bounds.width()/2, m_bounds.center());

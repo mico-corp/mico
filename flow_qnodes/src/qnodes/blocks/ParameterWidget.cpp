@@ -47,8 +47,8 @@ namespace flow{
 
     //---------------------------------------------------------------------------------------------------------------------
     ParameterWidget::ParameterWidget(   const ConfigParameterDef &_param, 
-                                        QWidget *_parent, 
-                                        const char *_name): param_(_param) {
+                                        QWidget *_parent):  QHBoxLayout(_parent), 
+                                                            param_(_param) {
         lName_ = _param.name_;
         type_ = _param.type_;
         label_ = new QLabel(_param.name_.c_str());

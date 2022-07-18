@@ -87,7 +87,7 @@ typedef cv::Rect cvRect;
 typedef cv::Rect2d cvRect;
 #endif
 const auto flatVectorDetectionConversion    = simpleFlatVectorTakeFirst<StlVectorDetection, micoMlDetection>;
-FLOW_CONVERSION_REGISTER(StlVectorDetection, micoMlDetection, flatVectorDetectionConversion);
+FLOW_CONVERSION_REGISTER(StlVectorDetection, micoMlDetection, flatVectorDetectionConversion)
 
 boost::any DetectionToMat(boost::any &_input){
     return boost::any_cast<mico::ml::Detection>(_input).crop_;
@@ -99,8 +99,8 @@ boost::any StlVectorDetectionToMat(boost::any &_input){
     else return cv::Mat();
 }
 
-FLOW_CONVERSION_REGISTER(micoMlDetection, cvMat, &DetectionToMat);
-FLOW_CONVERSION_REGISTER(StlVectorDetection, cvMat, &StlVectorDetectionToMat);
+FLOW_CONVERSION_REGISTER(micoMlDetection, cvMat, &DetectionToMat)
+FLOW_CONVERSION_REGISTER(StlVectorDetection, cvMat, &StlVectorDetectionToMat)
 
 boost::any DetectionToStlVectorFloat(boost::any &_input){
     const auto bb = boost::any_cast<mico::ml::Detection>(_input).bb_;
@@ -139,11 +139,11 @@ boost::any VectorDetectionToCvRect(boost::any& _input) {
 typedef Eigen::Vector2f EigenVector2f;
 typedef cv::Point2f CvPoint2f;
 typedef std::vector<float> StlVectorFloat;
-FLOW_CONVERSION_REGISTER(micoMlDetection, StlVectorFloat, &DetectionToStlVectorFloat);
-FLOW_CONVERSION_REGISTER(micoMlDetection, CvPoint2f, &DetectionToCvPoint);
-FLOW_CONVERSION_REGISTER(micoMlDetection, EigenVector2f, &DetectionToEigen);
-FLOW_CONVERSION_REGISTER(micoMlDetection, cvRect, &DetectionToCvRect);
-FLOW_CONVERSION_REGISTER(StlVectorDetection, cvRect, &VectorDetectionToCvRect);
+FLOW_CONVERSION_REGISTER(micoMlDetection, StlVectorFloat, &DetectionToStlVectorFloat)
+FLOW_CONVERSION_REGISTER(micoMlDetection, CvPoint2f, &DetectionToCvPoint)
+FLOW_CONVERSION_REGISTER(micoMlDetection, EigenVector2f, &DetectionToEigen)
+FLOW_CONVERSION_REGISTER(micoMlDetection, cvRect, &DetectionToCvRect)
+FLOW_CONVERSION_REGISTER(StlVectorDetection, cvRect, &VectorDetectionToCvRect)
 
 boost::any StlVectorDetectionToStlVectorFloat(boost::any &_input){
     const auto bb = boost::any_cast<StlVectorDetection>(_input)[0].bb_;
@@ -167,8 +167,8 @@ boost::any StlVectorDetectionToEigen(boost::any &_input){
     return Eigen::Vector2f(x, y);
 }
 
-FLOW_CONVERSION_REGISTER(StlVectorDetection, StlVectorFloat, &StlVectorDetectionToStlVectorFloat);
-FLOW_CONVERSION_REGISTER(StlVectorDetection, CvPoint2f, &StlVectorDetectionToCvPoint);
-FLOW_CONVERSION_REGISTER(StlVectorDetection, EigenVector2f, &StlVectorDetectionToEigen);
+FLOW_CONVERSION_REGISTER(StlVectorDetection, StlVectorFloat, &StlVectorDetectionToStlVectorFloat)
+FLOW_CONVERSION_REGISTER(StlVectorDetection, CvPoint2f, &StlVectorDetectionToCvPoint)
+FLOW_CONVERSION_REGISTER(StlVectorDetection, EigenVector2f, &StlVectorDetectionToEigen)
 
 #endif

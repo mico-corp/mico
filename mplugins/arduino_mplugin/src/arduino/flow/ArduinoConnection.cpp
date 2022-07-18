@@ -26,51 +26,9 @@
 namespace mico {
 	namespace arduino {
 		ArduinoConnection::ArduinoConnection(const std::string& _port, int baudrate) {
-			port_ = std::shared_ptr<SerialPort>(new SerialPort(_port, 115200));
+			port_ = std::shared_ptr<SerialPort>(new SerialPort(_port, baudrate));
 			run_ = true;
-			readThread_ = std::thread([&]() {
-				while (run_) {
-					auto str = port_->readLine();
-					
-					int idx = str.find("@");
-					if (idx != str.npos) {
-						boost::any data;
-						try {
-							int id = std::stoi(str.substr(0, idx));
-							if (callbacks_.find(id) != callbacks_.end()) {
-								auto dataRaw = str.substr(idx + 1);
-								if (dataRaw.find(",") == dataRaw.npos) { // Scalar
-									if (dataRaw.find(".") == dataRaw.npos) { // int
-										data = std::stoi(dataRaw);
-									} else { // Float
-										data = std::stof(dataRaw);
-									}
-								} else { // Vector
-									std::istringstream iss(dataRaw);
-									std::string token;
-									if (dataRaw.find(".") == dataRaw.npos) { // int
-										std::vector<int> vdata;
-										while (std::getline(iss, token, ',')) {
-											vdata.push_back(std::stoi(token));
-										}
-										data = vdata;
-									} else { // Float
-										std::vector<float> vdata;
-										while (std::getline(iss, token, ',')) {
-											vdata.push_back(std::stof(token));
-										}
-										data = vdata;
-									}
-								}
-								std::lock_guard<std::mutex> lock(mutex_);
-								callbacks_[id](data);
-							}
-						} catch (std::invalid_argument& _e) {
-
-						}
-					}
-				}
-			});
+			readThread_ = std::thread(&ArduinoConnection::readThread, this);
 		}
 		
 		ArduinoConnection::~ArduinoConnection() {
@@ -95,6 +53,54 @@ namespace mico {
 			std::lock_guard<std::mutex> lock(mutex_);
 			if (callbacks_.find(_id) != callbacks_.end()) {
 				callbacks_.erase(_id);
+			}
+		}
+
+		void ArduinoConnection::readThread() {
+			while (run_) {
+				auto str = port_->readLine();
+
+				size_t idx = str.find("@");
+				if (idx != str.npos) {
+					boost::any data;
+					try {
+						int id = std::stoi(str.substr(0, idx));
+						if (callbacks_.find(id) != callbacks_.end()) {
+							auto dataRaw = str.substr(idx + 1);
+							if (dataRaw.find(",") == dataRaw.npos) { // Scalar
+								if (dataRaw.find(".") == dataRaw.npos) { // int
+									data = std::stoi(dataRaw);
+								}
+								else { // Float
+									data = std::stof(dataRaw);
+								}
+							}
+							else { // Vector
+								std::istringstream iss(dataRaw);
+								std::string token;
+								if (dataRaw.find(".") == dataRaw.npos) { // int
+									std::vector<int> vdata;
+									while (std::getline(iss, token, ',')) {
+										vdata.push_back(std::stoi(token));
+									}
+									data = vdata;
+								}
+								else { // Float
+									std::vector<float> vdata;
+									while (std::getline(iss, token, ',')) {
+										vdata.push_back(std::stof(token));
+									}
+									data = vdata;
+								}
+							}
+							std::lock_guard<std::mutex> lock(mutex_);
+							callbacks_[id](data);
+						}
+					}
+					catch (std::invalid_argument&) {
+
+					}
+				}
 			}
 		}
 

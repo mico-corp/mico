@@ -26,7 +26,7 @@ namespace dvsal{
     
     DatasetStreamer::DatasetStreamer(const std::string _string){
         datasetPath_ = _string;    
-    };
+    }
     
     bool DatasetStreamer::init(){
         if(!std::filesystem::exists(datasetPath_)){
@@ -55,7 +55,7 @@ namespace dvsal{
         }
         dv::Event event(static_cast<int64_t>(timestamp * 1000000) , static_cast<int16_t>(x) , static_cast<int16_t>(y) , static_cast<uint8_t>(pol));
         
-        lastEvents_.add(event); 
+        lastEvents_.push_back(event); 
 
         return true;
     }

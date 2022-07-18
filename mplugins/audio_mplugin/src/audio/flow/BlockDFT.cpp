@@ -43,7 +43,7 @@ namespace mico{
                 fftw_complex* result = new fftw_complex[size_t(numPoints / 2) + 1];
                 std::vector<double> signal(_signal.begin(), _signal.end());
 
-                fftw_plan plan = fftw_plan_dft_r2c_1d(numPoints, signal.data(), result, NULL);
+                fftw_plan plan = fftw_plan_dft_r2c_1d(int(numPoints), signal.data(), result, NULL);
                 fftw_execute(plan);
 
 

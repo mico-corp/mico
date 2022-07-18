@@ -18,7 +18,7 @@ _anim(new QPropertyAnimation(this, "offset", this))
     });
 }
 
-void Switch::paintEvent(QPaintEvent *e) {
+void Switch::paintEvent(QPaintEvent *) {
     QPainter p(this);
     p.setPen(Qt::NoPen);
     if (isEnabled()) {

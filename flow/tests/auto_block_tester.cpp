@@ -32,6 +32,15 @@
 	#include <Windows.h>
 #endif
 
+constexpr bool kEnableDebugPrint = false;
+
+void debugPrint(const std::string& _msg) {
+	if constexpr (kEnableDebugPrint) {
+		std::cout << _msg << std::endl;
+	}
+}
+
+
 using namespace flow;
 
 std::filesystem::path getExePath() {
@@ -64,51 +73,48 @@ public:
 static CreatorsHolder creatorsHolder = CreatorsHolder();
 
 std::random_device rd; // obtain a random number from hardware
-std::mt19937 gen(rd()); // seed the generator
+std::mt19937 randomGeneratorSeed(rd()); // seed the generator
 std::uniform_int_distribution<int> distr(0, 5); // define the range
 
-void randomizeParameter(flow::ConfigParameterDef &_param, bool _verbose = false) {
-	int rndNumber = distr(gen);
+void randomizeParameter(flow::ConfigParameterDef &_param) {
+	int rndNumber = distr(randomGeneratorSeed);
 	switch (rndNumber) {
 	case 0: // set as bool
 		_param.type_ = flow::ConfigParameterDef::eParameterType::BOOLEAN;
 		_param.value_ = bool(rand() & 2);
-		if (_verbose) std::cout << "boolean\n";
+		debugPrint("boolean\n");
 		break;
 	case 1: // set as decimal
 		_param.type_ = flow::ConfigParameterDef::eParameterType::DECIMAL;
 		_param.value_ = float(rand())/rand();
-		if (_verbose) std::cout << "integer\n";
+		debugPrint("integer\n");
 		break;
 	case 2: // set as integer
 		_param.type_ = flow::ConfigParameterDef::eParameterType::INTEGER;
 		_param.value_ = int(rand());
-		if (_verbose) std::cout << "decimal\n";
+		debugPrint("decimal\n");
 		break;
 	case 3: // set as options
 		_param.type_ = flow::ConfigParameterDef::eParameterType::OPTIONS;
 		_param.selectedOption_ = std::string("A");
 		_param.value_ = std::vector{ std::string("A") , std::string("B") , std::string("C") };
-		if (_verbose) std::cout << "options\n";
+		debugPrint("options\n");
 		break;
 	case 4: // set as path
 	{
 		_param.type_ = flow::ConfigParameterDef::eParameterType::PATH;
 		_param.value_ = fs::path("./no/I/am/not/our/path");
-		if (_verbose) std::cout << "path\n";
+		debugPrint("path\n");
 		break;
 	}
 	case 5: // set as string
 	{
 		_param.type_ = flow::ConfigParameterDef::eParameterType::STRING;
 		_param.value_ = std::string("HEY I AM NOT WHAT U WANTED");
-		if (_verbose) std::cout << "string\n";
+		debugPrint("string\n");
 		break;
 	}
 	}
-
-	if(_verbose)
-		std::cout.flush();
 
 }
 
@@ -116,7 +122,7 @@ void randomizeParameter(flow::ConfigParameterDef &_param, bool _verbose = false)
 TEST(create_blocks, randomization_parameters) {
 	for (unsigned i = 0; i < 100; i++) {
 		flow::ConfigParameterDef param;
-		randomizeParameter(param, false);
+		randomizeParameter(param);
 		EXPECT_NO_THROW(param.serialize());
 	}
 
@@ -126,11 +132,11 @@ TEST(create_blocks, randomization_parameters) {
 // Try to create all the blocks. None of the constructors should crash, neither their configuration with empty values.
 TEST(create_blocks, create_blocks_destroy) {
 	for (auto& [tag, creator] : creatorsHolder.creators_) {
-		std::cout << "---------------------------------------------------------------------" << std::endl;
+		debugPrint("---------------------------------------------------------------------");
 
 		// Create block
 		auto block = creator();
-		std::cout << "Testing construction and destruction of block: " << block->name() << std::endl;
+		debugPrint("Testing construction and destruction of block: " + block->name());
 	}
 }
 
@@ -138,26 +144,23 @@ TEST(create_blocks, create_blocks_destroy) {
 TEST(create_blocks, create_blocks) {
 
 	for (auto& [tag, creator] : creatorsHolder.creators_) {
-		std::cout << "---------------------------------------------------------------------" << std::endl;
+		debugPrint("---------------------------------------------------------------------");
 
 		// Create block
 		auto block = creator();
-		std::cout << "Testing construction of block: " << block->name() << std::endl;
+		debugPrint("Testing construction of block: " + block->name());
 
 		// Configure with bad values
-		std::cout << "Configuration with empty list of parameters ";
+		debugPrint("Configuration with empty list of parameters ");
 		EXPECT_NO_THROW(block->configure({}));
-		std::cout << "---->  OK " << std::endl;
 
 		// Get default parameters
 		auto defaultParameters = block->parameters();
 		for (auto& param : defaultParameters) {
-			std::cout << "\t" + param.serialize() << std::endl;
+			debugPrint("\t" + param.serialize());
 		}
-		std::cout << "Configuration with default list of parameters ";
-		std::cout.flush();
+		debugPrint("Configuration with default list of parameters ");
 		EXPECT_NO_THROW(block->configure(defaultParameters));
-		std::cout << "---->  OK " << std::endl;
 
 		// Initialize with random parameters. 10 times
 		for (unsigned i = 0; i < 5;i++) {
@@ -168,19 +171,17 @@ TEST(create_blocks, create_blocks) {
 			for (auto& param : defaultParameters) {
 				std::string serializedParam = "";
 				EXPECT_NO_THROW(serializedParam = param.serialize());
-				std::cout << "\t" + serializedParam << std::endl;
+				debugPrint("\t" + serializedParam);
 			}
-			std::cout << "Test " << i;
-			std::cout.flush();
+			debugPrint("Test " + std::to_string(i));
 			EXPECT_NO_THROW(block->configure(defaultParameters));
-			std::cout << "---->  OK " << std::endl;
 		}
 	}
 }
 
 
 std::pair<flow::Outpipe*, std::function<void()>> randomPipe() {
-	int rndNumber = distr(gen);
+	int rndNumber = distr(randomGeneratorSeed);
 
 	Outpipe* ptr;
 	std::function<void()> fn;
@@ -212,9 +213,9 @@ std::pair<flow::Outpipe*, std::function<void()>> randomPipe() {
 TEST(input_tests, random_inputs) {
 
 	for (auto& [tag, creator] : creatorsHolder.creators_) {
-		std::cout << "---------------------------------------------------------------------" << std::endl;
+		debugPrint("---------------------------------------------------------------------");
 		auto block = creator();
-		std::cout << "Testing random inputs in block: " << block->name() << std::endl;
+		debugPrint("Testing random inputs in block: " + block->name() );
 
 		// Some blocks do no have any input policy. 
 		if (block->getPolicy()) {
@@ -244,9 +245,9 @@ TEST(input_tests, random_inputs) {
 TEST(input_tests, adequate_inputs) {
 
 	for (auto& [tag, creator] : creatorsHolder.creators_) {
-		std::cout << "---------------------------------------------------------------------" << std::endl;
+		debugPrint("---------------------------------------------------------------------");;
 		auto block = creator();
-		std::cout << "Testing adequate inputs in block: " << block->name() << std::endl;
+		debugPrint("Testing adequate inputs in block: " + block->name());;
 
 		// Some blocks do no have any input policy. 
 		if (block->getPolicy()) {
@@ -268,28 +269,28 @@ TEST(input_tests, adequate_inputs) {
 			if (hasError) continue;	// Error configuring the test, skip this block
 
 
-			std::cout << "\t Testing without being configured" << std::endl;
-			for (auto& [pipe, gen] : pipes) {
-				pipe->flush(gen->defaultContructible());
+			debugPrint("\t Testing without being configured");;
+			for (auto& [pipe, generator] : pipes) {
+				pipe->flush(generator->defaultContructible());
 			}
 			
 			auto defaultParameters = block->parameters();
 			block->configure(defaultParameters);
 
-			std::cout << "--- Configured! ---" << std::endl;
-			std::cout << "\t Default constructible input" << std::endl;
+			debugPrint("--- Configured! ---" );
+			debugPrint("\t Default constructible input");
 			// Test default constructible
 			for (unsigned i = 0; i < 100; i++) {
-				for (auto& [pipe, gen] : pipes) {
-					pipe->flush(gen->defaultContructible());
+				for (auto& [pipe, generator] : pipes) {
+					pipe->flush(generator->defaultContructible());
 				}
 			}
 
 			// Test random inputs
-			std::cout << "\t Random input generation" << std::endl;
+			debugPrint("\t Random input generation");
 			for (unsigned i = 0; i < 100; i++) {
-				for (auto& [pipe, gen] : pipes) {
-					pipe->flush(gen->randomInput());
+				for (auto& [pipe, generator] : pipes) {
+					pipe->flush(generator->randomInput());
 				}
 			}
 		}

@@ -48,8 +48,12 @@ boost::any numberToVector(boost::any& _input) {
 // Add concepts for compile time safety
 template<typename InT_, typename OutT_>
 boost::any vectorToVector(boost::any& _input) {
-    auto vin = boost::any_cast<InT_>(_input);
-    return OutT_(vin.begin(), vin.end());
+    auto vIn = boost::any_cast<InT_>(_input);
+    OutT_ vOut(vIn.size());
+    for (size_t i = 0; i < vIn.size(); i++) {
+        vOut[i] = typename OutT_::value_type(vIn[i]);
+    }
+    return vOut;
 }
 
 #endif

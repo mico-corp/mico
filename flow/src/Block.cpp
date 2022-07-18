@@ -29,37 +29,37 @@ namespace flow{
     bool ConfigParameterDef::asBool() const {
         assert(type_ == eParameterType::BOOLEAN);
         return boost::any_cast<bool>(value_);
-    };
+    }
 
     int ConfigParameterDef::asInteger() const {
         assert(type_ == eParameterType::INTEGER);
         return boost::any_cast<int>(value_);
-    };
+    }
 
     float ConfigParameterDef::asDecimal() const {
         assert(type_ == eParameterType::DECIMAL);
         return boost::any_cast<float>(value_);
-    };
+    }
 
     std::string ConfigParameterDef::asString() const {
         assert(type_ == eParameterType::STRING);
         return boost::any_cast<std::string>(value_);
-    };
+    }
 
     fs::path ConfigParameterDef::asPath() const {
         assert(type_ == eParameterType::PATH);
         return boost::any_cast<fs::path>(value_);
-    };
+    }
 
     std::vector<std::string> ConfigParameterDef::asOptions() const {
         assert(type_ == eParameterType::OPTIONS);
         return boost::any_cast<std::vector<std::string>>(value_);
-    };
+    }
 
     std::string ConfigParameterDef::selectedOption() const {
         assert(type_ == eParameterType::OPTIONS);
         return selectedOption_;
-    };
+    }
 
     std::string ConfigParameterDef::serialize() {
         std::string serialization = "{" + name_ + "," ;

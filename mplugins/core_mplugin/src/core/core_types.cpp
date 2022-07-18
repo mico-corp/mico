@@ -49,14 +49,14 @@ const auto floatToVectorFloat			= numberToVector<float, vectorFloat>;
 const auto intToVectorInt				= numberToVector<int, vectorInteger>;
 
 
-FLOW_CONVERSION_REGISTER(float, int, directConversionFloatInt);
-FLOW_CONVERSION_REGISTER(float, bool, directConversionFloatBool);
-FLOW_CONVERSION_REGISTER(int, float, directConversionIntFloat);
-FLOW_CONVERSION_REGISTER(int, bool, directConversionIntBool);
-FLOW_CONVERSION_REGISTER(bool, int, directConversionBoolInt);
-FLOW_CONVERSION_REGISTER(bool, float, directConversionBoolFloat);
-FLOW_CONVERSION_REGISTER(vectorInteger, vectorFloat, vectorIntToVectorFloat);
-FLOW_CONVERSION_REGISTER(vectorFloat, vectorInteger, vectorFloatToVectorIntt);
-FLOW_CONVERSION_REGISTER(float, vectorFloat, floatToVectorFloat);
-FLOW_CONVERSION_REGISTER(int, vectorInteger, intToVectorInt);
+FLOW_CONVERSION_REGISTER(float, int, directConversionFloatInt)
+FLOW_CONVERSION_REGISTER(float, bool, directConversionFloatBool)
+FLOW_CONVERSION_REGISTER(int, float, directConversionIntFloat)
+FLOW_CONVERSION_REGISTER(int, bool, directConversionIntBool)
+FLOW_CONVERSION_REGISTER(bool, int, directConversionBoolInt)
+FLOW_CONVERSION_REGISTER(bool, float, directConversionBoolFloat)
+FLOW_CONVERSION_REGISTER(vectorInteger, vectorFloat, vectorIntToVectorFloat)
+FLOW_CONVERSION_REGISTER(vectorFloat, vectorInteger, vectorFloatToVectorIntt)
+FLOW_CONVERSION_REGISTER(float, vectorFloat, floatToVectorFloat)
+FLOW_CONVERSION_REGISTER(int, vectorInteger, intToVectorInt)
 

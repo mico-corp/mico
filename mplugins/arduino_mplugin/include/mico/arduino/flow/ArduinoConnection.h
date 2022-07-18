@@ -58,7 +58,7 @@ namespace mico {
 		public:
 			typedef std::function<void(boost::any &)> ReadCallback;
 
-			ArduinoConnection(const std::string& _port, int baudrate);
+			ArduinoConnection(const std::string& _port, int baudrate = 115200);
 			~ArduinoConnection();
 
 			bool registerCallback(int _id, ReadCallback _readCb);
@@ -69,6 +69,9 @@ namespace mico {
 			void write(int _id, const T_ &_dat);
 
 			void close();
+
+		private:
+			void readThread();
 
 		private:
 			std::unordered_map<int, ArduinoDevice*> devices_;

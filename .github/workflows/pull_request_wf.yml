@@ -41,12 +41,12 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake ..
+          cmake .. -DBUILD_AUDIO=OFF
       - name: "Compile repository"
         run: |
           cd build
-          make -j
-      - name: "Try Deploy"
-        run: |
-          cd build
-          make package
+          make -j mico
+      # - name: "Try Deploy"
+      #   run: |
+      #     cd build
+      #     make package

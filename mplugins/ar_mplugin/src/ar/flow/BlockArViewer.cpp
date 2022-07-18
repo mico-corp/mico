@@ -48,7 +48,7 @@ namespace mico{
         }
 
         
-        bool BlockArViewer::configure(std::vector<flow::ConfigParameterDef> _params){
+        bool BlockArViewer::configure(std::vector<flow::ConfigParameterDef>){
             if (widget_) {
                 widget_->hide();
                 delete widget_;

@@ -44,7 +44,6 @@ std::string SerialPort::readLine() {
     using namespace boost;
     char c;
     std::string result;
-    int value = 0;
 
     for (;;) {
         asio::read(serial_, asio::buffer(&c, 1));

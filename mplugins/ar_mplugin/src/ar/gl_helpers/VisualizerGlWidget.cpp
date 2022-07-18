@@ -25,7 +25,7 @@
 
 namespace mico{
     namespace ar {
-        VisualizerGlWidget::VisualizerGlWidget(QWidget *_parent){
+        VisualizerGlWidget::VisualizerGlWidget(QWidget *_parent) : QOpenGLWidget(_parent) {
             scene_ = Scene3d::get();
 
             this->setFocusPolicy(Qt::StrongFocus);
@@ -41,8 +41,7 @@ namespace mico{
         }
 
 
-        void VisualizerGlWidget::addPoint(Scene3d::Point _p){
-            
+        void VisualizerGlWidget::addPoint(Scene3d::Point ){
         }
 
         void VisualizerGlWidget::updatePose(Eigen::Matrix4f _pose){
@@ -93,24 +92,25 @@ namespace mico{
         }
         
 
-        void VisualizerGlWidget::keyPressEvent(QKeyEvent *event) {
+        void VisualizerGlWidget::keyPressEvent(QKeyEvent *) {
         
         }
 
-        void VisualizerGlWidget::keyReleaseEvent(QKeyEvent *event) {
+        void VisualizerGlWidget::keyReleaseEvent(QKeyEvent *) {
             
         }
-        void VisualizerGlWidget::mousePressEvent(QMouseEvent *event){
-        }
-        
-        void VisualizerGlWidget::mouseReleaseEvent(QMouseEvent *event){
+        void VisualizerGlWidget::mousePressEvent(QMouseEvent *){
         }
 
-        void VisualizerGlWidget::mouseMoveEvent(QMouseEvent *event){
+        void VisualizerGlWidget::mouseReleaseEvent(QMouseEvent *){
+
+        }
+
+        void VisualizerGlWidget::mouseMoveEvent(QMouseEvent *){
             
         }
 
-        void VisualizerGlWidget::wheelEvent(QWheelEvent *event){
+        void VisualizerGlWidget::wheelEvent(QWheelEvent *){
         
         }
 

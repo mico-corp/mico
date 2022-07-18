@@ -39,7 +39,7 @@
 
 namespace flow{
     // Initialize dictionary
-    void CodeGenerator::parseScene(std::string _cppFile, QJsonObject const &_scene, const std::vector<std::string> &_customIncludes){
+    void CodeGenerator::parseScene(std::string, QJsonObject const &, const std::vector<std::string> &){
         //std::ofstream genMain(_cppFile);
     
         //// Write preamble
@@ -121,7 +121,7 @@ namespace flow{
         //writeEnd(genMain);
     }
 
-    void CodeGenerator::generateCmake(  std::string _cmakeFilePath, 
+    bool CodeGenerator::generateCmake(  std::string _cmakeFilePath, 
                                         std::string _cppName, 
                                         const std::vector<std::string> &_customFinds, 
                                         const std::vector<std::string> &_customLinks){
@@ -131,7 +131,7 @@ namespace flow{
         auto lastBar = exePath.find_last_of('/');
         exePath = exePath.substr(lastBar+1, exePath.size());   // Get just name
 
-        cmakeFile << "cmake_minimum_required (VERSION 3.12 FATAL_ERROR)" << std::endl;
+        cmakeFile << "cmake_minimum_required (VERSION 3.21 FATAL_ERROR)" << std::endl;
         cmakeFile << "project(mico VERSION 1.0 LANGUAGES C CXX)" << std::endl;
         
         for(auto &cFinds: _customFinds){
@@ -144,13 +144,13 @@ namespace flow{
         for(auto &cLinks: _customLinks){
             cmakeFile <<  "target_link_libraries(" << exePath << " LINK_PRIVATE "<< cLinks <<")" << std::endl;
         }
-
+	return true;
     }
 
-    void CodeGenerator::compile(std::string _cppFolder){
+    bool CodeGenerator::compile(std::string _cppFolder){
         std::string cmd = "cd "+ _cppFolder +"&& mkdir -p build && cd build && cmake .. && make";
-        system(cmd.c_str());
-
+        const int res = system(cmd.c_str());
+	return res != 0;
     }
 
 
@@ -210,14 +210,15 @@ namespace flow{
 
 
 
-    std::string CodeGenerator::demangleClassType(const char* mangled) {
+    std::string CodeGenerator::demangleClassType(const char* _mangled) {
         #ifdef linux
             int status;
-            std::unique_ptr<char[], void (*)(void*)> result(abi::__cxa_demangle(mangled, 0, 0, &status), std::free);
+            std::unique_ptr<char[], void (*)(void*)> result(abi::__cxa_demangle(_mangled, 0, 0, &status), std::free);
             std::string str = result.get() ? std::string(result.get()) : "error occurred";
             return str;
         #endif
         #ifdef _WIN32
+            _mangled;
             /*TCHAR szUndecorateName[256];
             memset(szUndecorateName, 0, 256);
             UnDecorateSymbolName(mangled, szUndecorateName, 256, 0);

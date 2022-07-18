@@ -75,7 +75,7 @@ namespace flow{
             streamActionButton_->setFixedWidth(100);
             layout->addWidget(streamActionButton_, Qt::AlignRight);
             connect(    streamActionButton_, &QCheckBox::toggled,
-                        [=](bool checked) { 
+                        [&](bool checked) { 
                                 if(checked){
                                     flowBlock_->start();
                                 }else{
@@ -154,7 +154,6 @@ namespace flow{
     
     std::vector<flow::ConfigParameterDef> FlowVisualBlock::extractParamsGui(){
         std::vector<flow::ConfigParameterDef> params;
-        int counter = 0; 
         for(auto &param: configParams_){
             params.push_back(param->getParam());
         }
