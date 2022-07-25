@@ -32,12 +32,18 @@ using std::vector;
 //	std::vector<std::string> flow::TypeLog::registeredTypes_ = {};
 //#endif
 
-const auto directConversionFloatInt     = directConversionType<float, int>;
-const auto directConversionFloatBool    = directConversionType<float, bool>;
-const auto directConversionIntFloat     = directConversionType<int, float>;
-const auto directConversionIntBool      = directConversionType<int, bool>;
-const auto directConversionBoolInt      = directConversionType<bool, int>;
-const auto directConversionBoolFloat    = directConversionType<bool, float>;
+const auto directConversionFloatUnsigned = directConversionType<float, unsigned>;
+const auto directConversionFloatInt		= directConversionType<float, int>;
+const auto directConversionFloatBool		= directConversionType<float, bool>;
+const auto directConversionIntUnsigned	= directConversionType<int, unsigned>;
+const auto directConversionIntFloat		= directConversionType<int, float>;
+const auto directConversionIntBool		= directConversionType<int, bool>;
+const auto directConversionBoolUnsigned	= directConversionType<bool, unsigned>;
+const auto directConversionBoolInt		= directConversionType<bool, int>;
+const auto directConversionBoolFloat		= directConversionType<bool, float>;
+const auto directConversionUnsignedBool	= directConversionType<unsigned, bool>;
+const auto directConversionUnsignedInt	= directConversionType<unsigned, int>;
+const auto directConversionUnsignedFloat	= directConversionType<unsigned, float>;
 
 typedef vector<int> vectorInteger;
 typedef vector<float> vectorFloat;
