@@ -56,7 +56,7 @@ endif()
 
 option(BUILD_AR                 "Set to build AR Module"            ON)
 option(BUILD_ARDUINO            "Set to build arduino Module"       ON)
-option(BUILD_AUDIO              "Set to build Audio Module"         ON)
+option(BUILD_AUDIO              "Set to build Audio Module"         OFF)
 option(BUILD_CAMERAS            "Set to build CAMERAS Module"       ON)
 option(BUILD_CUDA               "Set to build CUDA Module"          OFF)
 option(BUILD_DVS                "Set to build DSV Module"           OFF)

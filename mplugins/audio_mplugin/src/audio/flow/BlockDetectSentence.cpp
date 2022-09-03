@@ -21,8 +21,10 @@
 
 
 #include <mico/audio/flow/BlockDetectSentence.h>
-#include <flow/Outpipe.h>
+
 #include <algorithm>
+#include <cmath>
+#include <flow/Outpipe.h>
 
 namespace mico{
     namespace audio {
@@ -45,7 +47,7 @@ namespace mico{
 
         BlockDetectSentence::~BlockDetectSentence() {
             
-        };
+        }
 
 
         std::vector<flow::ConfigParameterDef> BlockDetectSentence::parameters() {

@@ -39,7 +39,7 @@ namespace mico{
 
         StreamerMicrophone::~StreamerMicrophone() {
             if(device_) device_->stop();
-        };
+        }
 
 
 
@@ -77,7 +77,7 @@ namespace mico{
             
             frames_.resize(in.size_channels());
 
-            for (int channel = 0; channel < in.size_channels(); ++channel) {
+            for (size_t channel = 0; channel < in.size_channels(); ++channel) {
                 frames_[channel].resize(in.size_frames());
                 memcpy(&frames_[channel][0], in.data(), sizeof(float) * in.size_frames());
                 if (gain_ != 1.0f) {

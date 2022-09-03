@@ -22,9 +22,10 @@
 #include <flow/plugins/PluginsLoader.h>
 #include <flow/Outpipe.h>
 
-#include <QApplication> // 666 TODO Remove this in the future
-
 #include <random>
+#include <filesystem>
+
+#include <QApplication> // 666 TODO Remove this in the future
 
 #include <gtest/gtest.h>
 
@@ -190,21 +191,27 @@ std::pair<flow::Outpipe*, std::function<void()>> randomPipe() {
 	case 0:
 		ptr = flow::makeOutput<bool>("output");
 		fn = std::bind([](Outpipe* _ptr) { _ptr->flush(true); }, ptr);
+		break;
 	case 1:
 		ptr = flow::makeOutput<int>("output");
 		fn = std::bind([](Outpipe* _ptr) { _ptr->flush(123); }, ptr);
+		break;
 	case 2:
 		ptr = flow::makeOutput<float>("output");
 		fn = std::bind([](Outpipe* _ptr) { _ptr->flush(1.023f); }, ptr);
+		break;
 	case 3:
 		ptr = flow::makeOutput<std::string>("output");
 		fn = std::bind([](Outpipe* _ptr) { _ptr->flush(std::string("hola")); }, ptr);
+		break;
 	case 4:
 		ptr = flow::makeOutput<std::vector<float>>("output");
 		fn = std::bind([](Outpipe* _ptr) { _ptr->flush(std::vector<float>{1.30f, 1.30f, 1.30f}); }, ptr);
+		break;
 	case 5:
 		ptr = flow::makeOutput<std::vector<int>>("output");
 		fn = std::bind([](Outpipe* _ptr) { _ptr->flush(std::vector<int>{2, 3, 1, 2}); }, ptr);
+		break;
 	}
 	
 	return { ptr, fn };

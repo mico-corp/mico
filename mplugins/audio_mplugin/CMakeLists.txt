@@ -45,9 +45,12 @@ if(WIN32)
 	find_package(FFTW3l CONFIG REQUIRED)
 	mplugin_link_library( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES FFTW3::fftw3 FFTW3::fftw3f FFTW3::fftw3l)
 else()
-	find_package(FFTW REQUIRED)
-	mplugin_link_library( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES ${FFTW_LIBRARIES})
-	mplugin_include_directory( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_INCLUDES ${FFTW_INCLUDE_DIRS})
+	find_package(PkgConfig REQUIRED)
+	pkg_search_module(FFTW REQUIRED fftw3 IMPORTED_TARGET)
+	mplugin_include_directory( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_INCLUDES PkgConfig::FFTW)
+	mplugin_link_library( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES PkgConfig::FFTW)
+
+
 endif()
 
 find_package(OpenCV 4.2 REQUIRED)
