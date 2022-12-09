@@ -61,7 +61,7 @@ namespace mico{
         BlockSpectrogram::~BlockSpectrogram() {
             if (rawDft_ != nullptr) delete[] rawDft_;
             
-        };
+        }
 
 
         std::vector<flow::ConfigParameterDef> BlockSpectrogram::parameters() {
@@ -88,7 +88,7 @@ namespace mico{
 
         void BlockSpectrogram::computeDFT(const std::vector<float> & _signal){
             std::vector<double> signal(_signal.begin(), _signal.begin()+sampleSize_);
-            fftw_plan plan = fftw_plan_dft_r2c_1d(sampleSize_, signal.data(), rawDft_, NULL);
+            fftw_plan plan = fftw_plan_dft_r2c_1d(sampleSize_, signal.data(), rawDft_, 0);
             fftw_execute(plan);
 
             std::vector<float> output;

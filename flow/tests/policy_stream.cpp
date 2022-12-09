@@ -83,9 +83,9 @@ TEST(transmission_int_1, transmission_int)  {
     Policy pol({makeInput<int>("counter")});
 
     int res = 0;
-    pol.registerCallback<int>({"counter"}, [&](int _i1){
+    pol.registerCallback<int>({"counter"}, std::function<void(int)>([&](int _i1){
         res = _i1;
-    });
+    }));
 
     op.registerPolicy(&pol, "counter");
 
@@ -107,12 +107,12 @@ TEST(disconnect, disconnect)  {
     Policy pol({ makeInput<int>("counter") });
 
     int res = 0;
-    bool goodCallback = pol.registerCallback<int>({"counter"}, [&](int _i1){
+    bool goodCallback = pol.registerCallback<int>({"counter"}, std::function<void(int)>([&](int _i1){
         res = _i1;
-    });
+    }));
     ASSERT_TRUE(goodCallback);
 
-    bool badCallback = pol.registerCallback<float>({ "float" }, [&](float _i1) { _i1; });
+    bool badCallback = pol.registerCallback<float>({ "float" }, std::function<void(float)>([&]([[maybe_unused]]float _i1) { }));
     ASSERT_FALSE(badCallback);
     
     op.registerPolicy(&pol, "counter");
@@ -136,18 +136,16 @@ TEST(transmission_int_2, transmission_int)  {
     Policy pol2({ makeInput<int>("counter") });
 
     int counterCall1 = 0;
-    pol1.registerCallback<int>({"counter"}, [&](int _in){
+    pol1.registerCallback<int>({"counter"}, std::function<void(int)>([&]([[maybe_unused]]int _in){
         counterCall1++; 
-        _in;
-    });
+    }));
     
     int counterCall2 = 0;
     std::mutex guardCall2;
-    pol2.registerCallback<int>({"counter"}, [&](int _in){
+    pol2.registerCallback<int>({"counter"}, std::function<void(int)>([&]([[maybe_unused]]int _in){
         guardCall2.lock();
         counterCall2++;
-        _in;
-    });
+    }));
 
     op.registerPolicy(&pol1, "counter");
     op.registerPolicy(&pol2, "counter");
@@ -178,19 +176,15 @@ TEST(sync_policy, sync_policy)  {
     int counterCallFloat = 0;
     int counterCallSync = 0;
     std::mutex guardCall1;
-    pol.registerCallback<int>({"counter"}, [&](int _in){
+    pol.registerCallback<int>({"counter"}, std::function<void(int)>([&]([[maybe_unused]]int _in){
         counterCallInt++;
-        _in;
-    });
-    pol.registerCallback<float>({"clock"}, [&](float _in){
+    }));
+    pol.registerCallback<float>({"clock"}, std::function<void(float)>([&]([[maybe_unused]]float _in){
         counterCallFloat++;
-        _in;
-    });
-    pol.registerCallback<int,float>({"counter", "clock"}, [&](int _i1, float _i2){
-        counterCallSync++;    
-        _i1;
-        _i2;
-    });
+    }));
+    pol.registerCallback<int,float>({"counter", "clock"}, std::function<void(int, float)>([&]([[maybe_unused]]int _i1, [[maybe_unused]]float _i2){
+        counterCallSync++; 
+    }));
     
     op1.registerPolicy(&pol,"counter");
     op2.registerPolicy(&pol,"clock");
@@ -222,24 +216,24 @@ TEST(deep_chain, deep_chain)  {
     op3.registerPolicy(&pol3, "johny");
 
 
-    pol.registerCallback<int>({"ticks"}, [&](int _in){
+    pol.registerCallback<int>({"ticks"}, std::function<void(int)>([&](int _in){
         int res = 2 * _in;
         ASSERT_EQ(res, 4);
         op2.flush(res);
-    });
+    }));
 
-    pol2.registerCallback<int>({"subs"}, [&](int _in){
+    pol2.registerCallback<int>({"subs"}, std::function<void(int)>([&](int _in){
         int res = 2 * _in;
         ASSERT_EQ(res, 8);
         op3.flush(res);
-    });
+    }));
 
     bool called = false;
-    pol3.registerCallback<int>({"johny"}, [&](int _in){
+    pol3.registerCallback<int>({"johny"}, std::function<void(int)>([&](int _in){
         int res = 2 * _in;
         ASSERT_EQ(res, 16);
         called = true;  
-    });
+    }));
     
     op.flush(2);
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -266,48 +260,48 @@ TEST(deep_chain_split, deep_chain_split)  {
     }
 
 
-    policies[0]->registerCallback<int>({"counter"}, [&](int _in){
+    policies[0]->registerCallback<int>({"counter"}, std::function<void(int)>([&](int _in){
         int res = 2 * _in;
         pipes[1]->flush(res);
-    });
+    }));
 
-    policies[1]->registerCallback<int>({"counter"}, [&](int _in){
+    policies[1]->registerCallback<int>({"counter"}, std::function<void(int)>([&](int _in){
         int res = 2 * _in;
         pipes[2]->flush(res);
         pipes[3]->flush(res);
-    });
+    }));
 
     // Branch 1
-    policies[2]->registerCallback<int>({"counter"}, [&](int _in){
+    policies[2]->registerCallback<int>({"counter"}, std::function<void(int)>([&](int _in){
         int res = 2 * _in;
         pipes[4]->flush(res);
-    });
+    }));
 
     int nCounterB1 = 0;
     std::mutex lockerB1;
-    policies[4]->registerCallback<int>({"counter"}, [&](int _in){
+    policies[4]->registerCallback<int>({"counter"}, std::function<void(int)>([&](int _in){
         lockerB1.lock();
         int res = 2 * _in;
         ASSERT_EQ(res, 32);
         nCounterB1++;
         lockerB1.unlock();
-    });
+    }));
 
     // Branch 2
-    policies[3]->registerCallback<int>({"counter"}, [&](int _in){
+    policies[3]->registerCallback<int>({"counter"}, std::function<void(int)>([&](int _in){
         int res = 2 * _in;
         pipes[5]->flush(res);
-    });
+    }));
 
     int nCounterB2 = 0;
     std::mutex lockerB2;
-    policies[5]->registerCallback<int>({"counter"}, [&](int _in){
+    policies[5]->registerCallback<int>({"counter"}, std::function<void(int)>([&](int _in){
         lockerB2.lock();
         int res = 2 * _in;
         ASSERT_EQ(res, 32);
         nCounterB2++;
         lockerB2.unlock();
-    });
+    }));
 
     
     pipes.front()->flush(2);
@@ -347,43 +341,36 @@ TEST(loop_chain_split, loop_chain_split)  {
     // Set callbacks
     bool calledOnce0a = true;
     std::mutex guard0a;
-    p0.registerCallback<int>({"counter"}, [&](int _in){
-        _in;
+    p0.registerCallback<int>({"counter"}, std::function<void(int)>([&]([[maybe_unused]]int _in){
         guard0a.lock();
         o1.flush(1);
         ASSERT_TRUE(calledOnce0a);
         calledOnce0a = false;
         guard0a.unlock();
-    });
+    }));
 
     bool calledOnce0b = true;
     std::mutex guard0b;
-    p0.registerCallback<std::string>({"msg"}, [&](std::string _in){
-        _in;
+    p0.registerCallback<std::string>({"msg"}, std::function<void(std::string)>([&]([[maybe_unused]]std::string _in){
         guard0b.lock();
         ASSERT_TRUE(calledOnce0b);
         calledOnce0b = false;
         guard0b.unlock();
-        _in;
-    });
+    }));
 
-    p1.registerCallback<int>({"tocks"}, [&](int _in){
-        _in;
+    p1.registerCallback<int>({"tocks"}, std::function<void(int)>([&]([[maybe_unused]]int _in){
         o3.flush("pepe");
         o4.flush(1);
-        _in;
-    });
+    }));
 
     bool calledOnce4 = true;
     std::mutex guard4;
-    p4.registerCallback<int>({"counter"}, [&](int _in){
-        _in;
+    p4.registerCallback<int>({"counter"}, std::function<void(int)>([&]([[maybe_unused]]int _in){
         guard4.lock();
         ASSERT_TRUE(calledOnce4);
         calledOnce4 = false;
         guard4.unlock();
-        _in;
-    });
+    }));
 
     o0.flush(1);
     while(calledOnce4){
@@ -401,8 +388,7 @@ TEST(concurrency_attack_test, concurrency_attack_test)  {
 
     int counterCall1 = 0;
     bool idle = true;
-    pol.registerCallback<int>({"cnt"}, [&](int _in){
-        _in;
+    pol.registerCallback<int>({"cnt"}, std::function<void(int)>([&]([[maybe_unused]]int _in){
         if(idle){
             idle=false;
             counterCall1++;
@@ -412,7 +398,7 @@ TEST(concurrency_attack_test, concurrency_attack_test)  {
         }else{
             // std::cout << "Shit I failed" << std::this_thread::get_id() << std::endl;
         }
-    });
+    }));
 
     op.registerPolicy(&pol, "cnt");    
 
@@ -420,18 +406,16 @@ TEST(concurrency_attack_test, concurrency_attack_test)  {
     std::condition_variable cv;
     bool ready = false;
 
-    auto print_id = [&](int id) {
+    auto print_id = [&]([[maybe_unused]]int id) {
         std::unique_lock<std::mutex> lck(mtx);
         while (!ready) cv.wait(lck);
         op.flush(1);
-        id;
     };
 
     const int nThreads = 10;
     std::thread vThreads[nThreads];
     for (int i=0; i<nThreads; ++i)
         vThreads[i] = std::thread(print_id,i);
-
     {
         std::unique_lock<std::mutex> lck(mtx);
         ready = true;
@@ -483,22 +467,22 @@ TEST(clear_data_test, clear_data_test) {
 
     // Register a callback for one tag
     volatile int i1 = 0;
-    p.registerCallback<int>({ "i1" }, [&](int _in) {
+    p.registerCallback<int>({ "i1" }, std::function<void(int)>([&](int _in) {
         i1 =_in;
-        });
+        }));
 
     // Register a callback for the other tag
     volatile int i2 = 0;
-    p.registerCallback<int>({ "i2" }, [&](int _in) {
+    p.registerCallback<int>({ "i2" }, std::function<void(int)>([&](int _in) {
         i2 = _in;
-        });
+        }));
 
 
     // Register a callback for both, this callback do not clear data flows. 
     volatile int iCombi1 = 0;
-    p.registerCallback<int, int>({ "i1", "i2"}, [&](int _i1, int _i2) {
+    p.registerCallback<int, int>({ "i1", "i2"}, std::function<void(int, int)>([&](int _i1, int _i2) {
         iCombi1 = _i1 + _i2;
-        });
+        }));
 
     // At the moment just one input has data, so the combination is still 0
     o1->flush(1);
@@ -514,9 +498,9 @@ TEST(clear_data_test, clear_data_test) {
 
     // Register a new callback for both, but in this case, the callback clears the data used
     int iCombi2 = 0;
-    p.registerCallback<int, int>({ "i1", "i2" }, [&](int _i1, int _i2) {
+    p.registerCallback<int, int>({ "i1", "i2" }, std::function<void(int, int)>([&](int _i1, int _i2) {
         iCombi2 = _i1 + _i2;
-    });
+    }));
 
 
     // The first combi already has data, so it changes

@@ -21,9 +21,13 @@
 
 
 #include <mico/audio/flow/BlockDFT.h>
-#include <flow/Outpipe.h>
+
 #include <algorithm>
+#include <math.h>
+
 #include <fftw3.h>
+
+#include <flow/Outpipe.h>
 
 namespace mico{
     namespace audio {
@@ -43,13 +47,13 @@ namespace mico{
                 fftw_complex* result = new fftw_complex[size_t(numPoints / 2) + 1];
                 std::vector<double> signal(_signal.begin(), _signal.end());
 
-                fftw_plan plan = fftw_plan_dft_r2c_1d(int(numPoints), signal.data(), result, NULL);
+                fftw_plan plan = fftw_plan_dft_r2c_1d(int(numPoints), signal.data(), result, 0);
                 fftw_execute(plan);
 
 
                 std::vector<float> output;
                 output.resize(numPoints / 2);
-                for (int i = 0; i < numPoints / 2; i++) {
+                for (size_t i = 0; i < numPoints / 2; i++) {
                     output[i] = 2.0 / (double)(numPoints)*fabs(result[i][0]);
                 }
                 delete[] result;

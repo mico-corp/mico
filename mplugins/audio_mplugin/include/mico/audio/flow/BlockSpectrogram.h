@@ -75,7 +75,7 @@ namespace mico{
             fftw_complex* rawDft_ = nullptr;
 
             cv::Mat spectrogram_;
-            int sampleSize_ = 2048;
+            size_t sampleSize_ = 2048;
             int stepSize_ = 512;
             int sizeSpectrogram_ = 100;
             int maxFrequency_ = 100;

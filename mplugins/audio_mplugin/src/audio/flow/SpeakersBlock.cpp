@@ -43,7 +43,7 @@ namespace mico{
             }
         }
 
-        bool SpeakersBlock::configure(std::vector<flow::ConfigParameterDef> _params) {
+        bool SpeakersBlock::configure([[maybe_unused]]std::vector<flow::ConfigParameterDef> _params) {
             if (device_) device_->stop();
 
             device_ = get_default_audio_output_device();
@@ -58,7 +58,7 @@ namespace mico{
 
         SpeakersBlock::~SpeakersBlock() {
             if(device_) device_->stop();
-        };
+        }
 
         void SpeakersBlock::fillBuffer(const std::vector<float>& _input, unsigned _channel) {
             dataLock_.lock();

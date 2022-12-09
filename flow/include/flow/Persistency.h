@@ -23,16 +23,9 @@
 #define FLOW_PERSISTENCY_H_
 
 #include <string>
+#include <filesystem>
 
-
-#if defined(__linux__)
-    #include <experimental/filesystem>  // Not implemented until g++8
-    namespace fs = std::experimental::filesystem;
-#elif defined(_WIN32)
-    #include <filesystem>
-    namespace fs = std::filesystem;
-#endif
-
+namespace fs = std::filesystem;
 
 namespace flow{
 
