@@ -64,7 +64,7 @@ mplugin_compile_definition( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_DEFINITIONS HAS_OP
 
 
 if(WIN32)
-	find_package(FreeGLUT REQUIRED)
+	find_package(freeglut REQUIRED)
 	mplugin_link_library(PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES FreeGLUT::freeglut)
 elseif(UNIX)
 	find_package(GLUT REQUIRED)

@@ -9037,7 +9037,11 @@ void QCPAxis::setupTickVectors()
   
   QVector<QString> oldLabels = mTickVectorLabels;
   mTicker->generate(mRange, mParentPlot->locale(), mNumberFormatChar, mNumberPrecision, mTickVector, mSubTicks ? &mSubTickVector : 0, mTickLabels ? &mTickVectorLabels : 0);
-  mCachedMarginValid &= mTickVectorLabels == oldLabels; // if labels have changed, margin might have changed, too
+  bool res = true;
+  for (int i = 0; i < mTickVectorLabels.size(); i++) {
+      res &= mTickVectorLabels[i] == oldLabels[i];
+  }
+  mCachedMarginValid &= res; // if labels have changed, margin might have changed, too
 }
 
 /*! \internal

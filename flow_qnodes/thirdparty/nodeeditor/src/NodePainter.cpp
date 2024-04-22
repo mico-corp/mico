@@ -200,7 +200,7 @@ drawFilledConnectionPoints(QPainter * painter,
 
   for(PortType portType: {PortType::Out, PortType::In})
   {
-    int n = state.getEntries(portType).size();
+    size_t n = state.getEntries(portType).size();
 
     for (QtNodes::PortIndex i = 0; i < n; ++i)
     {
@@ -283,7 +283,7 @@ drawEntryLabels(QPainter * painter,
 
     auto& entries = state.getEntries(portType);
 
-    int n = entries.size();
+    size_t n = entries.size();
 
     for (QtNodes::PortIndex i = 0; i < n; ++i)
     {
