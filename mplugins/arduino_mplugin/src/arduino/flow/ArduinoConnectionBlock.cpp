@@ -33,13 +33,6 @@
 
 namespace mico{
     namespace arduino{
-        ArduinoConnectionBlock::ArduinoConnectionBlock(){
-
-        }
-
-        ArduinoConnectionBlock::~ArduinoConnectionBlock(){
-        }
-
         bool ArduinoConnectionBlock::configure(std::vector<flow::ConfigParameterDef> _params) {
             if(arduino_){
                 arduino_->close();

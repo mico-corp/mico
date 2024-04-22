@@ -90,11 +90,6 @@ namespace mico{
         }
 
 
-        BlockPointCloudVisualizer::~BlockPointCloudVisualizer(){
-            
-        }
-
-
         void BlockPointCloudVisualizer::updateRender(pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr _cloud){
             vtkSmartPointer<vtkPoints> points = vtkSmartPointer<vtkPoints>::New();
             vtkSmartPointer<vtkUnsignedCharArray> colors = vtkSmartPointer<vtkUnsignedCharArray>::New();

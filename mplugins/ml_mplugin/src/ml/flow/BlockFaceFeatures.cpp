@@ -52,10 +52,6 @@ namespace mico{
             );
         }
 
-        BlockFaceFeatures::~BlockFaceFeatures() {
-            
-        }
-
         void BlockFaceFeatures::policyCallback(cv::Mat _image) {
             if (getPipe("descriptor")->registrations()) {
                 cv::Mat frame = _image.clone();

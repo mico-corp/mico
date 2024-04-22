@@ -52,12 +52,6 @@ namespace mico{
                 return (flow::Persistency::resourceDir()/"arduino"/"arduino_icon.png").string();
             }
 
-            /// Base constructor
-            ArduinoConnectionBlock();
-
-            /// Base destructor
-            ~ArduinoConnectionBlock();
-
             /// Configure block with given parameters.
             bool configure(std::vector<flow::ConfigParameterDef> _params) override;
 

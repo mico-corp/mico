@@ -60,8 +60,6 @@ namespace mico{
 
         BlockFrequencyCounter::~BlockFrequencyCounter(){
             refreshTimer_->stop();
-            delete refreshTimer_;
-            delete textDisplay_;
         }
 
         void BlockFrequencyCounter::policyCallback(boost::any) {

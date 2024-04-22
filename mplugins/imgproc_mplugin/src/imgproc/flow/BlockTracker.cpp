@@ -46,10 +46,6 @@ namespace mico{
                                 this        
             );
         }
-
-        BlockTracker::~BlockTracker() {
-
-        }
         
         bool BlockTracker::configure(std::vector<flow::ConfigParameterDef> _params) {
             std::lock_guard<std::mutex> lock(dataLock_);

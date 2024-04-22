@@ -45,11 +45,6 @@ namespace flow{
             connect(ui_->actionGenerate, &QAction::triggered, this, &BlockCreatorWindow::generateCurrent);
         }
 
-        BlockCreatorWindow::~BlockCreatorWindow(){
-
-        }
-
-
         void BlockCreatorWindow::addInput(){
             InputOutputItemWidget *input  = new InputOutputItemWidget(this);
             ui_->inputs_list->addWidget(input);

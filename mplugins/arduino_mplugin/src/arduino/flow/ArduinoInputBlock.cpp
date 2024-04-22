@@ -36,11 +36,6 @@ namespace mico {
             );
         }
 
-        
-        ArduinoInputBlock::~ArduinoInputBlock() {
-
-        }
-
         bool ArduinoInputBlock::configure(std::vector<flow::ConfigParameterDef> _params) {
             if (auto param = getParamByName(_params, "MsgID"); param) {
                 try {

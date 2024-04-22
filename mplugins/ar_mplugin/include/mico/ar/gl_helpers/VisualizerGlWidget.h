@@ -51,7 +51,6 @@ namespace mico{
             Q_OBJECT
         public:
             explicit VisualizerGlWidget(QWidget *_parent = 0);
-            ~VisualizerGlWidget();
 
             void addPoint(Scene3d::Point _p);
             void addLine(Scene3d::Point _p1, Scene3d::Point _p2);

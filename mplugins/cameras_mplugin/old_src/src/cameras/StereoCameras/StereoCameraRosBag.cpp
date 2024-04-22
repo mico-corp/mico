@@ -27,12 +27,6 @@
 #endif
 
 namespace mico {
-
-    //-----------------------------------------------------------------------------------------------------------------
-    StereoCameraRosBag::~StereoCameraRosBag() {
-		        
-    }
-
     //-----------------------------------------------------------------------------------------------------------------
     bool StereoCameraRosBag::init(const cjson::Json & _json){
         #ifdef RGBDTOOLS_USE_ROS

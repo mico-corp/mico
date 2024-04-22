@@ -43,11 +43,6 @@ namespace mico{
             return true;
         }
 
-        BlockDetectSentence::~BlockDetectSentence() {
-            
-        };
-
-
         std::vector<flow::ConfigParameterDef> BlockDetectSentence::parameters() {
             return {
                 { "SilenceThreshold", flow::ConfigParameterDef::eParameterType::DECIMAL, 0.02f},

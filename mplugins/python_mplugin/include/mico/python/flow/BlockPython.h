@@ -61,9 +61,6 @@ namespace mico{
             /// Base constructor
             BlockPython();
 
-            /// Base destructor
-            ~BlockPython();
-
             /// Get custom view widget to be display in the graph
             QWidget * customWidget(){
                 return blockInterpreter_;

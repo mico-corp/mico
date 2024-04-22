@@ -39,7 +39,6 @@ namespace flow{
             Q_OBJECT
         public:
             BlockCreatorWindow();
-            ~BlockCreatorWindow();
             
         private slots:
             void addInput();

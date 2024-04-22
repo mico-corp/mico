@@ -67,9 +67,6 @@ namespace mico {
                 });
 
         }
-        BlockPython::~BlockPython(){
-
-        }
 
 
         QBoxLayout * BlockPython::creationWidget(){

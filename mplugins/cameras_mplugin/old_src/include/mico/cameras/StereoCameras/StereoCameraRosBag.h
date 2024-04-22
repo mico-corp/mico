@@ -39,7 +39,6 @@ namespace mico {
 	/// Wrapper for generic ROS camera
     class StereoCameraRosBag :public StereoCamera {
 	public:		// Public interface
-        ~StereoCameraRosBag();
         /// \brief Initialize the camera using a config file. The coordinate system for the 3d is always on the color camera.
 		/// Config file must have following structure.
 		///

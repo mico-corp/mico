@@ -56,9 +56,6 @@ namespace mico{
             /// Base constructor
             ArduinoInputBlock();
 
-            /// Base destructor
-            ~ArduinoInputBlock();
-
             /// Configure block with given parameters.
             bool configure(std::vector<flow::ConfigParameterDef> _params) override;
 

@@ -31,11 +31,6 @@ namespace mico {
             createPipe<boost::any>("output");
         }
 
-
-        ArduinoOutputBlock::~ArduinoOutputBlock() {
-            
-        }
-
         bool ArduinoOutputBlock::configure(std::vector<flow::ConfigParameterDef> _params) {
             if (auto param = getParamByName(_params, "MsgID"); param) {
                 try {

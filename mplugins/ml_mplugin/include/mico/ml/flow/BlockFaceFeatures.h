@@ -86,9 +86,6 @@ namespace mico{
             /// Base constructor. Initializes the neural network.
             BlockFaceFeatures();
 
-            /// Destroy safely block
-            ~BlockFaceFeatures();
-
             /// Retreive icon of block    
             std::string icon() const override {
                 return (flow::Persistency::resourceDir() / "ml" / "block_face_features.png").string();

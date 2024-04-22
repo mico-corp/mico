@@ -62,8 +62,6 @@ namespace mico{
             virtual std::string name() const override {return "Point cloud Visualizer";}
 
             BlockPointCloudVisualizer();
-            ~BlockPointCloudVisualizer();
-
         private:
             void updateRender(pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr _cloud);
         private:

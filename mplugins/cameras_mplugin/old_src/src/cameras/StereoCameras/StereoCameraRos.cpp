@@ -30,11 +30,6 @@
 namespace mico {
 
     //-----------------------------------------------------------------------------------------------------------------
-    StereoCameraRos::~StereoCameraRos() {
-		        
-    }
-
-    //-----------------------------------------------------------------------------------------------------------------
     bool StereoCameraRos::init(const cjson::Json & _json){
         #ifdef RGBDTOOLS_USE_ROS
             if(!ros::isInitialized()){

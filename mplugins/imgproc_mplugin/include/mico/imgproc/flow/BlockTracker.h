@@ -63,8 +63,6 @@ namespace mico{
             /// Base constructor. Initializes the neural network.
             BlockTracker();
 
-            ~BlockTracker();
-
             /// Retreive icon of block    
             std::string icon() const override {
                 return (flow::Persistency::resourceDir() / "img_proc" / "block_tracker.svg").string();

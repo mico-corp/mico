@@ -50,9 +50,6 @@ namespace mico{
             /// Base constructor
             BlockDetectSentence();
 
-            /// Base destructor
-            ~BlockDetectSentence();
-
             /// Configure block with given parameters.
             bool configure(std::vector<flow::ConfigParameterDef> _params) override;
 
