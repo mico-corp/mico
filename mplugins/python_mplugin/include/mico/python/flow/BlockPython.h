@@ -1,34 +1,36 @@
-//---------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //  Python MICO plugin
-//---------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //  Copyright 2020 Pablo Ramon Soria (a.k.a. Bardo91) pabramsor@gmail.com
-//---------------------------------------------------------------------------------------------------------------------
-//  Permission is hereby granted, free of charge, to any person obtaining a copy of this software
-//  and associated documentation files (the "Software"), to deal in the Software without restriction,
-//  including without limitation the rights to use, copy, modify, merge, publish, distribute,
-//  sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+//-----------------------------------------------------------------------------
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to
+//  deal in the Software without restriction, including without limitation the
+//  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+//  sell copies of the Software, and to permit persons to whom the Software is
 //  furnished to do so, subject to the following conditions:
 //
-//  The above copyright notice and this permission notice shall be included in all copies or substantial
-//  portions of the Software.
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
 //
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
-//  BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-//  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES
-//  OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-//  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//---------------------------------------------------------------------------------------------------------------------
-
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+//  IN THE SOFTWARE.
+//-----------------------------------------------------------------------------
 
 #ifndef MICO_FLOW_BLOCKPYTHON_H_
 #define MICO_FLOW_BLOCKPYTHON_H_
 
 #include <flow/Block.h>
 
-#include <QTextEdit>
 #include <QGroupBox>
-#include <QVBoxLayout>
 #include <QPushButton>
+#include <QTextEdit>
+#include <QVBoxLayout>
 #include <QtWidgets>
 #include <mico/python/PythonSyntaxHighlighter.h>
 #include <mico/python/flow/InterfaceSelectorWidget.h>
@@ -44,63 +46,65 @@
 
 #include <atomic>
 
-namespace mico{
-    namespace python{ 
-        /// Mico block that allows to integrate python scripts into the flow modular system..
-        /// @ingroup  mico_python
-        class BlockPython: public flow::Block {
-        public:
-            /// Get name of block
-            std::string name() const override {return "Python";}
-            
-            /// Retreive icon of block    
-            std::string icon() const override {
-                return (flow::Persistency::resourceDir()/"python"/"Python.png").string();
-            }
+namespace mico {
+namespace python {
+/// Mico block that allows to integrate python scripts into the flow modular
+/// system..
+/// @ingroup  mico_python
+class BlockPython : public flow::Block {
+public:
+  /// Get name of block
+  std::string name() const override { return "Python"; }
 
-            /// Base constructor
-            BlockPython();
+  /// Retreive icon of block
+  std::string icon() const override {
+    return (flow::Persistency::resourceDir() / "python" / "Python.png")
+        .string();
+  }
 
-            /// Get custom view widget to be display in the graph
-            QWidget * customWidget(){
-                return blockInterpreter_;
-            }
+  /// Base constructor
+  BlockPython();
 
-            /// Return the custom creation widget, in which the user chooses the number and type of inputs
-            QBoxLayout * creationWidget() override;
+  /// Get custom view widget to be display in the graph
+  QWidget *customWidget() { return blockInterpreter_; }
 
-            /// Return if the block is configurable.
-            bool isConfigurable() override { return false; };
+  /// Return the custom creation widget, in which the user chooses the number
+  /// and type of inputs
+  QBoxLayout *creationWidget() override;
 
-            /// This block is resizable, it returns true.
-            bool resizable() const override { return true; }
+  /// Return if the block is configurable.
+  bool isConfigurable() override { return false; };
 
-        private:
-            void prepareInterfaces();
+  /// This block is resizable, it returns true.
+  bool resizable() const override { return true; }
 
-            void runPythonCode(flow::DataFlow _data, bool _useData);
+private:
+  void prepareInterfaces();
 
-            void encodeInput(boost::python::dict &locals, flow::DataFlow _data, std::string _tag, std::string _typeTag);
-            void flushPipe(boost::python::dict &_locals, std::string _tag, std::string _typeTag);
+  void runPythonCode(flow::DataFlow _data, bool _useData);
 
-        private:
-            inline static bool isInitialized_ = false;
+  void encodeInput(boost::python::dict &locals, flow::DataFlow _data,
+                   std::string _tag, std::string _typeTag);
+  void flushPipe(boost::python::dict &_locals, std::string _tag,
+                 std::string _typeTag);
 
-            bool isReady_ = false;
+private:
+  inline static bool isInitialized_ = false;
 
-            InterfaceSelectorWidget *interfaceSelector_;
+  bool isReady_ = false;
 
-            std::map<std::string, std::string>  inputInfo_, outputInfo_;
-            
-            QGroupBox *blockInterpreter_;
-            QVBoxLayout *blockInterpreterLayout_;
-            QTextEdit * pythonEditor_;
-            QPushButton * runButton_;
-            PythonSyntaxHighlighter *highlighter_;
+  InterfaceSelectorWidget *interfaceSelector_;
 
-        };
-    }
+  std::map<std::string, std::string> inputInfo_, outputInfo_;
 
-}
+  QGroupBox *blockInterpreter_;
+  QVBoxLayout *blockInterpreterLayout_;
+  QTextEdit *pythonEditor_;
+  QPushButton *runButton_;
+  PythonSyntaxHighlighter *highlighter_;
+};
+} // namespace python
+
+} // namespace mico
 
 #endif

@@ -51,21 +51,21 @@ namespace mico {
 
     
 
-    //---------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     template <typename PointType_>
     inline void SceneVisualizer<PointType_>::close(){
         if(mViewer)
             mViewer->close();
     }
 
-    //---------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     template <typename PointType_>
     inline SceneVisualizer<PointType_>::~SceneVisualizer(){
         if(mViewer)
             mViewer->close();
     }
 
-    //---------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     template <typename PointType_>
     inline void SceneVisualizer<PointType_>::drawDataframe(std::shared_ptr<mico::Dataframe<PointType_>> &_df, bool _drawPoints){
         if(!mViewer){
@@ -179,7 +179,7 @@ namespace mico {
         mViewer->spinOnce(10, true);
     }
 
-    //---------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
 #ifdef HAS_MICO_DNN
     template <typename PointType_>
     inline void SceneVisualizer<PointType_>::drawEntity(std::vector<std::shared_ptr<dnn::Entity<PointType_>>> _entity, bool _drawPoints, bool _drawCube, float _opacity){
@@ -290,7 +290,7 @@ namespace mico {
         }
     }
 #endif
-    //---------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     template <typename PointType_>
     inline void SceneVisualizer<PointType_>::drawWords(std::map<int, std::shared_ptr<Word<PointType_>>> _words){
         mViewer->removePointCloud("words");
@@ -307,7 +307,7 @@ namespace mico {
         }
     }
 
-    //---------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     template <typename PointType_>
     inline void SceneVisualizer<PointType_>::checkAndRedrawCf(){
         for(auto &cf: mDataframes){
@@ -319,7 +319,7 @@ namespace mico {
         }
     }
     
-    //---------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     template <typename PointType_>
     inline void SceneVisualizer<PointType_>::updateDataframe(int _dfId, const Eigen::Matrix4f &_newPose){
         if(!mViewer)
@@ -338,7 +338,7 @@ namespace mico {
     }
 
 
-    //---------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     template <typename PointType_>
     inline bool SceneVisualizer<PointType_>::draw3DMatches(pcl::PointCloud<PointType_> _pc1, pcl::PointCloud<PointType_> _pc2){
         if(!mViewer)
@@ -352,7 +352,7 @@ namespace mico {
         return true;
     }
 
-    //---------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     template <typename PointType_>
     inline bool SceneVisualizer<PointType_>::updateCurrentPose(const Eigen::Matrix4f &_pose){
         if(!mViewer)
@@ -366,7 +366,7 @@ namespace mico {
         return true;
     }
 
-    //---------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     template <typename PointType_>
     inline void SceneVisualizer<PointType_>::insertNodeCovisibility(const Eigen::Vector3f &_position){
         const unsigned char green[3] = {0, 255, 0};
@@ -379,14 +379,14 @@ namespace mico {
         
     }
     
-    //---------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     template <typename PointType_>
     inline void SceneVisualizer<PointType_>::updateNodeCovisibility(int _id, const Eigen::Vector3f &_position){
         double point[3] = {_position[0],_position[1], _position[2]};
         mCovisibilityNodes->SetPoint(_id, point);
     }
     
-    //---------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     template <typename PointType_>
     inline void SceneVisualizer<PointType_>::addCovisibility(int _id, const std::vector<typename Dataframe<PointType_>::Ptr> &_others){
         for(auto &other:_others){ 
@@ -397,7 +397,7 @@ namespace mico {
         }
     }
 
-    //---------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     template <typename PointType_>
     inline void SceneVisualizer<PointType_>::pause() {
         if(!mViewer)
@@ -411,7 +411,7 @@ namespace mico {
         }
     };
 
-    //---------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     template <typename PointType_>
     inline void SceneVisualizer<PointType_>::spinOnce(){
         if(!mViewer)
@@ -420,7 +420,7 @@ namespace mico {
         mViewer->spinOnce(10, true);
     }
 
-    //---------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     template <typename PointType_>
     inline void SceneVisualizer<PointType_>::keycallback(const pcl::visualization::KeyboardEvent &_event, void *_data) {
         for(auto &callback:mCustomCallbacks){
@@ -462,7 +462,7 @@ namespace mico {
         }
     };
 
-    //---------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     template <typename PointType_>
     inline void SceneVisualizer<PointType_>::mouseEventOccurred(const pcl::visualization::MouseEvent &event, void* viewer_void){
       //boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer = *static_cast<boost::shared_ptr<pcl::visualization::PCLVisualizer> *>(viewer_void);
@@ -473,7 +473,7 @@ namespace mico {
         
     };
 
-    //---------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     template <typename PointType_>
     inline void SceneVisualizer<PointType_>::pointPickedCallback(const pcl::visualization::PointPickingEvent &event, void*viewer_void) {
         event.getPoint(x,y,z);
@@ -485,7 +485,7 @@ namespace mico {
         std::cout << "Point clicked at position (" << x << ", " << y << ", " << z << ")" << std::endl;  
     }; 
 
-    //---------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     template <typename PointType_>
     inline void SceneVisualizer<PointType_>::addCustomKeyCallback(CustomCallbackType _callback){
         mCustomCallbacks.push_back(_callback);

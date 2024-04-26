@@ -1,21 +1,19 @@
 #include <QtWidgets/QApplication>
 
-#include <nodes/NodeData>
+#include <nodes/ConnectionStyle>
+#include <nodes/DataModelRegistry>
 #include <nodes/FlowScene>
 #include <nodes/FlowView>
-#include <nodes/DataModelRegistry>
-#include <nodes/ConnectionStyle>
+#include <nodes/NodeData>
 
 #include "models.hpp"
 
+using QtNodes::ConnectionStyle;
 using QtNodes::DataModelRegistry;
 using QtNodes::FlowScene;
 using QtNodes::FlowView;
-using QtNodes::ConnectionStyle;
 
-static std::shared_ptr<DataModelRegistry>
-registerDataModels()
-{
+static std::shared_ptr<DataModelRegistry> registerDataModels() {
   auto ret = std::make_shared<DataModelRegistry>();
 
   ret->registerModel<NaiveDataModel>();
@@ -32,13 +30,9 @@ registerDataModels()
   return ret;
 }
 
-
-static
-void
-setStyle()
-{
+static void setStyle() {
   ConnectionStyle::setConnectionStyle(
-    R"(
+      R"(
   {
     "ConnectionStyle": {
       "UseDataDefinedColors": true
@@ -47,12 +41,9 @@ setStyle()
   )");
 }
 
-
 //------------------------------------------------------------------------------
 
-int
-main(int argc, char* argv[])
-{
+int main(int argc, char *argv[]) {
   QApplication app(argc, argv);
 
   setStyle();

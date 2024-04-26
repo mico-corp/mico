@@ -1,99 +1,102 @@
-//---------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //  Cameras wrapper MICO plugin
-//---------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //  Copyright 2020 Pablo Ramon Soria (a.k.a. Bardo91) pabramsor@gmail.com
-//---------------------------------------------------------------------------------------------------------------------
-//  Permission is hereby granted, free of charge, to any person obtaining a copy of this software
-//  and associated documentation files (the "Software"), to deal in the Software without restriction,
-//  including without limitation the rights to use, copy, modify, merge, publish, distribute,
-//  sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+//-----------------------------------------------------------------------------
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to
+//  deal in the Software without restriction, including without limitation the
+//  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+//  sell copies of the Software, and to permit persons to whom the Software is
 //  furnished to do so, subject to the following conditions:
 //
-//  The above copyright notice and this permission notice shall be included in all copies or substantial
-//  portions of the Software.
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
 //
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
-//  BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-//  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES
-//  OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-//  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//---------------------------------------------------------------------------------------------------------------------
-
-
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+//  IN THE SOFTWARE.
+//-----------------------------------------------------------------------------
 
 #ifndef MICO_FLOW_BLOCKS_STREAMERS_STREAMWEBCAM_H_
 #define MICO_FLOW_BLOCKS_STREAMERS_STREAMWEBCAM_H_
 
-#include <flow/Block.h>
-#include <opencv2/opencv.hpp>
-#include <mutex>
 #include <condition_variable>
+#include <flow/Block.h>
+#include <mutex>
+#include <opencv2/opencv.hpp>
 
 class QSpinBox;
 
-namespace mico{
-    namespace cameras{
-        /// Mico block that opens USB camera devices and flush images out on a stream.
-        /// @ingroup  mico_cameras
-        ///
-        /// @image html blocks/cameras/cameras_block_streamer_webcam.png width=480px
-        ///
-        /// __Outputs__:
-        ///     * Image: image as cv::Mat obtained from webcam
-        ///     * width: width of output images.
-        ///     * height: height of output images.
-        ///
-        /// __parameters__:
-        ///     * Frequency: speed of output stream
-        ///     * device_id: id of the camera, depend on operative system. Typically starts from 0.
-        ///
-        class StreamWebcam:public flow::Block{
-        public:
-            /// Get name of block
-            std::string name() const override {return "Streamer Webcam";}     
-            
-            /// Retreive icon of block    
-            std::string icon() const override {
-                return (flow::Persistency::resourceDir() / "cameras"/"webcam_icon.svg").string();
-            }
-            
-            /// Base constructor
-            StreamWebcam();
+namespace mico {
+namespace cameras {
+/// Mico block that opens USB camera devices and flush images out on a stream.
+/// @ingroup  mico_cameras
+///
+/// @image html blocks/cameras/cameras_block_streamer_webcam.png width=480px
+///
+/// __Outputs__:
+///     * Image: image as cv::Mat obtained from webcam
+///     * width: width of output images.
+///     * height: height of output images.
+///
+/// __parameters__:
+///     * Frequency: speed of output stream
+///     * device_id: id of the camera, depend on operative system. Typically
+///     starts from 0.
+///
+class StreamWebcam : public flow::Block {
+public:
+  /// Get name of block
+  std::string name() const override { return "Streamer Webcam"; }
 
-            /// Base destructor
-            ~StreamWebcam();
-            
-            /// Configure block with given parameters.
-            bool configure(std::vector<flow::ConfigParameterDef> _params) override;
+  /// Retreive icon of block
+  std::string icon() const override {
+    return (flow::Persistency::resourceDir() / "cameras" / "webcam_icon.svg")
+        .string();
+  }
 
-            /// Get list of parameters of the block
-            std::vector<flow::ConfigParameterDef> parameters() override;
-            
-            /// Return if the block is configurable.
-            bool isConfigurable() override { return true; };
+  /// Base constructor
+  StreamWebcam();
 
-            /// Method to check if the block has auto running callback
-            bool hasRunLoop() const override { return true; };
+  /// Base destructor
+  ~StreamWebcam();
 
-            /// Returns a brief description of the block
-            std::string description() const override {return    "Streamer block that reads from usb ready cameras "
-                                                                "connected to the computer and streams its images.\n"
-                                                                "   - Outputs: \n";};
+  /// Configure block with given parameters.
+  bool configure(std::vector<flow::ConfigParameterDef> _params) override;
 
-            QWidget* customWidget() override;
+  /// Get list of parameters of the block
+  std::vector<flow::ConfigParameterDef> parameters() override;
 
-        protected:
-            void loopCallback() override;
+  /// Return if the block is configurable.
+  bool isConfigurable() override { return true; };
 
-        private:
-            cv::VideoCapture *camera_ = nullptr;
-            QSpinBox *freqSpinner_;
-            std::mutex safeDeletion_;
-            std::condition_variable cv_;
-        };
-    }
-}
+  /// Method to check if the block has auto running callback
+  bool hasRunLoop() const override { return true; };
 
+  /// Returns a brief description of the block
+  std::string description() const override {
+    return "Streamer block that reads from usb ready cameras "
+           "connected to the computer and streams its images.\n"
+           "   - Outputs: \n";
+  };
 
+  QWidget *customWidget() override;
+
+protected:
+  void loopCallback() override;
+
+private:
+  cv::VideoCapture *camera_ = nullptr;
+  QSpinBox *freqSpinner_;
+  std::mutex safeDeletion_;
+  std::condition_variable cv_;
+};
+} // namespace cameras
+} // namespace mico
 
 #endif

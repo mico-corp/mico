@@ -1,86 +1,81 @@
-//---------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //  Cameras wrapper MICO plugin
-//---------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //  Copyright 2020 Pablo Ramon Soria (a.k.a. Bardo91) pabramsor@gmail.com
-//---------------------------------------------------------------------------------------------------------------------
-//  Permission is hereby granted, free of charge, to any person obtaining a copy of this software
-//  and associated documentation files (the "Software"), to deal in the Software without restriction,
-//  including without limitation the rights to use, copy, modify, merge, publish, distribute,
-//  sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+//-----------------------------------------------------------------------------
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to
+//  deal in the Software without restriction, including without limitation the
+//  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+//  sell copies of the Software, and to permit persons to whom the Software is
 //  furnished to do so, subject to the following conditions:
 //
-//  The above copyright notice and this permission notice shall be included in all copies or substantial
-//  portions of the Software.
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
 //
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
-//  BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-//  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES
-//  OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-//  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//---------------------------------------------------------------------------------------------------------------------
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+//  IN THE SOFTWARE.
+//-----------------------------------------------------------------------------
 
-
-#include <mico/math/flow/ComparisonBlocks.h>
 #include <flow/Outpipe.h>
 #include <flow/Policy.h>
+#include <mico/math/flow/ComparisonBlocks.h>
 
 #include <cmath>
 
 #include <sstream>
 
-
 namespace mico {
-    namespace math{
-        ComparisonBlock::ComparisonBlock() {
-            createPipe<bool>("result");
+namespace math {
+ComparisonBlock::ComparisonBlock() {
+  createPipe<bool>("result");
 
-            createPolicy({ flow::makeInput<float>("A"),
-                            flow::makeInput<float>("B") });
+  createPolicy({flow::makeInput<float>("A"), flow::makeInput<float>("B")});
 
-            std::function<void(float, float)> fn = [&](float _a, float _b) {
-                if (fn_) {
-                    getPipe("result")->flush(fn_(_a, _b));
-                }
-            };
-
-            registerCallback({ "A", "B" }, fn );
-        }
-
-
-        bool ComparisonBlock::configure(std::vector<flow::ConfigParameterDef> _params) {
-            if (_params.size() != 1) return false;
-            if (_params[0].type_ != flow::ConfigParameterDef::eParameterType::OPTIONS) return false;
-
-            std::string param = _params[0].selectedOption();
-            if (param == "A==B") {
-                fn_ = [](float a, float b) {return a == b; };
-            }
-            else if (param == "A>B") {
-                fn_ = [](float a, float b) {return a > b; };
-            }
-            else if (param == "A<B") {
-                fn_ = [](float a, float b) {return a < b; };
-            }
-            else if (param == "A>=B") {
-                fn_ = [](float a, float b) {return a >= b; };
-            }
-            else if (param == "A<=B") {
-                fn_ = [](float a, float b) {return a <= b; };
-            }
-            else {
-                fn_ = [](float, float) {return false; };
-            }
-
-            return true;
-        }
-
-        std::vector<flow::ConfigParameterDef> ComparisonBlock::parameters() {
-            std::vector<std::string> options = { "A==B", "A>B", "A<B", "A>=B", "A<=B" };
-            return {
-                { "Operation", flow::ConfigParameterDef::eParameterType::OPTIONS,  options }
-            };
-        }
-
+  std::function<void(float, float)> fn = [&](float _a, float _b) {
+    if (fn_) {
+      getPipe("result")->flush(fn_(_a, _b));
     }
-        
+  };
+
+  registerCallback({"A", "B"}, fn);
 }
+
+bool ComparisonBlock::configure(std::vector<flow::ConfigParameterDef> _params) {
+  if (_params.size() != 1)
+    return false;
+  if (_params[0].type_ != flow::ConfigParameterDef::eParameterType::OPTIONS)
+    return false;
+
+  std::string param = _params[0].selectedOption();
+  if (param == "A==B") {
+    fn_ = [](float a, float b) { return a == b; };
+  } else if (param == "A>B") {
+    fn_ = [](float a, float b) { return a > b; };
+  } else if (param == "A<B") {
+    fn_ = [](float a, float b) { return a < b; };
+  } else if (param == "A>=B") {
+    fn_ = [](float a, float b) { return a >= b; };
+  } else if (param == "A<=B") {
+    fn_ = [](float a, float b) { return a <= b; };
+  } else {
+    fn_ = [](float, float) { return false; };
+  }
+
+  return true;
+}
+
+std::vector<flow::ConfigParameterDef> ComparisonBlock::parameters() {
+  std::vector<std::string> options = {"A==B", "A>B", "A<B", "A>=B", "A<=B"};
+  return {{"Operation", flow::ConfigParameterDef::eParameterType::OPTIONS,
+           options}};
+}
+
+} // namespace math
+
+} // namespace mico

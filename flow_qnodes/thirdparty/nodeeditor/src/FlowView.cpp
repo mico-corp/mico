@@ -2,41 +2,36 @@
 
 #include <QtWidgets/QGraphicsScene>
 
-#include <QToolBox>
 #include <QGridLayout>
+#include <QToolBox>
 
-#include <QtGui/QPen>
 #include <QtGui/QBrush>
+#include <QtGui/QPen>
 #include <QtWidgets/QMenu>
 
-#include <QtCore/QRectF>
 #include <QtCore/QPointF>
+#include <QtCore/QRectF>
 
 #include <QtOpenGL>
 #include <QtWidgets>
 
 #include <QDebug>
-#include <iostream>
 #include <cmath>
+#include <iostream>
 
-#include "FlowScene.hpp"
+#include "ConnectionGraphicsObject.hpp"
 #include "DataModelRegistry.hpp"
+#include "FlowScene.hpp"
 #include "Node.hpp"
 #include "NodeGraphicsObject.hpp"
-#include "ConnectionGraphicsObject.hpp"
 #include "StyleCollection.hpp"
 
-using QtNodes::FlowView;
 using QtNodes::FlowScene;
+using QtNodes::FlowView;
 
-
-FlowView::
-FlowView(QWidget *parent)
-  : QGraphicsView(parent)
-  , _clearSelectionAction(Q_NULLPTR)
-  , _deleteSelectionAction(Q_NULLPTR)
-  , _scene(Q_NULLPTR)
-{
+FlowView::FlowView(QWidget *parent)
+    : QGraphicsView(parent), _clearSelectionAction(Q_NULLPTR),
+      _deleteSelectionAction(Q_NULLPTR), _scene(Q_NULLPTR) {
   setDragMode(QGraphicsView::ScrollHandDrag);
   setRenderHint(QPainter::Antialiasing);
 
@@ -44,8 +39,8 @@ FlowView(QWidget *parent)
 
   setBackgroundBrush(flowViewStyle.BackgroundColor);
 
-  //setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
-  //setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);
+  // setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+  // setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
@@ -53,257 +48,223 @@ FlowView(QWidget *parent)
 
   setCacheMode(QGraphicsView::CacheBackground);
 
-  //setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
+  // setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
 }
 
-
-FlowView::
-FlowView(FlowScene *scene, QWidget *parent)
-  : FlowView(parent)
-{
+FlowView::FlowView(FlowScene *scene, QWidget *parent) : FlowView(parent) {
   setScene(scene);
 }
 
-
-QAction*
-FlowView::
-clearSelectionAction() const
-{
+QAction *FlowView::clearSelectionAction() const {
   return _clearSelectionAction;
 }
 
-
-QAction*
-FlowView::
-deleteSelectionAction() const
-{
+QAction *FlowView::deleteSelectionAction() const {
   return _deleteSelectionAction;
 }
 
+QAction *FlowView::copySelectionAction() const { return _copySelectionAction; }
 
-QAction*
-FlowView::
-copySelectionAction() const
-{
-    return _copySelectionAction;
-}
-
-void
-FlowView::setScene(FlowScene *scene)
-{
+void FlowView::setScene(FlowScene *scene) {
   _scene = scene;
   QGraphicsView::setScene(_scene);
 
   // setup actions
-  if (!_clearSelectionAction) delete _clearSelectionAction;
+  if (!_clearSelectionAction)
+    delete _clearSelectionAction;
   _clearSelectionAction = new QAction(QStringLiteral("Clear Selection"), this);
   _clearSelectionAction->setShortcut(Qt::Key_Escape);
-  connect(_clearSelectionAction, &QAction::triggered, _scene, &QGraphicsScene::clearSelection);
+  connect(_clearSelectionAction, &QAction::triggered, _scene,
+          &QGraphicsScene::clearSelection);
   addAction(_clearSelectionAction);
 
-  if (!_deleteSelectionAction) delete _deleteSelectionAction;
-  _deleteSelectionAction = new QAction(QStringLiteral("Delete Selection"), this);
+  if (!_deleteSelectionAction)
+    delete _deleteSelectionAction;
+  _deleteSelectionAction =
+      new QAction(QStringLiteral("Delete Selection"), this);
   _deleteSelectionAction->setShortcut(Qt::Key_Delete);
-  connect(_deleteSelectionAction, &QAction::triggered, this, &FlowView::deleteSelectedNodes);
+  connect(_deleteSelectionAction, &QAction::triggered, this,
+          &FlowView::deleteSelectedNodes);
   addAction(_deleteSelectionAction);
 
-  
-  if(!_copySelectionAction) delete _copySelectionAction;
+  if (!_copySelectionAction)
+    delete _copySelectionAction;
   _copySelectionAction = new QAction(QStringLiteral("Copy Selection"), this);
   _copySelectionAction->setShortcut(Qt::CTRL | Qt::Key_D);
-  connect(_copySelectionAction, &QAction::triggered, this, &FlowView::copySelectedNodes);
+  connect(_copySelectionAction, &QAction::triggered, this,
+          &FlowView::copySelectedNodes);
   addAction(_copySelectionAction);
 }
 
+void FlowView::contextMenuEvent(QContextMenuEvent *event) {
+  if (itemAt(event->pos())) {
+    QGraphicsView::contextMenuEvent(event);
+    return;
+  }
 
-void
-FlowView::
-contextMenuEvent(QContextMenuEvent *event)
-{
-    if (itemAt(event->pos()))
-    {
-      QGraphicsView::contextMenuEvent(event);
+  QDialog dialog;
+  QHBoxLayout *layout = new QHBoxLayout;
+
+  // Add result treeview to the contxt menu
+  QToolBox *nodeTypeSelector = new QToolBox();
+  nodeTypeSelector->setMinimumWidth(350);
+  nodeTypeSelector->setMinimumHeight(350);
+  layout->addWidget(nodeTypeSelector);
+
+  // auto *treeView = new QTreeWidget();
+  // treeView->header()->close();
+  // layout->addWidget(treeView);
+
+  QVBoxLayout *rightColumn = new QVBoxLayout;
+  QTextBrowser *nodeDescription = new QTextBrowser;
+  nodeDescription->setMaximumWidth(250);
+  nodeDescription->setMaximumHeight(250);
+  nodeDescription->setReadOnly(true);
+  nodeDescription->setText("Brief description of node");
+  rightColumn->addWidget(nodeDescription, 0, Qt::AlignTop);
+
+  QGroupBox *configGroup = new QGroupBox("Configuration");
+  rightColumn->addWidget(configGroup);
+
+  QHBoxLayout *buttonLayout = new QHBoxLayout;
+  QPushButton *okButton = new QPushButton("Create");
+  QPushButton *cancelButton = new QPushButton("Cancel");
+  buttonLayout->addWidget(okButton);
+  buttonLayout->addWidget(cancelButton);
+  rightColumn->addLayout(buttonLayout);
+
+  layout->addLayout(rightColumn);
+
+  dialog.setLayout(layout);
+  auto skipText = QStringLiteral("skip me");
+
+  QBoxLayout *currentConfigLayout = nullptr;
+  QString modelName = skipText;
+  std::unique_ptr<NodeDataModel> typeNode;
+
+  // QMap<QString, QTreeWidgetItem*> topLevelItems;
+  QMap<QString, QListWidget *> topLevelItems;
+  for (auto const &cat : _scene->registry().categories()) {
+    //
+    auto grid = new QListWidget();
+    grid->setViewMode(QListWidget::IconMode);
+    grid->setIconSize(QSize(100, 100));
+    grid->setResizeMode(QListWidget::Adjust);
+    grid->setMovement(QListView::Static);
+
+    nodeTypeSelector->addItem(grid, cat);
+    topLevelItems[cat] = grid;
+
+    connect(grid, &QListWidget::itemClicked, [&](QListWidgetItem *item) {
+      modelName = item->text();
+      if (modelName == skipText)
+        return;
+
+      typeNode = _scene->registry().create(modelName);
+      nodeDescription->setText(typeNode->description());
+
+      configGroup->setVisible(false);
+      delete configGroup;
+      configGroup = new QGroupBox("Configuration");
+      rightColumn->addWidget(configGroup);
+
+      currentConfigLayout = typeNode->creationWidget();
+      if (currentConfigLayout != nullptr) {
+        configGroup->setLayout(currentConfigLayout);
+      } else {
+      }
+    });
+  }
+
+  for (auto const &assoc :
+       _scene->registry().registeredModelsCategoryAssociation()) {
+    // auto parent = topLevelItems[assoc.second];
+    // auto item   = new QTreeWidgetItem(parent);
+    // item->setText(0, assoc.first);
+    // item->setData(0, Qt::UserRole, assoc.first);
+    auto parent = topLevelItems[assoc.second];
+
+    auto item = new QListWidgetItem(
+        _scene->registry().create(assoc.first)->icon(), assoc.first, parent);
+    parent->addItem(item);
+    // QVBoxLayout *pLayout = new QVBoxLayout();
+    // QLabel *pIconLabel = new QLabel();
+    // QLabel *pTextLabel = new QLabel();
+
+    // pIconLabel->setPixmap(_scene->registry().create(assoc.first)->icon().pixmap(QSize(32,
+    // 32))); pIconLabel->setAlignment(Qt::AlignCenter);
+    // pIconLabel->setMouseTracking(false);
+    // pIconLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+
+    // pTextLabel->setText(assoc.first);
+    // pTextLabel->setAlignment(Qt::AlignCenter);
+    // pTextLabel->setWordWrap(true);
+    // pTextLabel->setTextInteractionFlags(Qt::NoTextInteraction);
+    // pTextLabel->setMouseTracking(false);
+    // pTextLabel->setSizePolicy(QSizePolicy::Expanding,
+    // QSizePolicy::Expanding);
+
+    // pLayout->addWidget(pIconLabel);
+    // pLayout->addWidget(pTextLabel);
+    // pLayout->setSpacing(5);
+    // pLayout->setMargin(0);
+    // pLayout->setContentsMargins(5, 5, 5, 5);
+
+    // item->setText("");
+    // item->setLayout(pLayout);
+    // item->setMinimumWidth(100);
+    // item->setMinimumHeight(100);
+
+    // std::cout << assoc.first.toStdString() << parent->count()/3 << ", " <<
+    // parent->count()%3 << std::endl; parent->addWidget(item,
+    // parent->count()/3, parent->count()%3 );
+  }
+
+  // treeView->expandAll();
+  if (lastCategory_ != "") {
+    for (int i = 0; i < nodeTypeSelector->count(); i++) {
+      if (nodeTypeSelector->itemText(i) == lastCategory_) {
+        nodeTypeSelector->setCurrentIndex(i);
+        break;
+      }
+    }
+  }
+
+  connect(cancelButton, &QPushButton::clicked, [&] { dialog.close(); });
+
+  connect(okButton, &QPushButton::clicked, [&] {
+    if (modelName == skipText) {
       return;
     }
 
-    QDialog dialog;
-    QHBoxLayout *layout = new QHBoxLayout;
+    if (typeNode) {
+      auto &node = _scene->createNode(std::move(typeNode));
 
+      QPoint pos = event->pos();
 
-    //Add result treeview to the contxt menu
-    QToolBox *nodeTypeSelector = new QToolBox();
-    nodeTypeSelector->setMinimumWidth(350);
-    nodeTypeSelector->setMinimumHeight(350);
-    layout->addWidget(nodeTypeSelector);
-    
-    // auto *treeView = new QTreeWidget();
-    // treeView->header()->close();
-    // layout->addWidget(treeView);
+      QPointF posView = this->mapToScene(pos);
 
+      node.nodeGraphicsObject().setPos(posView);
 
-    QVBoxLayout *rightColumn = new QVBoxLayout;
-    QTextBrowser *nodeDescription = new QTextBrowser;
-    nodeDescription->setMaximumWidth(250);
-    nodeDescription->setMaximumHeight(250);
-    nodeDescription->setReadOnly(true);
-    nodeDescription->setText("Brief description of node");
-    rightColumn->addWidget(nodeDescription, 0, Qt::AlignTop);
+      _scene->nodePlaced(node);
 
-    QGroupBox *configGroup = new QGroupBox("Configuration");
-    rightColumn->addWidget(configGroup);
-
-    QHBoxLayout *buttonLayout = new QHBoxLayout;
-    QPushButton *okButton = new QPushButton("Create");
-    QPushButton *cancelButton = new QPushButton("Cancel");
-    buttonLayout->addWidget(okButton);
-    buttonLayout->addWidget(cancelButton);
-    rightColumn->addLayout(buttonLayout);
-
-    layout->addLayout(rightColumn);
-
-    dialog.setLayout(layout);
-    auto skipText = QStringLiteral("skip me");
-
-
-    QBoxLayout* currentConfigLayout = nullptr;
-    QString modelName = skipText;
-    std::unique_ptr<NodeDataModel> typeNode;
-
-    // QMap<QString, QTreeWidgetItem*> topLevelItems;
-    QMap<QString, QListWidget*> topLevelItems;
-    for (auto const &cat : _scene->registry().categories())
-    {
-      //
-      auto grid = new QListWidget();
-      grid->setViewMode(QListWidget::IconMode);
-      grid->setIconSize(QSize(100, 100));
-      grid->setResizeMode(QListWidget::Adjust);
-      grid->setMovement(QListView::Static);
-
-      nodeTypeSelector->addItem(grid, cat);
-      topLevelItems[cat] = grid;
-
-
-      connect(grid, &QListWidget::itemClicked, [&](QListWidgetItem* item) {
-          modelName = item->text();
-          if (modelName == skipText)
-              return;
-
-          typeNode = _scene->registry().create(modelName);
-          nodeDescription->setText(typeNode->description());
-
-          configGroup->setVisible(false);
-          delete configGroup;
-          configGroup = new QGroupBox("Configuration");
-          rightColumn->addWidget(configGroup);
-
-          currentConfigLayout = typeNode->creationWidget();
-          if (currentConfigLayout != nullptr) {
-              configGroup->setLayout(currentConfigLayout);
-          }
-          else {
-          }
-
-      });
-
+      lastCategory_ =
+          nodeTypeSelector->itemText(nodeTypeSelector->currentIndex());
+    } else {
+      qDebug() << "Model not found";
     }
 
+    dialog.close();
+  });
 
-    for (auto const& assoc : _scene->registry().registeredModelsCategoryAssociation()) {
-        // auto parent = topLevelItems[assoc.second];
-        // auto item   = new QTreeWidgetItem(parent);
-        // item->setText(0, assoc.first);
-        // item->setData(0, Qt::UserRole, assoc.first);
-        auto parent = topLevelItems[assoc.second];
-
-        auto item = new QListWidgetItem(_scene->registry().create(assoc.first)->icon(), assoc.first, parent);
-        parent->addItem(item);
-        // QVBoxLayout *pLayout = new QVBoxLayout();
-        // QLabel *pIconLabel = new QLabel();
-        // QLabel *pTextLabel = new QLabel();
-
-        // pIconLabel->setPixmap(_scene->registry().create(assoc.first)->icon().pixmap(QSize(32, 32)));
-        // pIconLabel->setAlignment(Qt::AlignCenter);
-        // pIconLabel->setMouseTracking(false);
-        // pIconLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-
-        // pTextLabel->setText(assoc.first);
-        // pTextLabel->setAlignment(Qt::AlignCenter);
-        // pTextLabel->setWordWrap(true);
-        // pTextLabel->setTextInteractionFlags(Qt::NoTextInteraction);
-        // pTextLabel->setMouseTracking(false);
-        // pTextLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-
-        // pLayout->addWidget(pIconLabel);
-        // pLayout->addWidget(pTextLabel);
-        // pLayout->setSpacing(5);
-        // pLayout->setMargin(0);
-        // pLayout->setContentsMargins(5, 5, 5, 5);
-
-        // item->setText("");
-        // item->setLayout(pLayout);
-        // item->setMinimumWidth(100);
-        // item->setMinimumHeight(100);
-
-        // std::cout << assoc.first.toStdString() << parent->count()/3 << ", " << parent->count()%3 << std::endl;
-        // parent->addWidget(item, parent->count()/3, parent->count()%3 );
-
-    }
-
-    // treeView->expandAll();
-    if (lastCategory_ != "") {
-        for (int i = 0; i < nodeTypeSelector->count(); i++) {
-            if (nodeTypeSelector->itemText(i) == lastCategory_) {
-                nodeTypeSelector->setCurrentIndex(i);
-                break;
-            }
-        }
-    }
-
-    connect(cancelButton, &QPushButton::clicked, [&]{
-      dialog.close();
-    });
-
-    connect(okButton, &QPushButton::clicked, [&]{
-      if (modelName == skipText) {
-        return;
-      }
-
-      if (typeNode) {
-        auto& node = _scene->createNode(std::move(typeNode));
-
-        QPoint pos = event->pos();
-
-        QPointF posView = this->mapToScene(pos);
-
-        node.nodeGraphicsObject().setPos(posView);
-
-        _scene->nodePlaced(node);
-
-        lastCategory_ = nodeTypeSelector->itemText(nodeTypeSelector->currentIndex());
-      }
-      else {
-        qDebug() << "Model not found";
-      }
-
-      dialog.close();
-    });
-
-
-
-    dialog.move(event->globalPos());
-    dialog.exec();
+  dialog.move(event->globalPos());
+  dialog.exec();
 }
 
-
-void
-FlowView::
-wheelEvent(QWheelEvent *event)
-{
+void FlowView::wheelEvent(QWheelEvent *event) {
   QPoint delta = event->angleDelta();
 
-  if (delta.y() == 0)
-  {
+  if (delta.y() == 0) {
     event->ignore();
     return;
   }
@@ -316,12 +277,8 @@ wheelEvent(QWheelEvent *event)
     scaleDown();
 }
 
-
-void
-FlowView::
-scaleUp()
-{
-  double const step   = 1.2;
+void FlowView::scaleUp() {
+  double const step = 1.2;
   double const factor = std::pow(step, 1.0);
 
   QTransform t = transform();
@@ -332,28 +289,19 @@ scaleUp()
   scale(factor, factor);
 }
 
-
-void
-FlowView::
-scaleDown()
-{
-  double const step   = 1.2;
+void FlowView::scaleDown() {
+  double const step = 1.2;
   double const factor = std::pow(step, -1.0);
 
   scale(factor, factor);
 }
 
-
-void
-FlowView::
-deleteSelectedNodes()
-{
+void FlowView::deleteSelectedNodes() {
   // Delete the selected connections first, ensuring that they won't be
   // automatically deleted when selected nodes are deleted (deleting a node
   // deletes some connections as well)
-  for (QGraphicsItem * item : _scene->selectedItems())
-  {
-    if (auto c = qgraphicsitem_cast<ConnectionGraphicsObject*>(item))
+  for (QGraphicsItem *item : _scene->selectedItems()) {
+    if (auto c = qgraphicsitem_cast<ConnectionGraphicsObject *>(item))
       _scene->deleteConnection(c->connection());
   }
 
@@ -361,145 +309,108 @@ deleteSelectedNodes()
   // Selected connections were already deleted prior to this loop, otherwise
   // qgraphicsitem_cast<NodeGraphicsObject*>(item) could be a use-after-free
   // when a selected connection is deleted by deleting the node.
-  for (QGraphicsItem * item : _scene->selectedItems())
-  {
-    if (auto n = qgraphicsitem_cast<NodeGraphicsObject*>(item))
+  for (QGraphicsItem *item : _scene->selectedItems()) {
+    if (auto n = qgraphicsitem_cast<NodeGraphicsObject *>(item))
       _scene->removeNode(n->node());
   }
 }
 
+void FlowView::copySelectedNodes() {
+  // List of selected items in scene
+  auto listNodes = _scene->selectedItems();
 
-void
-FlowView::
-copySelectedNodes()
-{
-    // List of selected items in scene
-    auto listNodes = _scene->selectedItems();
-    
-    // Iterate until we find an item that is a node.
-    for (QGraphicsItem* item : _scene->selectedItems()) {
-        // If it is a node, let's try to get the type to reproduce it.
-        if (auto n = qgraphicsitem_cast<NodeGraphicsObject*>(item)) {
-            // Get node type and create
-            auto jsonInfo = n->node().save();
-            QString modelName = jsonInfo["model"].toObject()["name"].toString();
+  // Iterate until we find an item that is a node.
+  for (QGraphicsItem *item : _scene->selectedItems()) {
+    // If it is a node, let's try to get the type to reproduce it.
+    if (auto n = qgraphicsitem_cast<NodeGraphicsObject *>(item)) {
+      // Get node type and create
+      auto jsonInfo = n->node().save();
+      QString modelName = jsonInfo["model"].toObject()["name"].toString();
 
-            auto& node = _scene->createNode(_scene->registry().create(modelName));
-        
-            // Move close to the existing one
-            QJsonObject positionJson = jsonInfo["position"].toObject();
-            QPointF     point(  positionJson["x"].toDouble() + 100,
-                                positionJson["y"].toDouble() + 100);
+      auto &node = _scene->createNode(_scene->registry().create(modelName));
 
-            node.nodeGraphicsObject().moveBy(point.x(), point.y());
+      // Move close to the existing one
+      QJsonObject positionJson = jsonInfo["position"].toObject();
+      QPointF point(positionJson["x"].toDouble() + 100,
+                    positionJson["y"].toDouble() + 100);
 
-        }
+      node.nodeGraphicsObject().moveBy(point.x(), point.y());
     }
-    
-   
+  }
 }
 
+void FlowView::keyPressEvent(QKeyEvent *event) {
+  switch (event->key()) {
+  case Qt::Key_Shift:
+    setDragMode(QGraphicsView::RubberBandDrag);
+    break;
 
-
-void
-FlowView::
-keyPressEvent(QKeyEvent *event)
-{
-  switch (event->key())
-  {
-    case Qt::Key_Shift:
-      setDragMode(QGraphicsView::RubberBandDrag);
-      break;
-
-    default:
-      break;
+  default:
+    break;
   }
 
   QGraphicsView::keyPressEvent(event);
 }
 
+void FlowView::keyReleaseEvent(QKeyEvent *event) {
+  switch (event->key()) {
+  case Qt::Key_Shift:
+    setDragMode(QGraphicsView::ScrollHandDrag);
+    break;
 
-void
-FlowView::
-keyReleaseEvent(QKeyEvent *event)
-{
-  switch (event->key())
-  {
-    case Qt::Key_Shift:
-      setDragMode(QGraphicsView::ScrollHandDrag);
-      break;
-
-    default:
-      break;
+  default:
+    break;
   }
   QGraphicsView::keyReleaseEvent(event);
 }
 
-
-void
-FlowView::
-mousePressEvent(QMouseEvent *event)
-{
+void FlowView::mousePressEvent(QMouseEvent *event) {
   QGraphicsView::mousePressEvent(event);
-  if (event->button() == Qt::LeftButton)
-  {
+  if (event->button() == Qt::LeftButton) {
     _clickPos = mapToScene(event->pos());
   }
 }
 
-
-void
-FlowView::
-mouseMoveEvent(QMouseEvent *event)
-{
+void FlowView::mouseMoveEvent(QMouseEvent *event) {
   QGraphicsView::mouseMoveEvent(event);
-  if (scene()->mouseGrabberItem() == nullptr && event->buttons() == Qt::LeftButton)
-  {
+  if (scene()->mouseGrabberItem() == nullptr &&
+      event->buttons() == Qt::LeftButton) {
     // Make sure shift is not being pressed
-    if ((event->modifiers() & Qt::ShiftModifier) == 0)
-    {
+    if ((event->modifiers() & Qt::ShiftModifier) == 0) {
       QPointF difference = _clickPos - mapToScene(event->pos());
       setSceneRect(sceneRect().translated(difference.x(), difference.y()));
     }
   }
 }
 
-
-void
-FlowView::
-drawBackground(QPainter* painter, const QRectF& r)
-{
+void FlowView::drawBackground(QPainter *painter, const QRectF &r) {
   QGraphicsView::drawBackground(painter, r);
 
-  auto drawGrid =
-    [&](double gridStep)
-    {
-      QRect   windowRect = rect();
-      QPointF tl = mapToScene(windowRect.topLeft());
-      QPointF br = mapToScene(windowRect.bottomRight());
+  auto drawGrid = [&](double gridStep) {
+    QRect windowRect = rect();
+    QPointF tl = mapToScene(windowRect.topLeft());
+    QPointF br = mapToScene(windowRect.bottomRight());
 
-      double left   = std::floor(tl.x() / gridStep - 0.5);
-      double right  = std::floor(br.x() / gridStep + 1.0);
-      double bottom = std::floor(tl.y() / gridStep - 0.5);
-      double top    = std::floor (br.y() / gridStep + 1.0);
+    double left = std::floor(tl.x() / gridStep - 0.5);
+    double right = std::floor(br.x() / gridStep + 1.0);
+    double bottom = std::floor(tl.y() / gridStep - 0.5);
+    double top = std::floor(br.y() / gridStep + 1.0);
 
-      // vertical lines
-      for (int xi = int(left); xi <= int(right); ++xi)
-      {
-        QLineF line(xi * gridStep, bottom * gridStep,
-                    xi * gridStep, top * gridStep );
+    // vertical lines
+    for (int xi = int(left); xi <= int(right); ++xi) {
+      QLineF line(xi * gridStep, bottom * gridStep, xi * gridStep,
+                  top * gridStep);
 
-        painter->drawLine(line);
-      }
+      painter->drawLine(line);
+    }
 
-      // horizontal lines
-      for (int yi = int(bottom); yi <= int(top); ++yi)
-      {
-        QLineF line(left * gridStep, yi * gridStep,
-                    right * gridStep, yi * gridStep );
-        painter->drawLine(line);
-      }
-    };
+    // horizontal lines
+    for (int yi = int(bottom); yi <= int(top); ++yi) {
+      QLineF line(left * gridStep, yi * gridStep, right * gridStep,
+                  yi * gridStep);
+      painter->drawLine(line);
+    }
+  };
 
   auto const &flowViewStyle = StyleCollection::flowViewStyle();
 
@@ -516,19 +427,9 @@ drawBackground(QPainter* painter, const QRectF& r)
   drawGrid(150);
 }
 
-
-void
-FlowView::
-showEvent(QShowEvent *event)
-{
+void FlowView::showEvent(QShowEvent *event) {
   _scene->setSceneRect(this->rect());
   QGraphicsView::showEvent(event);
 }
 
-
-FlowScene *
-FlowView::
-scene()
-{
-  return _scene;
-}
+FlowScene *FlowView::scene() { return _scene; }

@@ -24,46 +24,34 @@ using QtNodes::NodeDataType;
 using QtNodes::PortIndex;
 using QtNodes::PortType;
 
-TEST_CASE("FlowScene triggers connections created or deleted", "[gui]")
-{
-  struct MockDataModel : StubNodeDataModel
-  {
+TEST_CASE("FlowScene triggers connections created or deleted", "[gui]") {
+  struct MockDataModel : StubNodeDataModel {
     unsigned int nPorts(PortType) const override { return 1; }
 
-    void
-    inputConnectionCreated(Connection const&) override
-    {
+    void inputConnectionCreated(Connection const &) override {
       inputCreatedCalledCount++;
     }
 
-    void
-    inputConnectionDeleted(Connection const&) override
-    {
+    void inputConnectionDeleted(Connection const &) override {
       inputDeletedCalledCount++;
     }
 
-    void
-    outputConnectionCreated(Connection const&) override
-    {
+    void outputConnectionCreated(Connection const &) override {
       outputCreatedCalledCount++;
     }
 
-    void
-    outputConnectionDeleted(Connection const&) override
-    {
+    void outputConnectionDeleted(Connection const &) override {
       outputDeletedCalledCount++;
     }
 
-    int inputCreatedCalledCount  = 0;
-    int inputDeletedCalledCount  = 0;
+    int inputCreatedCalledCount = 0;
+    int inputDeletedCalledCount = 0;
     int outputCreatedCalledCount = 0;
     int outputDeletedCalledCount = 0;
 
-    void
-    resetCallCounts()
-    {
-      inputCreatedCalledCount  = 0;
-      inputDeletedCalledCount  = 0;
+    void resetCallCounts() {
+      inputCreatedCalledCount = 0;
+      inputDeletedCalledCount = 0;
       outputCreatedCalledCount = 0;
       outputDeletedCalledCount = 0;
     }
@@ -73,25 +61,24 @@ TEST_CASE("FlowScene triggers connections created or deleted", "[gui]")
 
   FlowScene scene;
 
-  Node& fromNode      = scene.createNode(std::make_unique<MockDataModel>());
-  Node& toNode        = scene.createNode(std::make_unique<MockDataModel>());
-  Node& unrelatedNode = scene.createNode(std::make_unique<MockDataModel>());
+  Node &fromNode = scene.createNode(std::make_unique<MockDataModel>());
+  Node &toNode = scene.createNode(std::make_unique<MockDataModel>());
+  Node &unrelatedNode = scene.createNode(std::make_unique<MockDataModel>());
 
-  auto& fromNgo      = fromNode.nodeGraphicsObject();
-  auto& toNgo        = toNode.nodeGraphicsObject();
-  auto& unrelatedNgo = unrelatedNode.nodeGraphicsObject();
+  auto &fromNgo = fromNode.nodeGraphicsObject();
+  auto &toNgo = toNode.nodeGraphicsObject();
+  auto &unrelatedNgo = unrelatedNode.nodeGraphicsObject();
 
   fromNgo.setPos(0, 0);
   toNgo.setPos(200, 20);
   unrelatedNgo.setPos(-100, -100);
 
-  auto& from      = dynamic_cast<MockDataModel&>(*fromNode.nodeDataModel());
-  auto& to        = dynamic_cast<MockDataModel&>(*toNode.nodeDataModel());
-  auto& unrelated = dynamic_cast<MockDataModel&>(*unrelatedNode.nodeDataModel());
+  auto &from = dynamic_cast<MockDataModel &>(*fromNode.nodeDataModel());
+  auto &to = dynamic_cast<MockDataModel &>(*toNode.nodeDataModel());
+  auto &unrelated =
+      dynamic_cast<MockDataModel &>(*unrelatedNode.nodeDataModel());
 
-
-  SECTION("creating half a connection (not finishing the connection)")
-  {
+  SECTION("creating half a connection (not finishing the connection)") {
     auto connection = scene.createConnection(PortType::Out, fromNode, 0);
 
     CHECK(from.inputCreatedCalledCount == 0);
@@ -106,44 +93,40 @@ TEST_CASE("FlowScene triggers connections created or deleted", "[gui]")
     scene.deleteConnection(*connection);
   }
 
-  struct Creation
-  {
-    std::string                                  name;
+  struct Creation {
+    std::string name;
     std::function<std::shared_ptr<Connection>()> createConnection;
   };
 
-  Creation sceneCreation{"scene.createConnection",
-                         [&] { return scene.createConnection(toNode, 0, fromNode, 0); }};
+  Creation sceneCreation{
+      "scene.createConnection",
+      [&] { return scene.createConnection(toNode, 0, fromNode, 0); }};
 
   Creation partialCreation{"scene.createConnection-by partial", [&] {
-                             auto connection = scene.createConnection(PortType::Out, fromNode, 0);
+                             auto connection = scene.createConnection(
+                                 PortType::Out, fromNode, 0);
                              connection->setNodeToPort(toNode, PortType::In, 0);
 
                              return connection;
                            }};
 
-  struct Deletion
-  {
-    std::string                                      name;
+  struct Deletion {
+    std::string name;
     std::function<void(std::shared_ptr<Connection>)> deleteConnection;
   };
 
   Deletion sceneDeletion{"scene.deleteConnection",
                          [&](auto c) { scene.deleteConnection(*c); }};
 
-  Deletion partialDragDeletion{"scene-deleteConnectionByDraggingOff",
-                               [&](auto connection) {
-                                 connection->clearNode(PortType::In);
-                               }};
+  Deletion partialDragDeletion{
+      "scene-deleteConnectionByDraggingOff",
+      [&](auto connection) { connection->clearNode(PortType::In); }};
 
-  SECTION("creating a connection")
-  {
+  SECTION("creating a connection") {
     std::vector<Creation> cases({sceneCreation, partialCreation});
 
-    for (Creation const& create : cases)
-    {
-      SECTION(create.name)
-      {
+    for (Creation const &create : cases) {
+      SECTION(create.name) {
         auto connection = create.createConnection();
 
         CHECK(from.inputCreatedCalledCount == 0);
@@ -160,15 +143,12 @@ TEST_CASE("FlowScene triggers connections created or deleted", "[gui]")
     }
   }
 
-  SECTION("deleting a connection")
-  {
+  SECTION("deleting a connection") {
     std::vector<Deletion> cases({sceneDeletion, partialDragDeletion});
 
-    for (auto const& deletion : cases)
-    {
-      SECTION("deletion: " + deletion.name)
-      {
-        auto                      connection     = sceneCreation.createConnection();
+    for (auto const &deletion : cases) {
+      SECTION("deletion: " + deletion.name) {
+        auto connection = sceneCreation.createConnection();
         std::weak_ptr<Connection> weakConnection = connection;
 
         from.resetCallCounts();

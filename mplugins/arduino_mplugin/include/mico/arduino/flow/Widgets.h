@@ -1,25 +1,26 @@
-//---------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //  Arduino MICO plugin
-//---------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //  Copyright 2020 Pablo Ramon Soria (a.k.a. Bardo91) pabramsor@gmail.com
-//---------------------------------------------------------------------------------------------------------------------
-//  Permission is hereby granted, free of charge, to any person obtaining a copy of this software
-//  and associated documentation files (the "Software"), to deal in the Software without restriction,
-//  including without limitation the rights to use, copy, modify, merge, publish, distribute,
-//  sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+//-----------------------------------------------------------------------------
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to
+//  deal in the Software without restriction, including without limitation the
+//  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+//  sell copies of the Software, and to permit persons to whom the Software is
 //  furnished to do so, subject to the following conditions:
 //
-//  The above copyright notice and this permission notice shall be included in all copies or substantial
-//  portions of the Software.
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
 //
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
-//  BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-//  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES
-//  OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-//  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//---------------------------------------------------------------------------------------------------------------------
-
-
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+//  IN THE SOFTWARE.
+//-----------------------------------------------------------------------------
 
 #ifndef MICO_ARDUINO_FLOW_WIDGETS_H_
 #define MICO_ARDUINO_FLOW_WIDGETS_H_
@@ -32,271 +33,270 @@ class QSlider;
 class QLabel;
 class QGroupBox;
 
-namespace mico{
+namespace mico {
 
-    namespace arduino {
-        /// Mico interactive block that simulates a toggle button.
-        /// @ingroup  mico_arduino
-        ///
-        /// @image html blocks/interactive/interactive_block_toggle_buton.png width=480px
-        ///
-        /// __outputs__:
-        ///     * state: boolean, true if pressed false if not. Single trigger
-        ///
-        class ToggleButtonBlock:public flow::Block{
-        public:
-            /// Retrieve name of block
-            std::string name() const override {return "Toggle Button";}     
-            
-            /// Get custom view widget to be display in the graph
-            QWidget * customWidget() override;
+namespace arduino {
+/// Mico interactive block that simulates a toggle button.
+/// @ingroup  mico_arduino
+///
+/// @image html blocks/interactive/interactive_block_toggle_buton.png
+/// width=480px
+///
+/// __outputs__:
+///     * state: boolean, true if pressed false if not. Single trigger
+///
+class ToggleButtonBlock : public flow::Block {
+public:
+  /// Retrieve name of block
+  std::string name() const override { return "Toggle Button"; }
 
-            /// Retreive icon of block    
-            std::string icon() const override {
-                return (flow::Persistency::resourceDir() / "arduino" / "block_toggle.svg").string();
-            }
+  /// Get custom view widget to be display in the graph
+  QWidget *customWidget() override;
 
-            
-            /// Base constructor
-            ToggleButtonBlock();
+  /// Retreive icon of block
+  std::string icon() const override {
+    return (flow::Persistency::resourceDir() / "arduino" / "block_toggle.svg")
+        .string();
+  }
 
-            /// Return if the block is configurable.
-            bool isConfigurable() override { return false; };
+  /// Base constructor
+  ToggleButtonBlock();
 
-            /// Returns a brief description of the block
-            std::string description() const override {return    "ToggleButton\n";};
-        private:
-            Switch *button_;
-        };
+  /// Return if the block is configurable.
+  bool isConfigurable() override { return false; };
 
+  /// Returns a brief description of the block
+  std::string description() const override { return "ToggleButton\n"; };
 
-        /// Mico interactive block that simulates a slider bar to generate integer values.
-        /// @ingroup  mico_arduino
-        ///
-        /// @image html blocks/interactive/interactive_block_slider_pwm.png width=480px
-        ///
-        /// __outputs__:
-        ///     * pwm: Integer from 0 to 1028.
-        ///
-        class SliderPwm :public flow::Block {
-        public:
-            /// Base constructor
-            SliderPwm();
+private:
+  Switch *button_;
+};
 
-            /// Retrive name of block
-            std::string name() const override { return "Slider Pwm"; }
+/// Mico interactive block that simulates a slider bar to generate integer
+/// values.
+/// @ingroup  mico_arduino
+///
+/// @image html blocks/interactive/interactive_block_slider_pwm.png width=480px
+///
+/// __outputs__:
+///     * pwm: Integer from 0 to 1028.
+///
+class SliderPwm : public flow::Block {
+public:
+  /// Base constructor
+  SliderPwm();
 
-            /// Get custom view widget to be display in the graph
-            QWidget* customWidget() override;
+  /// Retrive name of block
+  std::string name() const override { return "Slider Pwm"; }
 
-            /// Retreive icon of block    
-            std::string icon() const override {
-                return (flow::Persistency::resourceDir() / "arduino" / "block_slider.svg").string();
-            }
+  /// Get custom view widget to be display in the graph
+  QWidget *customWidget() override;
 
-            /// Return if the block is configurable.
-            bool isConfigurable() override { return false; };
+  /// Retreive icon of block
+  std::string icon() const override {
+    return (flow::Persistency::resourceDir() / "arduino" / "block_slider.svg")
+        .string();
+  }
 
-            /// Returns a brief description of the block
-            std::string description() const override { return    "Slider pwm\n"; };
-        private:
-            QSlider* slider_;
-        };
+  /// Return if the block is configurable.
+  bool isConfigurable() override { return false; };
 
-        /// Mico block that switches between two different signals from a boolean input.
-        /// @ingroup  mico_arduino
-        ///
-        /// @image html blocks/interactive/interactive_block_signal_switcher.png width=480px
-        ///
-        /// __inputs__:
-        ///     * Signal: boolean, if true, it enables flow from "A" to "Out". If false, it enables flow from "B" to "Out".
-        ///     * A: channel to be outputted if Signal is true.
-        ///     * B: channel to be outputted if Signal is false.
-        /// __outputs__:
-        ///     * Out: outputs flow depend on Signal input.
-        ///
-        class SignalSwitcher :public flow::Block {
-        public:
-            /// Base constructor
-            SignalSwitcher();
+  /// Returns a brief description of the block
+  std::string description() const override { return "Slider pwm\n"; };
 
-            /// Retreive name of block
-            std::string name() const override { return "Signal Switcher"; }
+private:
+  QSlider *slider_;
+};
 
-            /// Get custom view widget to be display in the graph
-            QWidget* customWidget() override;
+/// Mico block that switches between two different signals from a boolean input.
+/// @ingroup  mico_arduino
+///
+/// @image html blocks/interactive/interactive_block_signal_switcher.png
+/// width=480px
+///
+/// __inputs__:
+///     * Signal: boolean, if true, it enables flow from "A" to "Out". If false,
+///     it enables flow from "B" to "Out".
+///     * A: channel to be outputted if Signal is true.
+///     * B: channel to be outputted if Signal is false.
+/// __outputs__:
+///     * Out: outputs flow depend on Signal input.
+///
+class SignalSwitcher : public flow::Block {
+public:
+  /// Base constructor
+  SignalSwitcher();
 
-            /// Retreive icon of block    
-            std::string icon() const override {
-                return (flow::Persistency::resourceDir() / "arduino" / "switch_A.png").string();
-            }
+  /// Retreive name of block
+  std::string name() const override { return "Signal Switcher"; }
 
-            /// Return if the block is configurable.
-            bool isConfigurable() override { return false; };
+  /// Get custom view widget to be display in the graph
+  QWidget *customWidget() override;
 
-            /// Returns a brief description of the block
-            std::string description() const override { return    "Signal Switcher\n"; };
-        private:
-            bool flowA_ = true;
-            QLabel* img_;
-            QGroupBox* customWidget_;
-            std::string fileA = (flow::Persistency::resourceDir() / "arduino" / "switch_A.png").string();
-            std::string fileB = (flow::Persistency::resourceDir() / "arduino" / "switch_B.png").string();
-        };
+  /// Retreive icon of block
+  std::string icon() const override {
+    return (flow::Persistency::resourceDir() / "arduino" / "switch_A.png")
+        .string();
+  }
 
+  /// Return if the block is configurable.
+  bool isConfigurable() override { return false; };
 
-        /// Mico block that allows or not to flow depend on boolean trigger
-        /// @ingroup  mico_arduino
-        ///
-        /// @image html blocks/interactive/interactive_block_flow_switcher.png width=480px
-        ///
-        /// __inputs__:
-        ///     * Signal: boolean, if true, it enables flow from "A" to "Out". If false, it disable the flow
-        ///     * input: channel to be outputted if Signal is true.
-        /// __outputs__:
-        ///     * Out: outputs flow if Signal is true
-        ///
-        class FlowSwitch :public flow::Block {
-        public:
-            /// Base constructor
-            FlowSwitch();
+  /// Returns a brief description of the block
+  std::string description() const override { return "Signal Switcher\n"; };
 
-            /// Retreive name of block
-            std::string name() const override { return "Flow Switcher"; }
+private:
+  bool flowA_ = true;
+  QLabel *img_;
+  QGroupBox *customWidget_;
+  std::string fileA =
+      (flow::Persistency::resourceDir() / "arduino" / "switch_A.png").string();
+  std::string fileB =
+      (flow::Persistency::resourceDir() / "arduino" / "switch_B.png").string();
+};
 
-            /// Get custom view widget to be display in the graph
-            QWidget* customWidget() override;
+/// Mico block that allows or not to flow depend on boolean trigger
+/// @ingroup  mico_arduino
+///
+/// @image html blocks/interactive/interactive_block_flow_switcher.png
+/// width=480px
+///
+/// __inputs__:
+///     * Signal: boolean, if true, it enables flow from "A" to "Out". If false,
+///     it disable the flow
+///     * input: channel to be outputted if Signal is true.
+/// __outputs__:
+///     * Out: outputs flow if Signal is true
+///
+class FlowSwitch : public flow::Block {
+public:
+  /// Base constructor
+  FlowSwitch();
 
-            /// Retreive icon of block    
-            std::string icon() const override {
-                return (flow::Persistency::resourceDir() / "arduino" / "switch_off.png").string();
-            }
+  /// Retreive name of block
+  std::string name() const override { return "Flow Switcher"; }
 
-            /// Return if the block is configurable.
-            bool isConfigurable() override { return false; };
+  /// Get custom view widget to be display in the graph
+  QWidget *customWidget() override;
 
-            /// Returns a brief description of the block
-            std::string description() const override { return    "Switcher for generic signals\n"; };
+  /// Retreive icon of block
+  std::string icon() const override {
+    return (flow::Persistency::resourceDir() / "arduino" / "switch_off.png")
+        .string();
+  }
 
-        private:
-            bool flow_ = true;
-            QLabel* img_;
-            QGroupBox* customWidget_;
-            std::string fileOn = (flow::Persistency::resourceDir() / "arduino" / "switch_on.png").string();
-            std::string fileOff = (flow::Persistency::resourceDir() / "arduino" / "switch_off.png").string();
-        };
+  /// Return if the block is configurable.
+  bool isConfigurable() override { return false; };
 
-        /// Mico block that performs a NOT operation on the given input.
-        /// @ingroup  mico_arduino
-        class NotOperator :public flow::Block{
-        public:
+  /// Returns a brief description of the block
+  std::string description() const override {
+    return "Switcher for generic signals\n";
+  };
 
-            /// Base constructor
-            NotOperator(){
-                createPipe<bool>("NoA");
-                
-                createPolicy({  flow::makeInput<bool>("A")});
+private:
+  bool flow_ = true;
+  QLabel *img_;
+  QGroupBox *customWidget_;
+  std::string fileOn =
+      (flow::Persistency::resourceDir() / "arduino" / "switch_on.png").string();
+  std::string fileOff =
+      (flow::Persistency::resourceDir() / "arduino" / "switch_off.png")
+          .string();
+};
 
-                registerCallback({"A"}, 
-                    &NotOperator::policyCallback,
-                    this
-                );
-            }
+/// Mico block that performs a NOT operation on the given input.
+/// @ingroup  mico_arduino
+class NotOperator : public flow::Block {
+public:
+  /// Base constructor
+  NotOperator() {
+    createPipe<bool>("NoA");
 
+    createPolicy({flow::makeInput<bool>("A")});
 
-            /// Retreive icon of block    
-            std::string icon() const override {
-                return (flow::Persistency::resourceDir() / "arduino" / "block_not.svg").string();
-            }
+    registerCallback({"A"}, &NotOperator::policyCallback, this);
+  }
 
-            /// Get name of block
-            std::string name() const override {return "NOT";}     
+  /// Retreive icon of block
+  std::string icon() const override {
+    return (flow::Persistency::resourceDir() / "arduino" / "block_not.svg")
+        .string();
+  }
 
-            /// Return if the block is configurable.
-            bool isConfigurable() override { return false; };
-            
-            /// Returns a brief description of the block
-            std::string description() const override {return    "NOT\n";};
-        private:
-            void policyCallback(bool _a) {
-                getPipe("NoA")->flush(!_a);
-            }
-        };
+  /// Get name of block
+  std::string name() const override { return "NOT"; }
 
-        
-        /// Mico block that performs a AND operation on the given input.
-        /// @ingroup  mico_arduino
-        class AndOperator :public flow::Block{
-        public:
-            /// Base constructor
-            AndOperator(){
-                createPipe<bool>("out");
-                createPolicy({  flow::makeInput<bool>("A"),
-                                flow::makeInput<bool>("B") });
-                registerCallback(
-                    {"A", "B"},
-                    &AndOperator::policyCallback,
-                    this
-                );
-            }
+  /// Return if the block is configurable.
+  bool isConfigurable() override { return false; };
 
-            /// Retreive icon of block    
-            std::string icon() const override {
-                return (flow::Persistency::resourceDir() / "arduino" / "block_and.svg").string();
-            }
+  /// Returns a brief description of the block
+  std::string description() const override { return "NOT\n"; };
 
-            /// Get name of block
-            std::string name() const override {return "AND";}     
-            
-            /// Return if the block is configurable.
-            bool isConfigurable() override { return false; };
+private:
+  void policyCallback(bool _a) { getPipe("NoA")->flush(!_a); }
+};
 
-            /// Returns a brief description of the block
-            std::string description() const override {return    "AND\n";};
-        private:
-            void policyCallback(bool _a, bool _b) {
-                getPipe("out")->flush(_a && _b);
-            }
-        };
+/// Mico block that performs a AND operation on the given input.
+/// @ingroup  mico_arduino
+class AndOperator : public flow::Block {
+public:
+  /// Base constructor
+  AndOperator() {
+    createPipe<bool>("out");
+    createPolicy({flow::makeInput<bool>("A"), flow::makeInput<bool>("B")});
+    registerCallback({"A", "B"}, &AndOperator::policyCallback, this);
+  }
 
-        /// Mico block that performs a OR operation on the given input.
-        /// @ingroup  mico_arduino
-        class OrOperator :public flow::Block{
-        public:
-            /// Base constructor
-            OrOperator(){
-                createPipe<bool>("out");
-                createPolicy({  flow::makeInput<bool>("A"),
-                                flow::makeInput<bool>("B") });
-                registerCallback(
-                    {"A", "B"},
-                    &OrOperator::policyCallback,
-                    this
-                );
-            }
+  /// Retreive icon of block
+  std::string icon() const override {
+    return (flow::Persistency::resourceDir() / "arduino" / "block_and.svg")
+        .string();
+  }
 
-            /// Retreive icon of block    
-            std::string icon() const override {
-                return (flow::Persistency::resourceDir() / "arduino" / "block_or.svg").string();
-            }
+  /// Get name of block
+  std::string name() const override { return "AND"; }
 
-            /// Get name of block
-            std::string name() const override {return "OR";}     
+  /// Return if the block is configurable.
+  bool isConfigurable() override { return false; };
 
-            /// Return if the block is configurable.
-            bool isConfigurable() override { return false; };
+  /// Returns a brief description of the block
+  std::string description() const override { return "AND\n"; };
 
-            /// Returns a brief description of the block
-            std::string description() const override {return    "OR\n";};
-        private:
-            void policyCallback(bool _a, bool _b) {
-                getPipe("out")->flush(_a || _b);
-            }
-        };
+private:
+  void policyCallback(bool _a, bool _b) { getPipe("out")->flush(_a && _b); }
+};
 
-    }
-}
+/// Mico block that performs a OR operation on the given input.
+/// @ingroup  mico_arduino
+class OrOperator : public flow::Block {
+public:
+  /// Base constructor
+  OrOperator() {
+    createPipe<bool>("out");
+    createPolicy({flow::makeInput<bool>("A"), flow::makeInput<bool>("B")});
+    registerCallback({"A", "B"}, &OrOperator::policyCallback, this);
+  }
 
+  /// Retreive icon of block
+  std::string icon() const override {
+    return (flow::Persistency::resourceDir() / "arduino" / "block_or.svg")
+        .string();
+  }
 
+  /// Get name of block
+  std::string name() const override { return "OR"; }
+
+  /// Return if the block is configurable.
+  bool isConfigurable() override { return false; };
+
+  /// Returns a brief description of the block
+  std::string description() const override { return "OR\n"; };
+
+private:
+  void policyCallback(bool _a, bool _b) { getPipe("out")->flush(_a || _b); }
+};
+
+} // namespace arduino
+} // namespace mico
 
 #endif

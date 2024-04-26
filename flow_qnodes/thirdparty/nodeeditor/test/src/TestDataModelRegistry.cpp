@@ -11,32 +11,23 @@ using QtNodes::NodeDataType;
 using QtNodes::PortIndex;
 using QtNodes::PortType;
 
-namespace
-{
-class StubModelStaticName : public StubNodeDataModel
-{
+namespace {
+class StubModelStaticName : public StubNodeDataModel {
 public:
-  static QString
-  Name()
-  {
-    return "Name";
-  }
+  static QString Name() { return "Name"; }
 };
-}
+} // namespace
 
-TEST_CASE("DataModelRegistry::registerModel", "[interface]")
-{
+TEST_CASE("DataModelRegistry::registerModel", "[interface]") {
   DataModelRegistry registry;
 
-  SECTION("stub model")
-  {
+  SECTION("stub model") {
     registry.registerModel<StubNodeDataModel>();
     auto model = registry.create("name");
 
     CHECK(model->name() == "name");
   }
-  SECTION("stub model with static name")
-  {
+  SECTION("stub model with static name") {
     registry.registerModel<StubModelStaticName>();
     auto model = registry.create("Name");
 

@@ -7,9 +7,8 @@
 #include <boost/python/numpy.hpp>
 #include <opencv2/opencv.hpp>
 
-boost::python::numpy::ndarray ConvertMatToNDArray(const cv::Mat& mat);
+boost::python::numpy::ndarray ConvertMatToNDArray(const cv::Mat &mat);
 
-cv::Mat ConvertNDArrayToMat(const boost::python::numpy::ndarray& ndarr);
+cv::Mat ConvertNDArrayToMat(const boost::python::numpy::ndarray &ndarr);
 
-
-#endif 
+#endif

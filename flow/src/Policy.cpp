@@ -1,23 +1,26 @@
-//---------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //  FLOW
-//---------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //  Copyright 2020 Pablo Ramon Soria (a.k.a. Bardo91) pabramsor@gmail.com
-//---------------------------------------------------------------------------------------------------------------------
-//  Permission is hereby granted, free of charge, to any person obtaining a copy of this software
-//  and associated documentation files (the "Software"), to deal in the Software without restriction,
-//  including without limitation the rights to use, copy, modify, merge, publish, distribute,
-//  sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+//-----------------------------------------------------------------------------
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to
+//  deal in the Software without restriction, including without limitation the
+//  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+//  sell copies of the Software, and to permit persons to whom the Software is
 //  furnished to do so, subject to the following conditions:
 //
-//  The above copyright notice and this permission notice shall be included in all copies or substantial
-//  portions of the Software.
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
 //
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
-//  BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-//  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES
-//  OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-//  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//---------------------------------------------------------------------------------------------------------------------
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+//  IN THE SOFTWARE.
+//-----------------------------------------------------------------------------
 
 #include <flow/Policy.h>
 
@@ -26,65 +29,58 @@
 #include <cassert>
 #include <stdexcept>
 
+namespace flow {
 
-namespace flow{
+Policy::Policy(std::vector<PolicyInput> _inputs) {
+  if (_inputs.size() == 0) {
+    throw std::invalid_argument("A Policy cannot be constructed with an empty "
+                                "list of input pipe tags.");
+  }
 
-    Policy::Policy(std::vector<PolicyInput> _inputs){
-        if(_inputs.size() == 0){
-            throw std::invalid_argument( "A Policy cannot be constructed with an empty list of input pipe tags." );
-        }
-
-        for(auto &input:_inputs){
-            if(input.tag() == "" || input.typeName() == ""){
-                throw std::invalid_argument( "A Policy cannot be constructed with an empty list of input pipe tags." );
-            }
-            inputs_.push_back(input);
-            tags_.push_back(input.tag());
-        }
+  for (auto &input : _inputs) {
+    if (input.tag() == "" || input.typeName() == "") {
+      throw std::invalid_argument("A Policy cannot be constructed with an "
+                                  "empty list of input pipe tags.");
     }
-
-
-    void Policy::update(std::string _tag, boost::any _data){
-        for(auto flow:flows_){
-            flow->update(_tag, _data);
-        }
-    }
-
-    size_t Policy::nInputs(){
-        return inputs_.size();
-    }
-
-    std::vector<std::string> Policy::inputTags(){
-        return tags_;
-    }
-
-    const std::vector<PolicyInput>& Policy::inputs() const {
-        return inputs_;
-    }
-
-    std::string Policy::type(std::string _tag){
-        auto iter = std::find_if(inputs_.begin(), inputs_.end(), [_tag](const PolicyInput& _input) {
-            return _input.tag() == _tag;
-            });
-
-        if (iter == inputs_.end()) {
-            return "";
-        }
-        else {
-            return iter->typeName();
-        }
-    }
-
-    void Policy::associatePipe(std::string _tag, Outpipe* _pipe){
-        connetedPipes_[_tag] = _pipe;
-    }
-
-    bool Policy::disconnect(std::string _tag){
-        if(auto pipe = connetedPipes_[_tag]; pipe != nullptr){
-            pipe->unregisterPolicy(this);
-            return true;
-        }else{
-            return false;
-        }
-    }
+    inputs_.push_back(input);
+    tags_.push_back(input.tag());
+  }
 }
+
+void Policy::update(std::string _tag, boost::any _data) {
+  for (auto flow : flows_) {
+    flow->update(_tag, _data);
+  }
+}
+
+size_t Policy::nInputs() { return inputs_.size(); }
+
+std::vector<std::string> Policy::inputTags() { return tags_; }
+
+const std::vector<PolicyInput> &Policy::inputs() const { return inputs_; }
+
+std::string Policy::type(std::string _tag) {
+  auto iter = std::find_if(
+      inputs_.begin(), inputs_.end(),
+      [_tag](const PolicyInput &_input) { return _input.tag() == _tag; });
+
+  if (iter == inputs_.end()) {
+    return "";
+  } else {
+    return iter->typeName();
+  }
+}
+
+void Policy::associatePipe(std::string _tag, Outpipe *_pipe) {
+  connetedPipes_[_tag] = _pipe;
+}
+
+bool Policy::disconnect(std::string _tag) {
+  if (auto pipe = connetedPipes_[_tag]; pipe != nullptr) {
+    pipe->unregisterPolicy(this);
+    return true;
+  } else {
+    return false;
+  }
+}
+} // namespace flow

@@ -1,32 +1,35 @@
 
-//---------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //  flow
-//---------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //  Copyright 2020 Pablo Ramon Soria (a.k.a. Bardo91) pabramsor@gmail.com
-//---------------------------------------------------------------------------------------------------------------------
-//  Permission is hereby granted, free of charge, to any person obtaining a copy of this software
-//  and associated documentation files (the "Software"), to deal in the Software without restriction,
-//  including without limitation the rights to use, copy, modify, merge, publish, distribute,
-//  sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+//-----------------------------------------------------------------------------
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to
+//  deal in the Software without restriction, including without limitation the
+//  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+//  sell copies of the Software, and to permit persons to whom the Software is
 //  furnished to do so, subject to the following conditions:
 //
-//  The above copyright notice and this permission notice shall be included in all copies or substantial
-//  portions of the Software.
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
 //
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
-//  BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-//  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES
-//  OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-//  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//---------------------------------------------------------------------------------------------------------------------
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+//  IN THE SOFTWARE.
+//-----------------------------------------------------------------------------
 
 #ifndef FLOW_QNODES_BLOCKS_PARAMETERWIDGET_H_
 #define FLOW_QNODES_BLOCKS_PARAMETERWIDGET_H_
 
 #include <flow/Export.h>
 
-#include <QWidget>
 #include <QHBoxLayout>
+#include <QWidget>
 
 #include <flow/Block.h>
 #include <sstream>
@@ -36,41 +39,39 @@ class QCheckBox;
 class QLabel;
 class QPushButton;
 
-namespace flow{
+namespace flow {
 
-    class FLOW_DECL ParameterWidget: public QHBoxLayout{
-    public:
-        ParameterWidget(const ConfigParameterDef &_param, 
-                        QWidget *_parent = nullptr);
-        ~ParameterWidget();
-        
-        std::string label() const;
+class FLOW_DECL ParameterWidget : public QHBoxLayout {
+public:
+  ParameterWidget(const ConfigParameterDef &_param, QWidget *_parent = nullptr);
+  ~ParameterWidget();
 
-        ConfigParameterDef getParam();
+  std::string label() const;
 
-        void setValueString(std::string _val);
-        void setValueInt(int _val);
-        void setValueDec(float _val);
-        void setValueBool(bool _val);
-        void setValuePath(fs::path _val);
-        void setValueOption(std::string _val);
+  ConfigParameterDef getParam();
 
-        ConfigParameterDef::eParameterType type() { return type_; };
+  void setValueString(std::string _val);
+  void setValueInt(int _val);
+  void setValueDec(float _val);
+  void setValueBool(bool _val);
+  void setValuePath(fs::path _val);
+  void setValueOption(std::string _val);
 
-    private:
-        void browseCallback();
+  ConfigParameterDef::eParameterType type() { return type_; };
 
-    private:
-        std::string lName_;
-        QLabel   * label_;
-        QWidget   * value_;
-        QLineEdit *filePath_;
-        QPushButton *browseButton_;
-        flow::ConfigParameterDef::eParameterType type_;
-        const ConfigParameterDef param_;
-    };
+private:
+  void browseCallback();
 
+private:
+  std::string lName_;
+  QLabel *label_;
+  QWidget *value_;
+  QLineEdit *filePath_;
+  QPushButton *browseButton_;
+  flow::ConfigParameterDef::eParameterType type_;
+  const ConfigParameterDef param_;
+};
 
-}
+} // namespace flow
 
 #endif

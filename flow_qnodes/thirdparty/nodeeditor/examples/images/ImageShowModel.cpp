@@ -1,7 +1,7 @@
 #include "ImageShowModel.hpp"
 
-#include <QtCore/QEvent>
 #include <QtCore/QDir>
+#include <QtCore/QEvent>
 
 #include <QtWidgets/QFileDialog>
 
@@ -9,10 +9,8 @@
 
 #include "PixmapData.hpp"
 
-ImageShowModel::
-ImageShowModel()
-  : _label(new QLabel("Image will appear here"))
-{
+ImageShowModel::ImageShowModel()
+    : _label(new QLabel("Image will appear here")) {
   _label->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
 
   QFont f = _label->font();
@@ -26,43 +24,32 @@ ImageShowModel()
   _label->installEventFilter(this);
 }
 
-unsigned int
-ImageShowModel::
-nPorts(PortType portType) const
-{
+unsigned int ImageShowModel::nPorts(PortType portType) const {
   unsigned int result = 1;
 
-  switch (portType)
-  {
-    case PortType::In:
-      result = 1;
-      break;
+  switch (portType) {
+  case PortType::In:
+    result = 1;
+    break;
 
-    case PortType::Out:
-      result = 1;
+  case PortType::Out:
+    result = 1;
 
-    default:
-      break;
+  default:
+    break;
   }
 
   return result;
 }
 
-
-bool
-ImageShowModel::
-eventFilter(QObject *object, QEvent *event)
-{
-  if (object == _label)
-  {
+bool ImageShowModel::eventFilter(QObject *object, QEvent *event) {
+  if (object == _label) {
     int w = _label->width();
     int h = _label->height();
 
-    if (event->type() == QEvent::Resize)
-    {
+    if (event->type() == QEvent::Resize) {
       auto d = std::dynamic_pointer_cast<PixmapData>(_nodeData);
-      if (d)
-      {
+      if (d) {
         _label->setPixmap(d->pixmap().scaled(w, h, Qt::KeepAspectRatio));
       }
     }
@@ -71,40 +58,25 @@ eventFilter(QObject *object, QEvent *event)
   return false;
 }
 
-
-NodeDataType
-ImageShowModel::
-dataType(PortType, PortIndex) const
-{
+NodeDataType ImageShowModel::dataType(PortType, PortIndex) const {
   return PixmapData().type();
 }
 
-
-std::shared_ptr<NodeData>
-ImageShowModel::
-outData(PortIndex)
-{
+std::shared_ptr<NodeData> ImageShowModel::outData(PortIndex) {
   return _nodeData;
 }
 
-
-void
-ImageShowModel::
-setInData(std::shared_ptr<NodeData> nodeData, PortIndex)
-{
+void ImageShowModel::setInData(std::shared_ptr<NodeData> nodeData, PortIndex) {
   _nodeData = nodeData;
 
-  if (_nodeData)
-  {
+  if (_nodeData) {
     auto d = std::dynamic_pointer_cast<PixmapData>(_nodeData);
 
     int w = _label->width();
     int h = _label->height();
 
     _label->setPixmap(d->pixmap().scaled(w, h, Qt::KeepAspectRatio));
-  }
-  else
-  {
+  } else {
     _label->setPixmap(QPixmap());
   }
 
