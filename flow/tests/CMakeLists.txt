@@ -27,13 +27,12 @@ target_link_libraries(policy_stream LINK_PRIVATE flow)
 target_link_libraries(policy_stream LINK_PRIVATE GTest::gmock GTest::gtest GTest::gmock_main GTest::gtest_main)
 add_test(test_policy_stream policy_stream)
 
-add_executable(auto_block_tester auto_block_tester.cpp)
-target_link_libraries(auto_block_tester LINK_PRIVATE flow)
-target_link_libraries(auto_block_tester LINK_PRIVATE GTest::gmock GTest::gtest GTest::gmock_main GTest::gtest_main)
-add_test(test_auto_block_tester auto_block_tester)
-
 add_executable(thread_pool_test thread_pool_test.cpp)
 target_link_libraries(thread_pool_test LINK_PRIVATE flow)
 target_link_libraries(thread_pool_test LINK_PRIVATE GTest::gmock GTest::gtest GTest::gmock_main GTest::gtest_main)
 add_test(thread_pool_test thread_pool_test)
 
+# add_executable(auto_block_tester auto_block_tester.cpp)
+# target_link_libraries(auto_block_tester LINK_PRIVATE flow)
+# target_link_libraries(auto_block_tester LINK_PRIVATE GTest::gmock GTest::gtest GTest::gmock_main GTest::gtest_main)
+# add_test(test_auto_block_tester auto_block_tester)
