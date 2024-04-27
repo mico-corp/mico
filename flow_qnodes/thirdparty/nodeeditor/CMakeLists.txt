@@ -20,7 +20,6 @@ option(BUILD_EXAMPLES "Build Examples" "${NE_DEVELOPER_DEFAULTS}")
 option(BUILD_SHARED_LIBS "Build as shared library" ON)
 option(NE_FORCE_TEST_COLOR "Force colorized unit test output" OFF)
 
-enable_testing()
 
 if(NE_DEVELOPER_DEFAULTS)
   set(CMAKE_CXX_STANDARD 14)
@@ -146,14 +145,6 @@ target_sources(nodes PRIVATE ${nodes_moc})
 
 if(BUILD_EXAMPLES)
   add_subdirectory(examples)
-endif()
-
-##################
-# Automated Tests
-##
-
-if(BUILD_TESTING)
-  add_subdirectory(test)
 endif()
 
 ###############
