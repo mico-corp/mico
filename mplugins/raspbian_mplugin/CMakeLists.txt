@@ -1,5 +1,5 @@
 ##---------------------------------------------------------------------------------------------------------------------
-##  Visualizers MICO plugin
+##  MICO arduino wrapper plugin
 ##---------------------------------------------------------------------------------------------------------------------
 ##  Copyright 2020 Pablo Ramon Soria (a.k.a. Bardo91) pabramsor@gmail.com
 ##---------------------------------------------------------------------------------------------------------------------
@@ -18,63 +18,41 @@
 ##  OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 ##  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ##---------------------------------------------------------------------------------------------------------------------
+cmake_minimum_required (VERSION 3.21 FATAL_ERROR)
+project(mico VERSION 1.0 LANGUAGES C CXX)
+set(PLUGIN_NAME ${PROJECT_NAME}-raspbian)
+
+##################################################
+###### Create project and configure ALIAS ########
+##################################################
+
+find_package(Qt5 REQUIRED COMPONENTS Core Widgets)
+file(GLOB_RECURSE MICO_RASPBIAN_SOURCE_FILES "src/*.cpp" "src/*.c")
+file(GLOB_RECURSE MICO_RASPBIAN_HEADER_FILES "include/*.h" "include/*.inl")
+
+find_package(Qt5 REQUIRED COMPONENTS Core Widgets)
+
+SET(MICO_MODULES ${MICO_MODULES} raspbian PARENT_SCOPE)
+add_mplugin(    PLUGIN_NAME ${PLUGIN_NAME} 
+                PLUGIN_SOURCES ${MICO_RASPBIAN_SOURCE_FILES}
+                PLUGIN_HEADERS  ${MICO_RASPBIAN_HEADER_FILES} 
+				MICO_DEPS core
+				HAS_RESOURCES)
 
 
-add_subdirectory(core_mplugin)
-add_subdirectory(math_mplugin)
+##################################################
+######    Loading 3rd party libraries.    ########
+##################################################
 
-if(${BUILD_AR})
-	add_subdirectory(ar_mplugin)
+find_package(Eigen3 REQUIRED)
+mplugin_link_library( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES Eigen3::Eigen)
+mplugin_link_library( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES flow_qnodes)
+
+if(${TARGET_OS} STREQUAL "Raspbian")
+    mplugin_compile_definition(PLUGIN_NAME ${PLUGIN_NAME} IS_PUBLIC PLUGIN_DEFINITIONS MICO_IS_RASPBIAN)
+    mplugin_link_library( PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_LIBRARIES pigpio)
 endif()
-
-if(${BUILD_ARDUINO})
-	add_subdirectory(arduino_mplugin)
-endif()
-
-if(${BUILD_AUDIO})
-	add_subdirectory(audio_mplugin)
-endif()
-
-if(${BUILD_CAMERAS})
-	add_subdirectory(cameras_mplugin)
-endif()
-
-if(${BUILD_CUDA})
-	add_subdirectory(cuda_mplugin)
-endif()
-
-if(${BUILD_DVS})
-	add_subdirectory(dvs_mplugin)
-endif()
-
-if(${BUILD_FASTCOM})
-	add_subdirectory(fastcom_mplugin)
-endif()
-
-if(${BUILD_IMGPROC})
-	add_subdirectory(imgproc_mplugin)
-endif()
-
-if(${BUILD_ML})
-	add_subdirectory(ml_mplugin)
-endif()
-
-if(${BUILD_PYTHON})
-	add_subdirectory(python_mplugin)
-endif()
-
-if(${BUILD_ROBOTICS})
-	add_subdirectory(robotics_mplugin)
-endif()
-
-if(${BUILD_SIMULATION})
-	add_subdirectory(simulation_mplugin)
-endif()
-
-if(${BUILD_VISUALIZERS})
-	add_subdirectory(visualizers_mplugin)
-endif()
-
-if(${BUILD_RASPBIAN})
-	add_subdirectory(raspbian_mplugin)
-endif()
+##################################################
+######    Library.                        ########
+##################################################
+#add_definitions(-fopenmp)

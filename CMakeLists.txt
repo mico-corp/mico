@@ -67,11 +67,13 @@ option(BUILD_PYTHON             "Set to build Python Module"        OFF)
 option(BUILD_ROBOTICS           "Set to build robotics Module"      ON)
 option(BUILD_SIMULATION         "Set to build simulation Module"    ON)
 option(BUILD_VISUALIZERS        "Set to build VISUALIZERS Module"   ON)
+option(BUILD_RASPBIAN           "Set to true if want to compile in Rpy" OFF)
 
 option(BUILD_BENCHMARK          "Set to build Benchmarks"           OFF)
 option(BUILD_EXAMPLES           "Compile examples"                  OFF)
 
 option(ENABLE_SANITIZER         ""                                  OFF)
+
 
 option(MICO_PREPARE_INSTALLER   "Set to prepare installer" ON)
 if(WIN32)
