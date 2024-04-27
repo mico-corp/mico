@@ -27,6 +27,7 @@
 #include <mico/core/flow/BlockVectorSplitter.h>
 
 #include <cmath>
+#include <format>
 
 #include <QLabel>
 #include <QSpinBox>
@@ -42,7 +43,7 @@ BlockVectorSplitter::BlockVectorSplitter() {
 void BlockVectorSplitter::preparePolicy() {
   removePipes();
   for (unsigned i = 0; i < nTrajs_; i++) {
-    const std::string pipeName = "v" + std::to_string(i);
+    const std::string pipeName = std::format("v{}",i);
     createPipe<float>(pipeName);
   }
 }
@@ -70,7 +71,7 @@ void BlockVectorSplitter::policyCallback(std::vector<float> _v) {
     return;
 
   for (unsigned i = 0; i < nTrajs_; i++) {
-    const std::string pipeName = "v" + std::to_string(i);
+    const std::string pipeName = std::format("v{}",i);
     getPipe(pipeName)->flush(_v[i]);
   }
 }

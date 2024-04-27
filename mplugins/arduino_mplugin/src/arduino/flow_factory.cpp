@@ -28,7 +28,6 @@
 #include <mico/arduino/flow/ArduinoInputBlock.h>
 #include <mico/arduino/flow/ArduinoOutputBlock.h>
 #include <mico/arduino/flow/BlockJoyPad.h>
-#include <mico/arduino/flow/RaspberryGpioBlock.h>
 #include <mico/arduino/flow/Widgets.h>
 
 using namespace mico::arduino;
@@ -47,11 +46,6 @@ factory(fs::path _libraryPath) {
       []() { return std::make_shared<ArduinoInputBlock>(); }, "arduino");
   creator->registerNodeCreator(
       []() { return std::make_shared<ArduinoOutputBlock>(); }, "arduino");
-#ifdef MICO_IS_RASPBIAN
-  creator->registerNodeCreator(
-      []() { return std::make_shared<RaspberryGpioBlock>(); },
-      "Raspberry Gpio");
-#endif
   creator->registerNodeCreator(
       []() { return std::make_shared<ToggleButtonBlock>(); }, "interactive");
   creator->registerNodeCreator([]() { return std::make_shared<SliderPwm>(); },
