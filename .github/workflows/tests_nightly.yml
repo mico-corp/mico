@@ -48,7 +48,7 @@ jobs:
       - name: "Compile repository"
         run: |
           cd build
-          make -j mico
+          make all -j8
       - name: "Run tests"
         run: |
           cd build
