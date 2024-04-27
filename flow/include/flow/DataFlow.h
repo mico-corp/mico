@@ -88,6 +88,7 @@ private:
   std::function<void(const std::map<std::string, boost::any> &)> callback_;
   std::mutex safeCopyLock_;
   bool isRunning_ = false;
+  ThreadPool pool_;
 
 public:
   static FLOW_DECL

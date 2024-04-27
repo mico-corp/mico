@@ -40,7 +40,7 @@ BlockFlowPerformance::BlockFlowPerformance() {
   refreshTimer_ = new QTimer();
   QObject::connect(refreshTimer_, &QTimer::timeout, [&]() {
     textDisplay_->setText(
-        std::to_string(flow::ThreadPool::get()->loadRatio()).c_str());
+        std::to_string(pool_.loadRatio()).c_str());
   });
   refreshTimer_->start(100);
 }

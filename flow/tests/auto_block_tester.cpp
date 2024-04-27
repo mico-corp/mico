@@ -228,7 +228,7 @@ std::pair<flow::Outpipe *, std::function<void()>> randomPipe() {
 }
 
 TEST(input_tests, random_inputs) {
-
+  flow::ThreadPool pool;
   for (auto &[tag, creator] : creatorsHolder.creators_) {
     debugPrint("---------------------------------------------------------------"
                "------");
@@ -251,7 +251,7 @@ TEST(input_tests, random_inputs) {
       }
     }
     // Wait until all threads are idle....
-    while (flow::ThreadPool::get()->loadRatio() != 0.0f) {
+    while (pool.loadRatio() != 0.0f) {
       std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(
@@ -262,7 +262,7 @@ TEST(input_tests, random_inputs) {
 #include "InputGenerators.h"
 
 TEST(input_tests, adequate_inputs) {
-
+  flow::ThreadPool pool;
   for (auto &[tag, creator] : creatorsHolder.creators_) {
     debugPrint("---------------------------------------------------------------"
                "------");
@@ -318,7 +318,7 @@ TEST(input_tests, adequate_inputs) {
       }
     }
     // Wait until all threads are idle....
-    while (flow::ThreadPool::get()->loadRatio() != 0.0f) {
+    while (pool.loadRatio() != 0.0f) {
       std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(

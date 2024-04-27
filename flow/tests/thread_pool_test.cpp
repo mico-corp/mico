@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
-//  Cameras wrapper MICO plugin
+//  FLOW
 //-----------------------------------------------------------------------------
-//  Copyright 2020 Pablo Ramon Soria (a.k.a. Bardo91) pabramsor@gmail.com
+//  Copyright 2020 - Pablo Ramon Soria (a.k.a. Bardo91)
 //-----------------------------------------------------------------------------
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to
@@ -22,48 +22,42 @@
 //  IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#ifndef MICO_FLOW_BLOCKS_BLOCKFLOWPERFORMANCE_H_
-#define MICO_FLOW_BLOCKS_BLOCKFLOWPERFORMANCE_H_
-
-#include <flow/Block.h>
 #include <flow/ThreadPool.h>
 
-class QLabel;
-class QTimer;
+#include <gtest/gtest.h>
 
-namespace mico {
-namespace core {
-/// Mico block That shows the % of usage of threads reserved by mico-flow
-/// threadpool.
-/// @ingroup  mico_core
-///
-/// @image html blocks/core/core_block_flow_performance.png width=480px
-///
-class BlockFlowPerformance : public flow::Block {
-public:
-  /// Get name of block
-  virtual std::string name() const override { return "Block Flow Performance"; }
+using namespace flow;
 
-  /// Base constructor
-  BlockFlowPerformance();
-  ~BlockFlowPerformance();
+TEST(thread_pool_test, basic_life_cycle) {
+  ThreadPool tp;
+  tp.loadRatio();
+  EXPECT_TRUE(tp.numInstances() == 1);
+  EXPECT_TRUE(tp.loadRatio() == 0);
+  EXPECT_TRUE(tp.queueSize() == 0);
+}
 
-  /// Return if the block is configurable.
-  bool isConfigurable() override { return false; };
+TEST(thread_pool_test, emplace_and_block) {
+  ThreadPool tp;
 
-  /// Returns a brief description of the block
-  std::string description() const override {
-    return "Data about flow performance";
-  };
+  std::mutex mutex;
+  std::atomic<bool> condition = false;
+  mutex.lock();
 
-  QWidget *customWidget();
+  tp.emplace([&]() {
+    std::lock_guard<std::mutex> lock(mutex);
+    condition = true;
+  });
+  EXPECT_TRUE(tp.queueSize() == 1);
 
-private:
-  flow::ThreadPool pool_;
-  QLabel *textDisplay_;
-  QTimer *refreshTimer_;
-};
-} // namespace core
-} // namespace mico
+  // Release mutex
+  mutex.unlock();
+  while (!condition) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+  }
+  EXPECT_TRUE(tp.queueSize() == 0);
+}
 
-#endif
+int main(int _argc, char **_argv) {
+  testing::InitGoogleTest(&_argc, _argv);
+  return RUN_ALL_TESTS();
+}

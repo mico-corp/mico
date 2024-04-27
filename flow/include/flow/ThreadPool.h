@@ -44,31 +44,53 @@ class ThreadPool {
 public:
   using Task = std::function<void()>;
 
-  FLOW_DECL static void init();
-  FLOW_DECL static ThreadPool *get();
+private:
+  class ThreadPoolImpl {
+  public:
+    ThreadPoolImpl(size_t _nThreads);
 
-  FLOW_DECL void emplace(Task _task);
+    FLOW_DECL static void init();
+    FLOW_DECL static void deinit();
+    FLOW_DECL static ThreadPoolImpl *get();
+    FLOW_DECL void emplace(Task _task);
+    FLOW_DECL int numInstances() const;
 
-  FLOW_DECL ~ThreadPool();
+    ~ThreadPoolImpl();
+    size_t queueSize() const { return tasks_.size(); }
+    float loadRatio() const { return float(tasks_.size()) / nThreads_; }
 
-  /// Get size of task queue
-  FLOW_DECL size_t queueSize() { return tasks_.size(); }
+  private:
+    static std::unique_ptr<ThreadPoolImpl> instance_;
+    static int numInstances_;
 
-  FLOW_DECL float loadRatio() { return float(tasks_.size()) / nThreads_; }
+    std::queue<Task> tasks_;
+    bool isRunning_ = true;
+    size_t nThreads_;
+    std::vector<std::thread> threads_;
+    std::condition_variable waitEvent_;
+    std::mutex threadLock_;
+  }; // class ThreadPoolImpl
+
+public:
+  ThreadPool() { notOwnedThreadPool_ = ThreadPoolImpl::get(); }
+
+  ~ThreadPool() { ThreadPoolImpl::deinit(); }
+
+  FLOW_DECL void emplace(Task _task) { notOwnedThreadPool_->emplace(_task); }
+
+  FLOW_DECL size_t queueSize() const {
+    return notOwnedThreadPool_->queueSize();
+  }
+  FLOW_DECL float loadRatio() const { return notOwnedThreadPool_->loadRatio(); }
+  FLOW_DECL int numInstances() const {
+    return notOwnedThreadPool_->numInstances();
+  };
 
 private:
-  ThreadPool(size_t _nThreads);
+  ThreadPoolImpl *notOwnedThreadPool_ = nullptr;
 
-private:
-  static ThreadPool *instance_;
+}; // class ThreadPool
 
-  std::queue<Task> tasks_;
-  bool isRunning_ = true;
-  size_t nThreads_;
-  std::vector<std::thread> threads_;
-  std::condition_variable waitEvent_;
-  std::mutex threadLock_;
-};
 } // namespace flow
 
 #endif

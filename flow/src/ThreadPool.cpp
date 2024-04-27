@@ -29,9 +29,11 @@
 #include <string>
 
 namespace flow {
-ThreadPool *ThreadPool::instance_ = nullptr;
+std::unique_ptr<ThreadPool::ThreadPoolImpl>
+    ThreadPool::ThreadPoolImpl::instance_ = nullptr;
+int ThreadPool::ThreadPoolImpl::numInstances_ = 0;
 
-void ThreadPool::init() {
+void ThreadPool::ThreadPoolImpl::init() {
   size_t nThreads = std::thread::hardware_concurrency();
 #if defined(_WIN32)
   char *nThreadsVar = nullptr;
@@ -50,24 +52,34 @@ void ThreadPool::init() {
     }
   }
   if (!instance_)
-    instance_ = new ThreadPool(nThreads);
+    instance_ = std::make_unique<ThreadPool::ThreadPoolImpl>(nThreads);
 
   delete[] nThreadsVar;
 }
 
-ThreadPool *ThreadPool::get() {
-  if (!instance_)
-    init();
-  return instance_;
+void ThreadPool::ThreadPoolImpl::deinit() {
+  numInstances_--;
+  if (numInstances_ == 0) {
+    instance_ = std::unique_ptr<ThreadPool::ThreadPoolImpl>(nullptr);
+  }
 }
 
-void ThreadPool::emplace(Task _task) {
+ThreadPool::ThreadPoolImpl *ThreadPool::ThreadPoolImpl::get() {
+  if (!instance_)
+    init();
+  numInstances_++;
+  return instance_.get();
+}
+
+int ThreadPool::ThreadPoolImpl::numInstances() const { return numInstances_; }
+
+void ThreadPool::ThreadPoolImpl::emplace(Task _task) {
   std::unique_lock<std::mutex> lock(threadLock_);
   tasks_.emplace(std::move(_task));
   waitEvent_.notify_one();
 }
 
-ThreadPool::~ThreadPool() {
+ThreadPool::ThreadPoolImpl::~ThreadPoolImpl() {
   isRunning_ = false;
   waitEvent_.notify_all();
   for (auto &t : threads_) {
@@ -76,7 +88,7 @@ ThreadPool::~ThreadPool() {
   }
 }
 
-ThreadPool::ThreadPool(size_t _nThreads) {
+ThreadPool::ThreadPoolImpl::ThreadPoolImpl(size_t _nThreads) {
   nThreads_ = _nThreads;
   threads_.reserve(nThreads_);
   for (size_t i = 0; i < nThreads_; i++) {
@@ -88,8 +100,10 @@ ThreadPool::ThreadPool(size_t _nThreads) {
           waitEvent_.wait(lock,
                           [&]() { return !isRunning_ || !tasks_.empty(); });
 
-          task = std::move(tasks_.front());
-          tasks_.pop();
+          if (!tasks_.empty()) {
+            task = std::move(tasks_.front());
+            tasks_.pop();
+          }
         }
         if (task)
           task();
