@@ -32,6 +32,7 @@
 class QLabel;
 class QTimer;
 class QCustomPlot;
+class QPushButton;
 
 namespace mico {
 
@@ -58,6 +59,8 @@ public:
   /// Base destructor
   ~BlockQCustomPlot();
 
+  QWidget *customWidget() override;
+
   std::vector<flow::ConfigParameterDef> parameters() override;
 
   /// Configure block with given parameters.
@@ -81,6 +84,7 @@ private:
   std::vector<std::pair<float, float>> pendingData1_, pendingData2_,
       pendingData3_; // 666 ugly but fastly implemented
   QCustomPlot *plot_ = nullptr;
+  QPushButton *reopenButton_ = nullptr;
   QTimer *dataTimer_ = nullptr;
   std::mutex imgLock_;
   bool trackPlot_ = true;

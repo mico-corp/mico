@@ -25,11 +25,13 @@
 #include <mico/visualizers/flow/BlockQCustomPlot.h>
 
 #include <flow/Policy.h>
+#include <mico/visualizers/qcustomplot.h>
 
 #include <QLabel>
 #include <QPixmap>
+#include <QPushButton>
 #include <QTimer>
-#include <mico/visualizers/qcustomplot.h>
+
 namespace mico {
 namespace visualizer {
 BlockQCustomPlot::BlockQCustomPlot() {
@@ -54,6 +56,17 @@ BlockQCustomPlot::BlockQCustomPlot() {
   registerCallback({"signal1"}, cb1);
   registerCallback({"signal2"}, cb2);
   registerCallback({"signal3"}, cb3);
+}
+
+QWidget *BlockQCustomPlot::customWidget() {
+  reopenButton_ = new QPushButton("Open Viewer");
+
+  QObject::connect(reopenButton_, &QPushButton::clicked, [&]() {
+    if (plot_)
+      plot_->show();
+  });
+
+  return reopenButton_;
 }
 
 BlockQCustomPlot::~BlockQCustomPlot() {
