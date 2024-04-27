@@ -20,7 +20,7 @@
 ##---------------------------------------------------------------------------------------------------------------------
 
 cmake_minimum_required (VERSION 3.21 FATAL_ERROR)
-project(mico VERSION 2.0.0 LANGUAGES C CXX)
+project(mico VERSION 2.0.1 LANGUAGES C CXX)
 
 if( NOT CMAKE_BUILD_TYPE )
   set( CMAKE_BUILD_TYPE Release CACHE STRING
