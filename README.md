@@ -1,9 +1,9 @@
+[![tests_nightly](https://github.com/mico-corp/mico/actions/workflows/tests_nightly.yml/badge.svg)](https://github.com/mico-corp/mico/actions/workflows/tests_nightly.yml)
+
 # MICO - Modules-based Interface for Computer prOgramming
 
 ![](https://github.com/mico-corp/mico/blob/master/doc/example_play_ground.png)
 
-
-[![tests_nightly](https://github.com/mico-corp/mico/actions/workflows/tests_nightly.yml/badge.svg)](https://github.com/mico-corp/mico/actions/workflows/tests_nightly.yml)
 
 ## Contribute in our forum!
 
