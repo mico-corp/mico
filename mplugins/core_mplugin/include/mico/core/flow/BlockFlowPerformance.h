@@ -26,6 +26,7 @@
 #define MICO_FLOW_BLOCKS_BLOCKFLOWPERFORMANCE_H_
 
 #include <flow/Block.h>
+#include <flow/ThreadPool.h>
 
 class QLabel;
 class QTimer;
@@ -58,6 +59,7 @@ public:
   QWidget *customWidget();
 
 private:
+  flow::ThreadPool pool_;
   QLabel *textDisplay_;
   QTimer *refreshTimer_;
 };

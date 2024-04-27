@@ -132,6 +132,9 @@ TEST(transmission_int_2, transmission_int) {
     counterCall1++;
   });
 
+  // Intentionally block one of the policies. 
+  // Flow does not pipe triggers, if the policy is busy when a 
+  // new trigger arrives, the signal is dropped
   int counterCall2 = 0;
   std::mutex guardCall2;
   pol2.registerCallback<int>({"counter"}, [&](int) {
@@ -157,6 +160,8 @@ TEST(transmission_int_2, transmission_int) {
   ASSERT_EQ(1,
             counterCall2); // As the task did not end  until mutex is released,
                            // the rest of flushes did not generate new tasks
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
 }
 
 TEST(sync_policy, sync_policy) {
@@ -168,7 +173,6 @@ TEST(sync_policy, sync_policy) {
   int counterCallInt = 0;
   int counterCallFloat = 0;
   int counterCallSync = 0;
-  std::mutex guardCall1;
   pol.registerCallback<int>({"counter"}, [&](int) {
     counterCallInt++;
   });

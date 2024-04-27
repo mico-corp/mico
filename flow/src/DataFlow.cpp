@@ -24,7 +24,6 @@
 
 #include <flow/DataFlow.h>
 #include <flow/ThreadPool.h>
-#include <thread>
 
 namespace flow {
 
@@ -56,7 +55,7 @@ void DataFlow::checkData() {
   if (flagCounter == updated_.size()) {
     // Emplace task
     safeCopyLock_.lock();
-    ThreadPool::get()->emplace(std::bind(callback_, data_));
+    pool_.emplace(std::bind(callback_, data_));
     safeCopyLock_.unlock();
 
     // Consume consumable data
