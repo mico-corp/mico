@@ -22,30 +22,23 @@
 //  IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
+#include <flow/flow.h>
+#include <flow/plugins/BlockPlugin.h>
+#include <mico/raspbian/flow/RaspberryGpioBlock.h>
+
+using namespace mico::raspbian;
+using namespace flow;
+
+extern "C" FLOW_FACTORY_EXPORT flow::PluginNodeCreator *
+factory(fs::path _libraryPath) {
+  Persistency::setResourceDir(_libraryPath.parent_path().string() +
+                              "/resources");
+  flow::PluginNodeCreator *creator = new flow::PluginNodeCreator;
+
 #ifdef MICO_IS_RASPBIAN
-
-#include <flow/Outpipe.h>
-#include <mico/arduino/flow/RaspberryGpioBlock.h>
-#include <mico/arduino/flow/RaspberryGpioHelperNoSudo.h>
-
-namespace mico {
-namespace arduino {
-RaspberryGpioBlock::RaspberryGpioBlock() {
-  if (gpioInitialise() < 0)
-    return;
-
-  // createPipe<bool>("GPIO14");
-  createPolicy({flow::makeInput<bool>("GPIO14")});
-
-  gpioSetMode(14, PI_OUTPUT);
-  gpioWrite(14, 0);
-  registerCallback({"GPIO14"}, [&](flow::DataFlow _data) {
-    const unsigned level = (bool)_data.get<bool>("GPIO14") ? 1 : 0;
-    gpioWrite(14, level);
-  });
-}
-
-} // namespace arduino
-} // namespace mico
-
+  creator->registerNodeCreator(
+      []() { return std::make_shared<RaspberryGpioBlock>(); },
+      "Raspberry Gpio");
 #endif
+  return creator;
+}

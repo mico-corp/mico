@@ -24,38 +24,28 @@
 
 #ifdef MICO_IS_RASPBIAN
 
-#ifndef MICO_ARDUINO_FLOW_RASPBERRYGPIOBLOCK_H_
-#define MICO_ARDUINO_FLOW_RASPBERRYGPIOBLOCK_H_
-
-#include <flow/Block.h>
+#include <flow/Outpipe.h>
+#include <mico/raspbian/flow/RaspberryGpioBlock.h>
+#include <mico/raspbian/flow/RaspberryGpioHelperNoSudo.h>
 
 namespace mico {
-namespace arduino {
-/// Mico block is used to connecto a physical arduino. With this block, it is
-/// possible to send and receive signals from the arduino for any purpose.
-/// @ingroup  mico_arduino
-class RaspberryGpioBlock : public flow::Block {
-public:
-  /// Get name of block
-  virtual std::string name() const override { return "Raspberry gpio"; }
+namespace raspbian {
+RaspberryGpioBlock::RaspberryGpioBlock() {
+  if (gpioInitialise() < 0)
+    return;
 
-  /// Base constructor
-  RaspberryGpioBlock();
+  // createPipe<bool>("GPIO14");
+  createPolicy({flow::makeInput<bool>("GPIO14")});
 
-  /// Return if the block is configurable.
-  bool isConfigurable() override { return false; };
-
-  /// Returns a brief description of the block
-  std::string description() const override {
-    return "Low-level access to gpio in Raspberry pi. \n";
-  };
-
-private:
-};
+  gpioSetMode(14, PI_OUTPUT);
+  gpioWrite(14, 0);
+  registerCallback({"GPIO14"}, [&](flow::DataFlow _data) {
+    const unsigned level = (bool)_data.get<bool>("GPIO14") ? 1 : 0;
+    gpioWrite(14, level);
+  });
+}
 
 } // namespace arduino
-
 } // namespace mico
 
-#endif
 #endif
