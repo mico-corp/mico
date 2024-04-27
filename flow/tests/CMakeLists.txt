@@ -32,3 +32,8 @@ target_link_libraries(auto_block_tester LINK_PRIVATE flow)
 target_link_libraries(auto_block_tester LINK_PRIVATE GTest::gmock GTest::gtest GTest::gmock_main GTest::gtest_main)
 add_test(test_auto_block_tester auto_block_tester)
 
+add_executable(thread_pool_test thread_pool_test.cpp)
+target_link_libraries(thread_pool_test LINK_PRIVATE flow)
+target_link_libraries(thread_pool_test LINK_PRIVATE GTest::gmock GTest::gtest GTest::gmock_main GTest::gtest_main)
+add_test(thread_pool_test thread_pool_test)
+

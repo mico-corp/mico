@@ -29,7 +29,8 @@
 #include <string>
 
 namespace flow {
-std::unique_ptr<ThreadPool::ThreadPoolImpl> ThreadPool::ThreadPoolImpl::instance_ = nullptr;
+std::unique_ptr<ThreadPool::ThreadPoolImpl>
+    ThreadPool::ThreadPoolImpl::instance_ = nullptr;
 int ThreadPool::ThreadPoolImpl::numInstances_ = 0;
 
 void ThreadPool::ThreadPoolImpl::init() {
@@ -56,10 +57,9 @@ void ThreadPool::ThreadPoolImpl::init() {
   delete[] nThreadsVar;
 }
 
-
 void ThreadPool::ThreadPoolImpl::deinit() {
   numInstances_--;
-  if(numInstances_==0){
+  if (numInstances_ == 0) {
     instance_ = std::unique_ptr<ThreadPool::ThreadPoolImpl>(nullptr);
   }
 }
@@ -70,6 +70,8 @@ ThreadPool::ThreadPoolImpl *ThreadPool::ThreadPoolImpl::get() {
   numInstances_++;
   return instance_.get();
 }
+
+int ThreadPool::ThreadPoolImpl::numInstances() const { return numInstances_; }
 
 void ThreadPool::ThreadPoolImpl::emplace(Task _task) {
   std::unique_lock<std::mutex> lock(threadLock_);
@@ -98,8 +100,10 @@ ThreadPool::ThreadPoolImpl::ThreadPoolImpl(size_t _nThreads) {
           waitEvent_.wait(lock,
                           [&]() { return !isRunning_ || !tasks_.empty(); });
 
-          task = std::move(tasks_.front());
-          tasks_.pop();
+          if (!tasks_.empty()) {
+            task = std::move(tasks_.front());
+            tasks_.pop();
+          }
         }
         if (task)
           task();

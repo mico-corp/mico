@@ -41,57 +41,53 @@ namespace flow {
 /// their usage over the flow architecture.
 /// @ingroup  flow
 class ThreadPool {
-public: 
+public:
   using Task = std::function<void()>;
+
 private:
-class ThreadPoolImpl{
+  class ThreadPoolImpl {
   public:
-  ThreadPoolImpl(size_t _nThreads);
+    ThreadPoolImpl(size_t _nThreads);
 
-  static void init();
-  static void deinit();
-  static ThreadPoolImpl *get();
-  FLOW_DECL void emplace(Task _task);
+    FLOW_DECL static void init();
+    FLOW_DECL static void deinit();
+    FLOW_DECL static ThreadPoolImpl *get();
+    FLOW_DECL void emplace(Task _task);
+    FLOW_DECL int numInstances() const;
 
-  ~ThreadPoolImpl();
-  size_t queueSize() { return tasks_.size(); }
-  float loadRatio() { return float(tasks_.size()) / nThreads_; }
+    ~ThreadPoolImpl();
+    size_t queueSize() const { return tasks_.size(); }
+    float loadRatio() const { return float(tasks_.size()) / nThreads_; }
 
-private:
-  static std::unique_ptr<ThreadPoolImpl> instance_;
-  static int numInstances_;
+  private:
+    static std::unique_ptr<ThreadPoolImpl> instance_;
+    static int numInstances_;
 
-  std::queue<Task> tasks_;
-  bool isRunning_ = true;
-  size_t nThreads_;
-  std::vector<std::thread> threads_;
-  std::condition_variable waitEvent_;
-  std::mutex threadLock_;
-}; // class ThreadPoolImpl
+    std::queue<Task> tasks_;
+    bool isRunning_ = true;
+    size_t nThreads_;
+    std::vector<std::thread> threads_;
+    std::condition_variable waitEvent_;
+    std::mutex threadLock_;
+  }; // class ThreadPoolImpl
 
 public:
-  ThreadPool(){
-    notOwnedThreadPool_ = ThreadPoolImpl::get();
-  }
+  ThreadPool() { notOwnedThreadPool_ = ThreadPoolImpl::get(); }
 
-  ~ThreadPool(){
-    ThreadPoolImpl::deinit();
-  }
+  ~ThreadPool() { ThreadPoolImpl::deinit(); }
 
-  FLOW_DECL void emplace(Task _task){
-    notOwnedThreadPool_->emplace(_task);
-  }
+  FLOW_DECL void emplace(Task _task) { notOwnedThreadPool_->emplace(_task); }
 
-  FLOW_DECL size_t queueSize() { 
+  FLOW_DECL size_t queueSize() const {
     return notOwnedThreadPool_->queueSize();
   }
-  FLOW_DECL float loadRatio() {
-    return notOwnedThreadPool_->loadRatio();
-  }
+  FLOW_DECL float loadRatio() const { return notOwnedThreadPool_->loadRatio(); }
+  FLOW_DECL int numInstances() const {
+    return notOwnedThreadPool_->numInstances();
+  };
 
 private:
-  ThreadPoolImpl* notOwnedThreadPool_ = nullptr;
-
+  ThreadPoolImpl *notOwnedThreadPool_ = nullptr;
 
 }; // class ThreadPool
 

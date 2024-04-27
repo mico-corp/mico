@@ -70,7 +70,6 @@ void Outpipe::unregisterPolicy(Policy *_pol) {
       std::find(registeredPolicies_.begin(), registeredPolicies_.end(), _pol);
   if (iter != registeredPolicies_.end()) {
     policiesGuard.lock();
-    std::cout << "disconnecting pipe" << std::endl;
     registeredPolicies_.erase(iter);
     policiesGuard.unlock();
   }
