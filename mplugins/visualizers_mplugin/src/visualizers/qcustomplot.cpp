@@ -9154,14 +9154,18 @@ void QCPAxis::setupTickVectors() {
                     mNumberPrecision, mTickVector,
                     mSubTicks ? &mSubTickVector : 0,
                     mTickLabels ? &mTickVectorLabels : 0);
-  bool res = true;
-  for (int i = 0; i < mTickVectorLabels.size(); i++) {
-    if (mTickVectorLabels[i] != oldLabels[i]) {
-      res = false;
+  if (mTickVectorLabels.size() != oldLabels.size()) {
+    mCachedMarginValid = false;
+  } else {
+    bool res = true;
+    for (int i = 0; i < mTickVectorLabels.size(); i++) {
+      if (mTickVectorLabels[i] != oldLabels[i]) {
+        res = false;
+      }
     }
+    // if labels have changed, margin might have changed, too
+    mCachedMarginValid &= res;
   }
-  // if labels have changed, margin might have changed, too
-  mCachedMarginValid &= res;
 }
 
 /*! \internal
