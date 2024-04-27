@@ -32,7 +32,7 @@ macro(detect_OS)
         set(TARGET_OS Unknown)
     endif()
     
-    if(${BUILD_FOR_RASPBIAN})
+    if(${BUILD_RASPBIAN})
         set(TARGET_OS Raspbian)
     endif()
 endmacro(detect_OS)
