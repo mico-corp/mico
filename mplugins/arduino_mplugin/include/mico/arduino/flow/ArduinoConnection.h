@@ -28,6 +28,7 @@
 #include <boost/any.hpp>
 #include <functional>
 #include <mutex>
+#include <memory>
 #include <thread>
 #include <unordered_map>
 

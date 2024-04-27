@@ -90,11 +90,7 @@ public:
   };
 
 private:
-#if defined(WIN32)
   typedef cv::Rect cvRect;
-#elif defined(__linux__)
-  typedef cv::Rect2d cvRect;
-#endif
 
   void createTracker(const std::string &_trackerName);
   void callbackInitBB(cvRect _bb);

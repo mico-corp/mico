@@ -27,12 +27,7 @@
 
 #include <flow/Block.h>
 #include <opencv2/opencv.hpp>
-
-namespace cv {
-namespace aruco {
-class Dictionary;
-}
-} // namespace cv
+#include <opencv2/aruco.hpp>
 
 namespace mico {
 namespace ar {

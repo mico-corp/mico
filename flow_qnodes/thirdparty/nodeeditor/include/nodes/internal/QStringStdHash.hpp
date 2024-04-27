@@ -5,7 +5,7 @@
 #include <QtCore/QString>
 #include <QtCore/QVariant>
 
-#if !defined(WIN32)
+#if 0 //!defined(WIN32) legacy
 namespace std {
     template <>
     struct hash<QString> {

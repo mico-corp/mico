@@ -120,7 +120,6 @@ macro(micoPrepareInstaller)
             libopencv-dev, 
             libopencv-contrib-dev, 
             qt5-qmake, 
-            qt5-default, 
             libqt5opengl5-dev, 
             qtbase5-dev, 
             qttools5-dev-tools, 

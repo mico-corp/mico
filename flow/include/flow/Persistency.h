@@ -27,13 +27,13 @@
 
 #include <string>
 
-#if defined(__linux__)
-#include <experimental/filesystem> // Not implemented until g++8
-namespace fs = std::experimental::filesystem;
-#elif defined(_WIN32)
 #include <filesystem>
 namespace fs = std::filesystem;
-#endif
+// #if defined(__linux__)
+// #include <experimental/filesystem> // Not implemented until g++8
+// namespace fs = std::experimental::filesystem;
+// #elif defined(_WIN32)
+// #endif
 
 namespace flow {
 
