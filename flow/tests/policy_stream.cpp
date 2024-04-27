@@ -44,64 +44,58 @@ TEST(pipe_creation, pipe_creation) {
 
   EXPECT_THROW(Outpipe op("", ""), std::invalid_argument);
 
-  Outpipe op1("A", "int");
-  Outpipe op2("B", "float");
-  Outpipe op3("A", "float");
-  Policy pol({makeInput<int>("A"), makeInput<float>("B")});
+  [[maybe_unused]] Outpipe *op1 = makeOutput<int>("A");
+  [[maybe_unused]] Outpipe *op2 = makeOutput<float>("B");
+  [[maybe_unused]] Outpipe *op3 = makeOutput<float>("A");
+  [[maybe_unused]] Policy pol({makeInput<int>("A"), makeInput<float>("B")});
 }
 
 TEST(registration, registration) {
   // Invalid creation
 
   // Valid creation
-  Outpipe op("o1", "int");
-  ASSERT_STREQ("o1", op.tag().c_str());
-  ASSERT_EQ(0, op.registrations());
+  Outpipe *op = makeOutput<int>("o1");
+  ASSERT_STREQ("o1", op->tag().c_str());
+  ASSERT_EQ(0, op->registrations());
 
   Policy pol({makeInput<int>("o1")});
-  ASSERT_TRUE(op.registerPolicy(&pol, "o1"));
-  ASSERT_FALSE(op.registerPolicy(&pol, "o"));
-  ASSERT_EQ(1, op.registrations());
+  ASSERT_TRUE(op->registerPolicy(&pol, "o1"));
+  ASSERT_FALSE(op->registerPolicy(&pol, "o"));
+  ASSERT_EQ(1, op->registrations());
 
   //
-  Outpipe op1("A", "int");
-  Outpipe op2("B", "float");
-  Outpipe op3("A", "float");
+  Outpipe *op1 = makeOutput<int>("A");
+  Outpipe *op2 = makeOutput<float>("B");
+  Outpipe *op3 = makeOutput<float>("A");
   Policy pol1({makeInput<int>("A"), makeInput<float>("B")});
 
-  ASSERT_TRUE(op1.registerPolicy(&pol1, "A"));
-  ASSERT_TRUE(op2.registerPolicy(&pol1, "B"));
+  ASSERT_TRUE(op1->registerPolicy(&pol1, "A"));
+  ASSERT_TRUE(op2->registerPolicy(&pol1, "B"));
 
-  ASSERT_FALSE(op2.registerPolicy(&pol1, "C"));
-  ASSERT_FALSE(op3.registerPolicy(&pol1, "A"));
+  ASSERT_FALSE(op2->registerPolicy(&pol1, "C"));
+  ASSERT_FALSE(op3->registerPolicy(&pol1, "A"));
 }
 
 TEST(transmission_int_1, transmission_int) {
-  Outpipe op("number",
-             "int"); // Tags of Output and Policy do not need to be the same.
+  // Tags of Output and Policy do not need to be the same.
+  Outpipe *op = makeOutput<int>("number");
+             
 
   Policy pol({makeInput<int>("counter")});
 
   int res = 0;
   pol.registerCallback<int>({"counter"}, [&](int _i1) { res = _i1; });
 
-  op.registerPolicy(&pol, "counter");
+  op->registerPolicy(&pol, "counter");
 
   // Good type flush
-  op.flush(1);
+  op->flush(1);
   std::this_thread::sleep_for(std::chrono::milliseconds(100));
   ASSERT_EQ(res, 1);
-
-  // Bad type flush   This is not true anymore.... more user-friendly for
-  // non-developers
-  /*EXPECT_THROW(
-      op.flush(5.312f);
-      std::this_thread::sleep_for(std::chrono::milliseconds(100));
-  , boost::bad_any_cast);*/
 }
 
 TEST(disconnect, disconnect) {
-  Outpipe op("counter", "int");
+  Outpipe *op = makeOutput<int>("counter");
   Policy pol({makeInput<int>("counter")});
 
   int res = 0;
@@ -113,22 +107,22 @@ TEST(disconnect, disconnect) {
       pol.registerCallback<float>({"float"}, [&](float) { });
   ASSERT_FALSE(badCallback);
 
-  op.registerPolicy(&pol, "counter");
+  op->registerPolicy(&pol, "counter");
 
-  op.flush(1);
+  op->flush(1);
   std::this_thread::sleep_for(std::chrono::milliseconds(10));
   ASSERT_EQ(res, 1);
 
   pol.disconnect("counter");
 
-  op.flush(2);
+  op->flush(2);
   std::this_thread::sleep_for(std::chrono::milliseconds(10));
   ASSERT_EQ(res, 1);
-  ASSERT_EQ(0, op.registrations());
+  ASSERT_EQ(0, op->registrations());
 }
 
 TEST(transmission_int_2, transmission_int) {
-  Outpipe op("counter", "int");
+  Outpipe *op = makeOutput<int>("counter");
 
   Policy pol1({makeInput<int>("counter")});
   Policy pol2({makeInput<int>("counter")});
@@ -145,17 +139,17 @@ TEST(transmission_int_2, transmission_int) {
     counterCall2++;
   });
 
-  op.registerPolicy(&pol1, "counter");
-  op.registerPolicy(&pol2, "counter");
+  op->registerPolicy(&pol1, "counter");
+  op->registerPolicy(&pol2, "counter");
 
   //
-  op.flush(1);
+  op->flush(1);
   std::this_thread::sleep_for(std::chrono::milliseconds(10));
-  op.flush(1);
+  op->flush(1);
   std::this_thread::sleep_for(std::chrono::milliseconds(10));
-  op.flush(1);
+  op->flush(1);
   std::this_thread::sleep_for(std::chrono::milliseconds(10));
-  op.flush(1);
+  op->flush(1);
   std::this_thread::sleep_for(std::chrono::milliseconds(10));
   guardCall2.unlock();
 
@@ -166,8 +160,8 @@ TEST(transmission_int_2, transmission_int) {
 }
 
 TEST(sync_policy, sync_policy) {
-  Outpipe op1("counter", "int");
-  Outpipe op2("clock", "float");
+  Outpipe *op1 = makeOutput<int>("counter");
+  Outpipe *op2 = makeOutput<float>("clock");
 
   Policy pol({makeInput<int>("counter"), makeInput<float>("clock")});
 
@@ -186,13 +180,13 @@ TEST(sync_policy, sync_policy) {
                                      counterCallSync++;
                                    });
 
-  op1.registerPolicy(&pol, "counter");
-  op2.registerPolicy(&pol, "clock");
+  op1->registerPolicy(&pol, "counter");
+  op2->registerPolicy(&pol, "clock");
 
   // Good type flush
-  op1.flush(1);
+  op1->flush(1);
   std::this_thread::sleep_for(std::chrono::milliseconds(10));
-  op2.flush(1.123f);
+  op2->flush(1.123f);
   std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
   ASSERT_EQ(1, counterCallInt);
@@ -201,28 +195,28 @@ TEST(sync_policy, sync_policy) {
 }
 
 TEST(deep_chain, deep_chain) {
-  Outpipe op("counter", "int");
+  Outpipe *op = makeOutput<int>("counter");
   Policy pol({makeInput<int>("ticks")});
-  op.registerPolicy(&pol, "ticks");
+  op->registerPolicy(&pol, "ticks");
 
-  Outpipe op2("accum", "int");
+  Outpipe *op2 = makeOutput<int>("accum");
   Policy pol2({makeInput<int>("subs")});
-  op2.registerPolicy(&pol2, "subs");
+  op2->registerPolicy(&pol2, "subs");
 
-  Outpipe op3("josua", "int");
+  Outpipe *op3 = makeOutput<int>("josua");
   Policy pol3({makeInput<int>("johny")});
-  op3.registerPolicy(&pol3, "johny");
+  op3->registerPolicy(&pol3, "johny");
 
   pol.registerCallback<int>({"ticks"}, [&](int _in) {
     int res = 2 * _in;
     ASSERT_EQ(res, 4);
-    op2.flush(res);
+    op2->flush(res);
   });
 
   pol2.registerCallback<int>({"subs"}, [&](int _in) {
     int res = 2 * _in;
     ASSERT_EQ(res, 8);
-    op3.flush(res);
+    op3->flush(res);
   });
 
   bool called = false;
@@ -232,7 +226,7 @@ TEST(deep_chain, deep_chain) {
     called = true;
   });
 
-  op.flush(2);
+  op->flush(2);
   std::this_thread::sleep_for(std::chrono::milliseconds(100));
   ASSERT_TRUE(called);
 }
@@ -314,30 +308,30 @@ TEST(loop_chain_split, loop_chain_split) {
   //                           |--> o4 --> p4
 
   // Create pipes and connections
-  Outpipe o0("counter", "int");
+  Outpipe *o0 = makeOutput<int>("counter");
   Policy p0({makeInput<int>("counter"), makeInput<std::string>("msg")});
 
-  o0.registerPolicy(&p0, "counter");
+  o0->registerPolicy(&p0, "counter");
 
-  Outpipe o1("ticks", "int");
+  Outpipe *o1 = makeOutput<int>("ticks");
   Policy p1({makeInput<int>("tocks")});
-  o1.registerPolicy(&p1, "tocks");
+  o1->registerPolicy(&p1, "tocks");
 
-  Outpipe o3("msg", typeid(std::string).name());
+  Outpipe *o3 = makeOutput<std::string>("msg"); 
   Policy p3({makeInput<std::string>("message")});
-  o3.registerPolicy(&p0, "msg");
-  o3.registerPolicy(&p3, "message");
+  o3->registerPolicy(&p0, "msg");
+  o3->registerPolicy(&p3, "message");
 
-  Outpipe o4("cnt", "int");
+  Outpipe *o4 = makeOutput<int>("cnt");
   Policy p4({makeInput<int>("counter")});
-  o4.registerPolicy(&p4, "counter");
+  o4->registerPolicy(&p4, "counter");
 
   // Set callbacks
   bool calledOnce0a = true;
   std::mutex guard0a;
   p0.registerCallback<int>({"counter"}, [&](int) {
     guard0a.lock();
-    o1.flush(1);
+    o1->flush(1);
     ASSERT_TRUE(calledOnce0a);
     calledOnce0a = false;
     guard0a.unlock();
@@ -353,8 +347,8 @@ TEST(loop_chain_split, loop_chain_split) {
   });
 
   p1.registerCallback<int>({"tocks"}, [&](int) {
-    o3.flush("pepe");
-    o4.flush(1);
+    o3->flush("pepe");
+    o4->flush(1);
   });
 
   bool calledOnce4 = true;
@@ -366,7 +360,7 @@ TEST(loop_chain_split, loop_chain_split) {
     guard4.unlock();
   });
 
-  o0.flush(1);
+  o0->flush(1);
   while (calledOnce4) {
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
@@ -374,7 +368,7 @@ TEST(loop_chain_split, loop_chain_split) {
 }
 
 TEST(concurrency_attack_test, concurrency_attack_test) {
-  Outpipe op("counter", "int");
+  Outpipe *op = makeOutput<int>("counter");
 
   Policy pol({makeInput<int>("cnt")});
 
@@ -395,7 +389,7 @@ TEST(concurrency_attack_test, concurrency_attack_test) {
     }
   });
 
-  op.registerPolicy(&pol, "cnt");
+  op->registerPolicy(&pol, "cnt");
 
   std::mutex mtx;
   std::condition_variable cv;
@@ -405,7 +399,7 @@ TEST(concurrency_attack_test, concurrency_attack_test) {
     std::unique_lock<std::mutex> lck(mtx);
     while (!ready)
       cv.wait(lck);
-    op.flush(1);
+    op->flush(1);
   };
 
   const int nThreads = 10;

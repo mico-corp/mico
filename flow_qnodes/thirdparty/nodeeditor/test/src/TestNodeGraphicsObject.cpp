@@ -25,7 +25,7 @@ TEST_CASE("NodeDataModel::portOutConnectionPolicy(...) isn't called for input "
     unsigned int nPorts(PortType) const override { return 1; }
 
     NodeDataModel::ConnectionPolicy
-    portOutConnectionPolicy(int index) const override {
+    portOutConnectionPolicy(int) const override {
       portOutConnectionPolicyCalledCount++;
       return NodeDataModel::ConnectionPolicy::One;
     }

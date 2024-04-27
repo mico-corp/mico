@@ -72,17 +72,17 @@ void testPolicyCreation() {
 
   pol.registerCallback({"i2", "i3"}, cb2);
 
-  auto *o1 = makeOutput<int>("o1");
-  auto *o2 = makeOutput<std::string>("o2");
-  auto *o3 = makeOutput<float>("o3");
+  auto o1 = makeOutput<int>("o1");
+  auto o2 = makeOutput<std::string>("o2");
+  auto o3 = makeOutput<float>("o3");
 
-  o1->registerPolicy(&pol, "i1");
-  o2->registerPolicy(&pol, "i2");
-  o3->registerPolicy(&pol, "i3");
+  o1.registerPolicy(&pol, "i1");
+  o2.registerPolicy(&pol, "i2");
+  o3.registerPolicy(&pol, "i3");
 
-  o1->flush(1);
-  o2->flush(std::string("hola"));
-  o3->flush(1.0f);
+  o1.flush(1);
+  o2.flush(std::string("hola"));
+  o3.flush(1.0f);
 
   std::this_thread::sleep_for(std::chrono::seconds(1));
 }

@@ -69,6 +69,9 @@ option(BUILD_SIMULATION         "Set to build simulation Module"    ON)
 option(BUILD_VISUALIZERS        "Set to build VISUALIZERS Module"   ON)
 
 option(BUILD_BENCHMARK          "Set to build Benchmarks"           OFF)
+option(BUILD_EXAMPLES           "Compile examples"                  OFF)
+
+option(ENABLE_SANITIZER         ""                                  OFF)
 
 option(MICO_PREPARE_INSTALLER   "Set to prepare installer" ON)
 if(WIN32)
@@ -77,6 +80,19 @@ elseif(UNIX)
     option(MICO_USE_DEB             "Use DEB generator to produce installer" ON)
 endif()
 
+if(${ENABLE_SANITIZER})
+  set(
+    CMAKE_CXX_FLAGS
+    "${CMAKE_CXX_FLAGS} -Werror -fsanitize=undefined -fsanitize=address"
+  )
+  set(
+    CMAKE_EXE_LINKER_FLAGS
+    "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=undefined -fsanitize=address"
+  )
+endif()
+
+find_package(GTest CONFIG REQUIRED)
+enable_testing()
 
 SET(MICO_MODULES "")
 

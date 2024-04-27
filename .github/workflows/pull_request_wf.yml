@@ -46,7 +46,7 @@ jobs:
         run: |
           cd build
           make -j mico
-      # - name: "Try Deploy"
-      #   run: |
-      #     cd build
-      #     make package
+      - name: "Run tests"
+        run: |
+          cd build
+          ctest

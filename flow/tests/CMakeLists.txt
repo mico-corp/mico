@@ -19,6 +19,8 @@
 ##  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ##---------------------------------------------------------------------------------------------------------------------
 
+include(CTest)
+
 ### Add test with input file
 add_executable(policy_stream policy_stream.cpp)
 target_link_libraries(policy_stream LINK_PRIVATE flow)

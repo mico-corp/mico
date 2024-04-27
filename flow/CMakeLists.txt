@@ -31,9 +31,6 @@ endif()
 #########################################
 find_package(Qt5 REQUIRED COMPONENTS Core Widgets Gui)
 
-option(BUILD_EXAMPLES   "Compile examples"              OFF)
-option(BUILD_TESTS      "Prepare tests"                 ON)
-
 ##################################################
 ######    Library.                        ########
 ##################################################
@@ -83,13 +80,9 @@ endif()
 ##################################################
 ######    Test.                           ########
 ##################################################
-if(${BUILD_TESTS})
-  find_package(GTest CONFIG)
-  if(${GTest_FOUND})
-    enable_testing()
-    add_subdirectory(tests)
-  endif()
-endif()
+
+add_subdirectory(tests)
+
 
 ##################################################
 ######    Examples.                       ########

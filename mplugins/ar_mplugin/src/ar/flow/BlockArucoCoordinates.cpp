@@ -33,6 +33,7 @@
 namespace mico {
 namespace ar {
 BlockArucoCoordinates::BlockArucoCoordinates() {
+  dictionary_ = cv::Ptr<cv::aruco::Dictionary>(new cv::aruco::Dictionary());
   dictionary_ = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
 
   createPipe<Eigen::Matrix4f>("coordinates");
@@ -94,7 +95,7 @@ void BlockArucoCoordinates::policyCallback(cv::Mat _image) {
 
   std::vector<int> ids;
   std::vector<std::vector<cv::Point2f>> corners;
-  cv::aruco::detectMarkers(image, &dictionary_, corners, ids);
+  cv::aruco::detectMarkers(image, dictionary_, corners, ids);
   // if at least one marker detected
   if (ids.size() > 0) {
     cv::aruco::drawDetectedMarkers(image, corners, ids);

@@ -88,7 +88,7 @@ private:
 
 private:
   int id_ = 1;
-  cv::aruco::Dictionary dictionary_;
+  cv::Ptr<cv::aruco::Dictionary> dictionary_;
 
   cv::Mat cameraMatrix_, distCoeffs_;
   bool isCalibrated_ = false;
