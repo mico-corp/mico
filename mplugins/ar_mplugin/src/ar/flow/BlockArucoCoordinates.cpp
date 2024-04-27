@@ -29,12 +29,11 @@
 #include <Eigen/Eigen>
 #include <opencv2/opencv.hpp>
 
-
 namespace mico {
 namespace ar {
 BlockArucoCoordinates::BlockArucoCoordinates() {
   dictionary_ = cv::Ptr<cv::aruco::Dictionary>(new cv::aruco::Dictionary());
-  dictionary_ = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
+  *dictionary_ = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
 
   createPipe<Eigen::Matrix4f>("coordinates");
   createPipe<std::map<int, Eigen::Matrix4f>>("all_coordinates");

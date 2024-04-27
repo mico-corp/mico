@@ -162,7 +162,7 @@ void NodePainter::drawFilledConnectionPoints(QPainter *painter,
   auto diameter = nodeStyle.ConnectionPointDiameter;
 
   for (PortType portType : {PortType::Out, PortType::In}) {
-    int n = state.getEntries(portType).size();
+    int n = int(state.getEntries(portType).size());
 
     for (QtNodes::PortIndex i = 0; i < n; ++i) {
       QPointF p = geom.portScenePosition(i, portType);
@@ -226,7 +226,7 @@ void NodePainter::drawEntryLabels(QPainter *painter, NodeGeometry const &geom,
 
     auto &entries = state.getEntries(portType);
 
-    int n = entries.size();
+    int n = int(entries.size());
 
     for (QtNodes::PortIndex i = 0; i < n; ++i) {
       QPointF p = geom.portScenePosition(i, portType);

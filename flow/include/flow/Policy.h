@@ -50,10 +50,10 @@ public:
   FLOW_DECL Policy(std::vector<PolicyInput> _inputs);
 
   template <typename... Arguments, typename F>
-  bool registerCallback(PolicyMask _mask,
-                        F _callback){
-                          return registerCallback(_mask, _callback);
-                        }
+  bool registerCallback(PolicyMask _mask, F _callback) {
+    std::function<void(Arguments... _args)> cb = _callback;
+    return registerCallback<Arguments...>(_mask, cb);
+  }
 
   template <typename... Arguments>
   bool registerCallback(PolicyMask _mask,
