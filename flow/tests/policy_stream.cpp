@@ -79,7 +79,6 @@ TEST(registration, registration) {
 TEST(transmission_int_1, transmission_int) {
   // Tags of Output and Policy do not need to be the same.
   Outpipe *op = makeOutput<int>("number");
-             
 
   Policy pol({makeInput<int>("counter")});
 
@@ -103,8 +102,7 @@ TEST(disconnect, disconnect) {
       pol.registerCallback<int>({"counter"}, [&](int _i1) { res = _i1; });
   ASSERT_TRUE(goodCallback);
 
-  bool badCallback =
-      pol.registerCallback<float>({"float"}, [&](float) { });
+  bool badCallback = pol.registerCallback<float>({"float"}, [&](float) {});
   ASSERT_FALSE(badCallback);
 
   op->registerPolicy(&pol, "counter");
@@ -128,17 +126,17 @@ TEST(transmission_int_2, transmission_int) {
   Policy pol2({makeInput<int>("counter")});
 
   int counterCall1 = 0;
-  pol1.registerCallback<int>({"counter"}, [&](int) {
-    counterCall1++;
-  });
+  pol1.registerCallback<int>({"counter"}, [&](int) { counterCall1++; });
 
-  // Intentionally block one of the policies. 
-  // Flow does not pipe triggers, if the policy is busy when a 
+  // Intentionally block one of the policies.
+  // Flow does not pipe triggers, if the policy is busy when a
   // new trigger arrives, the signal is dropped
+  std::mutex mtx;
+  std::condition_variable cv;
   int counterCall2 = 0;
-  std::mutex guardCall2;
   pol2.registerCallback<int>({"counter"}, [&](int) {
-    guardCall2.lock();
+    std::unique_lock<std::mutex> lck(mtx);
+    cv.wait(lck);
     counterCall2++;
   });
 
@@ -154,7 +152,8 @@ TEST(transmission_int_2, transmission_int) {
   std::this_thread::sleep_for(std::chrono::milliseconds(10));
   op->flush(1);
   std::this_thread::sleep_for(std::chrono::milliseconds(10));
-  guardCall2.unlock();
+  cv.notify_all();
+  std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
   ASSERT_EQ(4, counterCall1);
   ASSERT_EQ(1,
@@ -173,16 +172,10 @@ TEST(sync_policy, sync_policy) {
   int counterCallInt = 0;
   int counterCallFloat = 0;
   int counterCallSync = 0;
-  pol.registerCallback<int>({"counter"}, [&](int) {
-    counterCallInt++;
-  });
-  pol.registerCallback<float>({"clock"}, [&](float) {
-    counterCallFloat++;
-  });
+  pol.registerCallback<int>({"counter"}, [&](int) { counterCallInt++; });
+  pol.registerCallback<float>({"clock"}, [&](float) { counterCallFloat++; });
   pol.registerCallback<int, float>({"counter", "clock"},
-                                   [&](int, float) {
-                                     counterCallSync++;
-                                   });
+                                   [&](int, float) { counterCallSync++; });
 
   op1->registerPolicy(&pol, "counter");
   op2->registerPolicy(&pol, "clock");
@@ -321,7 +314,7 @@ TEST(loop_chain_split, loop_chain_split) {
   Policy p1({makeInput<int>("tocks")});
   o1->registerPolicy(&p1, "tocks");
 
-  Outpipe *o3 = makeOutput<std::string>("msg"); 
+  Outpipe *o3 = makeOutput<std::string>("msg");
   Policy p3({makeInput<std::string>("message")});
   o3->registerPolicy(&p0, "msg");
   o3->registerPolicy(&p3, "message");
