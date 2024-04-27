@@ -22,7 +22,8 @@
 
 name: tests_nightly
 on:
-  pull_request:
+  schedule:
+    - cron: "0 0 * * *"
 
 jobs:
   build:
