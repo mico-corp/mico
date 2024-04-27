@@ -76,9 +76,9 @@ ParameterWidget::ParameterWidget(const ConfigParameterDef &_param,
     value_ = new QSpinBox();
     this->addWidget(value_);
 
-    static_cast<QSpinBox *>(value_)->setValue(_param.asInteger());
     static_cast<QSpinBox *>(value_)->setMaximum(
         std::numeric_limits<int>::max());
+    static_cast<QSpinBox *>(value_)->setValue(_param.asInteger());
     break;
   }
   case flow::ConfigParameterDef::eParameterType::BOOLEAN:
