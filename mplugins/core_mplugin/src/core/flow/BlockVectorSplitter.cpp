@@ -43,8 +43,9 @@ BlockVectorSplitter::BlockVectorSplitter() {
 void BlockVectorSplitter::preparePolicy() {
   removePipes();
   for (unsigned i = 0; i < nTrajs_; i++) {
-    const std::string pipeName = std::format("v{}",i);
-    createPipe<float>(pipeName);
+    std::stringstream pipeName;
+    pipeName << "v" << i;
+    createPipe<float>(pipeName.str());
   }
 }
 
@@ -71,8 +72,9 @@ void BlockVectorSplitter::policyCallback(std::vector<float> _v) {
     return;
 
   for (unsigned i = 0; i < nTrajs_; i++) {
-    const std::string pipeName = std::format("v{}",i);
-    getPipe(pipeName)->flush(_v[i]);
+    std::stringstream pipeName;
+    pipeName << "v" << i;
+    getPipe(pipeName.str())->flush(_v[i]);
   }
 }
 } // namespace core
