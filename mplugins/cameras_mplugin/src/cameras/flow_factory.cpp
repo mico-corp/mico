@@ -27,7 +27,6 @@
 
 #include <mico/cameras/flow/BlockCalibrationMonocular.h>
 #include <mico/cameras/flow/BlockImageResize.h>
-#include <mico/cameras/flow/RaspiCam.h>
 #include <mico/cameras/flow/SingleImageFlusher.h>
 #include <mico/cameras/flow/StreamVideo.h>
 #include <mico/cameras/flow/StreamWebcam.h>
@@ -53,9 +52,5 @@ factory(fs::path _libraryPath) {
       "cameras");
   creator->registerNodeCreator(
       []() { return std::make_shared<BlockImageResize>(); }, "cameras");
-#ifdef MICO_IS_RASPBIAN
-  creator->registerNodeCreator([]() { return std::make_shared<RaspiCam, >(); },
-                               "cameras");
-#endif
   return creator;
 }

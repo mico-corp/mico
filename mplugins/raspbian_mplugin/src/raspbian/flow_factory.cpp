@@ -25,6 +25,7 @@
 #include <flow/flow.h>
 #include <flow/plugins/BlockPlugin.h>
 #include <mico/raspbian/flow/RaspberryGpioBlock.h>
+#include <mico/raspbian/flow/RaspiCam.h>
 
 using namespace mico::raspbian;
 using namespace flow;
@@ -39,6 +40,11 @@ factory(fs::path _libraryPath) {
   creator->registerNodeCreator(
       []() { return std::make_shared<RaspberryGpioBlock>(); },
       "Raspberry Gpio");
+  #endif
+  #ifdef MICO_IS_RASPBIAN_DEPRECATED
+  creator->registerNodeCreator([]() { return std::make_shared<RaspiCam, >(); },
+                               "cameras");
 #endif
+
   return creator;
 }

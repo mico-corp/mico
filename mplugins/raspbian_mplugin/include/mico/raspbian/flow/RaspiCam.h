@@ -22,37 +22,61 @@
 //  IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#ifdef MICO_IS_RASPBIAN
+#ifdef MICO_IS_RASPBIAN_DEPRECATED
 
-#include <flow/Outpipe.h>
-#include <mico/cameras/flow/RaspiCam.h>
+#ifndef MICO_FLOW_BLOCKS_STREAMERS_RASPICAM_H_
+#define MICO_FLOW_BLOCKS_STREAMERS_RASPICAM_H_
+
+#include <flow/Block.h>
+#include <opencv2/opencv.hpp>
+#include <raspicam/raspicam_cv.h>
 
 namespace mico {
 namespace cameras {
-RaspiCam::RaspiCam() { createPipe<cv::Mat>("Color"); }
+/// Mico block that opens USB camera devices and flush images out on a stream.
+/// @ingroup  mico_cameras
+class RaspiCam : public flow::Block {
+public:
+  /// Get name of block
+  std::string name() const override { return "RaspiCam"; }
 
-bool RaspiCam::configure(std::vector<flow::ConfigParameterDef> _params) {
-  if (isRunningLoop()) // Cant configure if already running.
-    return false;
-
-  return camera_.open();
-}
-
-std::vector<flow::ConfigParameterDef> RaspiCam::parameters() { return {{}}; }
-
-void RaspiCam::loopCallback() {
-  while (isRunningLoop()) {
-    if (auto pipe = getPipe("Color"); pipe->registrations() != 0) {
-      cv::Mat image;
-      if (camera_.grab()) {
-        camera_.retrieve(image);
-        pipe->flush(image);
-      }
-    }
-    std::this_thread::sleep_for(std::chrono::milliseconds(1));
+  /// Retreive icon of block
+  virtual std::string icon() const override {
+    return (flow::Persistency::resourceDir() / "cameras" / "webcam_icon.svg")
+        .string();
   }
-}
+
+  /// Base constructor
+  RaspiCam();
+
+  /// Configure block with given parameters.
+  bool configure(std::vector<flow::ConfigParameterDef> _params) override;
+
+  /// Get list of parameters of the block
+  std::vector<flow::ConfigParameterDef> parameters() override;
+
+  /// Return if the block is configurable.
+  bool isConfigurable() override { return true; };
+
+  /// Method to check if the block has auto running callback
+  bool hasRunLoop() const { return true; }
+  override;
+
+  /// Returns a brief description of the block
+  std::string description() const override {
+    return "Streamer block that reads from usb ready cameras "
+           "connected to the computer and streams its images.\n"
+           "   - Outputs: \n";
+  };
+
+protected:
+  void loopCallback() override;
+
+private:
+  raspicam::RaspiCam_Cv camera_;
+};
 } // namespace cameras
 } // namespace mico
 
+#endif
 #endif
