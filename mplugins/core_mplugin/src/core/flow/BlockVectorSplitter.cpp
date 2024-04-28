@@ -27,7 +27,6 @@
 #include <mico/core/flow/BlockVectorSplitter.h>
 
 #include <cmath>
-#include <format>
 
 #include <QLabel>
 #include <QSpinBox>
